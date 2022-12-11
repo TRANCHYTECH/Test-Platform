@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2C3281FE-EE52-470F-8A9A-1AB3BAD8265C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestManager", "TestManager", "{C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Api", "Services\TestManager\VietGeeks.TestPlatform.TestManager.Api\VietGeeks.TestPlatform.TestManager.Api.csproj", "{E132E587-83E9-46D4-9457-3F96C89D2A2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Core", "Services\TestManager\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj", "{28AAB41B-2DA0-4F48-BED8-2350A6397000}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Contract", "Services\TestManager\VietGeeks.TestPlatform.TestManager.Contract\VietGeeks.TestPlatform.TestManager.Contract.csproj", "{97C31AA0-7CA0-4DF7-AC4A-B70028843626}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Infrastructure", "Services\TestManager\VietGeeks.TestPlatform.TestManager.Infrastructure\VietGeeks.TestPlatform.TestManager.Infrastructure.csproj", "{73BA2242-CB92-448F-A96B-078AF59BE542}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{84A0701A-5871-40D0-9632-92204E46F3AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.SharedKernel", "BuildingBlocks\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj", "{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.WebApp", "Services\TestManager\VietGeeks.TestPlatform.TestManager.WebApp\VietGeeks.TestPlatform.TestManager.WebApp.csproj", "{34F0C88D-B7ED-4730-B650-A2BD36D38F5D}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{21602316-7091-4EF7-88FA-9CDD019DA943}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E132E587-83E9-46D4-9457-3F96C89D2A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E132E587-83E9-46D4-9457-3F96C89D2A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E132E587-83E9-46D4-9457-3F96C89D2A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E132E587-83E9-46D4-9457-3F96C89D2A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28AAB41B-2DA0-4F48-BED8-2350A6397000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28AAB41B-2DA0-4F48-BED8-2350A6397000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28AAB41B-2DA0-4F48-BED8-2350A6397000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28AAB41B-2DA0-4F48-BED8-2350A6397000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97C31AA0-7CA0-4DF7-AC4A-B70028843626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97C31AA0-7CA0-4DF7-AC4A-B70028843626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97C31AA0-7CA0-4DF7-AC4A-B70028843626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97C31AA0-7CA0-4DF7-AC4A-B70028843626}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73BA2242-CB92-448F-A96B-078AF59BE542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73BA2242-CB92-448F-A96B-078AF59BE542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73BA2242-CB92-448F-A96B-078AF59BE542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73BA2242-CB92-448F-A96B-078AF59BE542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34F0C88D-B7ED-4730-B650-A2BD36D38F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34F0C88D-B7ED-4730-B650-A2BD36D38F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34F0C88D-B7ED-4730-B650-A2BD36D38F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34F0C88D-B7ED-4730-B650-A2BD36D38F5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21602316-7091-4EF7-88FA-9CDD019DA943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21602316-7091-4EF7-88FA-9CDD019DA943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21602316-7091-4EF7-88FA-9CDD019DA943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21602316-7091-4EF7-88FA-9CDD019DA943}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C4EB9E0A-995E-4B67-B644-1C7EF8DC0063} = {2C3281FE-EE52-470F-8A9A-1AB3BAD8265C}
+		{E132E587-83E9-46D4-9457-3F96C89D2A2F} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
+		{28AAB41B-2DA0-4F48-BED8-2350A6397000} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
+		{97C31AA0-7CA0-4DF7-AC4A-B70028843626} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
+		{73BA2242-CB92-448F-A96B-078AF59BE542} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE} = {84A0701A-5871-40D0-9632-92204E46F3AE}
+		{34F0C88D-B7ED-4730-B650-A2BD36D38F5D} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11EC26A0-B2C1-4D0F-A042-ABDACADBEB33}
+	EndGlobalSection
+EndGlobal
