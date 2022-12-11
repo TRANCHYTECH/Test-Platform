@@ -1,0 +1,3 @@
+<ng-container *ngIf="auth.user$ | async as user">
+    <p>Welcome {{user.email}}</p>
+</ng-container>
