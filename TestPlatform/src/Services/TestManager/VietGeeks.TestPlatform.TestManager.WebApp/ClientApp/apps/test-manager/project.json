@@ -19,7 +19,10 @@
           "apps/test-manager/src/favicon.ico",
           "apps/test-manager/src/assets"
         ],
-        "styles": ["apps/test-manager/src/styles.scss"],
+        "styles": [
+          "apps/test-manager/src/styles.scss",
+          "apps/test-manager/src/assets/scss/argon.scss"
+        ],
         "scripts": []
       },
       "configurations": {

@@ -12,6 +12,7 @@ import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
 import { map, of } from 'rxjs';
 import { ShellModule } from './shell/shell.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +22,8 @@ import { ShellModule } from './shell/shell.module';
     ShellModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     SharedModule,
-    AuthModule.forRoot()
+    AuthModule.forRoot(),
+    NgbModule
   ],
   providers: [
     {
