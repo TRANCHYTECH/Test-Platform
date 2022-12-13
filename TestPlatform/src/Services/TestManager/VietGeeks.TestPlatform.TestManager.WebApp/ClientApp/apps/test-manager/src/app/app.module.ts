@@ -13,6 +13,8 @@ import { environment } from '../environments/environment';
 import { map, of } from 'rxjs';
 import { ShellModule } from './shell/shell.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +25,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     SharedModule,
     AuthModule.forRoot(),
-    NgbModule
+    NgbModule,
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
+    AkitaNgRouterStoreModule
   ],
   providers: [
     {
