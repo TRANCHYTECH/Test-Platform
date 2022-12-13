@@ -5,7 +5,7 @@ on:
       - master
 defaults:
   run:
-    working-directory: src
+    working-directory: ${{ github.workspace }}/src
 jobs:
   push-to-azure-container-registry:
     runs-on: ubuntu-latest
@@ -23,7 +23,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker-compose build
-        working-directory: ${{ github.workspace }}/src
         
       - name: Push Docker image to Azure Container Registry
         run: |
