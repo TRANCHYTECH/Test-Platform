@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-            cd /src
+            working-directory: src
             docker-compose build
 
       - name: Push Docker image to Azure Container Registry
