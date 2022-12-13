@@ -22,9 +22,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd {{ $GITHUB_WORKSPACE }}/src
           docker-compose build
-
+        working-directory: ${{ github.workspace }}/src
+        
       - name: Push Docker image to Azure Container Registry
         run: |
             docker tag vietgeeks.testplatform.testmanager.webapp:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ github.sha }}
