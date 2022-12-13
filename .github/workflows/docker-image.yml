@@ -19,7 +19,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd ${{ github.workspace }}/src         
+          cd ./${{ github.workspace }}/src         
           docker-compose build
         
       - name: Push Docker image to Azure Container Registry
