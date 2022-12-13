@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-            working-directory: ./src
+            working-directory: ./TestPlatform/src
             docker-compose build
 
       - name: Push Docker image to Azure Container Registry
