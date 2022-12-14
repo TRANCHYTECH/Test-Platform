@@ -7,7 +7,7 @@ jobs:
   push-to-azure-container-registry:
     runs-on: ubuntu-latest
     env:
-      BUILD_VERSION: ${{ secrets.MAJOR }}.$env.GITHUB_RUN_NUMBER
+      BUILD_VERSION: ${{ secrets.MAJOR }}.$GITHUB_RUN_NUMBER
     steps:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
@@ -21,8 +21,9 @@ jobs:
 
       - name: Build Docker image
         run: |   
+          echo $env.BUILD_VERSION
           docker-compose build
-        working-directory: ./TestPlatform/src
+        working-directory: ./TestPlatform/src1
         
       - name: Push Docker image to Azure Container Registry
         run: |
