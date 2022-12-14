@@ -14,16 +14,6 @@ jobs:
           username: ${{ secrets.AZ_SP_CLIENT_ID }}
           password: ${{ secrets.AZ_SP_CLIENT_SECRET }}
           
-      - name: Update build version    
-        uses: hmanzur/actions-set-secret@v2.0.0
-        with:
-          name: 'MINOR'
-          value: $((${{ secrets.MINOR }}+1))
-          repository: 'Viet-Geeks'
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          org: true
-          visibility: 'all'
-          
       - name: Checkout repository
         uses: actions/checkout@v1
 
@@ -34,7 +24,8 @@ jobs:
         
       - name: Push Docker image to Azure Container Registry
         run: |
-            docker tag vietgeeks.testplatform.testmanager.webapp:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ secrets.MAJOR }}.${{ secrets.MINOR }}
-            docker tag vietgeeks.testplatform.testmanager.api:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ secrets.MAJOR }}.${{ secrets.MINOR }}
-            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ secrets.MAJOR }}.${{ secrets.MINOR }}     
-            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+            $version = ${{ secrets.MAJOR }}+"."+(0000+$($Env:GITHUB_RUN_NUMBER))
+            docker tag vietgeeks.testplatform.testmanager.webapp:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:$version
+            docker tag vietgeeks.testplatform.testmanager.api:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:$version
+            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:$version     
+            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:$version
