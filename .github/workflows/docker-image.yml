@@ -6,6 +6,8 @@ on:
 jobs:
   push-to-azure-container-registry:
     runs-on: ubuntu-latest
+    env:
+      BUILD_VERSION: ${{ secrets.MAJOR }}.${{ Env:GITHUB_RUN_NUMBER }}
     steps:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
@@ -24,8 +26,7 @@ jobs:
         
       - name: Push Docker image to Azure Container Registry
         run: |
-            $version = ${{ secrets.MAJOR }}+"."+(0000+$($Env:GITHUB_RUN_NUMBER))
-            docker tag vietgeeks.testplatform.testmanager.webapp:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:$version
-            docker tag vietgeeks.testplatform.testmanager.api:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:$version
-            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:$version     
-            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:$version
+            docker tag vietgeeks.testplatform.testmanager.webapp:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ env.BUILD_VERSION }}
+            docker tag vietgeeks.testplatform.testmanager.api:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ env.BUILD_VERSION }}
+            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ env.BUILD_VERSION }}   
+            docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ env.BUILD_VERSION }}
