@@ -1,0 +1,12 @@
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/bin/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.deps.json
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/bin/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.dll
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/bin/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.pdb
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.csproj.AssemblyReference.cache
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.AssemblyInfoInputs.cache
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.AssemblyInfo.cs
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.csproj.CoreCompileInputs.cache
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.dll
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/refint/VietGeeks.TestPlatform.AspNetCore.dll
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/VietGeeks.TestPlatform.AspNetCore.pdb
+/Users/dangngoctau/Projects/test-platform/TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/Debug/net7.0/ref/VietGeeks.TestPlatform.AspNetCore.dll
