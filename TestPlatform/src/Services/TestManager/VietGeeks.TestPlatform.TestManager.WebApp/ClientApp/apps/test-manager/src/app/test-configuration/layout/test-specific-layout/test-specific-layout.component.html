@@ -1,0 +1,14 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body"></div>
+        <p>test-specific-layout works!</p>
+        <a [routerLink]="['basic-settings']">Basic Settings</a>
+        <a [routerLink]="['manage-questions']">Question Manager</a>
+        <a [routerLink]="['test-access']">Test Access</a>
+        <a [routerLink]="['test-sets']">Test Sets</a>
+        <a [routerLink]="['test-start-page']">Test Start Page</a>
+        <a [routerLink]="['time-settings']">Time Settings</a>
+        <a [routerLink]="['grading-and-summary']">Grading and summary</a>
+        <router-outlet></router-outlet>
+    </div>
+</div>
