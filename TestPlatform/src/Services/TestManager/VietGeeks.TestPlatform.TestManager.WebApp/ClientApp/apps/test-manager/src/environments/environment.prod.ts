@@ -1,6 +1,6 @@
 
 export const environment = {
-    production: false,
+    production: true,
     testManagerApiBaseUrl: '',
     auth: {
         domain: '',
