@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'viet-geeks-basic-settings',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./basic-settings.component.scss']
 })
 export class BasicSettingsComponent {
+  public Editor = ClassicEditor;
 
+   selectValue = ['Choice 1', 'Choice 2', 'Choice 3'];
 }

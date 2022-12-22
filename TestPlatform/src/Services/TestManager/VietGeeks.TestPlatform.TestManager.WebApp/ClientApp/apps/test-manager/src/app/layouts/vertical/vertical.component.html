@@ -1,0 +1,17 @@
+<div id="layout-wrapper" (window:resize)="onResize($event)">
+    <!-- Top Bar -->
+    <viet-geeks-topbar (mobileMenuButtonClicked)="onToggleMobileMenu()"></viet-geeks-topbar>
+    <!-- Side Bar -->
+    <viet-geeks-sidebar></viet-geeks-sidebar>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <!-- Main Content -->
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+        <!-- Footer -->
+        <viet-geeks-footer></viet-geeks-footer>
+    </div>
+  </div>
+  

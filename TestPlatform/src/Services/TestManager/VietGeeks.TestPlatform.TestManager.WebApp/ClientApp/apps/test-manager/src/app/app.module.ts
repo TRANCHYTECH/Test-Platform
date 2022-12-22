@@ -14,6 +14,10 @@ import { ShellModule } from './shell/shell.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { LayoutsModule } from './layouts/layouts.module';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,11 +26,21 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
     SharedModule,
     AuthModule.forRoot(),
     BrowserModule,
+    LayoutsModule,
     ShellModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     NgbModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+    FlatpickrModule.forRoot()
   ],
   providers: [
     {
@@ -46,7 +60,7 @@ export class AppModule { }
 
 function appInitializerFactory(httpBackend: HttpBackend, authClientConfig: AuthClientConfig, appSettingsService: AppSettingsService) {
   return () => {
-    if (environment.production) {
+    if (!environment.production) {
       appSettingsService.set<AppSettings>(environment);
       setAuthClientConfig(authClientConfig, environment);
 
@@ -73,3 +87,6 @@ function setAuthClientConfig(authClientConfig: AuthClientConfig, appSettings: Ap
   });
 }
 
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
+}

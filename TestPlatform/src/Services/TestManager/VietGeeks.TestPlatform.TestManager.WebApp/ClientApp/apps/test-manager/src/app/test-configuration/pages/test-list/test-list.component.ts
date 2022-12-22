@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { projectListWidgets as data } from './data';
 
 @Component({
   selector: 'viet-geeks-test-list',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./test-list.component.scss']
 })
 export class TestListComponent {
+  projectListWidgets: any[] = [];
 
+  constructor() {
+    this.projectListWidgets = data;
+  }
 }

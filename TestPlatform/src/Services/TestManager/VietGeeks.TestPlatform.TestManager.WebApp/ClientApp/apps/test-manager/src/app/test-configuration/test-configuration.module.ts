@@ -13,6 +13,12 @@ import { TestStartPageComponent } from './pages/test-specific/test-start-page/te
 import { GradingAndSummaryComponent } from './pages/test-specific/grading-and-summary/grading-and-summary.component';
 import { TestTimeSettingsComponent } from './pages/test-specific/test-time-settings/test-time-settings.component';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
+import { SharedModule } from '@viet-geeks/shared';
+import { NgbDropdownModule, NgbProgressbar, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DropzoneModule } from 'ngx-dropzone-wrapper';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 @NgModule({
   declarations: [
@@ -26,8 +32,19 @@ import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-
     TestStartPageComponent,
     GradingAndSummaryComponent,
     TestTimeSettingsComponent,
-    TestSpecificLayoutComponent,
+    TestSpecificLayoutComponent
   ],
-  imports: [CommonModule, TestConfigurationRoutingModule],
+  imports: [
+    CommonModule,
+    TestConfigurationRoutingModule,
+    SharedModule,
+    NgbProgressbar,
+    NgbTooltip,
+    NgbDropdownModule,
+    NgSelectModule,
+    DropzoneModule,
+    CKEditorModule,
+    FlatpickrModule
+  ]
 })
-export class TestConfigurationModule {}
+export class TestConfigurationModule { }

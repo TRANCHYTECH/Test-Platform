@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../../libs/core/src/lib/services/event.service.ts"],
   "compilerOptions": {
     "types": ["jest", "node"]
   }
