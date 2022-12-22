@@ -1,0 +1,101 @@
+<div class="row g-4 mb-3">
+    <div class="col-sm-auto">
+        <div>
+            <a routerLink="/tests/new/basic-settings" class="btn btn-soft-secondary"><i
+                    class="ri-add-line align-bottom me-1"></i>Add New</a>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="d-flex justify-content-sm-end gap-2">
+            <div class="search-box ms-2">
+                <input type="text" class="form-control" placeholder="Search...">
+                <i class="ri-search-line search-icon"></i>
+            </div>
+
+            <div class="w-md">
+                <select class="form-control" data-choices data-choices-search-false>
+                    <option value="All">All</option>
+                    <option value="Today">Today</option>
+                    <option value="Yesterday" selected>Yesterday</option>
+                    <option value="Last 7 Days">Last 7 Days</option>
+                    <option value="Last 30 Days">Last 30 Days</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Year">Last Year</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxl-3 col-sm-6 project-card" *ngFor="let data of projectListWidgets" id="pl1_{{data.id}}">
+        <div class="card card-height-100">
+            <div class="card-body">
+                <div class="d-flex flex-column h-100">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-4">{{data.time}}</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="d-flex gap-1 align-items-center">
+                                <div class="dropdown" ngbDropdown>
+                                    <button class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ngbDropdownToggle>
+                                        <i-feather name="more-horizontal" class="icon-sm"></i-feather>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i class="ri-eye-fill align-bottom me-2 text-muted"></i> View</a>
+                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-soft-warning rounded p-2">
+                                    <img src="{{data.img}}" alt="" class="img-fluid p-1">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 fs-15"><a [routerLink]="[data.id, 'basic-settings']" class="text-dark">{{data.label}}</a></h5>
+                            <p class="text-muted text-truncate-two-lines mb-3">{{data.caption}}</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="d-flex mb-2">
+                            <div class="flex-grow-1">
+                                <div>Questions</div>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div><i class="ri-list-check align-bottom me-1 text-muted"></i>{{data.number}}</div>
+                            </div>
+                        </div>
+                        <div class="progress-sm animated-progess">
+                          <ngb-progressbar [value]="data.progressBar" type="primary" class="progress-sm"></ngb-progressbar>
+                        </div><!-- /.progress -->
+                    </div>
+                </div>
+  
+            </div>
+            <!-- end card body -->
+            <div class="card-footer bg-transparent border-top-dashed py-2">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div class="text-muted">
+                            <i class="ri-calendar-event-fill me-1 align-bottom"></i> {{data.date}}
+                        </div>
+                    </div>
+  
+                </div>
+  
+            </div>
+            <!-- end card footer -->
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col -->
+  </div>
+  <!-- end row -->

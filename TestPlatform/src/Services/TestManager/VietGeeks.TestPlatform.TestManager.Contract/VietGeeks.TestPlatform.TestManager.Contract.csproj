@@ -5,4 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="System.ComponentModel.Annotations" />
+    <None Remove="FluentValidation" />
+  </ItemGroup>
 </Project>

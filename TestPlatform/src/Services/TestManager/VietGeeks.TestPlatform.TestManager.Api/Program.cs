@@ -1,24 +1,18 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
+using VietGeeks.TestPlatform.AspNetCore;
+using VietGeeks.TestPlatform.TestManager.Api.ValidationRules;
+using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddVietGeeksAspNetCore(builder.Configuration.GetSection("Auth").Get<AuthOptions>() ?? new AuthOptions());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    var authSection = builder.Configuration.GetSection("Auth");
-    options.Authority = authSection.GetValue<string>("Authority");
-    options.Audience = authSection.GetValue<string>("Audience");
-});
+builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
+builder.Services.RegisterInfrastructureModule(builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

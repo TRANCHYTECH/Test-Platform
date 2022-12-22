@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiPrefixInterceptor } from './intercepters/api-prefix.intercepter';
 import { AppSettingsService } from './services/app-settings.service';
+import { EventService } from './services/event.service';
+import { LanguageService } from './services/language.service';
 
 @NgModule({
   imports: [CommonModule],
@@ -12,7 +14,9 @@ import { AppSettingsService } from './services/app-settings.service';
       provide: HTTP_INTERCEPTORS,
       useClass: ApiPrefixInterceptor,
       multi: true
-    }
+    },
+    EventService,
+    LanguageService
   ]
 })
 export class CoreModule {

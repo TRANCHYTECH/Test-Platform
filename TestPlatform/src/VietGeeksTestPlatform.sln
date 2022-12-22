@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.Test
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{21602316-7091-4EF7-88FA-9CDD019DA943}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietGeeks.TestPlatform.AspNetCore", "BuildingBlocks\VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj", "{194EF700-E3D7-486B-B00B-9A9358365CB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{21602316-7091-4EF7-88FA-9CDD019DA943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21602316-7091-4EF7-88FA-9CDD019DA943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21602316-7091-4EF7-88FA-9CDD019DA943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{73BA2242-CB92-448F-A96B-078AF59BE542} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
 		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE} = {84A0701A-5871-40D0-9632-92204E46F3AE}
 		{34F0C88D-B7ED-4730-B650-A2BD36D38F5D} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
+		{194EF700-E3D7-486B-B00B-9A9358365CB9} = {84A0701A-5871-40D0-9632-92204E46F3AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11EC26A0-B2C1-4D0F-A042-ABDACADBEB33}

@@ -21,7 +21,9 @@
         ],
         "styles": [
           "apps/test-manager/src/styles.scss",
-          "apps/test-manager/src/assets/scss/argon.scss"
+          "apps/test-manager/src/assets/scss/config/minimal/bootstrap.scss",
+          "apps/test-manager/src/assets/scss/icons.scss",
+          "apps/test-manager/src/assets/scss/config/minimal/app.scss"
         ],
         "scripts": []
       },
@@ -31,7 +33,7 @@
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "2mb"
             },
             {
               "type": "anyComponentStyle",
