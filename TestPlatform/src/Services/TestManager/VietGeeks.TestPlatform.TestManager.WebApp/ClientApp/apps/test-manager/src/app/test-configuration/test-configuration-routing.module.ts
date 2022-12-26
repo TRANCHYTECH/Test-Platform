@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from '@angular/router';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { TestListComponent } from './pages/test-list/test-list.component';
 import { BasicSettingsComponent } from './pages/test-specific/basic-settings/basic-settings.component';
@@ -13,38 +13,42 @@ import { TestTimeSettingsComponent } from './pages/test-specific/test-time-setti
 const routes: Routes = [
   {
     path: '',
-    component: TestListComponent
+    component: TestListComponent,
+    pathMatch: 'full'
   },
   {
-    path: ':testId',
+    path: '',
     component: TestSpecificLayoutComponent,
     children: [
       {
-        path: 'basic-settings',
-        component: BasicSettingsComponent
+        path: ':id/basic-settings',
+        component: BasicSettingsComponent,
+        resolve: {
+          isNewTest: isNewTest()
+        }
       },
       {
-        path: 'manage-questions',
-        component: ManageQuestionsComponent
+        path: ':id/manage-questions',
+        component: ManageQuestionsComponent //todo: add guard to prevent new test
       },
       {
-        path: 'test-sets',
+        path: ':id/test-sets',
         component: TestSetsComponent
       },
       {
-        path: 'time-settings',
+        path: ':id/time-settings',
         component: TestTimeSettingsComponent
       },
       {
-        path: 'test-access',
+        path: ':id/test-access',
         component: TestAccessComponent
       },
       {
-        path: 'test-start-page',
+        path: ':id/test-start-page',
         component: TestStartPageComponent
       },
       {
-        path: 'grading-and-summary',
+        path: ':id/grading-and-summary',
         component: GradingAndSummaryComponent
       }
     ]
@@ -56,3 +60,8 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class TestConfigurationRoutingModule { }
+
+function isNewTest() {
+  return (route: ActivatedRouteSnapshot) => route.params['id'] === 'new';
+}
+

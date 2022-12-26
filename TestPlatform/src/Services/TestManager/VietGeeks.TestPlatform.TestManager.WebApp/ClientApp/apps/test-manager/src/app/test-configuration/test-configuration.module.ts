@@ -19,6 +19,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,8 @@ import { FlatpickrModule } from 'angularx-flatpickr';
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     TestConfigurationRoutingModule,
     SharedModule,
     NgbProgressbar,
