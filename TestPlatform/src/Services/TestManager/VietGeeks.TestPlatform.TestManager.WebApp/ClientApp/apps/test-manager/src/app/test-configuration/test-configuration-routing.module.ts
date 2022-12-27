@@ -14,6 +14,7 @@ const routes: Routes = [
   {
     path: '',
     component: TestListComponent,
+    title: 'My Tests',
     pathMatch: 'full'
   },
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
       {
         path: ':id/basic-settings',
         component: BasicSettingsComponent,
+        title: 'Basic Settings',
         resolve: {
           isNewTest: isNewTest()
         }
@@ -30,31 +32,37 @@ const routes: Routes = [
       {
         path: ':id/manage-questions',
         component: ManageQuestionsComponent,
+        title: 'Manage Questions',
         canActivate: [isExistingTest()]
       },
       {
         path: ':id/test-sets',
         component: TestSetsComponent,
+        title: 'Test Sets',
         canActivate: [isExistingTest()]
       },
       {
         path: ':id/time-settings',
         component: TestTimeSettingsComponent,
+        title: 'Time Settings',
         canActivate: [isExistingTest()]
       },
       {
         path: ':id/test-access',
         component: TestAccessComponent,
+        title: 'Test Access',
         canActivate: [isExistingTest()]
       },
       {
         path: ':id/test-start-page',
         component: TestStartPageComponent,
+        title: 'Test Start Page',
         canActivate: [isExistingTest()]
       },
       {
         path: ':id/grading-and-summary',
         component: GradingAndSummaryComponent,
+        title: 'Grading & Summary',
         canActivate: [isExistingTest()]
       }
     ]

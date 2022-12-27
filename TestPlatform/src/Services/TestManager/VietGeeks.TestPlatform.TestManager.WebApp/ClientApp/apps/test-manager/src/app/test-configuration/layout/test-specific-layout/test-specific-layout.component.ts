@@ -11,11 +11,14 @@ import { BehaviorSubject, filter } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSpecificLayoutComponent {
+  title? = '';
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
-      const testId = this.route.snapshot.children[0].params['id'];
+      const testSpecificPartRoute =  this.route.snapshot.children[0];
+      const testId = testSpecificPartRoute.params['id'];
+      this.title = testSpecificPartRoute.title;
       const isNewTest = testId === 'new';
       this.menus$.next([
         {
