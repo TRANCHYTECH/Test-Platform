@@ -29,27 +29,33 @@ const routes: Routes = [
       },
       {
         path: ':id/manage-questions',
-        component: ManageQuestionsComponent //todo: add guard to prevent new test
+        component: ManageQuestionsComponent,
+        canActivate: [isExistingTest()]
       },
       {
         path: ':id/test-sets',
-        component: TestSetsComponent
+        component: TestSetsComponent,
+        canActivate: [isExistingTest()]
       },
       {
         path: ':id/time-settings',
-        component: TestTimeSettingsComponent
+        component: TestTimeSettingsComponent,
+        canActivate: [isExistingTest()]
       },
       {
         path: ':id/test-access',
-        component: TestAccessComponent
+        component: TestAccessComponent,
+        canActivate: [isExistingTest()]
       },
       {
         path: ':id/test-start-page',
-        component: TestStartPageComponent
+        component: TestStartPageComponent,
+        canActivate: [isExistingTest()]
       },
       {
         path: ':id/grading-and-summary',
-        component: GradingAndSummaryComponent
+        component: GradingAndSummaryComponent,
+        canActivate: [isExistingTest()]
       }
     ]
   }
@@ -65,3 +71,7 @@ function isNewTest() {
   return (route: ActivatedRouteSnapshot) => route.params['id'] === 'new';
 }
 
+function isExistingTest() {
+  //todo: check id is a valid format.
+  return (route: ActivatedRouteSnapshot) => route.params['id'] !== 'new';
+}

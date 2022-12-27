@@ -1,1 +1,59 @@
-<p>test-access works!</p>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    <h5>Channel</h5>
+                    <div class="d-flex gap-3">
+                        <button type="button" class="btn btn-primary btn-label">
+                            <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>Web Browser</button>
+                        <button type="button" class="btn btn-primary btn-label">
+                            <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>Microsoft Teams</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <h5>Access type</h5>
+                    <div class="d-flex gap-3">
+                        <button type="button" class="btn btn-primary btn-label">
+                            <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>Public link</button>
+                        <button type="button" class="btn btn-primary btn-label">
+                            <i class="ri-lock-password-line label-icon align-middle fs-24 me-2"></i>Private code access</button>
+
+                        <button type="button" class="btn btn-primary btn-label">
+                            <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>Group password</button>
+
+                        <button type="button" class="btn btn-primary btn-label">
+                            <i class="ri-ball-pen-line label-icon align-middle fs-24 me-2"></i>Training</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
+                        <i class="ri-airplay-line me-3 align-middle"></i>Anyone who has a link will be able to take the
+                        test
+                    </div>
+                </div>
+                <div class="hstack gap-3 mb-3">
+                    <a class="form-control" href="#">https://www.dev.testmaster.io/test/DxJCp7RSFqk</a>
+                    <button type="button" class="btn btn-outline-secondary flex-shrink-0">Copy link</button>
+                </div>
+                <div class="hstack form-check form-switch form-switch-lg mb-3">
+                    <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
+                    <label for="flexSwitchCheckRightDisabled" class="form-check-label">Require a private test access code to authenticate a respondent. Before the test starts, a respondent will have to enter their email address to which code will be sent.</label>
+                </div>
+                <div class="mb-3">
+                    <h5>Respondents</h5>
+                    <select data-choices formControlName="category"  class="form-select" id="test-category-input">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="text-end mb-4">
+            <div class="d-flex gap-1 justify-content-end">
+                <button type="submit" class="btn btn-primary w-sm">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

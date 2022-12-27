@@ -64,6 +64,7 @@
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@ng-bootstrap/ng-bootstrap": "^14.0.0",
     "@ng-select/ng-select": "^10.0.1",
+    "@ngneat/until-destroy": "^9.2.2",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@popperjs/core": "^2.11.6",

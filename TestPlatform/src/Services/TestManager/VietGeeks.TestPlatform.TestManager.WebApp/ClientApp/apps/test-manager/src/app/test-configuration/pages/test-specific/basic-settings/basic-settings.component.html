@@ -9,7 +9,7 @@
                 <div class="mb-3">
                     <label for="test-category-input" class="form-label">Catetory</label>
                     <div class="input-group">
-                        <select formControlName="category"  class="form-select" id="test-category-input">
+                        <select data-choices formControlName="category"  class="form-select" id="test-category-input">
                             <option [value]="c.id" *ngFor="let c of testCategories$ | async">{{c.text}}</option>
                         </select>
                         <button class="btn btn-outline-primary" (click)="addCategory()">Add New Category</button>
