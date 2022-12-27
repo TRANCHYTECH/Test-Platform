@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from '@angular/router';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { TestListComponent } from './pages/test-list/test-list.component';
 import { BasicSettingsComponent } from './pages/test-specific/basic-settings/basic-settings.component';
@@ -13,39 +13,57 @@ import { TestTimeSettingsComponent } from './pages/test-specific/test-time-setti
 const routes: Routes = [
   {
     path: '',
-    component: TestListComponent
+    component: TestListComponent,
+    title: 'My Tests',
+    pathMatch: 'full'
   },
   {
-    path: ':testId',
+    path: '',
     component: TestSpecificLayoutComponent,
     children: [
       {
-        path: 'basic-settings',
-        component: BasicSettingsComponent
+        path: ':id/basic-settings',
+        component: BasicSettingsComponent,
+        title: 'Basic Settings',
+        resolve: {
+          isNewTest: isNewTest()
+        }
       },
       {
-        path: 'manage-questions',
-        component: ManageQuestionsComponent
+        path: ':id/manage-questions',
+        component: ManageQuestionsComponent,
+        title: 'Manage Questions',
+        canActivate: [isExistingTest()]
       },
       {
-        path: 'test-sets',
-        component: TestSetsComponent
+        path: ':id/test-sets',
+        component: TestSetsComponent,
+        title: 'Test Sets',
+        canActivate: [isExistingTest()]
       },
       {
-        path: 'time-settings',
-        component: TestTimeSettingsComponent
+        path: ':id/time-settings',
+        component: TestTimeSettingsComponent,
+        title: 'Time Settings',
+        canActivate: [isExistingTest()]
       },
       {
-        path: 'test-access',
-        component: TestAccessComponent
+        path: ':id/test-access',
+        component: TestAccessComponent,
+        title: 'Test Access',
+        canActivate: [isExistingTest()]
       },
       {
-        path: 'test-start-page',
-        component: TestStartPageComponent
+        path: ':id/test-start-page',
+        component: TestStartPageComponent,
+        title: 'Test Start Page',
+        canActivate: [isExistingTest()]
       },
       {
-        path: 'grading-and-summary',
-        component: GradingAndSummaryComponent
+        path: ':id/grading-and-summary',
+        component: GradingAndSummaryComponent,
+        title: 'Grading & Summary',
+        canActivate: [isExistingTest()]
       }
     ]
   }
@@ -56,3 +74,12 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class TestConfigurationRoutingModule { }
+
+function isNewTest() {
+  return (route: ActivatedRouteSnapshot) => route.params['id'] === 'new';
+}
+
+function isExistingTest() {
+  //todo: check id is a valid format.
+  return (route: ActivatedRouteSnapshot) => route.params['id'] !== 'new';
+}

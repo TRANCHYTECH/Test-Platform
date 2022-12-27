@@ -1,98 +1,33 @@
-
-<div class="row">
-    <div class="col-lg-8">
+<div class="row" [formGroup]="basicSettingForm">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label" for="project-title-input">Title</label>
-                    <input type="text" class="form-control" id="project-title-input"
-                        placeholder="Enter project title">
+                    <label class="form-label" for="project-title-input">Test name</label>
+                    <input formControlName="name" type="text" class="form-control" id="project-title-input" placeholder="Enter test name">
                 </div>
-  
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="mb-3 mb-lg-0">
-                            <label for="test-category-input" class="form-label"><a href="javascript:void(0);" class="float-end text-decoration-underline">Add New</a>Catetory</label>
-                            <select class="form-select" data-choices data-choices-search-false
-                                id="test-category-input">
-                                <option value="High" selected>Angular Expert</option>
-                                <option value="Medium">React Master</option>
-                            </select>
-                        </div>
+                <div class="mb-3">
+                    <label for="test-category-input" class="form-label">Catetory</label>
+                    <div class="input-group">
+                        <select data-choices formControlName="category"  class="form-select" id="test-category-input">
+                            <option [value]="c.id" *ngFor="let c of testCategories$ | async">{{c.text}}</option>
+                        </select>
+                        <button class="btn btn-outline-primary" (click)="addCategory()">Add New Category</button>
                     </div>
-
+                    <small class="form-text text-muted">Select test category to keep track of all your tests.</small>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    <ckeditor [editor]="Editor" data="
-                    <p>It will be as simple as occidental in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is. The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary.</p>
-                      <ul>
-                        <li>Product Design, Figma (Software), Prototype</li>
-                        <li>Four Dashboards : Ecommerce, Analytics, Project etc.</li>
-                        <li>Create calendar, chat and email app pages.</li>
-                        <li>Add authentication pages</li>
-                      </ul>
-                      ">
-                    </ckeditor>
+                    <label class="form-label" for="description">Description</label>
+                    <textarea formControlName="description" id="descripion" class="form-control"></textarea>
+                    <small class="form-text text-muted">Add test description for identification purposes. It will be visible <b>to you only</b>.</small>
                 </div>
             </div>
-            <!-- end card body -->
         </div>
-        <!-- end card -->
-        <!-- end card -->
         <div class="text-end mb-4">
-          <div class="d-flex gap-1 justify-content-end">
-            <button type="submit" class="btn btn-success w-sm">Create</button>
-          </div>
+            <div class="d-flex gap-1 justify-content-end">
+                <button type="submit" class="btn btn-primary w-sm" (click)="submit()">Save</button>
+            </div>
         </div>
     </div>
-    <!-- end col -->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Privacy</h5>
-            </div>
-            <div class="card-body">
-                <div>
-                    <label for="choices-privacy-status-input" class="form-label">Status</label>
-                    <select class="form-select" data-choices data-choices-search-false
-                        id="choices-privacy-status-input">
-                        <option value="Private" selected>Private</option>
-                        <option value="Team">Team</option>
-                        <option value="Public">Public</option>
-                    </select>
-                </div>
-            </div>
-            <!-- end card body -->
-        </div>
-        <!-- end card -->
-  
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Tags</h5>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label for="choices-categories-input" class="form-label">Categories</label>
-                    <select class="form-select" data-choices data-choices-search-false
-                        id="choices-categories-input">
-                        <option value="Designing" selected>Designing</option>
-                        <option value="Development">Development</option>
-                    </select>
-                </div>
-  
-                <div>
-                    <label for="choices-text-input" class="form-label">Skills</label>
-                    <ng-select [items]="selectValue" [multiple]="true"></ng-select>
-                </div>
-            </div>
-            <!-- end card body -->
-        <!-- end card -->
-        </div>
-        <!-- end card -->
-    </div>
-    <!-- end col -->
-  </div>
-  <!-- end row -->
-  
+</div>

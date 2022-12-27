@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, filter } from 'rxjs';
 
+@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-specific-layout',
   templateUrl: './test-specific-layout.component.html',
@@ -9,50 +11,54 @@ import { BehaviorSubject, filter } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSpecificLayoutComponent {
+  title? = '';
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
 
   constructor(private router: Router, private route: ActivatedRoute) {
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
-      const isNewTest = this.route.snapshot.params['testId'] === 'new';
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
+      const testSpecificPartRoute =  this.route.snapshot.children[0];
+      const testId = testSpecificPartRoute.params['id'];
+      this.title = testSpecificPartRoute.title;
+      const isNewTest = testId === 'new';
       this.menus$.next([
         {
-          routerLink: ['basic-settings'],
+          routerLink: [testId, 'basic-settings'],
           text: 'Basic Settings',
           icon: 'ri-settings-2-line',
           disable: false
         },
         {
-          routerLink: ['manage-questions'],
+          routerLink: [testId, 'manage-questions'],
           text: 'Manage Questions',
           icon: 'ri-equalizer-fill',
           disable: isNewTest
         },
         {
-          routerLink: ['test-access'],
+          routerLink: [testId, 'test-access'],
           text: 'Test Access',
           icon: 'ri-shield-keyhole-line',
           disable: isNewTest
         },
         {
-          routerLink: ['test-sets'],
+          routerLink: [testId, 'test-sets'],
           text: 'Test Sets',
           icon: 'ri-tools-line',
           disable: isNewTest
         },
         {
-          routerLink: ['test-start-page'],
+          routerLink: [testId, 'test-start-page'],
           text: 'Test Start Page',
           icon: 'ri-eye-line',
           disable: isNewTest
         },
         {
-          routerLink: ['time-settings'],
+          routerLink: [testId, 'time-settings'],
           text: 'Time Settings',
           icon: 'ri-time-line',
           disable: isNewTest
         },
         {
-          routerLink: ['grading-and-summary'],
+          routerLink: [testId, 'grading-and-summary'],
           text: 'Grading and summary',
           icon: 'ri-mark-pen-line',
           disable: isNewTest
