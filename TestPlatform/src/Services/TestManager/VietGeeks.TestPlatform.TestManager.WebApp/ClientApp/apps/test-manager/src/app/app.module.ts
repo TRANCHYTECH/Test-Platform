@@ -10,7 +10,6 @@ import { SharedModule } from '@viet-geeks/shared';
 import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
 import { of, tap } from 'rxjs';
-import { ShellModule } from './shell/shell.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -27,7 +26,6 @@ import { FlatpickrModule } from 'angularx-flatpickr';
     AuthModule.forRoot(),
     BrowserModule,
     LayoutsModule,
-    ShellModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     NgbModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),

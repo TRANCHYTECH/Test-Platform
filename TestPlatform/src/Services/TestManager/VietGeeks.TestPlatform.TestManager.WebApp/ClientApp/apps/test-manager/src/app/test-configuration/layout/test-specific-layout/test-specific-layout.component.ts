@@ -34,15 +34,15 @@ export class TestSpecificLayoutComponent {
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'test-access'],
-          text: 'Test Access',
-          icon: 'ri-shield-keyhole-line',
-          disable: isNewTest
-        },
-        {
           routerLink: [testId, 'test-sets'],
           text: 'Test Sets',
           icon: 'ri-tools-line',
+          disable: isNewTest
+        },
+        {
+          routerLink: [testId, 'test-access'],
+          text: 'Test Access',
+          icon: 'ri-shield-keyhole-line',
           disable: isNewTest
         },
         {
@@ -52,15 +52,15 @@ export class TestSpecificLayoutComponent {
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'time-settings'],
-          text: 'Time Settings',
-          icon: 'ri-time-line',
-          disable: isNewTest
-        },
-        {
           routerLink: [testId, 'grading-and-summary'],
           text: 'Grading and summary',
           icon: 'ri-mark-pen-line',
+          disable: isNewTest
+        },
+        {
+          routerLink: [testId, 'time-settings'],
+          text: 'Time Settings',
+          icon: 'ri-time-line',
           disable: isNewTest
         }
       ]);

@@ -8,6 +8,23 @@
                         its results.</label>
                     <ckeditor [editor]="Editor" data=''></ckeditor>
                 </div>
+                <div class="form-check form-switch form-switch-lg mb-3">
+                    <input type="checkbox" role="switch" id="i3" class="form-check-input">
+                    <label for="i3" class="form-check-label">Set redirection to an external website at the end of the test</label>
+                </div>
+                <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
+                    <div class="alert-body">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="ri-information-line fs-16 align-middle"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="alert-heading">Enter full website address (incl. http/https).</h5>
+                            </div>
+                        </div>
+                    </div>
+                </ngb-alert>
+                <input formControlName="name" type="text" class="form-control" id="project-title-input" placeholder="Website">
             </div>
         </div>
         <div class="card">
@@ -17,7 +34,7 @@
                     <div class="alert-body">
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
-                                <i class="ri-notification-off-line fs-16 align-middle"></i>
+                                <i class="ri-information-line fs-16 align-middle"></i>
                             </div>
                             <div class="flex-grow-1">
                                 <h5 class="alert-heading">Set grading criteria</h5>
@@ -33,11 +50,11 @@
                         <label for="flexSwitchCheckRightDisabled" class="form-check-label">Pass mark</label>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-sm-auto">
                             <label for="mask-value" class="form-label">Value</label>
                             <input type="text" class="form-control" id="mask-value" placeholder="">
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-sm-auto">
                             <label for="choices-priority-input" class="form-label">Unit</label>
                             <select class="form-select" data-choices data-choices-search-false
                                 id="choices-priority-input">
@@ -54,7 +71,7 @@
                         points or percents</label>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-lg-6">
+                    <div class="col-sm-auto">
                         <label for="choices-priority-input" class="form-label">Types of grades:</label>
                         <select class="form-select" data-choices data-choices-search-false id="choices-priority-input">
                             <option value="High" selected>Grades</option>
@@ -62,7 +79,7 @@
                             <option value="Medium">Descriptive grades</option>
                         </select>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-sm-auto">
                         <label for="choices-priority-input" class="form-label">Ranges unit:</label>
                         <select class="form-select" data-choices data-choices-search-false id="choices-priority-input">
                             <option value="High" selected>%</option>
@@ -113,7 +130,7 @@
                     <div class="alert-body">
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
-                                <i class="ri-notification-off-line fs-16 align-middle"></i>
+                                <i class="ri-information-line fs-16 align-middle"></i>
                             </div>
                             <div class="flex-grow-1">
                                 <h5 class="alert-heading">Two-phase feedback</h5>
@@ -149,12 +166,33 @@
                         <label class="form-check-label" for="p6">Pass or fail message</label>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label>Message for users who have passed:</label>
+                    <ckeditor [editor]="Editor" data='Congratulations on completing the test!' class="short-editor" style="min-height: 100px;"></ckeditor>
+                </div>
+                <div class="mb-3">
+                    <label>Message for users who have failed:</label>
+                    <ckeditor [editor]="Editor" class="short-editor" data='Unfortunately your score was too low to pass the test.'></ckeditor>
+                </div>
                 <div class="form-check form-switch form-switch-lg">
                     <input type="checkbox" role="switch" id="i1" class="form-check-input">
                     <label for="i1" class="form-check-label">Inform respondent about result via email</label>
                 </div>
                 <small class="text-muted">The email will display the same content as the one at the end of the
                     test.</small>
+            </div>
+        </div>
+        <div class="card">
+            <h5 class="card-header border-bottom-0">MY FEEDBACK</h5>
+            <div class="card-body">
+                <div class="form-check form-switch form-switch-lg mb-3">
+                    <input type="checkbox" role="switch" id="i2" class="form-check-input">
+                    <label for="i2" class="form-check-label">Send every respondent's results in separate email (1 respondent = 1 message)</label>
+                </div>
+                <div class="form-check form-switch form-switch-lg mb-3">
+                    <input type="checkbox" role="switch" id="i3" class="form-check-input">
+                    <label for="i3" class="form-check-label">Send collective results after the test has ended (1 message)</label>
+                </div>
             </div>
         </div>
         <div class="text-end mb-4">

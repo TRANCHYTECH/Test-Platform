@@ -7,5 +7,5 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   styleUrls: ['./grading-and-summary.component.scss'],
 })
 export class GradingAndSummaryComponent {
-  public Editor = ClassicEditor;
+  Editor = ClassicEditor;
 }
