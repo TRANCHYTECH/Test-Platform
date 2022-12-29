@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { TestListComponent } from './pages/test-list/test-list.component';
 import { BasicSettingsComponent } from './pages/test-specific/basic-settings/basic-settings.component';
@@ -42,12 +42,6 @@ const routes: Routes = [
         canActivate: [isExistingTest()]
       },
       {
-        path: ':id/time-settings',
-        component: TestTimeSettingsComponent,
-        title: 'Time Settings',
-        canActivate: [isExistingTest()]
-      },
-      {
         path: ':id/test-access',
         component: TestAccessComponent,
         title: 'Test Access',
@@ -63,6 +57,12 @@ const routes: Routes = [
         path: ':id/grading-and-summary',
         component: GradingAndSummaryComponent,
         title: 'Grading & Summary',
+        canActivate: [isExistingTest()]
+      },
+      {
+        path: ':id/time-settings',
+        component: TestTimeSettingsComponent,
+        title: 'Time Settings',
         canActivate: [isExistingTest()]
       }
     ]

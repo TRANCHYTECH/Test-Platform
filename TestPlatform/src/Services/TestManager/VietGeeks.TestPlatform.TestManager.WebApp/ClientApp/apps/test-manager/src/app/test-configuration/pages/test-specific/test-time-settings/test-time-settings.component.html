@@ -11,7 +11,7 @@
                             Time to complete the test: (hh:mm):
                         </label>
                     </div>
-                    <input type="text" class="form-control border-dashed" style="width: 150px;">
+                    <input type="time" class="form-control border-dashed" style="width: 150px;">
                 </div>
                 <div class="hstack gap-3 mb-3">
                     <div class="form-check">
@@ -21,7 +21,7 @@
                             Time limit for each test question (mm:ss):
                         </label>
                     </div>
-                    <input class="form-control border-dashed" type="text" style="width: 150px;">
+                    <input class="form-control border-dashed" type="time" style="width: 150px;">
                 </div>
             </div>
         </div>
@@ -42,14 +42,16 @@
                                 <i class="ri-information-line fs-16 align-middle"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <p class="mb-0">In the bottom part of the configuration menu, you will find the "Activate test" button. After
-                                    clicking it, respondents can access the test in the timeframe specified below. When setting the
+                                <p class="mb-0">In the bottom part of the configuration menu, you will find the
+                                    "Activate test" button. After
+                                    clicking it, respondents can access the test in the timeframe specified below. When
+                                    setting the
                                     value, remember that latecomers won't be allowed to start the test.</p>
                             </div>
                         </div>
                     </div>
                 </ngb-alert>
-                <div class="hstack gap-3 mb-3">
+                <div class="mb-3">
                     <label for="flexRadioDefault2">Test will remain active for:</label>
                     <input class="form-control border-dashed" type="text" style="width: 150px;">
                 </div>
@@ -57,17 +59,47 @@
                     <input class="form-check-input" type="radio" name="flexRadioDefault" id="si1">
                     <label class="form-check-label" for="si1">Activation in set time period</label>
                 </div>
+                <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
+                    <div class="alert-body">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="ri-information-line fs-16 align-middle"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="mb-0">In the bottom part of the configuration menu, you will find the
+                                    "Activate test" button. After
+                                    clicking it, respondents can access the test in the timeframe specified below. When
+                                    setting the
+                                    value, remember that latecomers won't be allowed to start the test.</p>
+                            </div>
+                        </div>
+                    </div>
+                </ngb-alert>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="flemb-3">
+                        <label for="flexRadioDefault2">Test activation date</label>
+                        <input class="form-control border-dashed" type="date" style="width: 150px;">
+                    </div>
+                    <div class="flex-grow-1 mb-3">
+                        <label for="flexRadioDefault2">Access closing date</label>
+                        <input class="form-control border-dashed" type="date" style="width: 150px;">
+                    </div>
+                    <div class="col-lg-12">
+                        <label>Current server time in your time zone is: <b>10:47 ICT</b>. You can change your time zone in : </label>
+                        <a [routerLink]="['/']" class="btn btn-link"><i class="ri-global-line align-bottom me-1"></i>Language and region settings</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card">
             <h5 class="card-header border-bottom-0">ADDTIONAL OPTIONS</h5>
             <div class="card-body">
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <div class="form-check form-switch form-switch-lg mb-3">     
+                    <input class="form-check-input" type="checkbox" role="switch" name="flexRadioDefault" id="flexRadioDefault1">
                     <label class="form-check-label" for="flexRadioDefault1">
                         Allow answering questions in any order and moving back or skipping questions
                     </label>
-                </div>       
+                </div>
             </div>
         </div>
         <div class="text-end mb-4">

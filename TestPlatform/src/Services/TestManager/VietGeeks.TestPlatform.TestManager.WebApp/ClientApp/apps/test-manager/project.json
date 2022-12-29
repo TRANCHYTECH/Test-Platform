@@ -20,10 +20,10 @@
           "apps/test-manager/src/assets"
         ],
         "styles": [
-          "apps/test-manager/src/styles.scss",
           "apps/test-manager/src/assets/scss/config/minimal/bootstrap.scss",
           "apps/test-manager/src/assets/scss/icons.scss",
-          "apps/test-manager/src/assets/scss/config/minimal/app.scss"
+          "apps/test-manager/src/assets/scss/config/minimal/app.scss",
+          "apps/test-manager/src/styles.scss"
         ],
         "scripts": []
       },
