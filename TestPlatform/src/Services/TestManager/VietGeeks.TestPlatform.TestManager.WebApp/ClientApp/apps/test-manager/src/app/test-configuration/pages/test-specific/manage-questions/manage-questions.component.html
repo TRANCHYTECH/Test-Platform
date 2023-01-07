@@ -1,139 +1,137 @@
 <div class="row g-4 mb-3">
-    <div class="col-sm-auto">
-        <div>
-            <a routerLink="/tests/new/basic-settings" class="btn btn-soft-secondary"><i
-                    class="ri-add-line align-bottom me-1"></i>Add New</a>
-        </div>
+  <div class="col-sm-auto">
+    <div>
+      <a routerLink="/tests/new/basic-settings" class="btn btn-soft-secondary"><i
+          class="ri-add-line align-bottom me-1"></i>Add New</a>
     </div>
-    <div class="col-sm">
-        <div class="d-flex justify-content-sm-end gap-2">
-            <div class="search-box ms-2">
-                <input type="text" class="form-control" placeholder="Search...">
-                <i class="ri-search-line search-icon"></i>
-            </div>
+  </div>
+  <div class="col-sm">
+    <div class="d-flex justify-content-sm-end gap-2">
+      <div class="search-box ms-2">
+        <input type="text" class="form-control" placeholder="Search...">
+        <i class="ri-search-line search-icon"></i>
+      </div>
 
-            <div class="w-md">
-                <select class="form-control" data-choices data-choices-search-false>
-                    <option value="All">All</option>
-                    <option value="Today">Today</option>
-                    <option value="Yesterday" selected>Yesterday</option>
-                    <option value="Last 7 Days">Last 7 Days</option>
-                    <option value="Last 30 Days">Last 30 Days</option>
-                    <option value="This Month">This Month</option>
-                    <option value="Last Year">Last Year</option>
-                </select>
-            </div>
-        </div>
+      <div class="w-md">
+        <select class="form-control" data-choices data-choices-search-false>
+          <option value="All">All</option>
+          <option value="Today">Today</option>
+          <option value="Yesterday" selected>Yesterday</option>
+          <option value="Last 7 Days">Last 7 Days</option>
+          <option value="Last 30 Days">Last 30 Days</option>
+          <option value="This Month">This Month</option>
+          <option value="Last Year">Last Year</option>
+        </select>
+      </div>
     </div>
+  </div>
 </div>
 <div class="row">
-    <div class="col-xxl-12 project-card" *ngFor="let data of questions" id="pl1_{{data.id}}">
-        <div class="card card-height-100">
-            <div class="card-body">
-                <div class="d-flex flex-column h-100">
-                    <div class="d-flex">
-                        <div class="flex-grow-1 mb-4">
-                            <div class="text-muted">#{{data.questionNo}}</div>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <div class="d-flex gap-1 align-items-center">
-                                <div>
-                                    <span class="ms-3 badge rounded-pill text-bg-primary">{{data.categoryId}}</span>
-                                    <span class="ms-3"><label>Type</label> {{data.answerTypeName}}</span>
-                                    <span class="ms-3 vr"></span>
-                                    <span class="ms-3"><label>Points</label> {{data.scoreSettings?.maxPoints}}</span>
-                                    <!-- <p class="text-muted text-truncate-two-lines mb-3">{{data.caption}}</p> -->
-                                </div>
-                                <div class="dropdown" ngbDropdown>
-                                    <button
-                                        class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
-                                        ngbDropdownToggle>
-                                        <i-feather name="more-horizontal" class="icon-sm"></i-feather>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i
-                                                class="ri-file-copy-line align-bottom me-2 text-muted"></i>Duplicate</a>
-                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i
-                                                class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <div class="flex-shrink-0 me-3">
-                            <h5 class="mb-1 fs-15"><a [routerLink]="[data.id]" class="text-dark">{{data.questionDefinition}}</a></h5>
-                        </div>
-                    </div>
-                    <div class="d-flex mb-2" *ngIf="data.answerType == 1">
-                        <div class="flex-grow-1">
-                                <div *ngFor="let answer of data.answers">
-                                    <div class="form-check form-radio-outline form-radio-secondary mb-3">
-                                        <input class="form-check-input" type="radio" name="formradiocolor10" id="answer_{{answer.id}}" checked>
-                                        <label class="form-check-label" for="formradioRight14">
-                                            {{answer.answerDescription}}
-                                        </label>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="d-flex mb-2" *ngIf="data.answerType == 2">
-                        <div class="flex-grow-1">
-                                <div *ngFor="let answer of data.answers">
-                                    <!-- Custom Outline Checkboxes -->
-                                    <div class="form-check form-check-outline form-check-primary mb-3">
-                                        <input class="form-check-input" type="checkbox" id="answer_{{answer.id}}" checked>
-                                        <label class="form-check-label" for="formCheck13">
-                                            {{answer.answerDescription}}
-                                        </label>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-
+  <div class="col-xxl-12 project-card" *ngFor="let data of questions" id="pl1_{{data.id}}">
+    <div class="card card-height-100">
+      <div class="card-body">
+        <div class="d-flex flex-column h-100">
+          <div class="d-flex">
+            <div class="flex-grow-1 mb-4">
+              <div class="text-muted">#{{data.questionNo}}</div>
             </div>
+            <div class="flex-shrink-0">
+              <div class="d-flex gap-1 align-items-center">
+                <div>
+                  <span class="ms-3 badge rounded-pill text-bg-primary">{{data.categoryId}}</span>
+                  <span class="ms-3"><label>Type</label> {{data.answerTypeName}}</span>
+                  <span class="ms-3 vr"></span>
+                  <span class="ms-3"><label>Points</label> {{data.scoreSettings?.maxPoints}}</span>
+                </div>
+                <div class="dropdown" ngbDropdown>
+                  <button class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ngbDropdownToggle>
+                    <i-feather name="more-horizontal" class="icon-sm"></i-feather>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                    <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i
+                        class="ri-file-copy-line align-bottom me-2 text-muted"></i>Duplicate</a>
+                    <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i
+                        class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex mb-2">
+            <div class="flex-shrink-0 me-3">
+              <h5 class="mb-1 fs-15"><a [routerLink]="[data.id]" class="text-dark">{{data.questionDefinition}}</a></h5>
+            </div>
+          </div>
+          <div class="d-flex mb-2" *ngIf="data.answerType === 1">
+            <div class="flex-grow-1">
+              <div *ngFor="let answer of data.answers" [ngClass]="{'bg-light': answer.isCorrect}">
+                <div class="form-check form-radio-outline form-radio-secondary mb-3">
+                  <input class="form-check-input" type="radio" name="formradiocolor10" id="answer_{{answer.id}}"
+                  [attr.checked]="answer.isCorrect">
+                  <label class="form-check-label" for="formradioRight14">
+                    {{answer.answerDescription}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex mb-2" *ngIf="data.answerType === 2">
+            <div class="flex-grow-1">
+              <div *ngFor="let answer of data.answers"  [ngClass]="{'bg-light': answer.isCorrect}">
+                <!-- Custom Outline Checkboxes -->
+                <div class="form-check form-check-outline form-check-primary mb-3">
+                  <input class="form-check-input" type="checkbox" id="answer_{{answer.id}}" [attr.checked]="answer.isCorrect">
+                  <label class="form-check-label" for="formCheck13">
+                    {{answer.answerDescription}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- end card -->
+
+      </div>
     </div>
-    <!-- end col -->
+    <!-- end card -->
+  </div>
+  <!-- end col -->
 </div>
 <!-- end row -->
 
 
 <div class="row g-0 text-center text-sm-start align-items-center mb-4">
-    <div class="col-sm-6">
-        <div>
-            <p class="mb-sm-0 text-muted">Showing <span class="fw-semibold">1</span> to <span
-                    class="fw-semibold">10</span> of <span class="fw-semibold text-decoration-underline">12</span>
-                entries</p>
-        </div>
+  <div class="col-sm-6">
+    <div>
+      <p class="mb-sm-0 text-muted">Showing <span class="fw-semibold">1</span> to <span class="fw-semibold">10</span> of
+        <span class="fw-semibold text-decoration-underline">12</span>
+        entries</p>
     </div>
-    <!-- end col -->
-    <div class="col-sm-6">
-        <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
-            <li class="page-item disabled">
-                <a href="javascript:void(0);" class="page-link">Previous</a>
-            </li>
-            <li class="page-item active">
-                <a href="javascript:void(0);" class="page-link">1</a>
-            </li>
-            <li class="page-item ">
-                <a href="javascript:void(0);" class="page-link">2</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">3</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">4</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">5</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">Next</a>
-            </li>
-        </ul>
-    </div><!-- end col -->
+  </div>
+  <!-- end col -->
+  <div class="col-sm-6">
+    <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+      <li class="page-item disabled">
+        <a href="javascript:void(0);" class="page-link">Previous</a>
+      </li>
+      <li class="page-item active">
+        <a href="javascript:void(0);" class="page-link">1</a>
+      </li>
+      <li class="page-item ">
+        <a href="javascript:void(0);" class="page-link">2</a>
+      </li>
+      <li class="page-item">
+        <a href="javascript:void(0);" class="page-link">3</a>
+      </li>
+      <li class="page-item">
+        <a href="javascript:void(0);" class="page-link">4</a>
+      </li>
+      <li class="page-item">
+        <a href="javascript:void(0);" class="page-link">5</a>
+      </li>
+      <li class="page-item">
+        <a href="javascript:void(0);" class="page-link">Next</a>
+      </li>
+    </ul>
+  </div><!-- end col -->
 </div><!-- end row -->

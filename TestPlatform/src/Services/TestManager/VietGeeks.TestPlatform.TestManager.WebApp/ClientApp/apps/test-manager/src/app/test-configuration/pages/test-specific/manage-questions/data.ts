@@ -12,6 +12,7 @@ const questions = [
     {
       answerDescription: "8488 m",
       answerPoint: 2,
+      isCorrect: true
     },
     {
       answerDescription: "8466 m",
@@ -35,24 +36,26 @@ const questions = [
   {
     id: 2,
     questionNo: 2,
-    questionDefinition: "What is the current officially recognized elevation of Mount Everest?",
-    categoryId: "Geography",
-    categoryName: "Geography",
-    categoryColor: "Geography",
+    questionDefinition: "Select all tributaries of the Hudson River:",
+    categoryId: "River",
+    categoryName: "River",
+    categoryColor: "River",
     answerType: 2,
     answerTypeName: "Multiple choices",
     answers: [
     {
-      answerDescription: "8488 m",
+      answerDescription: "Croton River",
+      answerPoint: 2,
+      isCorrect: true,
+    },
+    {
+      answerDescription: "Maid River",
       answerPoint: 2,
     },
     {
-      answerDescription: "8466 m",
+      answerDescription: "Kinderhook Creek",
       answerPoint: 2,
-    },
-    {
-      answerDescription: "8844 m",
-      answerPoint: 2,
+      isCorrect: true,
     }],
     scoreSettings: {
       correctPoint: 1,
