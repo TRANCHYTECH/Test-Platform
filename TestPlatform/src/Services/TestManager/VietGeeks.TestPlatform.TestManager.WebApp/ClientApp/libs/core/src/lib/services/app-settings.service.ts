@@ -18,5 +18,9 @@ export class AppSettingsService {
   set<T extends IAppSettings>(value: T) {
     this._appSettings$.next(value);
   } 
+
+  get<T extends IAppSettings>() {
+    return <T>this._appSettings$.value;
+  } 
 }
  

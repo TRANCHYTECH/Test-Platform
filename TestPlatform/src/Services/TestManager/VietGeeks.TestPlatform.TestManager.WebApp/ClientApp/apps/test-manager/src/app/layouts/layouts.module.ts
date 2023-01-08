@@ -14,6 +14,7 @@ import { VerticalComponent } from './vertical/vertical.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
+import { SharedModule } from '@viet-geeks/shared';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FooterComponent } from './footer/footer.component';
   ],
   imports: [
     CommonModule,
+    SharedModule,
     RouterModule,
     NgbDropdownModule,
     NgbNavModule,

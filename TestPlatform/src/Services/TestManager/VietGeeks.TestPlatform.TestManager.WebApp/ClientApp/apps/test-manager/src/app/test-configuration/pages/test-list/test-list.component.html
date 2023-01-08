@@ -27,14 +27,14 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xxl-3 col-sm-6 project-card" *ngFor="let data of projectListWidgets" id="pl1_{{data.id}}">
+    <div class="col-xxl-3 col-sm-6 project-card" *ngFor="let test of tests$ | async" id="pl1_{{test.id}}">
         <div class="card card-height-100">
             <div class="card-body">
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex">
                         <div class="flex-grow-1 mb-4">
                             <span class="btn btn-outline-info btn-sm me-1">Active</span>
-                            <span class="text-muted">{{data.time}}</span>
+                            <span class="text-muted">{{test.createdOn}}</span>
                         </div>
                         <div class="flex-shrink-0">
                             <div class="d-flex gap-1 align-items-center">
@@ -43,24 +43,17 @@
                                         <i-feather name="more-horizontal" class="icon-sm"></i-feather>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i class="ri-file-copy-line align-bottom me-2 text-muted"></i>Duplicate</a>
-                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>
+                                        <a class="dropdown-item" [routerLink]="[test.id, 'basic-settings']"><i class="ri-file-copy-line align-bottom me-2 text-muted"></i>Duplicate</a>
+                                        <a class="dropdown-item" [routerLink]="[test.id, 'basic-settings']"><i class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex mb-2">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-soft-warning rounded p-2">
-                                    <img src="{{data.img}}" alt="" class="img-fluid p-1">
-                                </span>
-                            </div>
-                        </div>
                         <div class="flex-grow-1">
-                            <h5 class="mb-1 fs-15"><a [routerLink]="[data.id, 'basic-settings']" class="text-dark">{{data.label}}</a></h5>
-                            <p class="text-muted text-truncate-two-lines mb-3">{{data.caption}}</p>
+                            <h5 class="mb-1 fs-15"><a [routerLink]="[test.id, 'basic-settings']" class="text-dark">{{test.basicSettings.name}}</a></h5>
+                            <p class="text-muted text-truncate-two-lines mb-3">{{test.basicSettings.description}}</p>
                         </div>
                     </div>
                 </div>

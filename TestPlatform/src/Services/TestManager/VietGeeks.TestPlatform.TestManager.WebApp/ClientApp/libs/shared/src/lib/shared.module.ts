@@ -4,14 +4,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { FeatherModule } from 'angular-feather';
 import { allIcons } from 'angular-feather/icons';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastsContainerComponent } from './components/notifications/toasts-container.component';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule, FeatherModule.pick(allIcons)],
-  declarations: [BreadcrumbsComponent],
+  imports: [CommonModule, HttpClientModule, FeatherModule.pick(allIcons), NgbToastModule],
+  declarations: [BreadcrumbsComponent, ToastsContainerComponent],
   exports: [
     HttpClientModule,
     FeatherModule,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    ToastsContainerComponent
   ]
 })
-export class SharedModule {}
+export class SharedModule { }

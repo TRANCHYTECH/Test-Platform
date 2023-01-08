@@ -10,7 +10,7 @@
                     <label for="test-category-input" class="form-label">Catetory</label>
                     <div class="input-group">
                         <select data-choices formControlName="category"  class="form-select" id="test-category-input">
-                            <option [value]="c.id" *ngFor="let c of testCategories$ | async">{{c.text}}</option>
+                            <option [value]="c.name" *ngFor="let c of testCategories$ | async">{{c.name}}</option>
                         </select>
                         <button class="btn btn-outline-primary" (click)="addCategory()">Add New Category</button>
                     </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="text-end mb-4">
             <div class="d-flex gap-1 justify-content-end">
-                <button type="submit" class="btn btn-primary w-sm" (click)="submit()">Save</button>
+                <button type="submit" class="btn btn-primary w-sm" (click)="submit()" [disabled]="basicSettingForm.pristine">Save</button>
             </div>
         </div>
     </div>

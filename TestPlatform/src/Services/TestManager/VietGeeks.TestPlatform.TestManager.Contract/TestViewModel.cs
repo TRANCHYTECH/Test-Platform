@@ -2,33 +2,43 @@
 
 namespace VietGeeks.TestPlatform.TestManager.Contract
 {
-    public class NewTestViewModel
+    public class NewTestDefinitionViewModel
     {
-        public string TestName { get; set; }
+        public CreateOrUpdateTestBasicSettingsViewModel BasicSettings { get; set; } = default!;
+    }
 
-        public string CategoryId { get; set; }
+    public class UpdateTestDefinitionViewModel
+    {
+        public CreateOrUpdateTestBasicSettingsViewModel? BasicSettings { get; set; }
+    }
 
-        public string LanguageId { get; set; }
+    public class CreateOrUpdateTestBasicSettingsViewModel
+    {
+        public string Name { get; set; }
+
+        public string Category { get; set; }
+
+        public string? Language { get; set; }
 
         public string Description { get; set; }
     }
 
-    public class UpdateTestViewModel
+    public class TestBasicSettingsViewModel
     {
+        public string Name { get; set; }
 
+        public string Category { get; set; }
+
+        public string? Language { get; set; }
+
+        public string Description { get; set; }
     }
 
-    public class TestViewModel
+    public class TestDefinitionViewModel
     {
         public string Id { get; set; }
 
-        public string TestName { get; set; }
-
-        public string CategoryId { get; set; }
-
-        public string LanguageId { get; set; }
-
-        public string Description { get; set; }
+        public TestBasicSettingsViewModel BasicSettings { get; set; } = default!;
 
         public DateTime CreatedOn { get; set; }
 

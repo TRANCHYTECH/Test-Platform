@@ -10,10 +10,25 @@ builder.Services.AddControllers();
 builder.Services.AddVietGeeksAspNetCore(builder.Configuration.GetSection("Auth").Get<AuthOptions>() ?? new AuthOptions());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "dev",
+                      builder =>
+                      {
+                          builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                      });
+});
+
 
 builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
 builder.Services.RegisterInfrastructureModule(builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions());
 var app = builder.Build();
+
+app.UseCors("dev");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -28,9 +43,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(x => x
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .SetIsOriginAllowed(origin => true)
-              .AllowCredentials());
 app.Run();

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Entities;
 using VietGeeks.TestPlatform.AspNetCore;
+using VietGeeks.TestPlatform.TestManager.Core.Models;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure
 {
@@ -15,6 +16,8 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure
                 UserID = tenant.UserId,
                 UserName = tenant.Email
             };
+
+            SetGlobalFilterForBaseClass<EntityBase>(c => c.ModifiedBy.UserID == tenant.UserId);
         }
 
         protected override Action<T> OnBeforeSave<T>()
