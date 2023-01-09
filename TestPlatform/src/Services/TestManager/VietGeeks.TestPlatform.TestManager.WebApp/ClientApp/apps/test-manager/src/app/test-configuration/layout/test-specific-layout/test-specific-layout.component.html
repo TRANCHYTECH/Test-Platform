@@ -1,6 +1,6 @@
 <viet-geeks-breadcrumbs [title]="title" [breadcrumbItems]="[]"></viet-geeks-breadcrumbs>
 <div class="row">
-    <div class="col-xxl-3">
+    <div class="col-lg-3 col-xl-2">
         <ngb-accordion class="accordion-flush" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
             <ngb-panel id="test-config">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
@@ -12,7 +12,7 @@
                             <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
                                 [class.disabled]="menu.disable"
                                 class="list-group-item list-group-item-action border-0">
-                                <i [class]="menu.icon" class="align-middle me-2"></i> {{menu.text}}</a>
+                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
                         </ng-container>
                     </div>
                 </ng-template>
@@ -27,7 +27,7 @@
             </ngb-panel>
         </ngb-accordion>
     </div>
-    <div class="col-xxl-9">
+    <div class="col-lg-9 col-xl-10">
         <router-outlet></router-outlet>
     </div>
 </div>

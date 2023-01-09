@@ -8,12 +8,4 @@ export class TestsQuery extends QueryEntity<TestsState> {
   constructor(store: TestsStore) {
     super(store);
   }
-
-  selectTestBasicSetting$ = (id: string) => {
-    if(this.hasEntity(id)) {
-      return this.getEntity(id)?.basicSetting || null;
-    }
-
-    return null;
-  }
 }

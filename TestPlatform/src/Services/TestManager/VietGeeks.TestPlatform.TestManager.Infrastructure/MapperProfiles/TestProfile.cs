@@ -9,8 +9,11 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.MappingProfiles
     {
         public TestProfile()
         {
-            CreateMap<NewTestViewModel, MyTest>();
-            CreateMap<MyTest, TestViewModel>();
+            CreateMap<NewTestDefinitionViewModel, TestDefinition>();
+            CreateMap<CreateOrUpdateTestBasicSettingsViewModel, TestBasicSettingsPart>();
+
+            CreateMap<TestDefinition, TestDefinitionViewModel>();
+            CreateMap<TestBasicSettingsPart, TestBasicSettingsViewModel>();
         }
     }
 }

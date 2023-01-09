@@ -1,10 +1,11 @@
 
 export interface Test {
   id: string;
-  basicSetting: TestBasicSetting;
+  basicSettings: BasicSettings;
+  createdOn: Date;
 }
 
-export interface TestBasicSetting {
+export interface BasicSettings {
   name: string;
   category: string;
   description: string;
@@ -40,8 +41,5 @@ interface Answer {
 }
 
 export function createTest(params: Partial<Test>) {
-  return {
-    id: params.id,
-    basicSetting: params.basicSetting
-  } as Test;
+  return params as Test;
 }

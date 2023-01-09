@@ -1,6 +1,6 @@
 export interface TestCategory {
   id: number | string;
-  text: string;
+  name: string;
 }
 
 export function createTestCategory(params: Partial<TestCategory>) {

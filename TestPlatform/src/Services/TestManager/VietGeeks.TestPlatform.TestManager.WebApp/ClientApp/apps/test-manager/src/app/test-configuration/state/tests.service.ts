@@ -1,37 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { AppSettingsService } from '@viet-geeks/core';
+import { AppSettings } from '../../app-setting.model';
+import { EMPTY } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Test, TestBasicSetting } from './test.model';
+import { Test } from './test.model';
+import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
 
 @Injectable({ providedIn: 'root' })
 export class TestsService {
 
-  constructor(private testsStore: TestsStore, private http: HttpClient) {
+  constructor(private _testsStore: TestsStore, private _testsQuery: TestsQuery, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
+
   get() {
-    return this.http.get<Test[]>('https://api.com').pipe(tap(entities => {
-      this.testsStore.set(entities);
+    return this._http.get<Test[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/`).pipe(tap(entities => {
+      this._testsStore.set(entities);
     }));
   }
 
-  add(test: Test) {
-    this.testsStore.add(test);
+  getById(id: string) {
+    if(this._testsQuery.hasEntity(id)) {
+      return EMPTY;
+    }
+    
+    return this._http.get<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`).pipe(tap(rs => {
+      this._testsStore.upsert(id, rs);
+    }));
+  }
+
+  add(test: Partial<Test>) {
+    return this._http.post<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/`, test).pipe(tap(rs => {
+      this._testsStore.add(rs);
+    }));
   }
 
   update(id: string, test: Partial<Test>) {
-    this.testsStore.update(id, test);
+    return this._http.put<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`, test).pipe(tap(rs => {
+      this._testsStore.update(id, rs);
+    }));
   }
 
   remove(id: string) {
-    this.testsStore.remove(id);
+    this._testsStore.remove(id);
   }
 
-  getBasicSettings(id: string) {
-    const mock: TestBasicSetting = { name: 'Test 1', category: '124', description: 'desc' };
-    this.testsStore.update(id, { basicSetting: mock });
-    return of(true);
+  private get testManagerApiBaseUrl() {
+    return this._appSettingService.get<AppSettings>().testManagerApiBaseUrl;
   }
 }
