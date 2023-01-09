@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { TestListComponent } from './pages/test-list/test-list.component';
 import { BasicSettingsComponent } from './pages/test-specific/basic-settings/basic-settings.component';
+import { EditQuestionComponent } from './pages/test-specific/edit-question/edit-question.component';
 import { GradingAndSummaryComponent } from './pages/test-specific/grading-and-summary/grading-and-summary.component';
 import { ManageQuestionsComponent } from './pages/test-specific/manage-questions/manage-questions.component';
 import { TestAccessComponent } from './pages/test-specific/test-access/test-access.component';
@@ -33,6 +34,12 @@ const routes: Routes = [
         path: ':id/manage-questions',
         component: ManageQuestionsComponent,
         title: 'Manage Questions',
+        canActivate: [isExistingTest()]
+      },
+      {
+        path: ':id/manage-questions/:question-id',
+        component: EditQuestionComponent,
+        title: 'Edit Question',
         canActivate: [isExistingTest()]
       },
       {
