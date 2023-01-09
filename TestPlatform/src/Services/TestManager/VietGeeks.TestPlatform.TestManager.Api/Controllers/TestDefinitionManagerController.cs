@@ -36,7 +36,7 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var createdTest = await _testManagerService.CreateTest(viewModel);
+            var createdTest = await _testManagerService.CreateTestDefinition(viewModel);
 
             return Ok(createdTest);
         }
@@ -52,7 +52,7 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, UpdateTestDefinitionViewModel viewModel)
         {
-            var testDefinitions = await _testManagerService.UpdateTestBasicSettings(id, viewModel);
+            var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
             return Ok(testDefinitions);
         }

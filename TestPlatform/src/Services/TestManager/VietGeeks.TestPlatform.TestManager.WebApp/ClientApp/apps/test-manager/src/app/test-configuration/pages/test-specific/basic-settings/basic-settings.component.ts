@@ -67,10 +67,10 @@ export class BasicSettingsComponent implements OnInit {
     if (formValue.id === null) {
       const createdTest = await lastValueFrom(this._testsService.add({ basicSettings: basicSettings }));
       this._router.navigate(['tests', createdTest.id, 'basic-settings']);
-      this._toastService.show('Test created', { classname: 'bg-success text-light' });
+      this._toastService.show('Test created');
     } else {
       await firstValueFrom(this._testsService.update(formValue.id, { basicSettings: basicSettings }));
-      this._toastService.show('Test basic settings updated', { classname: 'bg-success text-light' });
+      this._toastService.show('Test basic settings updated');
     }
   }
 

@@ -16,7 +16,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure
             _managerDbContext = managerDbContext;
         }
 
-        public async Task<TestDefinitionViewModel> CreateTest(NewTestDefinitionViewModel newTest)
+        public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
         {
             var testEntity = _mapper.Map<TestDefinition>(newTest);
             await _managerDbContext.SaveAsync(testEntity);
@@ -38,15 +38,21 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure
             return _mapper.Map<List<TestDefinitionViewModel>>(entities);
         }
 
-        public async Task<TestDefinitionViewModel> UpdateTestBasicSettings(string id, UpdateTestDefinitionViewModel viewModel)
+        public async Task<TestDefinitionViewModel> UpdateTestDefinition(string id, UpdateTestDefinitionViewModel viewModel)
         {
             var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync();
+
+            var updatedProperties = new List<string>();
             if(viewModel.BasicSettings != null)
             {
                 _mapper.Map(viewModel.BasicSettings, entity.BasicSettings);
+                updatedProperties.Add(nameof(TestDefinition.BasicSettings));
             }
 
-            var updateResult = await _managerDbContext.SaveOnlyAsync(entity, e => new { e.BasicSettings });
+            if (updatedProperties.Count > 0)
+            {
+                var updateResult = await _managerDbContext.SaveOnlyAsync(entity, updatedProperties);
+            }
             //todo: check update result to ensure
 
            return _mapper.Map<TestDefinitionViewModel>(entity);
