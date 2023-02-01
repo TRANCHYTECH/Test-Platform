@@ -7,4 +7,7 @@ public interface ITestManagerService
     Task<TestDefinitionViewModel> GetTestDefinition(string id);
     Task<List<TestDefinitionViewModel>> GetTestDefinitions();
     Task<TestDefinitionViewModel> UpdateTestDefinition(string id, UpdateTestDefinitionViewModel viewModel);
+
+    Task<TestCategoryViewModel> CreateTestCategory(NewTestCategoryViewModel newTestCategory);
+    Task<List<TestCategoryViewModel>> GetTestCategories();
 }

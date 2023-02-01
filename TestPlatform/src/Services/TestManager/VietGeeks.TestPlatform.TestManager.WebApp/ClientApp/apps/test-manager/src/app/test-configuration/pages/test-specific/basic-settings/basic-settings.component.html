@@ -12,7 +12,7 @@
                         <select data-choices formControlName="category"  class="form-select" id="test-category-input">
                             <option [value]="c.name" *ngFor="let c of testCategories$ | async">{{c.name}}</option>
                         </select>
-                        <button class="btn btn-outline-primary" (click)="addCategory()">Add New Category</button>
+                        <button class="btn btn-outline-primary" (click)="openAddTestCategoryModal()">Add New Category</button>
                     </div>
                     <small class="form-text text-muted">Select test category to keep track of all your tests.</small>
                 </div>
