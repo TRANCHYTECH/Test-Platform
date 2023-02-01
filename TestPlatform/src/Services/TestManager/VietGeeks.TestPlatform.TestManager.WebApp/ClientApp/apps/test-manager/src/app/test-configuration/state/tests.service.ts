@@ -16,7 +16,7 @@ export class TestsService {
 
 
   get() {
-    return this._http.get<Test[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/`).pipe(tap(entities => {
+    return this._http.get<Test[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`).pipe(tap(entities => {
       this._testsStore.set(entities);
     }));
   }

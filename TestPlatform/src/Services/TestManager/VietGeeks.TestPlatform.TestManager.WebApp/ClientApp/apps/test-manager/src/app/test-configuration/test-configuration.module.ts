@@ -14,7 +14,7 @@ import { GradingAndSummaryComponent } from './pages/test-specific/grading-and-su
 import { TestTimeSettingsComponent } from './pages/test-specific/test-time-settings/test-time-settings.component';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { SharedModule } from '@viet-geeks/shared';
-import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbNavModule, NgbProgressbar, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbModalModule, NgbNavModule, NgbProgressbar, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -50,7 +50,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FlatpickrModule,
     NgbNavModule,
     NgbAccordionModule,
-    NgbAlertModule
+    NgbAlertModule,
+    NgbModalModule
   ]
 })
 export class TestConfigurationModule { }

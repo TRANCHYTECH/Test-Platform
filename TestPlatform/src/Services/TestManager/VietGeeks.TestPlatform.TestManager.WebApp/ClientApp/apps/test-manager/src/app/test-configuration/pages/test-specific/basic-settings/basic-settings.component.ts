@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TestCategory } from '../../../state/test-category.model';
-import { filter, firstValueFrom, lastValueFrom, Observable, take } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import { TestsService } from '../../../state/tests.service';
 import { TestCategoriesService } from '../../../state/test-categories.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +9,8 @@ import { TestCategoriesQuery } from '../../../state/test-categories.query';
 import { TestsQuery } from '../../../state/tests.query';
 import { ToastService } from '@viet-geeks/shared';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreateTestCategoryComponent } from '../../../components/create-test-category/create-test-category.component';
 
 @UntilDestroy()
 @Component({
@@ -28,7 +30,8 @@ export class BasicSettingsComponent implements OnInit {
     private _testCategoriesQuery: TestCategoriesQuery,
     private _testQuery: TestsQuery,
     private _testCategoriesService: TestCategoriesService,
-    private _toastService: ToastService) {
+    private _toastService: ToastService,
+    private _modalService: NgbModal) {
     this.basicSettingForm = this._fb.group({
       id: null,
       name: '',
@@ -38,27 +41,25 @@ export class BasicSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    lastValueFrom(this._testCategoriesService.get());
+    firstValueFrom(this._testCategoriesService.get());
     this.testCategories$ = this._testCategoriesQuery.selectAll();
-
-    this.route.params.subscribe(p => {
+    this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
       const testId = p['id'];
       if (testId !== 'new') {
-        firstValueFrom(this._testsService.getById(testId));
-        this._testQuery.selectEntity(testId).pipe(filter(test => test !== undefined), untilDestroyed(this)).subscribe(test => {
-          this.basicSettingForm.reset({
-            id: test?.id,
-            name: test?.basicSettings.name,
-            category: test?.basicSettings.category,
-            description: test?.basicSettings.description
-          });
+        await firstValueFrom(this._testsService.getById(testId), { defaultValue: null });
+        const test = this._testQuery.getEntity(testId);
+        this.basicSettingForm.reset({
+          id: test?.id,
+          name: test?.basicSettings.name,
+          category: test?.basicSettings.category,
+          description: test?.basicSettings.description
         });
       }
     });
   }
 
   async submit() {
-    if(this.basicSettingForm.invalid) {
+    if (this.basicSettingForm.invalid) {
       return;
     }
 
@@ -74,8 +75,12 @@ export class BasicSettingsComponent implements OnInit {
     }
   }
 
-  addCategory() {
-    this._testCategoriesService.add({ id: '123', name: 'React Expert' });
-    this._testCategoriesService.add({ id: '124', name: 'Angular Expert' });
+  openAddTestCategoryModal() {
+    const modalRef = this._modalService.open(CreateTestCategoryComponent, { size: 'md', centered: true });
+    modalRef.result.then(async (formValue: Partial<TestCategory>) => {
+      await firstValueFrom(this._testCategoriesService.add(formValue));
+    }, reason => {
+      console.log(reason);
+    })
   }
 }

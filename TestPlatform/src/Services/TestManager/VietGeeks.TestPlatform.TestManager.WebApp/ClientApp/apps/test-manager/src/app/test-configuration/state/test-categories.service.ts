@@ -6,6 +6,8 @@ import { TestCategory } from './test-category.model';
 import { TestCategoriesStore } from './test-categories.store';
 import { TestCategoriesQuery } from './test-categories.query';
 import { EMPTY } from 'rxjs';
+import { AppSettingsService } from '@viet-geeks/core';
+import { AppSettings } from '../../app-setting.model';
 
 @Injectable({ providedIn: 'root' })
 export class TestCategoriesService {
@@ -13,12 +15,13 @@ export class TestCategoriesService {
   constructor(
     private _testCategoriesQuery: TestCategoriesQuery,
     private _testCategoriesStore: TestCategoriesStore,
+    private _appSettingService: AppSettingsService,
     private _http: HttpClient) {
   }
 
   get() {
     return this._testCategoriesQuery.selectHasCache().pipe(switchMap(hasCache => {
-      const apiCall = this._http.get<TestCategory[]>('https://63b42852ea89e3e3db580795.mockapi.io/api/testcategories').pipe(tap(entities => {
+      const apiCall = this._http.get<TestCategory[]>(`${this.testManagerApiBaseUrl}/Management/TestCategory`).pipe(tap(entities => {
       this._testCategoriesStore.set(entities);
       }));
 
@@ -26,8 +29,10 @@ export class TestCategoriesService {
     }))
   }
 
-  add(testCategory: TestCategory) {
-    this._testCategoriesStore.add(testCategory);
+  add(testCategory: Partial<TestCategory>) {
+    return this._http.post<TestCategory>(`${this.testManagerApiBaseUrl}/Management/TestCategory`, testCategory).pipe(tap(rs => {
+      this._testCategoriesStore.add(rs);
+    }));
   }
 
   update(id: string, testCategory: Partial<TestCategory>) {
@@ -36,5 +41,9 @@ export class TestCategoriesService {
 
   remove(id: ID) {
     this._testCategoriesStore.remove(id);
+  }
+
+  private get testManagerApiBaseUrl() {
+    return this._appSettingService.get<AppSettings>().testManagerApiBaseUrl;
   }
 }
