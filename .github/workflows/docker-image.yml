@@ -1,4 +1,4 @@
-name: Push to Azure Container Registry
+name: viet-geeks-test-platform-ci-cd-dev
 on:
   push:
     branches:
@@ -28,3 +28,18 @@ jobs:
             docker tag vietgeeks.testplatform.testmanager.api:latest ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ github.sha }}
             docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ github.sha }}   
             docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ github.sha }}
+  
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Test Manager Api
+        uses: azure/container-apps-deploy-action@v0
+        with:
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ github.sha }}
+          
+      - name: Deploy Test Manager Web App
+        uses: azure/container-apps-deploy-action@v0
+        with:
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ github.sha }}
