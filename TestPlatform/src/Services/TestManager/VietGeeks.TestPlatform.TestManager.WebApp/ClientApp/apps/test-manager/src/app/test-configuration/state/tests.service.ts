@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
 import { EMPTY, firstValueFrom } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Test } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
@@ -26,9 +26,14 @@ export class TestsService {
       return EMPTY;
     }
 
-    return this._http.get<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`).pipe(tap(rs => {
-      this._testsStore.upsert(id, rs);
-    }));
+    return this._http.get<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`).pipe(
+      tap(rs => {
+        this._testsStore.upsert(id, rs);
+      }),
+      catchError((err => {
+        console.log('http client error', err);
+        return EMPTY;
+      })));
   }
 
   setActive(id: string) {
@@ -36,7 +41,7 @@ export class TestsService {
   }
 
   add(test: Partial<Test>) {
-    return this._http.post<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/`, test).pipe(tap(rs => {
+    return this._http.post<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`, test).pipe(tap(rs => {
       this._testsStore.add(rs);
     }));
   }

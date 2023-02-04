@@ -80,6 +80,11 @@ public class TestDefinitionManagementController : ControllerBase
     {
         var testDefinition = await _testManagerService.GetTestDefinition(id);
 
+        if(testDefinition == null)
+        {
+            return NotFound();
+        }
+
         return Ok(testDefinition);
     }
 }
