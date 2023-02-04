@@ -1,10 +1,9 @@
 name: viet-geeks-test-platform-ci-cd-dev
 on:
-  push:
-    branches:
-      - master_
+  workflow_dispatch
+  
 jobs:
-  push-to-azure-container-registry:
+  build-and-deploy-api-webapp:
     runs-on: ubuntu-latest
     steps:
       - name: Login to Azure Container Registry
