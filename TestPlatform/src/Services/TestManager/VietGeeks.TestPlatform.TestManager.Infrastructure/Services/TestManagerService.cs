@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
@@ -40,12 +41,21 @@ public class TestManagerService : ITestManagerService
     public async Task<TestDefinitionViewModel> UpdateTestDefinition(string id, UpdateTestDefinitionViewModel viewModel)
     {
         var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync();
+        if (entity == null)
+            throw new EntityNotFoundException(id, nameof(TestDefinition));
 
         var updatedProperties = new List<string>();
+
         if(viewModel.BasicSettings != null)
         {
-            _mapper.Map(viewModel.BasicSettings, entity.BasicSettings);
+            entity.BasicSettings = _mapper.Map<TestBasicSettingsPart>(viewModel.BasicSettings);
             updatedProperties.Add(nameof(TestDefinition.BasicSettings));
+        }
+
+        if(viewModel.TestSetSettings != null)
+        {
+            entity.TestSetSettings = _mapper.Map<TestSetSettingsPart>(viewModel.TestSetSettings);
+            updatedProperties.Add(nameof(TestDefinition.TestSetSettings));
         }
 
         if (updatedProperties.Count > 0)

@@ -11,5 +11,4 @@ export class TestsStore extends EntityStore<TestsState> {
   constructor() {
     super();
   }
-
 }

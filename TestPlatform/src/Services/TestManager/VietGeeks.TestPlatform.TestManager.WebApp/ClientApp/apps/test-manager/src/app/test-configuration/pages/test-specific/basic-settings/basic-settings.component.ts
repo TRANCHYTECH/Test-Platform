@@ -70,7 +70,7 @@ export class BasicSettingsComponent implements OnInit {
       this._router.navigate(['tests', createdTest.id, 'basic-settings']);
       this._toastService.show('Test created');
     } else {
-      await firstValueFrom(this._testsService.update(formValue.id, { basicSettings: basicSettings }));
+      await this._testsService.update(formValue.id, { basicSettings: basicSettings });
       this._toastService.show('Test basic settings updated');
     }
   }

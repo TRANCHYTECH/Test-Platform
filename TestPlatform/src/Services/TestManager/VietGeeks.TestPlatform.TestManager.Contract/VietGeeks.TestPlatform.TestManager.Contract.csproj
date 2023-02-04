@@ -9,5 +9,9 @@
   <ItemGroup>
     <None Remove="System.ComponentModel.Annotations" />
     <None Remove="FluentValidation" />
+    <None Remove="System.Text.Json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
   </ItemGroup>
 </Project>

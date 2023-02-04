@@ -11,6 +11,7 @@
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Contract\VietGeeks.TestPlatform.TestManager.Contract.csproj" />
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Microsoft.Extensions.DependencyInjection.Abstractions" />

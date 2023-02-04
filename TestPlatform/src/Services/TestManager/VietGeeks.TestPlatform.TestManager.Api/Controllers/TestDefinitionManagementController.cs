@@ -15,12 +15,17 @@ public class TestDefinitionManagementController : ControllerBase
     private readonly ILogger<TestDefinitionManagementController> _logger;
 
     private readonly IValidator<NewTestDefinitionViewModel> _newTestValidator;
+    private readonly IValidator<UpdateTestDefinitionViewModel> _updateTestValidator;
     private readonly ITestManagerService _testManagerService;
 
-    public TestDefinitionManagementController(ILogger<TestDefinitionManagementController> logger, IValidator<NewTestDefinitionViewModel> newTestValidator, ITestManagerService testManagerService)
+    public TestDefinitionManagementController(ILogger<TestDefinitionManagementController> logger,
+        IValidator<NewTestDefinitionViewModel> newTestValidator,
+        IValidator<UpdateTestDefinitionViewModel> updateTestValidator,
+        ITestManagerService testManagerService)
     {
         _logger = logger;
         _newTestValidator = newTestValidator;
+        _updateTestValidator = updateTestValidator;
         _testManagerService = testManagerService;
     }
 
@@ -48,9 +53,23 @@ public class TestDefinitionManagementController : ControllerBase
         return Ok(testDefinitions);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="viewModel"></param>
+    /// <returns></returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, UpdateTestDefinitionViewModel viewModel)
     {
+        var validationResult = _updateTestValidator.Validate(viewModel);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(this.ModelState);
+
+            return BadRequest(ModelState);
+        }
+
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);
