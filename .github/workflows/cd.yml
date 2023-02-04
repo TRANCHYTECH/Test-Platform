@@ -1,0 +1,33 @@
+name: viet-geeks-test-platform-cd-dev
+on:
+    workflow_dispatch
+jobs:
+  deploy-container-apps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Test Manager Api
+        uses: azure/container-apps-deploy-action@v0
+        with:
+          containerAppName: test-master-api-dev
+          resourceGroup: test-master-dev
+          containerAppEnvironment: test-master-dev
+          acrName: secrets.ACR_REGISTRY_NAME
+          acrUsername: ${{ secrets.AZ_SP_CLIENT_ID }}
+          acrPassword: ${{ secrets.AZ_SP_CLIENT_SECRET }}
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:40658e7bcc78076fb311ce2db9cbd1d301bab650
+          
+      - name: Deploy Test Manager Web App
+        uses: azure/container-apps-deploy-action@v0
+        with:
+          containerAppName: test-master-dev
+          resourceGroup: test-master-dev
+          containerAppEnvironment: test-master-dev
+          acrName: secrets.ACR_REGISTRY_NAME
+          acrUsername: ${{ secrets.AZ_SP_CLIENT_ID }}
+          acrPassword: ${{ secrets.AZ_SP_CLIENT_SECRET }}
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:40658e7bcc78076fb311ce2db9cbd1d301bab650
