@@ -1,4 +1,19 @@
 {
+  "MENUITEMS": {
+    "account": {
+      "text": "Account"
+    },
+    "MENU": {
+      "TEXT": "MENU"
+    },
+    "DASHBOARD": {
+      "TEXT": "Dashboard",
+      "BADGE": "New",
+      "LIST": {
+        "tests": "My Tests"
+      }
+    }
+  },
   "Pages": {
     "TestSets": {
       "GeneratorTypes": {
