@@ -3,7 +3,7 @@ on:
   workflow_dispatch
   
 jobs:
-  build-and-deploy-api-webapp:
+  build-api-webapp-images:
     runs-on: ubuntu-latest
     steps:
       - name: Login to Azure Container Registry
@@ -28,6 +28,10 @@ jobs:
             docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ github.sha }}   
             docker push ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ github.sha }}
   
+  deploy-container-apps:
+    needs: build-api-webapp-images
+    runs-on: ubuntu-latest
+    steps:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
@@ -36,9 +40,15 @@ jobs:
       - name: Deploy Test Manager Api
         uses: azure/container-apps-deploy-action@v0
         with:
-          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ github.sha }}
+          containerAppName: test-master-api-dev
+          resourceGroup: test-master-dev
+          containerAppEnvironment: test-master-dev
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:${{ github.sha }} 
           
       - name: Deploy Test Manager Web App
         uses: azure/container-apps-deploy-action@v0
         with:
-          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ github.sha }}
+          containerAppName: test-master-dev
+          resourceGroup: test-master-dev
+          containerAppEnvironment: test-master-dev
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:${{ github.sha }} 
