@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { FormBuilder } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { ToastService } from "@viet-geeks/shared";
 import { BehaviorSubject, firstValueFrom } from "rxjs";
@@ -15,9 +16,11 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     testId!: string;
     test: Test;
 
+    router = inject(Router);
     route = inject(ActivatedRoute);
     changeDetector = inject(ChangeDetectorRef);
-
+    fb = inject(FormBuilder);
+    
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
 
@@ -25,6 +28,10 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     
     get readyForUI$() {
         return this._readyForUI.asObservable();
+    }
+
+    get isNewTest() {
+        return this.testId === 'new';
     }
 
     private _readyForUI = new BehaviorSubject(false);
@@ -36,16 +43,18 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
             this.testId = p['id'];
-            if (this.testId !== 'new') {
+            if (!this.isNewTest) {
                 await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
                 const testDef = this.testsQuery.getEntity(this.testId);
                 if(testDef === undefined) {
-                    throw new Error('should redirect to list');
+                    await this.router.navigate(['tests']);
+                    return;
                 }
 
                 this.test = testDef;
-                this.afterGetTest();
             }
+
+            this.afterGetTest();
         });
 
         this.onInit();

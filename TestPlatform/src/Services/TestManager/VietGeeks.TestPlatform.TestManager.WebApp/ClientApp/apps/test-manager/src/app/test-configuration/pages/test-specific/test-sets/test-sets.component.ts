@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormArray, FormGroup, Validators, FormControl } from '@angular/forms';
 import { find, forEach } from 'lodash';
 import { TestSets } from '../../../state/test.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -60,9 +60,9 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
     { id: GeneratorTypes.RandomFromCategories, textKey: 'Pages.TestSets.GeneratorTypes.RandomFromCategories' }
   ]
 
-  constructor(private _fb: FormBuilder) {
+  constructor() {
     super();
-    this.testSetsForm = this._fb.group({});
+    this.testSetsForm = this.fb.group({});
   }
 
   onInit() {
@@ -70,9 +70,9 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   }
 
   afterGetTest(): void {
-    this.testSetsForm = this._fb.group({
+    this.testSetsForm = this.fb.group({
       generatorType: this.test?.testSetSettings?.generatorType || GeneratorTypes.Default,
-      generator: this._fb.group({
+      generator: this.fb.group({
         $type: GeneratorTypes.RandomFromCategories,
         configs: this.createGeneratorConfigsForm()
       })
@@ -94,14 +94,14 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   }
 
   private createGeneratorConfigsForm() {
-    const generatorConfigsForm = this._fb.array<FormGroup>([]);
+    const generatorConfigsForm = this.fb.array<FormGroup>([]);
     forEach(this.questionCategories, (value) => {
       const existingDrawValue = find(this.test.testSetSettings?.generator?.configs, { id: value.id });
-      generatorConfigsForm.push(this._fb.group({
+      generatorConfigsForm.push(this.fb.group({
         id: value.id,
-        draw: this._fb.control(existingDrawValue?.draw || value.totalQuestions, [Validators.min(0), Validators.max(value.totalQuestions)]),
-        name: this._fb.control({ value: value.name, disabled: true }),
-        totalQuestions: this._fb.control({ value: value.totalQuestions, disabled: true })
+        draw: this.fb.control(existingDrawValue?.draw || value.totalQuestions, [Validators.min(0), Validators.max(value.totalQuestions)]),
+        name: this.fb.control({ value: value.name, disabled: true }),
+        totalQuestions: this.fb.control({ value: value.totalQuestions, disabled: true })
       }));
     });
 
