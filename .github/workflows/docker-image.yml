@@ -2,7 +2,7 @@ name: viet-geeks-test-platform-ci-cd-dev
 on:
   push:
     branches:
-      - master
+      - master_
 jobs:
   push-to-azure-container-registry:
     runs-on: ubuntu-latest
