@@ -17,6 +17,19 @@ public class TestProfile : Profile
 
         CreateMap<NewTestCategoryViewModel, TestCategory>();
         CreateMap<TestCategory, TestCategoryViewModel>();
+
+        // Test set settings mapping.
+        CreateMap<ITestSetGeneratorViewModel, ITestSetGenerator>()
+            .Include<RandomByCategoriesGeneratorViewModel, RandomByCategoriesGenerator>();
+        CreateMap<RandomByCategoriesGeneratorViewModel, RandomByCategoriesGenerator>();
+        CreateMap<RandomByCategoriesGeneratorConfigViewModel, RandomByCategoriesGeneratorConfig>();
+        CreateMap<CreateOrUpdateTestSetSettingsViewModel, TestSetSettingsPart>();
+
+        CreateMap<ITestSetGenerator, ITestSetGeneratorViewModel>()
+            .Include<RandomByCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
+        CreateMap<RandomByCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
+        CreateMap<RandomByCategoriesGeneratorConfig, RandomByCategoriesGeneratorConfigViewModel>();
+        CreateMap<TestSetSettingsPart, TestSetSettingsViewModel>();
     }
 }
 

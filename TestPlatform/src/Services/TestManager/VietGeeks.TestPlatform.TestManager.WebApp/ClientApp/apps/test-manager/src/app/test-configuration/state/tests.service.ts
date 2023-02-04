@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
-import { EMPTY } from 'rxjs';
+import { EMPTY, firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Test } from './test.model';
 import { TestsQuery } from './tests.query';
@@ -22,13 +22,17 @@ export class TestsService {
   }
 
   getById(id: string) {
-    if(this._testsQuery.hasEntity(id)) {
+    if (this._testsQuery.hasEntity(id)) {
       return EMPTY;
     }
-    
+
     return this._http.get<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`).pipe(tap(rs => {
       this._testsStore.upsert(id, rs);
     }));
+  }
+
+  setActive(id: string) {
+    this._testsStore.setActive(id);
   }
 
   add(test: Partial<Test>) {
@@ -38,9 +42,9 @@ export class TestsService {
   }
 
   update(id: string, test: Partial<Test>) {
-    return this._http.put<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`, test).pipe(tap(rs => {
+    return firstValueFrom(this._http.put<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}`, test).pipe(tap(rs => {
       this._testsStore.update(id, rs);
-    }));
+    })));
   }
 
   remove(id: string) {

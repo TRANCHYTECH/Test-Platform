@@ -2,6 +2,7 @@
 export interface Test {
   id: string;
   basicSettings: BasicSettings;
+  testSetSettings: TestSets;
   createdOn: Date;
 }
 
@@ -9,6 +10,14 @@ export interface BasicSettings {
   name: string;
   category: string;
   description: string;
+}
+
+export interface TestSets {
+  generatorType: number;
+  generator?: {
+    $type: number;
+    configs: { id: string, draw: number }[]
+  }
 }
 
 export interface TestQuestion {
