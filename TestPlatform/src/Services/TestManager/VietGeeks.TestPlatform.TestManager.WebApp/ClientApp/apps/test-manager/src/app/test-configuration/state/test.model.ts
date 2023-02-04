@@ -2,7 +2,7 @@
 export interface Test {
   id: string;
   basicSettings: BasicSettings;
-  testSetSettings: TestSets;
+  testSetSettings?: TestSets;
   createdOn: Date;
 }
 

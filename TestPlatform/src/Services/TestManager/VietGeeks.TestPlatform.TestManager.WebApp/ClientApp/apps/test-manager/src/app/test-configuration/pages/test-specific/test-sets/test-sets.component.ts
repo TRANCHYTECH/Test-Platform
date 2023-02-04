@@ -71,7 +71,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
 
   afterGetTest(): void {
     this.testSetsForm = this._fb.group({
-      generatorType: this.test?.testSetSettings.generatorType || GeneratorTypes.Default,
+      generatorType: this.test?.testSetSettings?.generatorType || GeneratorTypes.Default,
       generator: this._fb.group({
         $type: GeneratorTypes.RandomFromCategories,
         configs: this.createGeneratorConfigsForm()
@@ -96,7 +96,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   private createGeneratorConfigsForm() {
     const generatorConfigsForm = this._fb.array<FormGroup>([]);
     forEach(this.questionCategories, (value) => {
-      const existingDrawValue = find(this.test?.testSetSettings.generator?.configs, { id: value.id });
+      const existingDrawValue = find(this.test.testSetSettings?.generator?.configs, { id: value.id });
       generatorConfigsForm.push(this._fb.group({
         id: value.id,
         draw: this._fb.control(existingDrawValue?.draw || value.totalQuestions, [Validators.min(0), Validators.max(value.totalQuestions)]),
