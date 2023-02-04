@@ -16,7 +16,7 @@ jobs:
           containerAppName: test-master-api-dev
           resourceGroup: test-master-dev
           containerAppEnvironment: test-master-dev
-          imageToDeploy: vtvcabdev.azurecr.io/vietgeeks.testplatform.testmanager.api:40658e7bcc78076fb311ce2db9cbd1d301bab650
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:ca5644723fff16b9e9b4767d270813037d9ee3d9 
           
       - name: Deploy Test Manager Web App
         uses: azure/container-apps-deploy-action@v0
@@ -24,4 +24,4 @@ jobs:
           containerAppName: test-master-dev
           resourceGroup: test-master-dev
           containerAppEnvironment: test-master-dev
-          imageToDeploy: vtvcabdev.azurecr.io/vietgeeks.testplatform.testmanager.webapp:40658e7bcc78076fb311ce2db9cbd1d301bab650
+          imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:ca5644723fff16b9e9b4767d270813037d9ee3d9 
