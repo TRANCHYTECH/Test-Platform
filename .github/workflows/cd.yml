@@ -16,7 +16,7 @@ jobs:
           containerAppName: test-master-api-dev
           resourceGroup: test-master-dev
           containerAppEnvironment: test-master-dev
-          acrName: secrets.ACR_REGISTRY_NAME
+          acrName: ${{ secrets.ACR_REGISTRY_NAME }}
           acrUsername: ${{ secrets.AZ_SP_CLIENT_ID }}
           acrPassword: ${{ secrets.AZ_SP_CLIENT_SECRET }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.api:40658e7bcc78076fb311ce2db9cbd1d301bab650
@@ -27,7 +27,7 @@ jobs:
           containerAppName: test-master-dev
           resourceGroup: test-master-dev
           containerAppEnvironment: test-master-dev
-          acrName: secrets.ACR_REGISTRY_NAME
+          acrName: ${{ secrets.ACR_REGISTRY_NAME }}
           acrUsername: ${{ secrets.AZ_SP_CLIENT_ID }}
           acrPassword: ${{ secrets.AZ_SP_CLIENT_SECRET }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY_NAME }}.azurecr.io/vietgeeks.testplatform.testmanager.webapp:40658e7bcc78076fb311ce2db9cbd1d301bab650
