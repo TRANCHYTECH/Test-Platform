@@ -12,4 +12,3 @@ public class TimeSettingsPart
 
     public DateTimeOffset ActiveTo { get; set; }
 }
-

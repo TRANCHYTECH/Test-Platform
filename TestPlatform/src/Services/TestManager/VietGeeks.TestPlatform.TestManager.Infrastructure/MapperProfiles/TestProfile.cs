@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using VietGeeks.TestPlatform.TestManager.Contract;
+using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.MappingProfiles;
@@ -19,17 +20,33 @@ public class TestProfile : Profile
         CreateMap<TestCategory, TestCategoryViewModel>();
 
         // Test set settings mapping.
-        CreateMap<ITestSetGeneratorViewModel, ITestSetGenerator>()
-            .Include<RandomByCategoriesGeneratorViewModel, RandomByCategoriesGenerator>();
-        CreateMap<RandomByCategoriesGeneratorViewModel, RandomByCategoriesGenerator>();
-        CreateMap<RandomByCategoriesGeneratorConfigViewModel, RandomByCategoriesGeneratorConfig>();
+        CreateMap<TestSetGeneratorViewModel, TestSetGenerator>()
+            .Include<RandomByCategoriesGeneratorViewModel, RandomFromCategoriesGenerator>();
+        CreateMap<RandomByCategoriesGeneratorViewModel, RandomFromCategoriesGenerator>();
+        CreateMap<RandomByCategoriesGeneratorConfigViewModel, RandomFromCategoriesGeneratorConfig>();
         CreateMap<CreateOrUpdateTestSetSettingsViewModel, TestSetSettingsPart>();
 
-        CreateMap<ITestSetGenerator, ITestSetGeneratorViewModel>()
-            .Include<RandomByCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
-        CreateMap<RandomByCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
-        CreateMap<RandomByCategoriesGeneratorConfig, RandomByCategoriesGeneratorConfigViewModel>();
+        CreateMap<TestSetGenerator, TestSetGeneratorViewModel>()
+            .Include<RandomFromCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
+        CreateMap<RandomFromCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
+        CreateMap<RandomFromCategoriesGeneratorConfig, RandomByCategoriesGeneratorConfigViewModel>();
         CreateMap<TestSetSettingsPart, TestSetSettingsViewModel>();
+
+        //
+        CreateMap<TestAccessTypeViewModel, TestAccessType>()
+            .Include<PublicLinkTypeViewModel, PublicLinkType>();
+        CreateMap<PublicLinkTypeViewModel, PublicLinkType>();
+        CreateMap<PrivateAccessCodeTypeViewModel, PrivateAccessCodeType>();
+        CreateMap<PrivateAccessCodeConfigViewModel, PrivateAccessCodeConfig>();
+        CreateMap<CreateOrUpdateTestAccessSettingsViewModel, TestAccessSettingsPart>();
+
+        CreateMap<TestAccessType, TestAccessTypeViewModel>()
+            .Include<PublicLinkType, PublicLinkTypeViewModel>();
+        CreateMap<PublicLinkType, PublicLinkTypeViewModel>();
+        CreateMap<PrivateAccessCodeType, PrivateAccessCodeTypeViewModel>();
+        CreateMap<PrivateAccessCodeConfig, PrivateAccessCodeConfigViewModel>();
+        CreateMap<TestAccessSettingsPart, TestAccessSettingsViewModel>();
+
     }
 }
 
