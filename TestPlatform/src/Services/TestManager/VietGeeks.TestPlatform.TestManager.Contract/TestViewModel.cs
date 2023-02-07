@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
 namespace VietGeeks.TestPlatform.TestManager.Contract;
 
@@ -14,6 +15,8 @@ public class UpdateTestDefinitionViewModel
     public CreateOrUpdateTestBasicSettingsViewModel? BasicSettings { get; set; }
 
     public CreateOrUpdateTestSetSettingsViewModel? TestSetSettings { get; set; }
+
+    public CreateOrUpdateTestAccessSettingsViewModel? TestAccessSettings { get; set; }
 }
 
 public class CreateOrUpdateTestBasicSettingsViewModel
@@ -46,6 +49,8 @@ public class TestDefinitionViewModel
 
     public TestSetSettingsViewModel? TestSetSettings { get; set; }
 
+    public TestAccessSettingsViewModel? TestAccessSettings { get; set; }
+
     public DateTime CreatedOn { get; set; }
 
     public DateTime ModifiedOn { get; set; }
@@ -53,29 +58,29 @@ public class TestDefinitionViewModel
 
 public class CreateOrUpdateTestSetSettingsViewModel
 {
-    public int GeneratorType { get; set; }
+    public TestSetGeneratorType GeneratorType { get; set; }
 
-    public ITestSetGeneratorViewModel? Generator { get; set; }
+    public TestSetGeneratorViewModel? Generator { get; set; }
 }
 
 public class TestSetSettingsViewModel
 {
-    public int GeneratorType { get; set; }
+    public TestSetGeneratorType GeneratorType { get; set; }
 
-    public ITestSetGeneratorViewModel? Generator { get; set; }
+    public TestSetGeneratorViewModel? Generator { get; set; }
 }
 
 [JsonDerivedType(typeof(DefaultGeneratorViewModel), 1)]
 [JsonDerivedType(typeof(RandomByCategoriesGeneratorViewModel), 2)]
-public interface ITestSetGeneratorViewModel
+public abstract class TestSetGeneratorViewModel
 {
 }
 
-public class DefaultGeneratorViewModel : ITestSetGeneratorViewModel
+public class DefaultGeneratorViewModel : TestSetGeneratorViewModel
 {
 }
 
-public class RandomByCategoriesGeneratorViewModel : ITestSetGeneratorViewModel
+public class RandomByCategoriesGeneratorViewModel : TestSetGeneratorViewModel
 {
     public List<RandomByCategoriesGeneratorConfigViewModel> Configs { get; set; } = new List<RandomByCategoriesGeneratorConfigViewModel>();
 }
@@ -88,4 +93,12 @@ public class RandomByCategoriesGeneratorConfigViewModel
     [JsonPropertyName("draw")]
     public int DrawNumber { get; set; }
 }
+
+public enum TestSetGeneratorType
+{
+    Default = 1,
+    RandomByCategories = 2
+}
+
+
 

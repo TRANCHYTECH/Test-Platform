@@ -10,8 +10,13 @@
     <None Remove="System.ComponentModel.Annotations" />
     <None Remove="FluentValidation" />
     <None Remove="System.Text.Json" />
+    <None Remove="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>

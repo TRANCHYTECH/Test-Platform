@@ -58,11 +58,16 @@ public class TestManagerService : ITestManagerService
             updatedProperties.Add(nameof(TestDefinition.TestSetSettings));
         }
 
+        if(viewModel.TestAccessSettings != null)
+        {
+            entity.TestAccessSettings = _mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
+            updatedProperties.Add(nameof(TestDefinition.TestAccessSettings));
+        }
+
         if (updatedProperties.Count > 0)
         {
             var updateResult = await _managerDbContext.SaveOnlyAsync(entity, updatedProperties);
         }
-        //todo: check update result to ensure
 
        return _mapper.Map<TestDefinitionViewModel>(entity);
     }

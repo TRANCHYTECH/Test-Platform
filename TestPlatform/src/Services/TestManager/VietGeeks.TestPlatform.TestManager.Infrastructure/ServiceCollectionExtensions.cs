@@ -15,10 +15,6 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ITestManagerService, TestManagerService>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
-
-        BsonSerializer.RegisterSerializer(typeof(Core.Models.ITestSetGenerator), BsonSerializer.LookupSerializer<Core.Models.RandomByCategoriesGenerator>());
-        //BsonSerializer(typeof(ImpliedImplementationInterfaceSerializer<Core.Models.ITestSetGenerator, Core.Models.RandomByCategoriesGenerator>));
-        //BsonClassMap.RegisterClassMap<Core.Models.RandomByCategoriesGenerator>();
     }
 }
 

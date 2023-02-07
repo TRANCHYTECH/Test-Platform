@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Api.ValidationRules;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
+using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 
@@ -14,7 +15,6 @@ public class TestDefinitionManagementController : ControllerBase
 {
     private readonly ILogger<TestDefinitionManagementController> _logger;
 
-    private readonly IValidator<NewTestDefinitionViewModel> _newTestValidator;
     private readonly IValidator<UpdateTestDefinitionViewModel> _updateTestValidator;
     private readonly ITestManagerService _testManagerService;
 
@@ -24,20 +24,17 @@ public class TestDefinitionManagementController : ControllerBase
         ITestManagerService testManagerService)
     {
         _logger = logger;
-        _newTestValidator = newTestValidator;
         _updateTestValidator = updateTestValidator;
         _testManagerService = testManagerService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(NewTestDefinitionViewModel viewModel)
+    public async Task<IActionResult> Create([FromServices] IValidator<NewTestDefinitionViewModel> newTestValidator, NewTestDefinitionViewModel viewModel)
     {
-        var validationResult = _newTestValidator.Validate(viewModel);
-        if(!validationResult.IsValid)
+        var validationResult = newTestValidator.Validate(viewModel);
+        if (!validationResult.IsValid)
         {
-            validationResult.AddToModelState(this.ModelState);
-
-            return BadRequest(ModelState);
+            return BadRequest(validationResult.Errors);
         }
 
         var createdTest = await _testManagerService.CreateTestDefinition(viewModel);
@@ -65,10 +62,19 @@ public class TestDefinitionManagementController : ControllerBase
         var validationResult = _updateTestValidator.Validate(viewModel);
         if (!validationResult.IsValid)
         {
-            validationResult.AddToModelState(this.ModelState);
-
-            return BadRequest(ModelState);
+            return BadRequest(validationResult.Errors);
         }
+
+        //todo: remove test.
+        viewModel.TestAccessSettings = new Contract.ViewModels.CreateOrUpdateTestAccessSettingsViewModel
+        {
+            Channel = TestAcessChannelViewModel.WebBrowser,
+            AccessType = new PublicLinkTypeViewModel
+            {
+                RequireAccessCode = true,
+                AttemptsPerRespondent = 10
+            }
+        };
 
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
@@ -80,7 +86,7 @@ public class TestDefinitionManagementController : ControllerBase
     {
         var testDefinition = await _testManagerService.GetTestDefinition(id);
 
-        if(testDefinition == null)
+        if (testDefinition == null)
         {
             return NotFound();
         }
