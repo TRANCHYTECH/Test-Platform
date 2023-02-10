@@ -65,17 +65,6 @@ public class TestDefinitionManagementController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
 
-        //todo: remove test.
-        viewModel.TestAccessSettings = new Contract.ViewModels.CreateOrUpdateTestAccessSettingsViewModel
-        {
-            Channel = TestAcessChannelViewModel.WebBrowser,
-            AccessType = new PublicLinkTypeViewModel
-            {
-                RequireAccessCode = true,
-                AttemptsPerRespondent = 10
-            }
-        };
-
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);

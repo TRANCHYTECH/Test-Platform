@@ -7,6 +7,8 @@ import { catchError, tap } from 'rxjs/operators';
 import { Test } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
+import { forEach, range } from 'lodash';
+import { defKSUID32 } from '@thi.ng/ksuid';
 
 @Injectable({ providedIn: 'root' })
 export class TestsService {
@@ -54,6 +56,17 @@ export class TestsService {
 
   remove(id: string) {
     this._testsStore.remove(id);
+  }
+
+  generateAccessCodes(count: number) {
+    const codes: string[] = [];
+    // https://en.wikipedia.org/wiki/Hexspeak
+    const id = defKSUID32();
+    forEach(range(count), () => {
+      codes.push(id.next());
+    });
+
+    return codes;
   }
 
   private get testManagerApiBaseUrl() {
