@@ -33,19 +33,22 @@ public class TestProfile : Profile
         CreateMap<TestSetSettingsPart, TestSetSettingsViewModel>();
 
         //
-        CreateMap<TestAccessTypeViewModel, TestAccessType>()
-            .Include<PublicLinkTypeViewModel, PublicLinkType>();
+        CreateMap<TestAccessConfigViewModel, TestAccessSettings>().IncludeAllDerived().IncludeAllDerived();
         CreateMap<PublicLinkTypeViewModel, PublicLinkType>();
         CreateMap<PrivateAccessCodeTypeViewModel, PrivateAccessCodeType>();
         CreateMap<PrivateAccessCodeConfigViewModel, PrivateAccessCodeConfig>();
+        CreateMap<GroupPasswordTypeViewModel, GroupPasswordType>();
+        CreateMap<TrainingTypeViewModel, TrainingType>();
         CreateMap<CreateOrUpdateTestAccessSettingsViewModel, TestAccessSettingsPart>();
 
-        CreateMap<TestAccessType, TestAccessTypeViewModel>()
-            .Include<PublicLinkType, PublicLinkTypeViewModel>();
+        CreateMap<TestAccessSettings, TestAccessConfigViewModel>().IncludeAllDerived();
         CreateMap<PublicLinkType, PublicLinkTypeViewModel>();
         CreateMap<PrivateAccessCodeType, PrivateAccessCodeTypeViewModel>();
         CreateMap<PrivateAccessCodeConfig, PrivateAccessCodeConfigViewModel>();
+        CreateMap<GroupPasswordType, GroupPasswordTypeViewModel>();
+        CreateMap<TrainingType, TrainingTypeViewModel>();
         CreateMap<TestAccessSettingsPart, TestAccessSettingsViewModel>();
+
 
     }
 }

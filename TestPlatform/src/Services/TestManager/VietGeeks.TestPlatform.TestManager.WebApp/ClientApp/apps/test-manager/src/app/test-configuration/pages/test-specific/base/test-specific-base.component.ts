@@ -14,7 +14,7 @@ import { TestsService } from "../../../state/tests.service";
 })
 export abstract class TestSpecificBaseComponent implements OnInit {
     testId!: string;
-    test: Test;
+    test!: Test;
 
     router = inject(Router);
     route = inject(ActivatedRoute);

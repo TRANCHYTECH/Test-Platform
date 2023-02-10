@@ -6,66 +6,71 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
 public class TestAccessSettingsViewModel
 {
-    public TestAcessChannelViewModel Channel { get; set; }
+    public TestAccessType AccessType { get; set; }
 
-    public TestAccessTypeViewModel AccessType { get; set; } = default!;
+    public TestAccessConfigViewModel Settings { get; set; } = default!;
 
     public HonestRespondentRuleViewModel? HonestRespondentRule { get; set; }
 }
 
 public class CreateOrUpdateTestAccessSettingsViewModel
 {
-    public TestAcessChannelViewModel Channel { get; set; }
+    public TestAccessType AccessType { get; set; }
 
-    public TestAccessTypeViewModel AccessType { get; set; } = default!;
+    public TestAccessConfigViewModel? Settings { get; set; } = default!;
 
     public HonestRespondentRuleViewModel? HonestRespondentRule { get; set; }
 }
 
-public enum TestAcessChannelViewModel
+public enum TestAccessType
 {
-    WebBrowser = 1
+    PublicLink = 1,
+    PrivateAccessCode = 2,
+    GroupPassword = 3,
+    Training = 4
 }
 
-[JsonDerivedType(typeof(PublicLinkTypeViewModel), 1)]
-[JsonDerivedType(typeof(PrivateAccessCodeTypeViewModel), 2)]
-[JsonDerivedType(typeof(GroupPasswordTypeViewModel), 3)]
-[JsonDerivedType(typeof(TrainingTypeViewModel), 4)]
-public abstract class TestAccessTypeViewModel
+[JsonDerivedType(typeof(PublicLinkTypeViewModel), (int)TestAccessType.PublicLink)]
+[JsonDerivedType(typeof(PrivateAccessCodeTypeViewModel), (int)TestAccessType.PrivateAccessCode)]
+[JsonDerivedType(typeof(GroupPasswordTypeViewModel), (int)TestAccessType.GroupPassword)]
+[JsonDerivedType(typeof(TrainingTypeViewModel), (int)TestAccessType.Training)]
+public abstract class TestAccessConfigViewModel
 {
 }
 
-public class PublicLinkTypeViewModel : TestAccessTypeViewModel
+public class PublicLinkTypeViewModel : TestAccessConfigViewModel
 {
     public bool RequireAccessCode { get; set; }
 
-    public int AttemptsPerRespondent { get; set; }
+    public int Attempts { get; set; }
 }
 
-public class PrivateAccessCodeTypeViewModel : TestAccessTypeViewModel
+public class PrivateAccessCodeTypeViewModel : TestAccessConfigViewModel
 {
     public List<PrivateAccessCodeConfigViewModel> Configs { get; set; } = new List<PrivateAccessCodeConfigViewModel>();
+
+    public int Attempts { get; set; }
 }
 
 public class PrivateAccessCodeConfigViewModel
 {
     public string Code { get; set; } = default!;
 
+    public string? SetId { get; set; }
+
     public string? Email { get; set; }
 
-    public string? TestSetId { get; set; }
-
-    public int AttemptsPerRespondent { get; set; }
+    public bool SendCode { get; set; }
 }
 
-public class GroupPasswordTypeViewModel : TestAccessTypeViewModel
+public class GroupPasswordTypeViewModel : TestAccessConfigViewModel
 {
     public string Password { get; set; } = default!;
 
-    public int AttemptsPerRespondent { get; set; }
+    public int Attempts { get; set; }
 }
 
-public class TrainingTypeViewModel : TestAccessTypeViewModel
+public class TrainingTypeViewModel : TestAccessConfigViewModel
 {
 }
 

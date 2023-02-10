@@ -1,8 +1,8 @@
-
 export interface Test {
   id: string;
   basicSettings: BasicSettings;
   testSetSettings?: TestSets;
+  testAccessSettings?: TestAccess;
   createdOn: Date;
 }
 
@@ -18,6 +18,35 @@ export interface TestSets {
     $type: number;
     configs: { id: string, draw: number }[]
   }
+}
+
+export class TestAccess {
+  accessType!: number;
+  settings!: IAccessType;
+}
+
+export interface IAccessType {
+  $type: number;
+}
+
+export interface GroupPasswordType extends IAccessType {
+  password: boolean;
+  attempts: number;
+}
+
+export interface PublicLinkType extends IAccessType {
+  requireAccessCode: boolean;
+  attempts: number;
+}
+
+export interface PrivateAccessCodeType extends IAccessType {
+  configs: {
+    code: string,
+    email: string,
+    sendCode: boolean,
+    setId: string
+  }[];
+  attempts: number;
 }
 
 export interface TestQuestion {

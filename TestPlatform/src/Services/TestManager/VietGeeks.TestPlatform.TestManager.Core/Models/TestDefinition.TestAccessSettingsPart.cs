@@ -1,60 +1,63 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.Serializers;
-using System;
-using System.Collections.Generic;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 public class TestAccessSettingsPart
 {
-    public TestAcessChannel Channel { get; set; }
+    public TestAcessType AccessType { get; set; }
 
-    public TestAccessType? AccessType { get; set; }
+    public TestAccessSettings? Settings { get; set; }
 
     public HonestRespondentRule? HonestRespondentRule { get; set; }
 }
 
-public enum TestAcessChannel
+public enum TestAcessType
 {
-    WebBrowser = 1
+    PublicLink = 1,
+    PrivateAccessCode = 2,
+    GroupPassword = 3,
+    Training = 4
 }
 
 [BsonKnownTypes(typeof(PublicLinkType), typeof(PrivateAccessCodeType), typeof(GroupPasswordType), typeof(TrainingType))]
-public abstract class TestAccessType
+public abstract class TestAccessSettings
 {
 }
 
-public class PublicLinkType : TestAccessType
+public class PublicLinkType : TestAccessSettings
 {
     public bool RequireAccessCode { get; set; }
 
-    public int AttemptsPerRespondent { get; set; }
+    public int Attempts { get; set; }
 }
 
-public class PrivateAccessCodeType : TestAccessType
+public class PrivateAccessCodeType : TestAccessSettings
 {
+    public List<PrivateAccessCodeConfig> Configs { get; set; } = new List<PrivateAccessCodeConfig>();
+
+    public int Attempts { get; set; }
 }
 
 public class PrivateAccessCodeConfig
 {
-    public string Code { get; set; } = default!;    
+    public string Code { get; set; } = default!;
 
     public string? Email { get; set; }
 
-    public string? TestSetId { get; set; }
+    public string? SetId { get; set; }
 
-    public int AttemptsPerRespondent { get; set; }
+    public bool SendCode { get; set; }
 }
 
-public class GroupPasswordType: TestAccessType
+public class GroupPasswordType : TestAccessSettings
 {
     public string Password { get; set; } = default!;
 
-    public int AttemptsPerRespondent { get; set; }
+    public int Attempts { get; set; }
 }
 
-public class TrainingType : TestAccessType
+public class TrainingType : TestAccessSettings
 {
 }
 
