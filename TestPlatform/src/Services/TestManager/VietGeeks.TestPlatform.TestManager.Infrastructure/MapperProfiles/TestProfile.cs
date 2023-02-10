@@ -33,7 +33,7 @@ public class TestProfile : Profile
         CreateMap<TestSetSettingsPart, TestSetSettingsViewModel>();
 
         //
-        CreateMap<TestAccessConfigViewModel, TestAccessSettings>().IncludeAllDerived().IncludeAllDerived();
+        CreateMap<TestAccessConfigViewModel, TestAccessSettings>().IncludeAllDerived();
         CreateMap<PublicLinkTypeViewModel, PublicLinkType>();
         CreateMap<PrivateAccessCodeTypeViewModel, PrivateAccessCodeType>();
         CreateMap<PrivateAccessCodeConfigViewModel, PrivateAccessCodeConfig>();
@@ -49,7 +49,19 @@ public class TestProfile : Profile
         CreateMap<TrainingType, TrainingTypeViewModel>();
         CreateMap<TestAccessSettingsPart, TestAccessSettingsViewModel>();
 
+        CreateMap<Contract.ViewModels.GradingCriteriaConfig, Core.Models.GradingCriteriaConfig>().IncludeAllDerived();
+        CreateMap<Contract.ViewModels.PassMaskCriteria, Core.Models.PassMaskCriteria>();
+        CreateMap<Contract.ViewModels.GradeRangeCriteria, Core.Models.GradeRangeCriteria>();
+        CreateMap<Contract.ViewModels.GradeRangeCriteriaDetail, Core.Models.GradeRangeCriteriaDetail>();
+        CreateMap<Contract.ViewModels.TestEndConfig, Core.Models.TestEndConfig>();
+        CreateMap<Contract.ViewModels.CreateOrupdateGradingSettings, Core.Models.GradingSettingsPart>();
 
+        CreateMap<Core.Models.GradingCriteriaConfig, Contract.ViewModels.GradingCriteriaConfig>().IncludeAllDerived();
+        CreateMap<Core.Models.PassMaskCriteria, Contract.ViewModels.PassMaskCriteria>();
+        CreateMap<Core.Models.GradeRangeCriteria, Contract.ViewModels.GradeRangeCriteria>();
+        CreateMap<Core.Models.GradeRangeCriteriaDetail, Contract.ViewModels.GradeRangeCriteriaDetail>();
+        CreateMap<Core.Models.TestEndConfig, Contract.ViewModels.TestEndConfig>();
+        CreateMap<Core.Models.GradingSettingsPart, Contract.ViewModels.GradingSettings>();
     }
 }
 

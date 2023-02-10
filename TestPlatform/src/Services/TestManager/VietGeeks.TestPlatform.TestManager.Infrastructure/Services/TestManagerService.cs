@@ -46,22 +46,29 @@ public class TestManagerService : ITestManagerService
 
         var updatedProperties = new List<string>();
 
-        if(viewModel.BasicSettings != null)
+        if (viewModel.BasicSettings != null)
         {
             entity.BasicSettings = _mapper.Map<TestBasicSettingsPart>(viewModel.BasicSettings);
             updatedProperties.Add(nameof(TestDefinition.BasicSettings));
         }
 
-        if(viewModel.TestSetSettings != null)
+        if (viewModel.TestSetSettings != null)
         {
             entity.TestSetSettings = _mapper.Map<TestSetSettingsPart>(viewModel.TestSetSettings);
             updatedProperties.Add(nameof(TestDefinition.TestSetSettings));
         }
 
-        if(viewModel.TestAccessSettings != null)
+        if (viewModel.TestAccessSettings != null)
         {
             entity.TestAccessSettings = _mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
             updatedProperties.Add(nameof(TestDefinition.TestAccessSettings));
+        }
+
+        //todo: remove this block
+        if (viewModel.GradingSettings != null)
+        {
+            entity.GradingSettings = _mapper.Map<GradingSettingsPart>(viewModel.GradingSettings);
+            updatedProperties.Add(nameof(TestDefinition.GradingSettings));
         }
 
         if (updatedProperties.Count > 0)
@@ -69,7 +76,7 @@ public class TestManagerService : ITestManagerService
             var updateResult = await _managerDbContext.SaveOnlyAsync(entity, updatedProperties);
         }
 
-       return _mapper.Map<TestDefinitionViewModel>(entity);
+        return _mapper.Map<TestDefinitionViewModel>(entity);
     }
 
     public async Task<List<TestCategoryViewModel>> GetTestCategories()

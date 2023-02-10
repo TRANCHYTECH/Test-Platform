@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, range } from 'lodash';
+
 import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 
@@ -11,7 +12,7 @@ export const TestAccessType = {
   GroupPassword: 3,
   Training: 4
 }
-
+//todo(tau): Implement test set selection
 @UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-access',
@@ -103,6 +104,10 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
 
   onAccessTypeSelected(accessType: number) {
     this.accessTypeCtrl.setValue(accessType);
+  }
+
+  deleteAccessCode(controlIndex: number) {
+    (this.privateAccessCodeCtrl.controls['configs'] as FormArray).removeAt(controlIndex);
   }
 
   generateCodes() {
