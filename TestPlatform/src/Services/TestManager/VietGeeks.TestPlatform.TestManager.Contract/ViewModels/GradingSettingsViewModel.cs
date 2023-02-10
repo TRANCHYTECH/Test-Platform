@@ -1,9 +1,18 @@
-﻿using System.Collections.Generic;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace VietGeeks.TestPlatform.TestManager.Core.Models;
+namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
-public class GradingSettingsPart
+
+public class CreateOrupdateGradingSettings
+{
+    public TestEndConfig TestEndConfig { get; set; } = default!;
+
+    public Dictionary<string, GradingCriteriaConfig> GradingCriterias { get; set; } = new Dictionary<string, GradingCriteriaConfig>();
+}
+
+public class GradingSettings
 {
     public TestEndConfig TestEndConfig { get; set; } = default!;
 
@@ -19,7 +28,8 @@ public class TestEndConfig
     public string? ToAddress { get; set; }
 }
 
-[BsonKnownTypes(typeof(PassMaskCriteria), typeof(GradeRangeCriteria))]
+[JsonDerivedType(typeof(PassMaskCriteria), (int)GradingCriteriaConfigType.PassMask)]
+[JsonDerivedType(typeof(GradeRangeCriteria), (int)GradingCriteriaConfigType.GradeRanges)]
 public abstract class GradingCriteriaConfig
 {
 }

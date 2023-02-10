@@ -17,6 +17,7 @@ import { LayoutsModule } from './layouts/layouts.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,7 +39,8 @@ import { FlatpickrModule } from 'angularx-flatpickr';
         deps: [HttpClient]
       }
     }),
-    FlatpickrModule.forRoot()
+    FlatpickrModule.forRoot(),
+    SweetAlert2Module.forRoot()
   ],
   providers: [
     {

@@ -68,6 +68,7 @@
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@popperjs/core": "^2.11.6",
+    "@sweetalert2/ngx-sweetalert2": "^12.1.0",
     "@thi.ng/ksuid": "^3.0.1",
     "angular-feather": "^6.5.0",
     "angularx-flatpickr": "^7.0.0",
@@ -78,6 +79,7 @@
     "ngx-cookie-service": "^15.0.0",
     "ngx-dropzone-wrapper": "^13.0.0",
     "rxjs": "~7.5.0",
+    "sweetalert2": "^11.7.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   }
