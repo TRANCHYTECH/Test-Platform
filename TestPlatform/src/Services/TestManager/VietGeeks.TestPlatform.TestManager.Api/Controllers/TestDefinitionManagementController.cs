@@ -64,46 +64,6 @@ public class TestDefinitionManagementController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
 
-        //todo(tau): remove this mock.
-        viewModel.GradingSettings = new CreateOrupdateGradingSettings
-        {
-            TestEndConfig = new TestEndConfig
-            {
-                Message = "Custom message",
-                RedirectTo = true,
-                ToAddress = "https://vietgeeks.io"
-            },
-            GradingCriterias = new Dictionary<string, GradingCriteriaConfig>
-            {
-                {
-                    GradingCriteriaConfigType.PassMask.ToString(),
-                    new PassMaskCriteria {
-                        Value = 70,
-                        Unit = RangeUnit.Point
-                    }
-                },
-                {
-                    GradingCriteriaConfigType.GradeRanges.ToString(),
-                    new GradeRangeCriteria {
-                        Unit = RangeUnit.Percent,
-                        GradeType = GradeType.GradeAndDescriptive,
-                        Details = new List<GradeRangeCriteriaDetail>
-                        {
-                            new GradeRangeCriteriaDetail
-                            {
-                                From = 0,
-                                To = 50,
-                                Grades = new Dictionary<string, string>{
-                                    { GradeType.Grade.ToString(), "Grade A" },
-                                    { GradeType.Descriptive.ToString(), "Superman" }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);

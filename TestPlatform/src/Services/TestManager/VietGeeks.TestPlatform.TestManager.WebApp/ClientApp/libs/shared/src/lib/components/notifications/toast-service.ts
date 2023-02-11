@@ -1,14 +1,31 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { Injectable } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  toasts: any[] = [];
+  readonly toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
-  show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
-    this.toasts.push({ textOrTpl, ...options });
+  success(message: string) {
+    this.toast.fire({
+      icon: 'success',
+      title: message
+    })
   }
 
-  remove(toast: any) {
-    this.toasts = this.toasts.filter(t => t !== toast);
+  error(message: string) {
+    this.toast.fire({
+      icon: 'error',
+      title: message
+    })
   }
 }

@@ -59,10 +59,10 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     if (formValue.id === null) {
       const createdTest = await lastValueFrom(this.testsService.add({ basicSettings: basicSettings }));
       this.router.navigate(['tests', createdTest.id, 'basic-settings']);
-      this.notifyService.show('Test created');
+      this.notifyService.success('Test created');
     } else {
       await this.testsService.update(formValue.id, { basicSettings: basicSettings });
-      this.notifyService.show('Test basic settings updated');
+      this.notifyService.success('Test basic settings updated');
     }
   }
 

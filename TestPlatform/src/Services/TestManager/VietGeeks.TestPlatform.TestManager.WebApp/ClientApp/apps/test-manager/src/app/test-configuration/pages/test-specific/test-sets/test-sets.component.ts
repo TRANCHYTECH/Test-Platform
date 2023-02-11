@@ -90,7 +90,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
       model.generator = undefined;
     }
     await this.testsService.update(this.testId, { testSetSettings: model });
-    this.notifyService.show('Test sets updated');
+    this.notifyService.success('Test sets updated');
   }
 
   private createGeneratorConfigsForm() {

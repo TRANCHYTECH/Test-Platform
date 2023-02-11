@@ -8,6 +8,8 @@ public class GradingSettingsPart
     public TestEndConfig TestEndConfig { get; set; } = default!;
 
     public Dictionary<string, GradingCriteriaConfig> GradingCriterias { get; set; } = new Dictionary<string, GradingCriteriaConfig>();
+
+    public InformRespondentConfig InformRespondentConfig { get; set; } = default!;
 }
 
 public class TestEndConfig
@@ -17,6 +19,27 @@ public class TestEndConfig
     public bool RedirectTo { get; set; }
 
     public string? ToAddress { get; set; }
+}
+
+public class InformRespondentConfig
+{
+    public bool InformViaEmail { get; set; }
+
+    public string? PassedMessage { get; set; }
+
+    public string? FailedMessage { get; set; }
+
+    public Dictionary<string, bool> InformFactors { get; set; } = new Dictionary<string, bool>();
+}
+
+public enum InformFactor
+{
+    PercentageScore = 1,
+    PointsScore = 2,
+    Grade = 3,
+    DescriptiveGrade = 4,
+    CorrectAnwsers = 5,
+    PassOrFailMessage = 6
 }
 
 [BsonKnownTypes(typeof(PassMaskCriteria), typeof(GradeRangeCriteria))]
