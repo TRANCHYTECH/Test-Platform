@@ -1,204 +1,206 @@
 <div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <h5 class="card-header border-bottom-0">TEST END MESSAGE</h5>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label>Configure a message to be displayed to all respondents at the end of the test, regardless of
-                        its results.</label>
-                    <ckeditor [editor]="Editor" data=''></ckeditor>
-                </div>
-                <div class="form-check form-switch form-switch-lg mb-3">
-                    <input type="checkbox" role="switch" id="i3" class="form-check-input">
-                    <label for="i3" class="form-check-label">Set redirection to an external website at the end of the test</label>
-                </div>
-                <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
-                    <div class="alert-body">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
-                                <i class="ri-information-line fs-16 align-middle"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="alert-heading">Enter full website address (incl. http/https).</h5>
+    <ng-container *ngIf="readyForUI$ | async">
+        <div class="col-lg-12" [formGroup]="gradeForm">
+            <div class="card" formGroupName="testEndConfig">
+                <h5 class="card-header border-bottom-0">TEST END MESSAGE</h5>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label>Configure a message to be displayed to all respondents at the end of the test, regardless
+                            of
+                            its results.</label>
+                        <ckeditor [editor]="Editor" class="short-editor" formControlName="message"></ckeditor>
+                    </div>
+                    <div class="form-check form-switch form-switch-lg mb-3">
+                        <input type="checkbox" role="switch" id="i3" class="form-check-input"
+                            formControlName="redirectTo">
+                        <label for="i3" class="form-check-label">Set redirection to an external website at the end of
+                            the test</label>
+                    </div>
+                    <ngb-alert [type]="'info'" [dismissible]="false"
+                        class="alert-additional fade show custom-alert mb-3">
+                        <div class="alert-body">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="ri-information-line fs-16 align-middle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="alert-heading">Enter full website address (incl. http/https).</h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </ngb-alert>
-                <input formControlName="name" type="text" class="form-control" id="project-title-input" placeholder="Website">
-            </div>
-        </div>
-        <div class="card">
-            <h5 class="card-header border-bottom-0">GRADING CRITERIA</h5>
-            <div class="card-body">
-                <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
-                    <div class="alert-body">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
-                                <i class="ri-information-line fs-16 align-middle"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h5 class="alert-heading">Set grading criteria</h5>
-                                <p class="mb-0">Define grading criteria now or when all test scores are available.</p>
-                            </div>
-                        </div>
-                    </div>
-                </ngb-alert>
-                <div class="mb-3">
-                    <label>Maximum possible score (100%): 0p.</label>
-                    <div class="hstack form-check form-switch form-switch-lg mb-3">
-                        <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
-                        <label for="flexSwitchCheckRightDisabled" class="form-check-label">Pass mark</label>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-auto">
-                            <label for="mask-value" class="form-label">Value</label>
-                            <input type="text" class="form-control" id="mask-value" placeholder="">
-                        </div>
-                        <div class="col-sm-auto">
-                            <label for="choices-priority-input" class="form-label">Unit</label>
-                            <select class="form-select" data-choices data-choices-search-false
-                                id="choices-priority-input">
-                                <option value="High" selected>%</option>
-                                <option value="Medium">p.</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hstack form-check form-switch form-switch-lg mb-3">
-                    <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
-                    <label for="flexSwitchCheckRightDisabled" class="form-check-label">Define grade ranges based on
-                        points or percents</label>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-auto">
-                        <label for="choices-priority-input" class="form-label">Types of grades:</label>
-                        <select class="form-select" data-choices data-choices-search-false id="choices-priority-input">
-                            <option value="High" selected>Grades</option>
-                            <option value="Medium">Grade and descriptive grades</option>
-                            <option value="Medium">Descriptive grades</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-auto">
-                        <label for="choices-priority-input" class="form-label">Ranges unit:</label>
-                        <select class="form-select" data-choices data-choices-search-false id="choices-priority-input">
-                            <option value="High" selected>%</option>
-                            <option value="Medium">p.</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="card mb-3">
-                    <h5 class="card-header">RANGES (2)</h5>
-                    <div class="card-body">
-                        <div>
-                            <div class="d-inline-flex align-items-center mb-3 gap-1"><label class="fw-bold">Range
-                                    1:</label><label>From:</label><label>0 p.</label><label>not less than:</label><input
-                                    class="form-control border-dashed" style="width: 100px;"><label>p.</label></div>
-                            <div class="mb-3">
-                                <label class="text-muted">Grade:</label>
-                                <input type="text" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted">Descriptive grade:</label>
-                                <textarea class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="d-inline-flex align-items-center mb-3 gap-1"><label class="fw-bold">Range
-                                    2:</label><label>From:</label><label>0 p.</label><label>not less than:</label><input
-                                    class="form-control border-dashed" style="width: 100px;"><label>p.</label></div>
-                            <div class="mb-3">
-                                <label class="text-muted">Grade:</label>
-                                <input type="text" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-muted">Descriptive grade:</label>
-                                <textarea class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline-secondary btn-label">
-                            <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add range</button>
-                    </div>
+                    </ngb-alert>
+                    <input formControlName="toAddress" type="text" class="form-control" placeholder="Website">
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <h5 class="card-header border-bottom-0">INFORMATION FOR RESPONDENTS</h5>
-            <div class="card-body">
-                <label>Choose what information to show to respondents at the end of the test</label>
-                <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
-                    <div class="alert-body">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
-                                <i class="ri-information-line fs-16 align-middle"></i>
+            <div class="card" formGroupName="gradingCriterias">
+                <h5 class="card-header border-bottom-0">GRADING CRITERIA</h5>
+                <div class="card-body">
+                    <ngb-alert [type]="'info'" [dismissible]="false"
+                        class="alert-additional fade show custom-alert mb-3">
+                        <div class="alert-body">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="ri-information-line fs-16 align-middle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="alert-heading">Set grading criteria</h5>
+                                    <p class="mb-0">Define grading criteria now or when all test scores are available.
+                                    </p>
+                                </div>
                             </div>
-                            <div class="flex-grow-1">
-                                <h5 class="alert-heading">Two-phase feedback</h5>
-                                <p class="mb-0">You can initially hide some information from respondents. After
-                                    reviewing all results, you can reveal the rest.</p>
+                        </div>
+                    </ngb-alert>
+                    <div class="mb-3">
+                        <label>Maximum possible score (100%): 0p.</label>
+                    </div>
+                    <div class="mb-3" formGroupName="{{GradingCriteriaConfigTypeRef.PassMask.toString()}}">
+                        <div class="hstack form-check form-switch form-switch-lg ms-auto">
+                            <input type="checkbox" role="switch" class="form-check-input" id="passmask-criteria-toggler"
+                                [checked]="getGradingCriteriaCtrl(GradingCriteriaConfigTypeRef.PassMask).enable"
+                                (change)="toggleGradeCriteria({id: GradingCriteriaConfigTypeRef.PassMask, originEvent: $event})">
+                            <label for="passmask-criteria-toggler" class="form-check-label">Pass mark</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <label for="mask-value" class="form-label">Value</label>
+                                <input type="number" class="form-control" formControlName="value">
+                            </div>
+                            <div class="col-sm-auto">
+                                <label class="form-label">Unit</label>
+                                <select class="form-select" formControlName="unit">
+                                    <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.rangeUnits">{{r.key}}
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                </ngb-alert>
-                <div class="d-inline-flex flex-wrap gap-3 mb-3">
-                    <div class="form-check form-check-secondary">
-                        <input class="form-check-input" type="checkbox" id="percentage-score" checked>
-                        <label class="form-check-label" for="percentage-score">Percentage score</label>
-                    </div>
-                    <div class="form-check form-check-secondary">
-                        <input class="form-check-input" type="checkbox" id="p2" checked>
-                        <label class="form-check-label" for="p2">Points score</label>
-                    </div>
-                    <div class="form-check form-check-secondary">
-                        <input class="form-check-input" type="checkbox" id="p3" checked>
-                        <label class="form-check-label" for="p3">Grade</label>
-                    </div>
-                    <div class="form-check form-check-secondary">
-                        <input class="form-check-input" type="checkbox" id="p4" checked>
-                        <label class="form-check-label" for="p4">Descriptive grade</label>
-                    </div>
-                    <div class="form-check form-check-secondary">
-                        <input class="form-check-input" type="checkbox" id="p5" checked>
-                        <label class="form-check-label" for="p5">Correct answers to questions</label>
-                    </div>
-                    <div class="form-check form-check-secondary">
-                        <input class="form-check-input" type="checkbox" id="p6" checked>
-                        <label class="form-check-label" for="p6">Pass or fail message</label>
+                    <div class="mb-3" formGroupName="{{GradingCriteriaConfigTypeRef.GradeRanges.toString()}}">
+                        <div class="hstack form-check form-switch form-switch-lg mb-3">
+                            <input type="checkbox" role="switch" id="grade-ranges-toggler" class="form-check-input"
+                                [checked]="getGradingCriteriaCtrl(GradingCriteriaConfigTypeRef.GradeRanges).enable"
+                                (change)="toggleGradeCriteria({id: GradingCriteriaConfigTypeRef.GradeRanges, originEvent: $event})">
+                            <label for="grade-ranges-toggler" class="form-check-label">Define grade ranges based
+                                on
+                                points or percents</label>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-auto">
+                                <label class="form-label">Types of grades:</label>
+                                <select class="form-select" formControlName="gradeType">
+                                    <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.gradeTypes">{{r.key}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-auto">
+                                <label class="form-label">Ranges unit:</label>
+                                <select class="form-select" formControlName="unit">
+                                    <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.rangeUnits">{{r.key}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card" formArrayName="details">
+                            <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
+                            <div class="card-body">
+                                <div class="mb-3" *ngFor="let ctrl of gradeRangesDetailsCtrl.controls; let i = index">
+                                    <ng-container [formGroup]="ctrl">
+                                        <div class="hstack">
+                                            <div class="d-inline-flex align-items-center mb-3 gap-1">
+                                                <label class="fw-bold">Range {{i +
+                                                    1}}:</label><label>From:</label><label>{{ctrl.controls['from'].value}}
+                                                    p.</label><label>not less
+                                                    than:</label>
+                                                <input type="number" class="form-control border-dashed"
+                                                    style="width: 100px;" formControlName="to"><label>p.</label>
+                                            </div>
+                                            <i class="ri-delete-bin-line delete-icon ms-auto"
+                                                [swal]="{ title: 'Confirmation', text: 'You want to delete this grade!', showCancelButton: true }"
+                                                (confirm)="gradeRangesDetailsCtrl.removeAt(i)"></i>
+                                        </div>
+                                        <ng-container formGroupName="grades">
+                                            <div class="mb-3">
+                                                <label class="text-muted">Grade:</label>
+                                                <input type="text" class="form-control"
+                                                    formControlName="{{GradeTypeRef.Grade.toString()}}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="text-muted">Descriptive grade:</label>
+                                                <textarea class="form-control"
+                                                    formControlName="{{GradeTypeRef.Descriptive.toString()}}"></textarea>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary btn-label"
+                                    (click)="addNewGradeRange()">
+                                    <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add range</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label>Message for users who have passed:</label>
-                    <ckeditor [editor]="Editor" data='Congratulations on completing the test!' class="short-editor" style="min-height: 100px;"></ckeditor>
+            </div>
+            <div class="card" formGroupName="informRespondentConfig">
+                <h5 class="card-header border-bottom-0">INFORMATION FOR RESPONDENTS</h5>
+                <div class="card-body">
+                    <label>Choose what information to show to respondents at the end of the test</label>
+                    <ngb-alert [type]="'info'" [dismissible]="false"
+                        class="alert-additional fade show custom-alert mb-3">
+                        <div class="alert-body">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="ri-information-line fs-16 align-middle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="alert-heading">Two-phase feedback</h5>
+                                    <p class="mb-0">You can initially hide some information from respondents. After
+                                        reviewing all results, you can reveal the rest.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </ngb-alert>
+                    <div class="d-inline-flex flex-wrap gap-3 mb-3" formGroupName="informFactors">
+                        <div class="form-check form-check" *ngFor="let factor of InformFactorRef | keyvalue">
+                            <input class="form-check-input" type="checkbox" id="inform-factor-{{factor.value}}" formControlName="{{factor.value}}">
+                            <label class="form-check-label" for="inform-factor-{{factor.value}}">{{factor.key}}</label>
+                        </div>             
+                    </div>
+                    <div class="mb-3">
+                        <label>Message for users who have passed:</label>
+                        <ckeditor [editor]="Editor" class="short-editor" formControlName="passedMessage"></ckeditor>
+                    </div>
+                    <div class="mb-3">
+                        <label>Message for users who have failed:</label>
+                        <ckeditor [editor]="Editor" class="short-editor" formControlName="failedMessage"></ckeditor>
+                    </div>
+                    <div class="form-check form-switch form-switch-lg">
+                        <input type="checkbox" role="switch" id="informViaEmailToggler" class="form-check-input" formControlName="informViaEmail">
+                        <label for="informViaEmailToggler" class="form-check-label">Inform respondent about result via email</label>
+                    </div>
+                    <small class="text-muted">The email will display the same content as the one at the end of the
+                        test.</small>
                 </div>
-                <div class="mb-3">
-                    <label>Message for users who have failed:</label>
-                    <ckeditor [editor]="Editor" class="short-editor" data='Unfortunately your score was too low to pass the test.'></ckeditor>
+            </div>
+            <!-- <div class="card">
+                <h5 class="card-header border-bottom-0">MY FEEDBACK</h5>
+                <div class="card-body">
+                    <div class="form-check form-switch form-switch-lg mb-3">
+                        <input type="checkbox" role="switch" id="i2" class="form-check-input">
+                        <label for="i2" class="form-check-label">Send every respondent's results in separate email (1
+                            respondent = 1 message)</label>
+                    </div>
+                    <div class="form-check form-switch form-switch-lg mb-3">
+                        <input type="checkbox" role="switch" id="i3" class="form-check-input">
+                        <label for="i3" class="form-check-label">Send collective results after the test has ended (1
+                            message)</label>
+                    </div>
                 </div>
-                <div class="form-check form-switch form-switch-lg">
-                    <input type="checkbox" role="switch" id="i1" class="form-check-input">
-                    <label for="i1" class="form-check-label">Inform respondent about result via email</label>
+            </div> -->
+            <div class="text-end mb-4">
+                <div class="d-flex gap-1 justify-content-end">
+                    <button type="button" class="btn btn-primary w-sm" (click)="save()"
+                        [disabled]="gradeForm.invalid || gradeForm.pristine">Save</button>
                 </div>
-                <small class="text-muted">The email will display the same content as the one at the end of the
-                    test.</small>
             </div>
         </div>
-        <div class="card">
-            <h5 class="card-header border-bottom-0">MY FEEDBACK</h5>
-            <div class="card-body">
-                <div class="form-check form-switch form-switch-lg mb-3">
-                    <input type="checkbox" role="switch" id="i2" class="form-check-input">
-                    <label for="i2" class="form-check-label">Send every respondent's results in separate email (1 respondent = 1 message)</label>
-                </div>
-                <div class="form-check form-switch form-switch-lg mb-3">
-                    <input type="checkbox" role="switch" id="i3" class="form-check-input">
-                    <label for="i3" class="form-check-label">Send collective results after the test has ended (1 message)</label>
-                </div>
-            </div>
-        </div>
-        <div class="text-end mb-4">
-            <div class="d-flex gap-1 justify-content-end">
-                <button type="submit" class="btn btn-primary w-sm">Save</button>
-            </div>
-        </div>
-    </div>
+    </ng-container>
 </div>

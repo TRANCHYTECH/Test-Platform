@@ -114,7 +114,7 @@
                                                 <input type="checkbox" class="form-check-input"
                                                     formControlName="sendCode">
                                             </td>
-                                            <td><i class="ri-delete-bin-line delete-icon" [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }" (confirm)="deleteAccessCode(i)"></i></td>
+                                            <td><i class="ri-delete-bin-line delete-icon" [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }" (confirm)="privateAccessCodeConfigsCtrl.removeAt(i)"></i></td>
                                         </tr>
                                     </ng-container>
                                 </tbody>

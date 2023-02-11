@@ -80,6 +80,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [1, [Validators.required, Validators.min(1), Validators.max(10)]]
     }));
     this.testAccessForm.addControl(TestAccessType.Training.toString(), this.fb.group({}));
+
     // Path current values.
     switch (this.test.testAccessSettings?.accessType) {
       case TestAccessType.PublicLink:
@@ -104,10 +105,6 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
 
   onAccessTypeSelected(accessType: number) {
     this.accessTypeCtrl.setValue(accessType);
-  }
-
-  deleteAccessCode(controlIndex: number) {
-    (this.privateAccessCodeCtrl.controls['configs'] as FormArray).removeAt(controlIndex);
   }
 
   generateCodes() {
@@ -142,7 +139,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     };
 
     await this.testsService.update(this.testId, { testAccessSettings: model });
-    this.notifyService.show('Test access updated');
+    this.notifyService.success('Test access updated');
   }
 
   private updatePrivateAccessCodeForm() {

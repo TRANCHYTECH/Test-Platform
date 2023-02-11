@@ -54,6 +54,7 @@ public class TestProfile : Profile
         CreateMap<Contract.ViewModels.GradeRangeCriteria, Core.Models.GradeRangeCriteria>();
         CreateMap<Contract.ViewModels.GradeRangeCriteriaDetail, Core.Models.GradeRangeCriteriaDetail>();
         CreateMap<Contract.ViewModels.TestEndConfig, Core.Models.TestEndConfig>();
+        CreateMap<Contract.ViewModels.InformRespondentConfig, Core.Models.InformRespondentConfig>();
         CreateMap<Contract.ViewModels.CreateOrupdateGradingSettings, Core.Models.GradingSettingsPart>();
 
         CreateMap<Core.Models.GradingCriteriaConfig, Contract.ViewModels.GradingCriteriaConfig>().IncludeAllDerived();
@@ -61,6 +62,7 @@ public class TestProfile : Profile
         CreateMap<Core.Models.GradeRangeCriteria, Contract.ViewModels.GradeRangeCriteria>();
         CreateMap<Core.Models.GradeRangeCriteriaDetail, Contract.ViewModels.GradeRangeCriteriaDetail>();
         CreateMap<Core.Models.TestEndConfig, Contract.ViewModels.TestEndConfig>();
+        CreateMap<Core.Models.InformRespondentConfig, Contract.ViewModels.InformRespondentConfig >();
         CreateMap<Core.Models.GradingSettingsPart, Contract.ViewModels.GradingSettings>();
     }
 }

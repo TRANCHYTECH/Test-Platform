@@ -3,6 +3,7 @@ export interface Test {
   basicSettings: BasicSettings;
   testSetSettings?: TestSets;
   testAccessSettings?: TestAccess;
+  gradingSettings?: GradingSettings;
   createdOn: Date;
 }
 
@@ -10,6 +11,46 @@ export interface BasicSettings {
   name: string;
   category: string;
   description: string;
+}
+
+export interface GradingSettings {
+  testEndConfig: TestEndConfig;
+  gradingCriterias: { [key: string]: GradingCriteriaConfig };
+  informRespondentConfig?: InformRespondentConfig;
+}
+
+export interface InformRespondentConfig {
+  informViaEmail: boolean;
+  passedMessage: string;
+  failedMessage: string;
+  informFactors: { [key: string]: string };
+}
+
+export interface TestEndConfig {
+  message?: string;
+  redirectTo: boolean;
+  toAddress?: string;
+}
+
+export interface GradingCriteriaConfig {
+  $type: number;
+}
+
+export interface PassMaskCriteria extends GradingCriteriaConfig {
+  value: number;
+  unit: number;
+}
+
+export interface GradeRangeCriteria extends GradingCriteriaConfig {
+  gradeType: number;
+  unit: number;
+  details: GradeRangeCriteriaDetail[]
+}
+
+export interface GradeRangeCriteriaDetail {
+  from: number,
+  to: number,
+  grades: { [key: string]: string }
 }
 
 export interface TestSets {
