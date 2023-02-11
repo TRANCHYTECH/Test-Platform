@@ -27,7 +27,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xxl-12 project-card" *ngFor="let data of questions" id="pl1_{{data.id}}">
+  <div class="col-xxl-12 project-card" *ngFor="let data of questions$ | async" id="pl1_{{data.id}}">
     <div class="card card-height-100">
       <div class="card-body">
         <div class="d-flex flex-column h-100">
@@ -41,7 +41,7 @@
                   <span class="ms-3 badge rounded-pill text-bg-primary">{{data.categoryId}}</span>
                   <span class="ms-3"><label>Type</label> {{data.answerTypeName}}</span>
                   <span class="ms-3 vr"></span>
-                  <span class="ms-3"><label>Points</label> {{data.scoreSettings?.maxPoints}}</span>
+                  <span class="ms-3"><label>Points</label> {{data.scoreSettings.maxPoints}}</span>
                 </div>
                 <div class="dropdown" ngbDropdown>
                   <button class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none"
