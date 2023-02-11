@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { QuestionCategory } from '../../../state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../../state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../../state/question-categories/question-categories.service';
-import { TestQuestion } from '../../../state/test.model';
-import { QuestionData, AnswerTypes } from './data';
+import { Question } from '../../../state/questions/question.model';
+import { AnswerTypes } from './data';
 
 @Component({
   selector: 'viet-geeks-edit-question',
@@ -15,7 +15,7 @@ import { QuestionData, AnswerTypes } from './data';
 export class EditQuestionComponent implements OnInit {
   Editor = ClassicEditor;
   questionCategories$!: Observable<QuestionCategory[]>;
-  question!: TestQuestion;
+  question!: Question;
   answerTypes = AnswerTypes;
 
   constructor (
@@ -25,7 +25,6 @@ export class EditQuestionComponent implements OnInit {
     this.questionCategories$ = this._questionCategoriesQuery.selectAll();
   }
   ngOnInit(): void {
-    this.question = QuestionData;
   }
 
   addCategory() {

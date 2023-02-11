@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -13,6 +12,8 @@ public static class ServiceCollectionExtensions
         DB.InitAsync(databaseOptions.DatabaseName, MongoClientSettings.FromConnectionString(databaseOptions.ConnectionString)).Wait();
 
         serviceCollection.AddScoped<ITestManagerService, TestManagerService>();
+        serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
+        serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
     }

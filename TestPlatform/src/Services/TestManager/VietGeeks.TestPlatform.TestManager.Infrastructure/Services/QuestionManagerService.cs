@@ -1,0 +1,54 @@
+﻿using AutoMapper;
+using MongoDB.Entities;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.TestManager.Contract;
+using VietGeeks.TestPlatform.TestManager.Core.Models;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+
+public class QuestionManagerService : IQuestionManagerService
+{
+    private readonly IMapper _mapper;
+    private readonly TestManagerDbContext _managerDbContext;
+
+    public QuestionManagerService(IMapper mapper, TestManagerDbContext managerDbContext)
+    {
+        _mapper = mapper;
+        _managerDbContext = managerDbContext;
+    }
+
+    public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, CancellationToken cancellationToken)
+    {
+        var entities = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(q => q.TestId == testId, cancellationToken);
+
+        return _mapper.Map<List<QuestionViewModel>>(entities);
+    }
+
+    public async Task<QuestionViewModel> GetQuestion(string id, CancellationToken cancellationToken)
+    {
+        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync();
+
+        return _mapper.Map<QuestionViewModel>(entity);
+    }
+
+    public async Task<QuestionViewModel> CreateQuestion(string testId, QuestionViewModel questionViewModel, CancellationToken cancellationToken)
+    {
+        var entity = _mapper.Map<QuestionDefinition>(questionViewModel);
+        entity.TestId = testId;
+        await _managerDbContext.SaveAsync(entity, cancellationToken);
+
+        return _mapper.Map<QuestionViewModel>(entity);
+    }
+
+    public async Task<QuestionViewModel> UpdateQuestion(string id, QuestionViewModel questionViewModel, CancellationToken cancellationToken)
+    {
+        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
+        if (entity == null)
+            throw new EntityNotFoundException(id, nameof(QuestionDefinition));
+
+        await _managerDbContext.SaveAsync(entity, cancellationToken);
+
+        return _mapper.Map<QuestionViewModel>(entity);
+    }
+}
