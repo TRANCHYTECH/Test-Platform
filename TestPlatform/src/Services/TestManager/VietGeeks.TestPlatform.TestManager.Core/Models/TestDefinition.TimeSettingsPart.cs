@@ -1,14 +1,42 @@
 ﻿using System;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 public class TimeSettingsPart
 {
-    public int MaximumTimeInMinutes { get; set; }
+    public TestDuration TestDuration { get; set; } = default!;
 
-    public int TimePerQuestionInMinutes { get; set; }
+    public TestActivationMethod TestActivationMethod { get; set; } = default!;
+}
 
-    public DateTimeOffset ActiveFrom { get; set; }
+public class TestDuration
+{
+    public TestDurationMethod Method { get; set; }
 
-    public DateTimeOffset ActiveTo { get; set; }
+    public TimeSpan Duration { get; set; }
+}
+
+[BsonKnownTypes(typeof(ManualTestActivation), typeof(TimePeriodActivation))]
+public abstract class TestActivationMethod
+{
+}
+
+public class ManualTestActivation : TestActivationMethod
+{
+    public TimeSpan ActiveUntil { get; set; }
+}
+
+
+public class TimePeriodActivation : TestActivationMethod
+{
+    public DateTimeOffset ActiveFromDate { get; set; }
+
+    public DateTimeOffset ActiveUntilDate { get; set; }
+}
+
+public enum TestDurationMethod
+{
+    CompleteTestTime = 1,
+    CompleteQuetsionTime = 2
 }

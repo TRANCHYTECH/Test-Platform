@@ -64,11 +64,16 @@ public class TestManagerService : ITestManagerService
             updatedProperties.Add(nameof(TestDefinition.TestAccessSettings));
         }
 
-        //todo: remove this block
         if (viewModel.GradingSettings != null)
         {
             entity.GradingSettings = _mapper.Map<GradingSettingsPart>(viewModel.GradingSettings);
             updatedProperties.Add(nameof(TestDefinition.GradingSettings));
+        }
+
+        if(viewModel.TimeSettings != null)
+        {
+            entity.TimeSettings = _mapper.Map<TimeSettingsPart>(viewModel.TimeSettings);
+            updatedProperties.Add(nameof(TestDefinition.TimeSettings));
         }
 
         if (updatedProperties.Count > 0)

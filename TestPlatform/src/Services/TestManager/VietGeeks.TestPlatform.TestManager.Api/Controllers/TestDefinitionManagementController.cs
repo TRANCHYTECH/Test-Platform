@@ -64,6 +64,20 @@ public class TestDefinitionManagementController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
 
+        //todo: remove this block
+        viewModel.TimeSettings = new CreateOrUpdateTimeSettingsViewModel
+        {
+            TestDuration = new TestDuration
+            {
+                Method = TestDurationMethod.CompleteQuetsionTime,
+                Duration = new TimeSpan(0, 2, 0)
+            },
+            TestActivationMethod = new ManualTestActivation
+            {
+                ActiveUntil = new TimeSpan(1, 0, 0, 0)
+            }
+        };
+
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);

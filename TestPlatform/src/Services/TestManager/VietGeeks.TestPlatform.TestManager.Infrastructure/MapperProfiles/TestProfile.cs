@@ -64,6 +64,18 @@ public class TestProfile : Profile
         CreateMap<Core.Models.TestEndConfig, Contract.ViewModels.TestEndConfig>();
         CreateMap<Core.Models.InformRespondentConfig, Contract.ViewModels.InformRespondentConfig >();
         CreateMap<Core.Models.GradingSettingsPart, Contract.ViewModels.GradingSettings>();
+
+        CreateMap<Contract.ViewModels.TestActivationMethod, Core.Models.TestActivationMethod>().IncludeAllDerived();
+        CreateMap<Contract.ViewModels.ManualTestActivation, Core.Models.ManualTestActivation>();
+        CreateMap<Contract.ViewModels.TimePeriodActivation, Core.Models.TimePeriodActivation>();
+        CreateMap<Contract.ViewModels.TestDuration, Core.Models.TestDuration>();
+        CreateMap<Contract.ViewModels.CreateOrUpdateTimeSettingsViewModel, Core.Models.TimeSettingsPart>();
+
+        CreateMap<Core.Models.TestActivationMethod, Contract.ViewModels.TestActivationMethod>().IncludeAllDerived();
+        CreateMap<Core.Models.ManualTestActivation, Contract.ViewModels.ManualTestActivation>();
+        CreateMap<Core.Models.TimePeriodActivation, Contract.ViewModels.TimePeriodActivation>();
+        CreateMap<Core.Models.TestDuration, Contract.ViewModels.TestDuration>();
+        CreateMap<Core.Models.TimeSettingsPart, Contract.ViewModels.TimeSettings>();
     }
 }
 
