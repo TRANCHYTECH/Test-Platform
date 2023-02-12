@@ -8,5 +8,4 @@ export class QuestionsQuery extends QueryEntity<QuestionsState> {
   constructor(store: QuestionsStore) {
     super(store);
   }
-
 }

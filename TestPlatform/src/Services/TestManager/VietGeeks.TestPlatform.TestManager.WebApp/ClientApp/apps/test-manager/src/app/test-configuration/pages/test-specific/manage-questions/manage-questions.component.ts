@@ -1,10 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Question } from '../../../state/questions/question.model';
 import { QuestionsQuery } from '../../../state/questions/question.query';
 import { QuestionService } from '../../../state/questions/question.service';
+
+@UntilDestroy()
 @Component({
   selector: 'viet-geeks-manage-questions',
   templateUrl: './manage-questions.component.html',
@@ -27,11 +29,6 @@ export class ManageQuestionsComponent implements OnInit {
       this.testId = p['id'];
       if (!this.isNewTest) {
         await firstValueFrom(this._questionsService.get(this.testId), { defaultValue: null });
-        const testDef = this._questionsQuery.getEntity(this.testId);
-        if (testDef === undefined) {
-          await this.router.navigate(['tests']);
-          return;
-        }
       }
     });
   }
