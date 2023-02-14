@@ -64,6 +64,22 @@ public class TestProfile : Profile
         CreateMap<Core.Models.TestEndConfig, Contract.ViewModels.TestEndConfig>();
         CreateMap<Core.Models.InformRespondentConfig, Contract.ViewModels.InformRespondentConfig >();
         CreateMap<Core.Models.GradingSettingsPart, Contract.ViewModels.GradingSettings>();
+
+        CreateMap<Contract.ViewModels.TestActivationMethod, Core.Models.TestActivationMethod>().IncludeAllDerived();
+        CreateMap<Contract.ViewModels.ManualTestActivation, Core.Models.ManualTestActivation>();
+        CreateMap<Contract.ViewModels.TimePeriodActivation, Core.Models.TimePeriodActivation>();
+        CreateMap<Contract.ViewModels.TestDurationMethod, Core.Models.TestDurationMethod>().IncludeAllDerived();
+        CreateMap<Contract.ViewModels.CompleteQuestionDuration, Core.Models.CompleteQuestionDuration>();
+        CreateMap<Contract.ViewModels.CompleteTestDuration, Core.Models.CompleteTestDuration>();
+        CreateMap<Contract.ViewModels.CreateOrUpdateTimeSettingsViewModel, Core.Models.TimeSettingsPart>();
+
+        CreateMap<Core.Models.TestActivationMethod, Contract.ViewModels.TestActivationMethod>().IncludeAllDerived();
+        CreateMap<Core.Models.ManualTestActivation, Contract.ViewModels.ManualTestActivation>();
+        CreateMap<Core.Models.TimePeriodActivation, Contract.ViewModels.TimePeriodActivation>();
+        CreateMap<Core.Models.TestDurationMethod, Contract.ViewModels.TestDurationMethod>().IncludeAllDerived();
+        CreateMap<Core.Models.CompleteQuestionDuration, Contract.ViewModels.CompleteQuestionDuration>();
+        CreateMap<Core.Models.CompleteTestDuration, Contract.ViewModels.CompleteTestDuration>();
+        CreateMap<Core.Models.TimeSettingsPart, Contract.ViewModels.TimeSettings>();
     }
 }
 

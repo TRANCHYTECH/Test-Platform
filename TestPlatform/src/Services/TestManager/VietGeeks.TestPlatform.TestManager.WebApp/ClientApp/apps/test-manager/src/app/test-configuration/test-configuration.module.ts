@@ -20,7 +20,7 @@ import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,8 @@ import { TranslateModule } from '@ngx-translate/core';
     NgbNavModule,
     NgbAccordionModule,
     NgbAlertModule,
-    NgbModalModule
+    NgbModalModule,
+    InputMaskModule
   ]
 })
 export class TestConfigurationModule { }

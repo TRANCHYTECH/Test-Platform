@@ -18,6 +18,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { InputMaskModule } from '@ngneat/input-mask';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,7 +41,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
       }
     }),
     FlatpickrModule.forRoot(),
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    InputMaskModule.forRoot({ inputSelector: 'input', isAsync: true })
   ],
   providers: [
     {
