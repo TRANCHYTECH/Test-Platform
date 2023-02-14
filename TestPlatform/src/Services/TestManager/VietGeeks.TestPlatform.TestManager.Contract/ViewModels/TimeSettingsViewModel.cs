@@ -5,24 +5,35 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
 {
     public class CreateOrUpdateTimeSettingsViewModel
     {
-        public TestDuration TestDuration { get; set; } = default!;
+        public TestDurationMethod TestDurationMethod { get; set; } = default!;
 
         public TestActivationMethod TestActivationMethod { get; set; } = default!;
     }
 
     public class TimeSettings
     {
-        public TestDuration TestDuration { get; set; } = default!;
+        public TestDurationMethod TestDurationMethod { get; set; } = default!;
 
         public TestActivationMethod TestActivationMethod { get; set; } = default!;
     }
 
-    public class TestDuration
-    {
-        public TestDurationMethod Method { get; set; }
 
+    [JsonDerivedType(typeof(CompleteTestDuration), (int)TestDurationMethodTypoe.CompleteTestTime)]
+    [JsonDerivedType(typeof(CompleteQuestionDuration), (int)TestDurationMethodTypoe.CompleteQuetsionTime)]
+    public abstract class TestDurationMethod
+    {
+    }
+
+    public class CompleteTestDuration : TestDurationMethod
+    {
         public TimeSpan Duration { get; set; }
     }
+
+    public class CompleteQuestionDuration : TestDurationMethod
+    {
+        public TimeSpan Duration { get; set; }
+    }
+
 
     [JsonDerivedType(typeof(ManualTestActivation), (int)TestActivationMethodType.ManualTest)]
     [JsonDerivedType(typeof(TimePeriodActivation), (int)TestActivationMethodType.TimePeriod)]
@@ -38,12 +49,12 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
 
     public class TimePeriodActivation : TestActivationMethod
     {
-        public DateTimeOffset ActiveFromDate { get; set; }
+        public DateTime ActiveFromDate { get; set; }
 
-        public DateTimeOffset ActiveUntilDate { get; set; }
+        public DateTime ActiveUntilDate { get; set; }
     }
 
-    public enum TestDurationMethod
+    public enum TestDurationMethodTypoe
     {
         CompleteTestTime = 1,
         CompleteQuetsionTime = 2

@@ -4,7 +4,38 @@ export interface Test {
   testSetSettings?: TestSets;
   testAccessSettings?: TestAccess;
   gradingSettings?: GradingSettings;
+  timeSettings?: TimeSettings;
   createdOn: Date;
+}
+
+export interface TimeSettings {
+  testDurationMethod: TestDurationMethod;
+  testActivationMethod: TestActivationMethod;
+}
+
+export interface TestDurationMethod {
+  $type: number;
+}
+
+export interface CompleteTestDuration extends TestDurationMethod {
+  duration: string;
+}
+
+export interface CompleteQuestionDuration extends TestDurationMethod {
+  duration: string;
+}
+
+export interface TestActivationMethod {
+  $type: number;
+}
+
+export interface ManualTestActivation extends TestActivationMethod {
+  activeUntil: string;
+}
+
+export interface TimePeriodActivation extends TestActivationMethod {
+  activeFromDate: Date;
+  activeUntilDate: Date;
 }
 
 export interface BasicSettings {
