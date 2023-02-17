@@ -1,12 +1,16 @@
+export enum AnswerType {
+  SingleChoice = 1,
+  MultipleChoice = 2
+}
 export interface Question {
   id: string;
   questionNo: number;
-  questionDefinition: string;
+  description: string;
   categoryId: string;
-  categoryName: string;
-  categoryColor: string;
+  categoryName?: string;
+  categoryColor?: string;
   answerType: number;
-  answerTypeName: string;
+  answerTypeName?: string;
   answers?: Answer[];
   scoreSettings: ScoreSettings;
   isMandatory: boolean;
@@ -14,7 +18,7 @@ export interface Question {
   lastModifiedDate: string;
 }
 
-interface ScoreSettings {
+export interface ScoreSettings {
   correctPoint: number;
   incorrectPoint: number;
   isPartialAnswersEnabled: boolean;
@@ -22,7 +26,7 @@ interface ScoreSettings {
   maxWords: number;
 }
 
-interface Answer {
+export interface Answer {
   id: string;
   answerDescription: string;
   answerPoint: number;

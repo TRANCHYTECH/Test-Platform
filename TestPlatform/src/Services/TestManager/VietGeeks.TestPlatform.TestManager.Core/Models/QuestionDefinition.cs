@@ -2,15 +2,13 @@
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models
 {
-    [Collection("QuestionDefinition")]
+    [Collection("QuestionDefinition1")]
     public class QuestionDefinition: EntityBase
     {
         public string TestId { get; set; }
         public int QuestionNo { get; set; }
         public string Description { get; set; }
-        public int CategoryId { get; set; }
-        public string CategoryName { get; set; }
-        public string CategoryColor { get; set; }
+        public string CategoryId { get; set; }
         public int AnswerType { get; set; }
         public Answer[] Answers { get; set; }
         public ScoreSettings ScoreSettings { get; set; }

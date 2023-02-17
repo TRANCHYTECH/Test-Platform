@@ -32,7 +32,7 @@ public class QuestionManagerService : IQuestionManagerService
         return _mapper.Map<QuestionViewModel>(entity);
     }
 
-    public async Task<QuestionViewModel> CreateQuestion(string testId, QuestionViewModel questionViewModel, CancellationToken cancellationToken)
+    public async Task<QuestionViewModel> CreateQuestion(string testId, NewQuestionViewModel questionViewModel, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<QuestionDefinition>(questionViewModel);
         entity.TestId = testId;
@@ -43,12 +43,16 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<QuestionViewModel> UpdateQuestion(string id, QuestionViewModel questionViewModel, CancellationToken cancellationToken)
     {
-        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
-        if (entity == null)
+        var existingEntity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
+        if (existingEntity == null)
             throw new EntityNotFoundException(id, nameof(QuestionDefinition));
 
-        await _managerDbContext.SaveAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<QuestionDefinition>(questionViewModel);
+        updatedEntity.ID = id;
+        updatedEntity.TestId = existingEntity.TestId;
 
-        return _mapper.Map<QuestionViewModel>(entity);
+        await _managerDbContext.SaveAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<QuestionViewModel>(updatedEntity);
     }
 }

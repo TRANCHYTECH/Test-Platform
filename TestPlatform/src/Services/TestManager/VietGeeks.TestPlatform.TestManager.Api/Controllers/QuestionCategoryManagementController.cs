@@ -28,7 +28,7 @@ public class QuestionCategoryManagementController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(QuestionCategoryViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(NewQuestionCategoryViewModel viewModel, CancellationToken cancellationToken)
     {
         var questionCategoryId = await _questionCategoryService.CreateQuestionCategory(viewModel, cancellationToken);
 

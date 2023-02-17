@@ -29,9 +29,6 @@
     <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ValidationRules\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Contract\VietGeeks.TestPlatform.TestManager.Contract.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>

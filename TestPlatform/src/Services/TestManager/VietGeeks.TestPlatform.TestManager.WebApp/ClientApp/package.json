@@ -73,6 +73,7 @@
     "angular-feather": "^6.5.0",
     "angularx-flatpickr": "^7.0.0",
     "bootstrap": "^5.2.3",
+    "bson-objectid": "^2.0.4",
     "flatpickr": "^4.6.13",
     "lodash": "^4.17.21",
     "ng": "^0.0.0",

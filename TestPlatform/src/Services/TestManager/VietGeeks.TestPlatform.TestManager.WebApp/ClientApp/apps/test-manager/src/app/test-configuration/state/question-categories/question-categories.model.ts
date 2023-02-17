@@ -1,6 +1,6 @@
 export interface QuestionCategory {
   id: number | string;
-  text: string;
+  name: string;
 }
 
 export function createQuestionCategory(params: Partial<QuestionCategory>) {
