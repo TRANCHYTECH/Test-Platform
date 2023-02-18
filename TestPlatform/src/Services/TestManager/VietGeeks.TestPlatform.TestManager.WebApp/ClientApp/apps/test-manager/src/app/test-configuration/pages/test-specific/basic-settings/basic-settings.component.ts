@@ -6,7 +6,7 @@ import { TestCategoriesService } from '../../../state/test-categories.service';
 import { TestCategoriesQuery } from '../../../state/test-categories.query';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateTestCategoryComponent } from '../../../components/create-test-category/create-test-category.component';
+import { CreateCategoryComponent } from '../../../components/create-test-category/create-test-category.component';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 
 @UntilDestroy()
@@ -67,7 +67,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
   }
 
   openAddTestCategoryModal() {
-    const modalRef = this._modalService.open(CreateTestCategoryComponent, { size: 'md', centered: true });
+    const modalRef = this._modalService.open(CreateCategoryComponent, { size: 'md', centered: true });
     modalRef.result.then(async (formValue: Partial<TestCategory>) => {
       await firstValueFrom(this._testCategoriesService.add(formValue));
     }, reason => {

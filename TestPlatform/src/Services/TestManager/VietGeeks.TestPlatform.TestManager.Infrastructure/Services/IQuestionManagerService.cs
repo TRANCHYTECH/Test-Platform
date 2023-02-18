@@ -7,6 +7,6 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
         Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, CancellationToken cancellationToken);
         Task<QuestionViewModel> GetQuestion(string id, CancellationToken cancellationToken);
         Task<QuestionViewModel> UpdateQuestion(string id, QuestionViewModel questionViewModel, CancellationToken cancellationToken);
-        Task<QuestionViewModel> CreateQuestion(string testId, QuestionViewModel questionViewModel, CancellationToken cancellationToken);
+        Task<QuestionViewModel> CreateQuestion(string testId, NewQuestionViewModel questionViewModel, CancellationToken cancellationToken);
     }
 }

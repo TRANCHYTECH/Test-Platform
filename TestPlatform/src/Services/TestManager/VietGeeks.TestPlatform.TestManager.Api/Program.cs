@@ -1,6 +1,4 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestManager.Api.ValidationRules;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
@@ -24,6 +22,7 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<QuestionValidator>();
 builder.Services.RegisterInfrastructureModule(builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions());
 var app = builder.Build();
 

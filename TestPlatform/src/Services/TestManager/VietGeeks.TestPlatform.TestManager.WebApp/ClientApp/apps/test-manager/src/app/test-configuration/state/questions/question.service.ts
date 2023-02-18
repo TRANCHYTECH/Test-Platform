@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 import { AppSettingsService } from '@viet-geeks/core';
+import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AppSettings } from '../../../app-setting.model';
 import { Question } from './question.model';
@@ -10,21 +11,25 @@ import { QuestionsStore } from './question.store';
 @Injectable({ providedIn: 'root' })
 export class QuestionService {
 
-  constructor(private _questionStore: QuestionsStore, private http: HttpClient, private _appSettingService: AppSettingsService) {
+  constructor(private _questionStore: QuestionsStore, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
   get(testId: string) {
-    return this.http.get<Question[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question`).pipe(tap(entities => {
+    return this._http.get<Question[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question`).pipe(tap(entities => {
       this._questionStore.set(entities);
     }));
   }
 
-  add(testCategory: Question) {
-    this._questionStore.add(testCategory);
+  add(testId: string, question: Question) {
+    return this._http.post<Question>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question`, question).pipe(tap(qs => {
+      this._questionStore.add(qs);
+    }));
   }
 
-  update(id: string, question: Partial<Question>) {
-    this._questionStore.update(id, question);
+  update(testId: string, id: string, question: Partial<Question>) {
+    return firstValueFrom(this._http.put<Question>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question/${id}`, question).pipe(tap(rs => {
+      this._questionStore.update(id, rs);
+    })));
   }
 
   remove(id: ID) {

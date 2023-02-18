@@ -21,7 +21,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(QuestionViewModel), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<QuestionViewModel>> Create([FromServices] IValidator<QuestionViewModel> newQuestionValidator, string testId, QuestionViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<ActionResult<QuestionViewModel>> Create([FromServices] IValidator<NewQuestionViewModel> newQuestionValidator, string testId, [FromBody] NewQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
         var validationResult = newQuestionValidator.Validate(viewModel);
         if (!validationResult.IsValid)

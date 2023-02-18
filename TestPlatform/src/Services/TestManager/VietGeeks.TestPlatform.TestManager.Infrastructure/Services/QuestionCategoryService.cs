@@ -15,7 +15,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             _managerDbContext = managerDbContext;
         }
 
-        public async Task<string> CreateQuestionCategory(QuestionCategoryViewModel questionCategory, CancellationToken cancellationToken)
+        public async Task<string> CreateQuestionCategory(NewQuestionCategoryViewModel questionCategory, CancellationToken cancellationToken)
         {
             var questionCategoryEntity = _mapper.Map<QuestionCategory>(questionCategory);
             await _managerDbContext.SaveAsync(questionCategoryEntity, cancellationToken);

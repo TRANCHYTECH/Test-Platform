@@ -1,3 +1,5 @@
+import { AnswerType } from "../../../state/questions/question.model";
+
 const question = {
   id: 1,
   questionNo: 1,
@@ -35,11 +37,11 @@ const question = {
 
 const answerTypes = [
   {
-    id: 1,
+    id: AnswerType.SingleChoice,
     text: 'Single choice'
   },
   {
-    id: 2,
+    id: AnswerType.MultipleChoice,
     text: 'Multiple choices'
   },
   {
