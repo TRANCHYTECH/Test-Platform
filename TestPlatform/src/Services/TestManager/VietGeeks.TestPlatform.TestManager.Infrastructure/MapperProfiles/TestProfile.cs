@@ -82,6 +82,13 @@ public class TestProfile : Profile
         CreateMap<Core.Models.CompleteTestDuration, Contract.ViewModels.CompleteTestDuration>();
         CreateMap<Core.Models.AnswerQuestionConfig, Contract.ViewModels.AnswerQuestionConfig>();
         CreateMap<Core.Models.TimeSettingsPart, Contract.ViewModels.TimeSettings>();
+
+        CreateMap<Contract.ViewModels.CreateOrUpdateTestStartSettingsViewModel, Core.Models.TestStartSettingsPart>();
+        CreateMap<Contract.ViewModels.RespondentIdentifyConfig, Core.Models.RespondentIdentifyConfig>();
+
+        CreateMap<Core.Models.TestStartSettingsPart, Contract.ViewModels.TestStartSettingsViewModel>();
+        CreateMap<Core.Models.RespondentIdentifyConfig, Contract.ViewModels.RespondentIdentifyConfig>();
+
     }
 }
 

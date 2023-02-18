@@ -15,9 +15,7 @@ public class TestDefinition: EntityBase
 
     public TestAccessSettingsPart? TestAccessSettings { get; set; }
 
-    public string InstructionMessage { get; set; } = default!;
-
-    public bool IsSkipQuestionsEnabled { get; set; } = default!;
+    public TestStartSettingsPart? TestStartSettings { get; set; }
 
     public bool IsActivated { get; set; }
 

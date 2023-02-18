@@ -1,69 +1,74 @@
 <div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <h5 class="card-header border-bottom-0">INSTRUCTIONS FOR RESPONDENTS</h5>
-            <div class="card-body">
-                <label>Provide test instructions to be displayed to respondents on the test start page.</label>
-                <ckeditor [editor]="Editor" data=''></ckeditor>
+    <ng-container *ngIf="readyForUI$ | async">
+        <div class="col-lg-12" [formGroup]="testStartPageForm">
+            <div class="card">
+                <h5 class="card-header border-bottom-0">INSTRUCTIONS FOR RESPONDENTS</h5>
+                <div class="card-body">
+                    <label>Provide test instructions to be displayed to respondents on the test start page.</label>
+                    <ckeditor [editor]="Editor" formControlName="instruction"></ckeditor>
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <h5 class="card-header border-bottom-0">TEST START FORM</h5>
-            <div class="card-body">
-                <label>Configure test start form and collect data to identify respondents.</label>
-                <table class="table caption-top table-nowrap">
-                    <thead class="table-light">
-                        <tr class="text-center">
-                            <th scope="col">Field</th>
-                            <th scope="col">Mandatory</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let x of [1,2,3]">
-                            <td>
-                                <select data-choices formControlName="category" class="form-select"
-                                    id="test-category-input">
-                                    <option>First name - text field</option>
-                                    <option>Last name - text field</option>
-                                </select>
-                            </td>
-                            <td class="text-center">
-                                <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled"
-                                    class="form-check-input">
-                            </td>
-                            <td>
-                                <div class="hstack gap-2">
-                                    <button type="button" class="btn btn-outline-secondary"><i
-                                            class="ri-arrow-up-s-line"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i
-                                            class="ri-arrow-down-s-line"></i></button>
-                                    <button type="button" class="btn btn-outline-secondary"><i
-                                            class="ri-delete-bin-5-line"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="hstack gap-3">
-                    <button type="button" class="btn btn-outline-secondary btn-label">
-                        <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add a field</button>
-                    <button type="button" class="btn btn-outline-secondary btn-label">
-                        <i class="ri-pencil-line label-icon align-middle fs-24 me-2"></i>Manage custom Fields</button>
+            <div class="card">
+                <h5 class="card-header border-bottom-0">TEST START FORM</h5>
+                <div class="card-body">
+                    <label>Configure test start form and collect data to identify respondents.</label>
+                    <table class="table caption-top table-nowrap" formArrayName="respondentIdentifyConfig">
+                        <thead class="table-light">
+                            <tr class="text-center">
+                                <th scope="col">Field</th>
+                                <th scope="col">Mandatory</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let control of respondentIdentifyConfig.controls; let i = index">
+                                <tr [formGroup]="control">
+                                    <td>
+                                        <select data-choices formControlName="fieldId" class="form-select">
+                                            <option [ngValue]="field.value" *ngFor="let field of fieldConfigs">
+                                                {{field.key}}</option>
+                                        </select>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" role="switch" formControlName="isRequired"
+                                            class="form-check-input">
+                                    </td>
+                                    <td>
+                                        <div class="hstack gap-2">
+                                            <button type="button" class="btn btn-outline-secondary"><i
+                                                    class="ri-arrow-up-s-line"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary"><i
+                                                    class="ri-arrow-down-s-line"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary" (click)="respondentIdentifyConfig.removeAt(i)"><i
+                                                    class="ri-delete-bin-5-line"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <div class="hstack gap-3">
+                        <button type="button" class="btn btn-outline-secondary btn-label" (click)="addNewField()">
+                            <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add a field</button>
+                        <button type="button" class="btn btn-outline-secondary btn-label">
+                            <i class="ri-pencil-line label-icon align-middle fs-24 me-2"></i>Manage custom
+                            Fields</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h5 class="card-header border-bottom-0">Consent</h5>
+                <div class="card-body">
+                    <label>If you require consent or acceptance before respondents can take the test, specify it
+                        below.</label>
+                    <ckeditor [editor]="Editor" class="short-editor" formControlName="consent"></ckeditor>
+                </div>
+            </div>
+            <div class="text-end mb-4">
+                <div class="d-flex gap-1 justify-content-end">
+                    <button type="button" class="btn btn-primary w-sm" (click)="save()">Save</button>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <h5 class="card-header border-bottom-0">Consent</h5>
-            <div class="card-body">
-                <label>If you require consent or acceptance before respondents can take the test, specify it below.</label>
-                <ckeditor [editor]="Editor" data='' class="short-editor"></ckeditor>
-            </div>
-        </div>
-        <div class="text-end mb-4">
-            <div class="d-flex gap-1 justify-content-end">
-                <button type="submit" class="btn btn-primary w-sm">Save</button>
-            </div>
-        </div>
-    </div>
+    </ng-container>
 </div>

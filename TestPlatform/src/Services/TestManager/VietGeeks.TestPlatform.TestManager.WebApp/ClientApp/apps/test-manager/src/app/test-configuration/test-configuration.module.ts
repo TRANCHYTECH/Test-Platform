@@ -21,6 +21,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { InputMaskModule } from '@ngneat/input-mask';
     NgbAccordionModule,
     NgbAlertModule,
     NgbModalModule,
-    InputMaskModule
+    InputMaskModule,
+    DragDropModule
   ]
 })
 export class TestConfigurationModule { }

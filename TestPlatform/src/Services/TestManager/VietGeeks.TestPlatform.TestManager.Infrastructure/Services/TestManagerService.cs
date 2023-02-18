@@ -76,6 +76,12 @@ public class TestManagerService : ITestManagerService
             updatedProperties.Add(nameof(TestDefinition.TimeSettings));
         }
 
+        if (viewModel.TestStartSettings != null)
+        {
+            entity.TestStartSettings = _mapper.Map<TestStartSettingsPart>(viewModel.TestStartSettings);
+            updatedProperties.Add(nameof(TestDefinition.TestStartSettings));
+        }
+
         if (updatedProperties.Count > 0)
         {
             var updateResult = await _managerDbContext.SaveOnlyAsync(entity, updatedProperties);
