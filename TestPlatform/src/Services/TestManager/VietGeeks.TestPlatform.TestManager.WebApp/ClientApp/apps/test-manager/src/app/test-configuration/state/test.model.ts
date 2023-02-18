@@ -11,6 +11,7 @@ export interface Test {
 export interface TimeSettings {
   testDurationMethod: TestDurationMethod;
   testActivationMethod: TestActivationMethod;
+  answerQuestionConfig: AnswerQuestionConfig;
 }
 
 export interface TestDurationMethod {
@@ -119,6 +120,10 @@ export interface PrivateAccessCodeType extends IAccessType {
     setId: string
   }[];
   attempts: number;
+}
+
+export interface AnswerQuestionConfig {
+  skipQuestion: boolean
 }
 
 export function createTest(params: Partial<Test>) {

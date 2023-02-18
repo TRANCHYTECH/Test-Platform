@@ -121,6 +121,9 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
           activeFromDate: this.fb.control(null, [Validators.required]),
           activeUntilDate: this.fb.control(null, [Validators.required])
         })
+      }),
+      answerQuestionConfig: this.fb.group({
+        skipQuestion: [timeSettings?.answerQuestionConfig?.skipQuestion || false, [Validators.required]]
       })
     });
 
@@ -153,7 +156,8 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
 
     const model: TimeSettings = {
       testDurationMethod: this.getSelectedValue(testDuration),
-      testActivationMethod: this.getSelectedValue(testActivationMethod)
+      testActivationMethod: this.getSelectedValue(testActivationMethod),
+      answerQuestionConfig: this.timeSettingsForm.controls['answerQuestionConfig'].value
     };
 
     await this.testsService.update(this.testId, { timeSettings: model });

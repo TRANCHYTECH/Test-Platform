@@ -71,6 +71,7 @@ public class TestProfile : Profile
         CreateMap<Contract.ViewModels.TestDurationMethod, Core.Models.TestDurationMethod>().IncludeAllDerived();
         CreateMap<Contract.ViewModels.CompleteQuestionDuration, Core.Models.CompleteQuestionDuration>();
         CreateMap<Contract.ViewModels.CompleteTestDuration, Core.Models.CompleteTestDuration>();
+        CreateMap<Contract.ViewModels.AnswerQuestionConfig, Core.Models.AnswerQuestionConfig>();
         CreateMap<Contract.ViewModels.CreateOrUpdateTimeSettingsViewModel, Core.Models.TimeSettingsPart>();
 
         CreateMap<Core.Models.TestActivationMethod, Contract.ViewModels.TestActivationMethod>().IncludeAllDerived();
@@ -79,6 +80,7 @@ public class TestProfile : Profile
         CreateMap<Core.Models.TestDurationMethod, Contract.ViewModels.TestDurationMethod>().IncludeAllDerived();
         CreateMap<Core.Models.CompleteQuestionDuration, Contract.ViewModels.CompleteQuestionDuration>();
         CreateMap<Core.Models.CompleteTestDuration, Contract.ViewModels.CompleteTestDuration>();
+        CreateMap<Core.Models.AnswerQuestionConfig, Contract.ViewModels.AnswerQuestionConfig>();
         CreateMap<Core.Models.TimeSettingsPart, Contract.ViewModels.TimeSettings>();
     }
 }
