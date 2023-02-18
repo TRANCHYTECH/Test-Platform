@@ -21,6 +21,8 @@ public class UpdateTestDefinitionViewModel
     public CreateOrupdateGradingSettings? GradingSettings { get; set; }
 
     public CreateOrUpdateTimeSettingsViewModel? TimeSettings { get; set; }
+
+    public CreateOrUpdateTestStartSettingsViewModel? TestStartSettings { get; set; }
 }
 
 public class CreateOrUpdateTestBasicSettingsViewModel
@@ -58,6 +60,8 @@ public class TestDefinitionViewModel
     public GradingSettings? GradingSettings { get; set; }
 
     public TimeSettings? TimeSettings { get; set; }
+
+    public TestStartSettingsViewModel? TestStartSettings { get; set; }
 
     public DateTime CreatedOn { get; set; }
 

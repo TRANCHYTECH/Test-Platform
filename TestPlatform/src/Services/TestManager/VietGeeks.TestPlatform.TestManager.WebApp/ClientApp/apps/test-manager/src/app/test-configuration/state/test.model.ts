@@ -5,6 +5,7 @@ export interface Test {
   testAccessSettings?: TestAccess;
   gradingSettings?: GradingSettings;
   timeSettings?: TimeSettings;
+  testStartSettings?: TestStartSettings;
   createdOn: Date;
 }
 
@@ -124,6 +125,17 @@ export interface PrivateAccessCodeType extends IAccessType {
 
 export interface AnswerQuestionConfig {
   skipQuestion: boolean
+}
+
+export interface TestStartSettings {
+  instruction?: string;
+  consent?: string;
+  respondentIdentifyConfig: RespondentIdentifyConfig[];
+}
+
+export interface RespondentIdentifyConfig {
+  fieldId: string;
+  isRequired: boolean;
 }
 
 export function createTest(params: Partial<Test>) {
