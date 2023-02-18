@@ -21,9 +21,11 @@ export interface Question {
 export interface ScoreSettings {
   correctPoint: number;
   incorrectPoint: number;
-  isPartialAnswersEnabled: boolean;
-  maxPoints: number;
-  maxWords: number;
+  isPartialAnswersEnabled?: boolean;
+  maxPoints?: number;
+  maxWords?: number;
+  totalPoints?: number;
+  partialIncorrectPoint?: number;
 }
 
 export interface Answer {

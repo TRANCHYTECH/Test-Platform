@@ -32,6 +32,7 @@ export class EditQuestionComponent implements OnInit {
   Editor = ClassicEditor;
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
+  scoreSettingsForm: FormGroup;
   answerTypes = AnswerTypes;
 
   route = inject(ActivatedRoute);
@@ -42,6 +43,7 @@ export class EditQuestionComponent implements OnInit {
   testId: string;
   isMultipleChoiceAnswer: boolean;
   answerType?: AnswerType;
+  isPartialScore: boolean;
   private _singleChoiceIndex?: number;
 
   constructor(
@@ -56,12 +58,21 @@ export class EditQuestionComponent implements OnInit {
     this.questionId = '';
     this.testId = '';
     this.isMultipleChoiceAnswer = false;
+    this.isPartialScore = false;
     this.questionForm = this._fb.group({
       description: '',
       categoryId: '',
       answerType: 0,
       answers: this._fb.array([]),
       selectedAnswer: ''
+    });
+
+    this.scoreSettingsForm = this._fb.group({
+      correctPoint: 0,
+      incorrectPoint: 0,
+      isPartialAnswersEnabled: false,
+      totalPoints: 0,
+      partialIncorrectPoint: 0
     });
   }
 
@@ -79,6 +90,16 @@ export class EditQuestionComponent implements OnInit {
           answerType: question?.answerType
         });
 
+        if (question?.scoreSettings) {
+          this.scoreSettingsForm.reset({
+            correctPoint: question.scoreSettings.correctPoint,
+            incorrectPoint: question.scoreSettings.incorrectPoint,
+            isPartialAnswersEnabled: question.scoreSettings.isPartialAnswersEnabled,
+            totalPoints: question.scoreSettings.totalPoints,
+            partialIncorrectPoint: question.scoreSettings.partialIncorrectPoint
+          });
+        }
+
         if (question?.answers) {
           question.answers.forEach(answer => {
             this.addAnswer(answer);
@@ -87,6 +108,7 @@ export class EditQuestionComponent implements OnInit {
 
         this.isMultipleChoiceAnswer = this.isMultipleChoice(question?.answerType);
         this.answerType = question?.answerType;
+        this.isPartialScore = question?.scoreSettings?.isPartialAnswersEnabled ?? false;
       }
     });
     this.registerControlEvents();
@@ -134,7 +156,7 @@ export class EditQuestionComponent implements OnInit {
       ...formValue,
       answerType: parseInt(formValue.answerType),
       questionNo: 1,//TODO
-      scoreSettings: {},
+      scoreSettings: this.scoreSettingsForm.value,
       id: this.questionId
     };
 
@@ -159,6 +181,11 @@ export class EditQuestionComponent implements OnInit {
         this.isMultipleChoiceAnswer = this.isMultipleChoice(t);
         this.answerType = t;
     });
+
+    const isPartialAnswersEnabledControl = this.scoreSettingsForm.get('isPartialAnswersEnabled') as FormControl;
+    isPartialAnswersEnabledControl.valueChanges.pipe(untilDestroyed(this)).subscribe(v => {
+      this.isPartialScore = v;
+  });
   }
 
   private isMultipleChoice(answerType?: AnswerType): boolean {
