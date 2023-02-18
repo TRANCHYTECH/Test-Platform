@@ -8,6 +8,8 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         public TestDurationMethod TestDurationMethod { get; set; } = default!;
 
         public TestActivationMethod TestActivationMethod { get; set; } = default!;
+
+        public AnswerQuestionConfig AnswerQuestionConfig { get; set; } = default!;
     }
 
     public class TimeSettings
@@ -15,6 +17,8 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         public TestDurationMethod TestDurationMethod { get; set; } = default!;
 
         public TestActivationMethod TestActivationMethod { get; set; } = default!;
+
+        public AnswerQuestionConfig AnswerQuestionConfig { get; set; } = default!;
     }
 
 
@@ -65,5 +69,11 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         ManualTest = 1,
         TimePeriod = 2
     }
+
+    public class AnswerQuestionConfig
+    {
+        public bool SkipQuestion { get; set; }
+    }
+
 }
 
