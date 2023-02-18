@@ -41,6 +41,7 @@ export class EditQuestionComponent implements OnInit {
   questionId: string;
   testId: string;
   isMultipleChoiceAnswer: boolean;
+  answerType?: AnswerType;
   private _singleChoiceIndex?: number;
 
   constructor(
@@ -85,6 +86,7 @@ export class EditQuestionComponent implements OnInit {
         }
 
         this.isMultipleChoiceAnswer = this.isMultipleChoice(question?.answerType);
+        this.answerType = question?.answerType;
       }
     });
     this.registerControlEvents();
@@ -143,11 +145,11 @@ export class EditQuestionComponent implements OnInit {
     if (this.questionId === 'new') {
       await lastValueFrom(this._questionService.add(this.testId, question));
       this.router.navigate(['tests', this.testId, 'manage-questions']);
-      this.notifyService.show('Question created');
+      this.notifyService.success('Question created');
     } else {
         await this._questionService.update(this.testId, this.questionId, question);
         this.router.navigate(['tests', this.testId, 'manage-questions']);
-        this.notifyService.show('Question updated');
+        this.notifyService.success('Question updated');
     }
   }
 
@@ -155,6 +157,7 @@ export class EditQuestionComponent implements OnInit {
     const answerTypeControl = this.questionForm.get('answerType') as FormControl;
     answerTypeControl.valueChanges.pipe(untilDestroyed(this)).subscribe(t => {
         this.isMultipleChoiceAnswer = this.isMultipleChoice(t);
+        this.answerType = t;
     });
   }
 

@@ -73,80 +73,86 @@
     <div class="card">
       <h5 class="card-header border-bottom-0">Score settings</h5>
       <div class="card-body">
-        <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
-          <div class="alert-body">
-            <div class="d-flex">
-              <div class="flex-shrink-0 me-3">
-                <i class="ri-information-line fs-16 align-middle"></i>
+        <ng-container [ngSwitch]="answerType">
+          <ng-container *ngSwitchCase="1">
+            <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
+              <div class="alert-body">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 me-3">
+                    <i class="ri-information-line fs-16 align-middle"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <p class="alert-heading mb-0">Define the number of points for a correct answer. Negative points for
+                      incorrect answers can also be assigned. If you don't want to do so, enter 0 (in words: zero) as the
+                      number of points for this answer.</p>
+                  </div>
+                </div>
               </div>
-              <div class="flex-grow-1">
-                <p class="alert-heading mb-0">Define the number of points for a correct answer. Negative points for
-                  incorrect answers can also be assigned. If you don't want to do so, enter 0 (in words: zero) as the
-                  number of points for this answer.</p>
+            </ngb-alert>
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">Point for correct answer</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                </div>
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">Point for incorrect answer</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                </div>
               </div>
             </div>
-          </div>
-        </ngb-alert>
-        <div class="mb-3">
-          <div class="row">
-            <div class="col-sm-auto">
-              <label for="mask-value" class="form-label">Point for correct answer</label>
-              <input type="text" class="form-control" id="mask-value" placeholder="">
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
+              <div class="alert-body">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 me-3">
+                    <i class="ri-information-line fs-16 align-middle"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <p class="alert-heading mb-0">Select a scoring method for your answers. You can choose to score fully
+                      correct answers only or partial answers too.</p>
+                  </div>
+                </div>
+              </div>
+            </ngb-alert>
+            <div class="mb-3">
+              <div class="hstack gap-3 mb-3">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    Score fully correct answers only
+                  </label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">Point for correct answer</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                </div>
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">Point for incorrect answer</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                </div>
+              </div>
+              <div class="hstack gap-3 mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    Score partial answers
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">Number of bonus points for all correct partial answers</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                </div>
+              </div>
             </div>
-            <div class="col-sm-auto">
-              <label for="mask-value" class="form-label">Point for incorrect answer</label>
-              <input type="text" class="form-control" id="mask-value" placeholder="">
-            </div>
-          </div>
-        </div>
+          </ng-container>
+        </ng-container>
 
-        <ngb-alert [type]="'info'" [dismissible]="false" class="alert-additional fade show custom-alert mb-3">
-          <div class="alert-body">
-            <div class="d-flex">
-              <div class="flex-shrink-0 me-3">
-                <i class="ri-information-line fs-16 align-middle"></i>
-              </div>
-              <div class="flex-grow-1">
-                <p class="alert-heading mb-0">Select a scoring method for your answers. You can choose to score fully
-                  correct answers only or partial answers too.</p>
-              </div>
-            </div>
-          </div>
-        </ngb-alert>
-        <div class="mb-3">
-          <div class="hstack gap-3 mb-3">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-              <label class="form-check-label" for="flexRadioDefault1">
-                Score fully correct answers only
-              </label>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-sm-auto">
-              <label for="mask-value" class="form-label">Point for correct answer</label>
-              <input type="text" class="form-control" id="mask-value" placeholder="">
-            </div>
-            <div class="col-sm-auto">
-              <label for="mask-value" class="form-label">Point for incorrect answer</label>
-              <input type="text" class="form-control" id="mask-value" placeholder="">
-            </div>
-          </div>
-          <div class="hstack gap-3 mb-3">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-              <label class="form-check-label" for="flexRadioDefault2">
-                Score partial answers
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-auto">
-              <label for="mask-value" class="form-label">Number of bonus points for all correct partial answers</label>
-              <input type="text" class="form-control" id="mask-value" placeholder="">
-            </div>
-          </div>
-        </div>
         <div class="hstack form-check form-switch form-switch-lg mb-3">
           <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
           <label for="flexSwitchCheckRightDisabled" class="form-check-label">Display maximum possible score for this
