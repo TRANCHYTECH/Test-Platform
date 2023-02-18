@@ -46,7 +46,7 @@
                 <td class="text-center">
                   <input *ngIf="isMultipleChoiceAnswer; else singleChoice" type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input" formControlName="isCorrect">
                   <ng-template #singleChoice>
-                    <input type="radio" role="switch" id="flexSwitchCheckRightDisabled" value='{{i}}' class="form-check-input" name="isCorrect" formControlName="isCorrect" checked="{{answers['controls'][i].get('isCorrect')?.value}}" (change)="selectSingleChoice(i)">
+                    <input type="radio" role="switch" id="flexSwitchCheckRightDisabled" value='{{i}}' class="form-check-input" name="isCorrect" formControlName="isCorrect" [attr.checked]="answers['controls'][i].get('isCorrect')?.value" (change)="selectSingleChoice(i)">
                   </ng-template>
                 </td>
                 <td>
@@ -70,7 +70,7 @@
         <button type="button" class="btn btn-outline-secondary btn-label" (click)="addEmptyAnswer()"><i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add answer</button>
       </div>
     </div>
-    <div class="card">
+    <div class="card" [formGroup]="scoreSettingsForm">
       <h5 class="card-header border-bottom-0">Score settings</h5>
       <div class="card-body">
         <ng-container [ngSwitch]="answerType">
@@ -93,11 +93,11 @@
               <div class="row">
                 <div class="col-sm-auto">
                   <label for="mask-value" class="form-label">Point for correct answer</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="correctPoint">
                 </div>
                 <div class="col-sm-auto">
                   <label for="mask-value" class="form-label">Point for incorrect answer</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="incorrectPoint">
                 </div>
               </div>
             </div>
@@ -119,34 +119,38 @@
             <div class="mb-3">
               <div class="hstack gap-3 mb-3">
                 <div class="form-check mb-2">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" name="isPartialAnswersEnabled" formControlName="isPartialAnswersEnabled" [value]=false>
                   <label class="form-check-label" for="flexRadioDefault1">
                     Score fully correct answers only
                   </label>
                 </div>
               </div>
-              <div class="row mb-3">
+              <div class="row mb-3" *ngIf="!isPartialScore">
                 <div class="col-sm-auto">
                   <label for="mask-value" class="form-label">Point for correct answer</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="correctPoint" />
                 </div>
                 <div class="col-sm-auto">
                   <label for="mask-value" class="form-label">Point for incorrect answer</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="incorrectPoint"/>
                 </div>
               </div>
               <div class="hstack gap-3 mb-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" name="isPartialAnswersEnabled" formControlName="isPartialAnswersEnabled" [value]=true>
                   <label class="form-check-label" for="flexRadioDefault2">
                     Score partial answers
                   </label>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" *ngIf="isPartialScore">
                 <div class="col-sm-auto">
-                  <label for="mask-value" class="form-label">Number of bonus points for all correct partial answers</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="">
+                  <label for="mask-value" class="form-label">Number of points for all correct partial answers</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="totalPoints" />
+                </div>
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">Number of points for each incorrect partial answer</label>
+                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="partialIncorrectPoint">
                 </div>
               </div>
             </div>

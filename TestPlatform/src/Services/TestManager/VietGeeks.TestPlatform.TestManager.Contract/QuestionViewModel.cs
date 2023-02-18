@@ -29,11 +29,13 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
 
     public class ScoreSettingsViewModel
     {
-        public int CorrectPoint { get; set; }
-        public int IncorrectPoint { get; set; }
+        public int? CorrectPoint { get; set; }
+        public int? IncorrectPoint { get; set; }
         public bool IsPartialAnswersEnabled { get; set; }
-        public int MaxPoints { get; set; }
-        public int MaxWords { get; set; }
+        public int? MaxPoints { get; set; }
+        public int? MaxWords { get; set; }
+        public int? TotalPoints { get; set; }
+        public int? PartialIncorrectPoint { get; set; }
     }
 
     public class AnswerViewModel
