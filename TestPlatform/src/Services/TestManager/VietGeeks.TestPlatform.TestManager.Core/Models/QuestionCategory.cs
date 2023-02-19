@@ -4,8 +4,7 @@ using MongoDB.Entities;
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 [Collection("Category")]
-public class QuestionCategory : EntityBase
+public class QuestionCategory : CategoryBase
 {
-    public string Name { get; set; } = default!;
 }
 
