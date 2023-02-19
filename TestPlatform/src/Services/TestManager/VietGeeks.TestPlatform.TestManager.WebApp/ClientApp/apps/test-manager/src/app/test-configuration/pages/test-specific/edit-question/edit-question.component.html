@@ -36,7 +36,6 @@
             <tr class="text-center">
               <th scope="col">Correct answer</th>
               <th scope="col">Description</th>
-              <th scope="col">Point</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -44,19 +43,13 @@
             <tr formArrayName="answers" *ngFor="let answer of answers['controls']; let i = index;">
               <ng-container [formGroupName]="i">
                 <td class="text-center">
-                  <input *ngIf="isMultipleChoiceAnswer; else singleChoice" type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input" formControlName="isCorrect">
+                  <input *ngIf="isMultipleChoiceAnswer; else singleChoice" type="checkbox" role="switch" id="flexSwitchCheckRightDisabled_{{i}}" class="form-check-input" formControlName="isCorrect">
                   <ng-template #singleChoice>
-                    <input type="radio" role="switch" id="flexSwitchCheckRightDisabled" value='{{i}}' class="form-check-input" name="isCorrect" formControlName="isCorrect" [attr.checked]="answers['controls'][i].get('isCorrect')?.value" (change)="selectSingleChoice(i)">
+                    <input type="radio" role="switch" id="flexSwitchCheckRightDisabled_{{i}}" [value]="i" class="form-check-input" name="selectedIndex" formControlName="selectedIndex" (change)="selectSingleChoice(i)">
                   </ng-template>
                 </td>
                 <td>
                   <input type="text" class="form-control" formControlName="answerDescription">
-                </td>
-
-                <td>
-                  <div class="hstack gap-2">
-                    <input type="number" class="form-control" formControlName="answerPoint">
-                  </div>
                 </td>
                 <td>
                   <div class="hstack gap-2">
@@ -158,17 +151,17 @@
         </ng-container>
 
         <div class="hstack form-check form-switch form-switch-lg mb-3">
-          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
+          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input" formControlName="isDisplayMaximumScore">
           <label for="flexSwitchCheckRightDisabled" class="form-check-label">Display maximum possible score for this
             question</label>
         </div>
         <div class="hstack form-check form-switch form-switch-lg mb-3">
-          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
+          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input" formControlName="mustAnswerToContinue">
           <label for="flexSwitchCheckRightDisabled" class="form-check-label">Force respondent to answer this question
             when displayed the first time</label>
         </div>
         <div class="hstack form-check form-switch form-switch-lg mb-3">
-          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input">
+          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input" formControlName="isMandatory">
           <label for="flexSwitchCheckRightDisabled" class="form-check-label">Terminate the test if the answer to this
             question is incorrect</label>
         </div>
@@ -176,7 +169,7 @@
     </div>
     <div class="text-end mb-4">
       <div class="d-flex gap-1 justify-content-end">
-        <button type="submit" class="btn btn-primary w-sm" (click)="submit()" [disabled]="questionForm.pristine">Save</button>
+        <button type="submit" class="btn btn-primary w-sm" (click)="submit()" [disabled]="questionForm.pristine && scoreSettingsForm.pristine">Save</button>
       </div>
     </div>
   </div>

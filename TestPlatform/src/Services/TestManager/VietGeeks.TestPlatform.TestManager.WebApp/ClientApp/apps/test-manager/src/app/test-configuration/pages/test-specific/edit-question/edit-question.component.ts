@@ -44,7 +44,7 @@ export class EditQuestionComponent implements OnInit {
   isMultipleChoiceAnswer: boolean;
   answerType?: AnswerType;
   isPartialScore: boolean;
-  private _singleChoiceIndex?: number;
+  singleChoiceIndex?: number;
 
   constructor(
     private _fb: FormBuilder,
@@ -63,8 +63,7 @@ export class EditQuestionComponent implements OnInit {
       description: '',
       categoryId: '',
       answerType: 0,
-      answers: this._fb.array([]),
-      selectedAnswer: ''
+      answers: this._fb.array([])
     });
 
     this.scoreSettingsForm = this._fb.group({
@@ -72,7 +71,10 @@ export class EditQuestionComponent implements OnInit {
       incorrectPoint: 0,
       isPartialAnswersEnabled: false,
       totalPoints: 0,
-      partialIncorrectPoint: 0
+      partialIncorrectPoint: 0,
+      isDisplayMaximumScore: false,
+      mustAnswerToContinue: false,
+      isMandatory: false
     });
   }
 
@@ -96,12 +98,16 @@ export class EditQuestionComponent implements OnInit {
             incorrectPoint: question.scoreSettings.incorrectPoint,
             isPartialAnswersEnabled: question.scoreSettings.isPartialAnswersEnabled,
             totalPoints: question.scoreSettings.totalPoints,
-            partialIncorrectPoint: question.scoreSettings.partialIncorrectPoint
+            partialIncorrectPoint: question.scoreSettings.partialIncorrectPoint,
+            isDisplayMaximumScore: question.scoreSettings.isDisplayMaximumScore,
+            mustAnswerToContinue: question.scoreSettings.mustAnswerToContinue,
+            isMandatory: question.scoreSettings.isMandatory
           });
         }
 
         if (question?.answers) {
-          question.answers.forEach(answer => {
+          this.singleChoiceIndex = question?.answers?.findIndex(a => a.isCorrect);
+          question.answers.forEach((answer) => {
             this.addAnswer(answer);
           });
         }
@@ -139,7 +145,7 @@ export class EditQuestionComponent implements OnInit {
   }
 
   selectSingleChoice(index: number) {
-    this._singleChoiceIndex = index;
+    this.singleChoiceIndex = index;
   }
 
   get answers() {
@@ -161,7 +167,7 @@ export class EditQuestionComponent implements OnInit {
     };
 
     if (!this.isMultipleChoice(question.answerType)) {
-      question.answers?.forEach((a, idx) => a.isCorrect = idx === this._singleChoiceIndex);
+      question.answers?.forEach((a, idx) => a.isCorrect = idx === this.singleChoiceIndex);
     }
 
     if (this.questionId === 'new') {
@@ -193,11 +199,15 @@ export class EditQuestionComponent implements OnInit {
   }
 
   private addAnswer(answer: Answer) {
-    this.answers.push(this._fb.group({
+    const formGroup = this._fb.group({
       id: answer.id,
       answerDescription : answer.answerDescription,
       answerPoint: answer.answerPoint,
-      isCorrect: answer.isCorrect
-    }));
+      isCorrect: answer.isCorrect,
+      selectedIndex: this.singleChoiceIndex
+    });
+    this.answers.push(formGroup);
+
+    return formGroup;
   }
 }

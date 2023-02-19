@@ -13,7 +13,6 @@ export interface Question {
   answerTypeName?: string;
   answers?: Answer[];
   scoreSettings: ScoreSettings;
-  isMandatory: boolean;
   createdDate: string;
   lastModifiedDate: string;
 }
@@ -26,6 +25,9 @@ export interface ScoreSettings {
   maxWords?: number;
   totalPoints?: number;
   partialIncorrectPoint?: number;
+  isDisplayMaximumScore: boolean;
+  mustAnswerToContinue: boolean;
+  isMandatory: boolean;
 }
 
 export interface Answer {

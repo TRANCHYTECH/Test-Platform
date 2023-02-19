@@ -24,7 +24,6 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
         public AnswerType AnswerType { get; set; }
         public IEnumerable<AnswerViewModel> Answers { get; set; }
         public ScoreSettingsViewModel ScoreSettings { get; set; }
-        public bool IsMandatory { get; set; }
     }
 
     public class ScoreSettingsViewModel
@@ -36,6 +35,9 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
         public int? MaxWords { get; set; }
         public int? TotalPoints { get; set; }
         public int? PartialIncorrectPoint { get; set; }
+        public bool IsDisplayMaximumScore { get; set; }
+        public bool MustAnswerToContinue { get; set; }
+        public bool IsMandatory { get; set; }
     }
 
     public class AnswerViewModel
