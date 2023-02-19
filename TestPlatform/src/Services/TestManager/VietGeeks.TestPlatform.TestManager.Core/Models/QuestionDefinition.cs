@@ -24,6 +24,9 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
         public int? MaxWords { get; set; }
         public int? TotalPoints { get; set; }
         public int? PartialIncorrectPoint { get; set; }
+        public bool IsDisplayMaximumScore { get; set; }
+        public bool MustAnswerToContinue { get; set; }
+        public bool IsMandatory { get; set; }
     }
 
     public class Answer
