@@ -1,8 +1,10 @@
-﻿using MongoDB.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 [Collection("TestDefinition")]
+[BsonIgnoreExtraElements]
 public class TestDefinition: EntityBase
 {
     public TestBasicSettingsPart BasicSettings { get; set; } = default!;

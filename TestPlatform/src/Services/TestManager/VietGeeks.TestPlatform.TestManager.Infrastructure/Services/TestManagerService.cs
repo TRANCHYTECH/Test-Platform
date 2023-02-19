@@ -92,7 +92,7 @@ public class TestManagerService : ITestManagerService
 
     public async Task<List<TestCategoryViewModel>> GetTestCategories()
     {
-        var entities = await _managerDbContext.Find<TestCategory>().ExecuteAsync();
+        var entities = await _managerDbContext.Find<TestCategory>().ManyAsync(c => c is TestCategory);
 
         return _mapper.Map<List<TestCategoryViewModel>>(entities);
     }

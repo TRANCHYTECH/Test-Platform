@@ -1,9 +1,10 @@
-﻿using MongoDB.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
+using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 [Collection("Category")]
-public class TestCategory : EntityBase
+public class TestCategory : CategoryBase
 {
-    public string Name { get; set; } = default!;
 }

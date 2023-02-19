@@ -1,8 +1,10 @@
-﻿using MongoDB.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models
 {
-    [Collection("QuestionDefinition1")]
+    [Collection("QuestionDefinition")]
+    [BsonIgnoreExtraElements]
     public class QuestionDefinition: EntityBase
     {
         public string TestId { get; set; }
