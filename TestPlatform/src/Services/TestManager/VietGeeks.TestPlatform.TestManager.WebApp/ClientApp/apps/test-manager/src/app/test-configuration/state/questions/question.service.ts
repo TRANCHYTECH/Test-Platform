@@ -5,7 +5,7 @@ import { AppSettingsService } from '@viet-geeks/core';
 import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AppSettings } from '../../../app-setting.model';
-import { Question } from './question.model';
+import { Question, QuestionSummary } from './question.model';
 import { QuestionsStore } from './question.store';
 
 @Injectable({ providedIn: 'root' })
@@ -34,6 +34,10 @@ export class QuestionService {
 
   remove(id: ID) {
     this._questionStore.remove(id);
+  }
+
+  getSummary(testId: string) {
+    return firstValueFrom(this._http.get<QuestionSummary[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question/Summary`), { defaultValue: [] });
   }
 
   private get testManagerApiBaseUrl() {

@@ -37,5 +37,4 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
         public int AnswerPoint { get; set; }
         public bool IsCorrect { get; set; }
     }
-
 }
