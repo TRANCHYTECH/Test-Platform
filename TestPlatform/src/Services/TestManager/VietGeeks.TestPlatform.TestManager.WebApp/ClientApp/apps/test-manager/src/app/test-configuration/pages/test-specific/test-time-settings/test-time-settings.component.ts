@@ -150,7 +150,12 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     this.maskReadyForUI();
   }
 
-  async save() {
+  get canSubmit(): boolean {
+    //todo(tau): add validation rules.
+    return true;
+  }
+
+  async submit() {
     const testDuration = this.timeSettingsForm.controls['testDurationMethod'] as FormGroup;
     const testActivationMethod = this.timeSettingsForm.controls['testActivationMethod'] as FormGroup;
 

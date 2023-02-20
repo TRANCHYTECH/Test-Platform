@@ -160,9 +160,10 @@
                     </ngb-alert>
                     <div class="d-inline-flex flex-wrap gap-3 mb-3" formGroupName="informFactors">
                         <div class="form-check form-check" *ngFor="let factor of InformFactorRef | keyvalue">
-                            <input class="form-check-input" type="checkbox" id="inform-factor-{{factor.value}}" formControlName="{{factor.value}}">
+                            <input class="form-check-input" type="checkbox" id="inform-factor-{{factor.value}}"
+                                formControlName="{{factor.value}}">
                             <label class="form-check-label" for="inform-factor-{{factor.value}}">{{factor.key}}</label>
-                        </div>             
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have passed:</label>
@@ -173,8 +174,10 @@
                         <ckeditor [editor]="Editor" class="short-editor" formControlName="failedMessage"></ckeditor>
                     </div>
                     <div class="form-check form-switch form-switch-lg">
-                        <input type="checkbox" role="switch" id="informViaEmailToggler" class="form-check-input" formControlName="informViaEmail">
-                        <label for="informViaEmailToggler" class="form-check-label">Inform respondent about result via email</label>
+                        <input type="checkbox" role="switch" id="informViaEmailToggler" class="form-check-input"
+                            formControlName="informViaEmail">
+                        <label for="informViaEmailToggler" class="form-check-label">Inform respondent about result via
+                            email</label>
                     </div>
                     <small class="text-muted">The email will display the same content as the one at the end of the
                         test.</small>
@@ -197,8 +200,8 @@
             </div> -->
             <div class="text-end mb-4">
                 <div class="d-flex gap-1 justify-content-end">
-                    <button type="button" class="btn btn-primary w-sm" (click)="save()"
-                        [disabled]="gradeForm.invalid || gradeForm.pristine">Save</button>
+                    <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
+                        [canSubmit]="canSubmit"></viet-geeks-submit-button>
                 </div>
             </div>
         </div>

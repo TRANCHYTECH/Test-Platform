@@ -39,7 +39,8 @@
                                                     class="ri-arrow-up-s-line"></i></button>
                                             <button type="button" class="btn btn-outline-secondary"><i
                                                     class="ri-arrow-down-s-line"></i></button>
-                                            <button type="button" class="btn btn-outline-secondary" (click)="respondentIdentifyConfig.removeAt(i)"><i
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                (click)="respondentIdentifyConfig.removeAt(i)"><i
                                                     class="ri-delete-bin-5-line"></i></button>
                                         </div>
                                     </td>
@@ -66,7 +67,8 @@
             </div>
             <div class="text-end mb-4">
                 <div class="d-flex gap-1 justify-content-end">
-                    <button type="button" class="btn btn-primary w-sm" (click)="save()">Save</button>
+                    <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
+                        [canSubmit]="canSubmit"></viet-geeks-submit-button>
                 </div>
             </div>
         </div>

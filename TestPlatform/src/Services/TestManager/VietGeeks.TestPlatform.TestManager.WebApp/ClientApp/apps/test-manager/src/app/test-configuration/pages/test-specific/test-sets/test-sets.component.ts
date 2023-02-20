@@ -24,7 +24,6 @@ export const GeneratorTypes = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSetsComponent extends TestSpecificBaseComponent {
-
   private _questionService = inject(QuestionService);
   private _questionCategoriesService = inject(QuestionCategoriesService);
   private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
@@ -84,10 +83,11 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
     this.maskReadyForUI();
   }
 
-  async saveTestSets() {
-    if (this.testSetsForm.invalid)
-      return;
+  get canSubmit(): boolean {
+    return this.testSetsForm.valid;
+  }
 
+  async submit() {
     const model = <TestSets>this.testSetsForm.value;
     if (model.generatorType === GeneratorTypes.Default) {
       model.generator = undefined;

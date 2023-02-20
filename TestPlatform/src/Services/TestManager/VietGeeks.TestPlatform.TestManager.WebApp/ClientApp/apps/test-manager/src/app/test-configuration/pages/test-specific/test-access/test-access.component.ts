@@ -127,12 +127,12 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     });
   }
 
-  async save() {
-    const accessType = this.activatedAccessType;
-    if (this.activatedAccessTypeForm.invalid) {
-      return;
-    }
+  get canSubmit(): boolean {
+    return this.activatedAccessTypeForm.valid;
+  }
 
+  async submit() {
+    const accessType = this.activatedAccessType;
     const model: TestAccess = {
       accessType: accessType,
       settings: assign({ $type: accessType }, this.activatedAccessTypeForm.value)
