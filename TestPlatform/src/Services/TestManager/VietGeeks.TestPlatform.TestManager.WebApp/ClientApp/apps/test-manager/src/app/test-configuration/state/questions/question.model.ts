@@ -36,6 +36,10 @@ export interface Answer {
   answerPoint: number;
   isCorrect: boolean;
 }
+export interface QuestionSummary {
+  categoryId: string;
+  numberOfQuestions: number;
+}
 
 export function createQuestion(params: Partial<Question>) {
   return params as Question;

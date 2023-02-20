@@ -77,4 +77,11 @@ public class QuestionDefinitionManagementController : ControllerBase
 
         return Ok(updatedQuestion);
     }
+
+    [HttpGet("Summary")]
+    [ProducesResponseType(typeof(IEnumerable<QuestionSummaryViewModel>), StatusCodes.Status200OK)]
+    public Task<IEnumerable<QuestionSummaryViewModel>> GetQuestionSummary(string testId, CancellationToken cancellationToken)
+    {
+        return _questionManagerService.GetQuestionSummary(testId, cancellationToken);
+    }
 }

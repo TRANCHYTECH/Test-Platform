@@ -16,7 +16,6 @@ export class TestsService {
   constructor(private _testsStore: TestsStore, private _testsQuery: TestsQuery, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
-
   get() {
     return this._http.get<Test[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`).pipe(tap(entities => {
       this._testsStore.set(entities);

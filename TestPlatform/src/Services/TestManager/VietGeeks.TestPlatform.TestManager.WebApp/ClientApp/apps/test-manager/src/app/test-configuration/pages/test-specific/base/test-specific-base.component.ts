@@ -43,7 +43,7 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
             this.testId = p['id'];
-            if (!this.isNewTest) {
+            if (!this.isNewTest) {       
                 await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
                 const testDef = this.testsQuery.getEntity(this.testId);
                 if(testDef === undefined) {
@@ -63,6 +63,7 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     abstract onInit(): void;
 
     abstract afterGetTest(): void;
+
 
     maskReadyForUI() {
         this._readyForUI.next(true);
