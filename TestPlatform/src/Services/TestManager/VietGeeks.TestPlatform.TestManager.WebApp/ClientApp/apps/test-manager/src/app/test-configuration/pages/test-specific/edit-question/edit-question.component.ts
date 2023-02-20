@@ -152,6 +152,18 @@ export class EditQuestionComponent implements OnInit {
     return this.questionForm.get('answers') as FormArray;
   }
 
+  get canSubmit(): boolean {
+    return this.questionForm.dirty || this.scoreSettingsForm.dirty;
+  }
+
+  submitFunc = async () => {
+    if (!this.canSubmit) {
+        return;
+    }
+
+    await this.submit();
+};
+
   async submit() {
     if (this.questionForm.invalid) {
       return;

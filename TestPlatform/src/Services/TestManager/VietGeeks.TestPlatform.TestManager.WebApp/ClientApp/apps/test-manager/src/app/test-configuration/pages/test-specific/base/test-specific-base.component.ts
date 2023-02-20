@@ -84,8 +84,19 @@ export abstract class TestSpecificBaseComponent implements OnInit {
 
     abstract afterGetTest(): void;
 
+    abstract submit(): Promise<void>;
+
+    abstract get canSubmit(): boolean;
 
     maskReadyForUI() {
         this._readyForUI.next(true);
     }
+
+    submitFunc = async () => {
+        if (!this.canSubmit) {
+            return;
+        }
+
+        await this.submit();
+    };
 }

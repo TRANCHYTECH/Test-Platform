@@ -62,10 +62,11 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
     }));
   }
 
-  async save() {
-    if (this.testStartPageForm.invalid)
-      return;
+  get canSubmit(): boolean {
+    return this.testStartPageForm.valid;
+  }
 
+  async submit() {
     const model = this.testStartPageForm.value;
 
     await this.testsService.update(this.testId, { testStartSettings: model });

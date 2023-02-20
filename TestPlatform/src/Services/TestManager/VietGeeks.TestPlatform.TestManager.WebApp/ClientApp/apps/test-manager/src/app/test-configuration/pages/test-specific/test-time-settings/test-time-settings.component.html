@@ -14,8 +14,8 @@
                             </label>
                         </div>
                         <ng-container formGroupName="{{option.id}}">
-                            <input type="text" class="form-control border-dashed" [inputMask]="mmssInputMask" style="width: 150px;"
-                                formControlName="duration">
+                            <input type="text" class="form-control border-dashed" [inputMask]="mmssInputMask"
+                                style="width: 150px;" formControlName="duration">
                         </ng-container>
                     </div>
                 </div>
@@ -55,8 +55,8 @@
                             </ngb-alert>
                             <div class="mb-3" formGroupName="{{TestActivationMethodTypeRef.ManualTest}}">
                                 <label for="flexRadioDefault2">Test will remain active for ([d.]hh:mm:ss):</label>
-                                <input class="form-control border-dashed" type="text" style="width: 150px;" [inputMask]="{}"
-                                    formControlName="activeUntil">
+                                <input class="form-control border-dashed" type="text" style="width: 150px;"
+                                    [inputMask]="{}" formControlName="activeUntil">
                             </div>
                         </ng-container>
                         <ng-container *ngIf="option.id === TestActivationMethodTypeRef.TimePeriod">
@@ -85,13 +85,13 @@
                                 formGroupName="{{TestActivationMethodTypeRef.TimePeriod}}">
                                 <div class="flemb-3">
                                     <label for="flexRadioDefault2">Test activation date</label>
-                                    <input class="form-control border-dashed" type="datetime-local" style="width: 200px;"
-                                        formControlName="activeFromDate">
+                                    <input class="form-control border-dashed" type="datetime-local"
+                                        style="width: 200px;" formControlName="activeFromDate">
                                 </div>
                                 <div class="flex-grow-1 mb-3">
                                     <label for="flexRadioDefault2">Access closing date</label>
-                                    <input class="form-control border-dashed" type="datetime-local" style="width: 200px;"
-                                        formControlName="activeUntilDate">
+                                    <input class="form-control border-dashed" type="datetime-local"
+                                        style="width: 200px;" formControlName="activeUntilDate">
                                 </div>
                                 <div class="col-lg-12">
                                     <label>Current server time in your time zone is: <b>10:47 ICT</b>. You can change
@@ -111,7 +111,8 @@
                 <h5 class="card-header border-bottom-0">ADDTIONAL OPTIONS</h5>
                 <div class="card-body" formGroupName="answerQuestionConfig">
                     <div class="form-check form-switch form-switch-lg mb-3">
-                        <input class="form-check-input" type="checkbox" role="switch"  id="skipQuestionTogogler" formControlName="skipQuestion">
+                        <input class="form-check-input" type="checkbox" role="switch" id="skipQuestionTogogler"
+                            formControlName="skipQuestion">
                         <label class="form-check-label" for="skipQuestionTogogler">
                             Allow answering questions in any order and moving back or skipping questions
                         </label>
@@ -120,7 +121,8 @@
             </div>
             <div class="text-end mb-4">
                 <div class="d-flex gap-1 justify-content-end">
-                    <button type="button" class="btn btn-primary w-sm" (click)="save()">Save</button>
+                    <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
+                        [canSubmit]="canSubmit"></viet-geeks-submit-button>
                 </div>
             </div>
         </div>

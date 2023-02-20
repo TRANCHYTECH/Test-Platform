@@ -199,13 +199,11 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     console.log('delete grade', i);
   }
 
-  async save() {
-    console.log('form', this.gradeForm.value);
-    if (this.gradeForm.invalid) {
-      console.log('grade form error', this.gradeForm.errors);
-      return;
-    }
+  get canSubmit(): boolean {
+    return this.gradeForm.valid;
+  }
 
+  async submit() {
     const model = <GradingSettings>this.gradeForm.value;
 
     await this.testsService.update(this.testId, { gradingSettings: model });

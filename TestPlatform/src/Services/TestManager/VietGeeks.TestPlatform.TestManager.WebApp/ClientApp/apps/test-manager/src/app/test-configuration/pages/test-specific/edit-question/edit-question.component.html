@@ -169,7 +169,7 @@
     </div>
     <div class="text-end mb-4">
       <div class="d-flex gap-1 justify-content-end">
-        <button type="submit" class="btn btn-primary w-sm" (click)="submit()" [disabled]="questionForm.pristine && scoreSettingsForm.pristine">Save</button>
+        <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc" [canSubmit]="canSubmit"></viet-geeks-submit-button>
       </div>
     </div>
   </div>

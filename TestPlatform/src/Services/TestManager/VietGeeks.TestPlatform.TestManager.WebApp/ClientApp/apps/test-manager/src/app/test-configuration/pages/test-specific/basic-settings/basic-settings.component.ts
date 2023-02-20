@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { TestCategory } from '../../../state/test-category.model';
 import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import { TestCategoriesService } from '../../../state/test-categories.service';
@@ -27,8 +27,8 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     super();
     this.basicSettingForm = this.fb.group({
       id: null,
-      name: '',
-      category: '',
+      name: ['', [Validators.required]],
+      category: ['', [Validators.required]],
       description: ''
     });
   }
@@ -51,11 +51,11 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     this.testCategories$ = this._testCategoriesQuery.selectAll();
   }
 
-  async submit() {
-    if (this.basicSettingForm.invalid) {
-      return;
-    }
+  get canSubmit(): boolean {
+    return this.basicSettingForm.dirty && this.basicSettingForm.valid;
+  }
 
+  async submit() {
     const formValue = this.basicSettingForm.value;
     const basicSettings = { name: formValue.name, category: formValue.category, description: formValue.description };
     if (formValue.id === null) {
