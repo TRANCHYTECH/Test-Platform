@@ -1,5 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
@@ -19,6 +20,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { InputMaskModule } from '@ngneat/input-mask';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +29,7 @@ import { InputMaskModule } from '@ngneat/input-mask';
     SharedModule,
     AuthModule.forRoot(),
     BrowserModule,
+    BrowserAnimationsModule,
     LayoutsModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     NgbModule,
@@ -42,7 +45,8 @@ import { InputMaskModule } from '@ngneat/input-mask';
     }),
     FlatpickrModule.forRoot(),
     SweetAlert2Module.forRoot(),
-    InputMaskModule.forRoot({ inputSelector: 'input', isAsync: true })
+    InputMaskModule.forRoot({ inputSelector: 'input', isAsync: true }),
+    NgxSpinnerModule.forRoot({ type: 'ball-scale-multiple' })
   ],
   providers: [
     {

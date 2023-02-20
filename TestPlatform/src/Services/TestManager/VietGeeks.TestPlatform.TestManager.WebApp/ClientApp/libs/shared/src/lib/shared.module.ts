@@ -7,6 +7,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   imports: [CommonModule, HttpClientModule, FeatherModule.pick(allIcons), NgbToastModule],
@@ -16,7 +17,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     TranslateModule,
     FeatherModule,
     BreadcrumbsComponent,
-    SweetAlert2Module
+    SweetAlert2Module,
+    NgxSpinnerModule
   ]
 })
 export class SharedModule { }
