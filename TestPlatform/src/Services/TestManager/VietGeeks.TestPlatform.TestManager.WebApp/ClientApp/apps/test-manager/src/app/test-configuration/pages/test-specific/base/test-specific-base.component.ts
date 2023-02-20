@@ -3,6 +3,7 @@ import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { ToastService } from "@viet-geeks/shared";
+import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, firstValueFrom } from "rxjs";
 import { Test, createTest } from "../../../state/test.model";
 import { TestsQuery } from "../../../state/tests.query";
@@ -20,12 +21,13 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     route = inject(ActivatedRoute);
     changeDetector = inject(ChangeDetectorRef);
     fb = inject(FormBuilder);
-    
+
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
 
     notifyService = inject(ToastService);
-    
+    private _spinner = inject(NgxSpinnerService);
+
     get readyForUI$() {
         return this._readyForUI.asObservable();
     }
@@ -43,10 +45,10 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
             this.testId = p['id'];
-            if (!this.isNewTest) {       
+            if (!this.isNewTest) {
                 await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
                 const testDef = this.testsQuery.getEntity(this.testId);
-                if(testDef === undefined) {
+                if (testDef === undefined) {
                     await this.router.navigate(['tests']);
                     return;
                 }
@@ -57,7 +59,25 @@ export abstract class TestSpecificBaseComponent implements OnInit {
             this.afterGetTest();
         });
 
+        this.configureLoadingIndicator();
+
         this.onInit();
+    }
+
+    private configureLoadingIndicator() {
+        this._readyForUI.pipe(untilDestroyed(this)).subscribe(v => {
+            if (v === false) {
+                this._spinner.show(undefined, {
+                    type: 'ball-fussion',
+                    size: 'medium',
+                    bdColor: 'rgba(100,149,237, .2)',
+                    color: 'white',
+                    fullScreen: false
+                });
+            } else {
+                this._spinner.hide();
+            }
+        });
     }
 
     abstract onInit(): void;
