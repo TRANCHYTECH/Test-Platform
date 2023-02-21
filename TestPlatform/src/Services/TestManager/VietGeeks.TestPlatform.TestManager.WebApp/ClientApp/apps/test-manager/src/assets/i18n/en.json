@@ -21,5 +21,10 @@
         "RandomFromCategories": "Random questions and answers order"
       }
     }
+  },
+  "errors": {
+    "required": "The field is required",
+    "minlength": "Expected length {{requiredLength}} got {{actualLength}}",
+    "maxlength": "Expected length {{requiredLength}} got {{actualLength}}"
   }
 }

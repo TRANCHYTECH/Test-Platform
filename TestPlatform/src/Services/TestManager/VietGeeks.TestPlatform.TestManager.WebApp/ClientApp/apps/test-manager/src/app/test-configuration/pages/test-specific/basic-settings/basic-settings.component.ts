@@ -27,7 +27,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     super();
     this.basicSettingForm = this.fb.group({
       id: null,
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
       category: ['', [Validators.required]],
       description: ''
     });
@@ -72,8 +72,9 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     const modalRef = this._modalService.open(CreateCategoryComponent, { size: 'md', centered: true });
     modalRef.result.then(async (formValue: Partial<TestCategory>) => {
       await firstValueFrom(this._testCategoriesService.add(formValue));
-    }, reason => {
-      console.log(reason);
+      this.notifyService.success('Test Category created');
+    }, _reason => {
+      this.notifyService.error('Test Category failed. Please try again');
     })
   }
 }

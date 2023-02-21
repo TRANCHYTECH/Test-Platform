@@ -22,6 +22,8 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { errorTailorImports } from '@ngneat/error-tailor';
+
 
 @NgModule({
   declarations: [
@@ -55,7 +57,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     NgbAlertModule,
     NgbModalModule,
     InputMaskModule,
-    DragDropModule
+    DragDropModule,
+    errorTailorImports
   ]
 })
 export class TestConfigurationModule { }

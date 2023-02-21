@@ -66,6 +66,7 @@
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@ng-bootstrap/ng-bootstrap": "^14.0.0",
     "@ng-select/ng-select": "^10.0.1",
+    "@ngneat/error-tailor": "^3.0.3",
     "@ngneat/input-mask": "^6.1.0",
     "@ngneat/until-destroy": "^9.2.2",
     "@ngx-translate/core": "^14.0.0",

@@ -1,18 +1,19 @@
 import { Component, Input } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { errorTailorImports } from '@ngneat/error-tailor';
 
 @Component({
     selector: 'viet-geeks-create-category',
     standalone: true,
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, errorTailorImports],
     template: `
 		<div class="modal-header">
 			<h4 class="modal-title">Add Category</h4>
 			<button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
 		</div>
 		<div class="modal-body">
-			<div [formGroup]="form">
+			<div [formGroup]="form" errorTailor>
                 <div class="mb-3">
                 <label for="name-field" class="form-label">Category Name</label>
                 <input type="text" id="name-field" class="form-control" placeholder="Enter Name" required
@@ -21,7 +22,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
             </div>
 		</div>
 		<div class="modal-footer">
-			<button type="button" class="btn btn-outline-dark" (click)="save()">Save</button>
+			<button type="button" class="btn btn-primary w-sm" (click)="save()" [disabled]="form.invalid">Save</button>
 		</div>
 	`,
 })
@@ -33,13 +34,13 @@ export class CreateCategoryComponent {
 
     constructor(private fb: FormBuilder, private activeModal: NgbActiveModal) {
         this.form = this.fb.group({
-            name: ''
+            name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]]
         })
     }
 
     save() {
-        if(this.form.invalid) {
-            return;
+        if (this.form.invalid) {
+            return
         }
 
         this.activeModal.close(this.form.value);
