@@ -80,7 +80,8 @@ e2e/*.map
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -517,3 +518,6 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudio,visualstudiocode,angular,android
+TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/project.assets.json
+TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/project.nuget.cache
+TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/VietGeeks.TestPlatform.AspNetCore.csproj.nuget.dgspec.json
