@@ -66,7 +66,9 @@ import { provideErrorTailorConfig } from '@ngneat/error-tailor';
           return {
             required: () => translateService.instant('errors.required'),
             minlength: error => translateService.instant('errors.minlength', error),
-            maxlength: error =>  translateService.instant('errors.maxlength', error)
+            maxlength: error =>  translateService.instant('errors.maxlength', error),
+            min: error => translateService.instant('errors.min', error),
+            max: error => translateService.instant('errors.max', error)
           }
         }, deps: [TranslateService]
       }

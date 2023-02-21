@@ -102,7 +102,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
       const existingDrawValue = find(this.test.testSetSettings?.generator?.configs, { id: value.categoryId });
       generatorConfigsForm.push(this.fb.group({
         id: value.categoryId,
-        draw: this.fb.control(existingDrawValue?.draw || value.numberOfQuestions, [Validators.min(0), Validators.max(value.numberOfQuestions)]),
+        draw: this.fb.control(existingDrawValue?.draw || value.numberOfQuestions, [Validators.required, Validators.min(1), Validators.max(value.numberOfQuestions)]),
         name: this.fb.control({ value: this.questionCategories.find(c => c.id === value.categoryId)?.name, disabled: true }),
         totalQuestions: this.fb.control({ value: value.numberOfQuestions, disabled: true })
       }));
