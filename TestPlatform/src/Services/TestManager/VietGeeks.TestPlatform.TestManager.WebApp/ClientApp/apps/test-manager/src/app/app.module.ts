@@ -15,12 +15,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { LayoutsModule } from './layouts/layouts.module';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -58,7 +59,18 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor, multi: true
-    }
+    },
+    provideErrorTailorConfig({
+      errors: {
+        useFactory(translateService: TranslateService) {
+          return {
+            required: () => translateService.instant('errors.required'),
+            minlength: error => translateService.instant('errors.minlength', error),
+            maxlength: error =>  translateService.instant('errors.maxlength', error)
+          }
+        }, deps: [TranslateService]
+      }
+    })
   ],
   bootstrap: [AppComponent],
 })
