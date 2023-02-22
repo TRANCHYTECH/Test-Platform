@@ -28,11 +28,12 @@ public class QuestionCategoryManagementController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(QuestionCategoryViewModel), 200)]
     public async Task<IActionResult> Create(NewQuestionCategoryViewModel viewModel, CancellationToken cancellationToken)
     {
-        var questionCategoryId = await _questionCategoryService.CreateQuestionCategory(viewModel, cancellationToken);
+        var questionCategory = await _questionCategoryService.CreateQuestionCategory(viewModel, cancellationToken);
 
-        return Ok(questionCategoryId);
+        return Ok(questionCategory);
     }
 }
 

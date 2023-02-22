@@ -15,12 +15,12 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             _managerDbContext = managerDbContext;
         }
 
-        public async Task<string> CreateQuestionCategory(NewQuestionCategoryViewModel questionCategory, CancellationToken cancellationToken)
+        public async Task<QuestionCategoryViewModel> CreateQuestionCategory(NewQuestionCategoryViewModel questionCategory, CancellationToken cancellationToken)
         {
             var questionCategoryEntity = _mapper.Map<QuestionCategory>(questionCategory);
             await _managerDbContext.SaveAsync(questionCategoryEntity, cancellationToken);
 
-            return questionCategoryEntity.ID;
+            return _mapper.Map<QuestionCategoryViewModel>(questionCategoryEntity);
         }
 
         public async Task<IEnumerable<QuestionCategoryViewModel>> GetCategories(CancellationToken cancellationToken)
