@@ -22,7 +22,7 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     changeDetector = inject(ChangeDetectorRef);
     fb = inject(FormBuilder);
     changeRef = inject(ChangeDetectorRef);
-    
+
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
 
@@ -105,7 +105,12 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     setupControlValidityTrigger(parent: FormGroup, sourcePath: string[], targetPaths: string[][]) {
         //todo: improve the destroying subscription.
         parent.get(sourcePath)?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => setTimeout(() => {
-          targetPaths.forEach(p => parent.get(p)?.updateValueAndValidity());
+            console.log('update trigger');
+            targetPaths.forEach(p => {
+                const control = parent.get(p);
+                control?.updateValueAndValidity();
+                control?.markAsTouched();
+            });
         }));
-      }
+    }
 }

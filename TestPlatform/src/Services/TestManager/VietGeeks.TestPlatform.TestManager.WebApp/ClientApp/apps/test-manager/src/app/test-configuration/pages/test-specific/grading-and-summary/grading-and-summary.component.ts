@@ -73,7 +73,8 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
         key: 'Grade and descriptive grades'
       },
     ],
-    maxPoint: 12
+    maxPoint: 12,
+    maxPercentage: 100
   };
 
   get gradingCriteriasCtrl() {
@@ -130,22 +131,9 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     // Triggers
     this.setupControlValidityTrigger(this.testEndConfigCtrl, ['redirectTo'], [['toAddress']]);
 
-    this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.PassMask.toString(), this.fb.group({
-      $type: GradingCriteriaConfigType.PassMask,
-      value: [0, [
-        Validators.required,
-        RxwebValidators.digit(),
-        Validators.min(1),
-        RxwebValidators.maxNumber({
-          dynamicConfig: (parent) => {
-            //todo(tau): get maxium values from server.
-            console.log('PassMask validation');
-            const value = (parent as GradeRangeCriteria).unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
-            return { value };
-          }
-        })]],
-      unit: [RangeUnit.Percent, [Validators.required]]
-    }));
+    const control = this.newPassMaskGradeCriteria();
+    control.disable();
+    this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.PassMask.toString(), control);
 
     this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.GradeRanges.toString(), this.fb.group({
       $type: GradingCriteriaConfigType.GradeRanges,
@@ -160,6 +148,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
 
     const gradingCriterias = this.test.gradingSettings?.gradingCriterias;
     forIn(gradingCriterias, (v, k) => {
+      this.gradingCriteriasCtrl.get(k)?.enable();
       switch (k) {
         case GradingCriteriaConfigType.PassMask.toString():
           this.gradingCriteriasCtrl.get(k)?.patchValue(v);
@@ -190,14 +179,39 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     }))
 
     // Setup triggers
-    // this.setupControlValidityTrigger(this.gradeForm.get(['gradingCriterias', GradingCriteriaConfigType.PassMask.toString()]) as FormGroup, ['unit'], [['value']]);
-    // this.gradeForm.get(['gradingCriterias', GradingCriteriaConfigType.GradeRanges.toString(), 'unit'])?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
-    //   this.gradeRangesDetailsCtrl.controls.forEach(c => {
-    //     c.controls['to'].updateValueAndValidity();
-    //   });
-    // });
+    this.setupControlValidityTrigger(this.gradeForm.get(['gradingCriterias', GradingCriteriaConfigType.PassMask.toString()]) as FormGroup, ['unit'], [['value']]);
+    this.gradeForm.get(['gradingCriterias', GradingCriteriaConfigType.GradeRanges.toString(), 'unit'])?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
+      setTimeout(() => {
+        this.gradeRangesDetailsCtrl.controls.forEach(c => {
+          c.controls['to'].updateValueAndValidity();
+          c.controls['to'].markAsTouched();
+        });
+      });
+    });
 
     this.maskReadyForUI();
+    //todo(tau): check issue why have to click on ui one time, to make ui show errors and change form state?
+    //todo(tau): reload/reset form after successfully updated.
+  }
+
+  private newPassMaskGradeCriteria(): FormGroup {
+    return this.fb.group({
+      $type: GradingCriteriaConfigType.PassMask,
+      value: [0, [
+        Validators.required,
+        RxwebValidators.digit(),
+        Validators.min(1),
+        RxwebValidators.maxNumber({
+          dynamicConfig: (parent) => {
+            //todo(tau): get maxium values from server.
+            console.log('PassMask value validatior run', parent);
+            const value = (parent as GradeRangeCriteria).unit === RangeUnit.Percent ? this.gradeFormConfigs.maxPercentage : this.gradeFormConfigs.maxPoint;
+            return { value };
+          }
+        })
+      ]],
+      unit: [RangeUnit.Percent, [Validators.required]]
+    });
   }
 
   private createNewGradeRangeCtrl(detail: Partial<GradeRangeCriteriaDetail>) {
@@ -208,32 +222,23 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
         RxwebValidators.minNumber({
           dynamicConfig: (parent, root) => {
             //todo(tau): refactor this code block.
-            console.log('min number validation');
-            // const details = ((root as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
-            // const foundIdx = findIndex(details, d => d.id === parent['id']);
-            // const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
-            return { value : 12 };
+            console.log('min range number validator run', parent);
+            const details = ((root as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
+            const foundIdx = findIndex(details, d => d.id === parent['id']);
+            const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
+            return { value };
           }
         }),
-        // RxwebValidators.maxNumber({
-        //   dynamicConfig: (parent, root) => {
-        //     console.log('max number config', parent);
-        //     const criteria = ((root as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria);
-        //     const value = criteria.unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
-        //     return { value };
-        //   }
-        // })
+        RxwebValidators.maxNumber({
+          dynamicConfig: (parent, root) => {
+            console.log('max range number validator run', parent);
+            const criteria = ((root as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria);
+            const value = criteria.unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
+            return { value };
+          }
+        })
       ]],
       grades: this.createGradeMask(detail?.grades)
-    });
-
-    //todo: refactor this, reuse it.
-    formGroup.controls['to'].valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
-      setTimeout(() => {
-        this.gradeRangesDetailsCtrl.controls.forEach(c => {
-          c.get(['to'])?.updateValueAndValidity();
-        });
-      });
     });
 
     return formGroup;
@@ -276,7 +281,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     console.log('delete grade', i);
   }
 
-   detailsTrackBy(index: number, detail: FormGroup) {
+  detailsTrackBy(index: number, detail: FormGroup) {
     return (detail.value as GradeRangeCriteriaDetail).id;
   }
 
