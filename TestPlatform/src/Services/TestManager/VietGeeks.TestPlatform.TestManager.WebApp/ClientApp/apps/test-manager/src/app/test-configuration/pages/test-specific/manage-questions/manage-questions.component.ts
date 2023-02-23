@@ -13,7 +13,7 @@ import { QuestionService } from '../../../state/questions/question.service';
 @Component({
   selector: 'viet-geeks-manage-questions',
   templateUrl: './manage-questions.component.html',
-  styleUrls: ['./manage-questions.component.scss'],
+  styleUrls: ['./manage-questions.component.scss']
 })
 export class ManageQuestionsComponent implements OnInit {
   questions$!: Observable<Question[]>;
@@ -22,6 +22,9 @@ export class ManageQuestionsComponent implements OnInit {
   questionCategories: {[id: string]: string} = {};
 
   testId: string;
+
+  page = 0;
+  pageSize = 10;
 
   constructor(private _questionsQuery: QuestionsQuery, private _questionsService: QuestionService,
     private _questionCategoriesQuery: QuestionCategoriesQuery,

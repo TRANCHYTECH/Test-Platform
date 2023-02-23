@@ -22,6 +22,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 
 
@@ -58,6 +59,7 @@ import { errorTailorImports } from '@ngneat/error-tailor';
     NgbModalModule,
     InputMaskModule,
     DragDropModule,
+    NgbPaginationModule,
     errorTailorImports
   ]
 })

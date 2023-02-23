@@ -37,7 +37,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<QuestionViewModel>), StatusCodes.Status201Created)]
     //TODO: paging
-    public Task<IEnumerable<QuestionViewModel>> Get(string testId, CancellationToken cancellationToken)
+    public Task<IEnumerable<QuestionViewModel>> Get(string testId, int? pageIndex, CancellationToken cancellationToken)
     {
         return _questionManagerService.GetQuestions(testId, cancellationToken);
     }
