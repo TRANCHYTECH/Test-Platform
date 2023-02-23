@@ -4,7 +4,6 @@ using MongoDB.Entities;
 namespace VietGeeks.TestPlatform.TestManager.Core.Models
 {
     [Collection("QuestionDefinition")]
-    [BsonIgnoreExtraElements]
     public class QuestionDefinition: EntityBase
     {
         public string TestId { get; set; }

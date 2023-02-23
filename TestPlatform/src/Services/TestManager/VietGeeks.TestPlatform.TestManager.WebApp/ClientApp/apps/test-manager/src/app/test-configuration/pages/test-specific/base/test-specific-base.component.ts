@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { ToastService } from "@viet-geeks/shared";
@@ -21,6 +21,7 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     route = inject(ActivatedRoute);
     changeDetector = inject(ChangeDetectorRef);
     fb = inject(FormBuilder);
+    changeRef = inject(ChangeDetectorRef);
 
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
@@ -99,4 +100,17 @@ export abstract class TestSpecificBaseComponent implements OnInit {
 
         await this.submit();
     };
+
+    //todo(tau): how to generalize it?
+    setupControlValidityTrigger(parent: FormGroup, sourcePath: string[], targetPaths: string[][]) {
+        //todo: improve the destroying subscription.
+        parent.get(sourcePath)?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => setTimeout(() => {
+            console.log('update trigger');
+            targetPaths.forEach(p => {
+                const control = parent.get(p);
+                control?.updateValueAndValidity();
+                control?.markAsTouched();
+            });
+        }));
+    }
 }

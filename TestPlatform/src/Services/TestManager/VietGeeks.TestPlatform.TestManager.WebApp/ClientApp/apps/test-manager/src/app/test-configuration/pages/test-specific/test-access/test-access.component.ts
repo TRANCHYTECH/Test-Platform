@@ -55,7 +55,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
   constructor() {
     super();
     this.testAccessForm = this.fb.group({});
-    this.codeGenerationForm = this.fb.group({ count: null });
+    this.codeGenerationForm = this.fb.group({ count: ['', [Validators.required, Validators.min(1), Validators.max(50)]] });
   }
 
   onInit(): void {
@@ -107,6 +107,11 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     this.accessTypeCtrl.setValue(accessType);
   }
 
+  get canGenerateCodes() {
+    return this.codeGenerationForm.valid;
+  }
+
+  //todo: validate that control ui
   generateCodes() {
     const control = this.codeGenerationForm.controls['count'];
     const count = control.value;
@@ -117,7 +122,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     const codes = this.testsService.generateAccessCodes(count);
     codes.forEach(code => this.privateAccessCodeConfigsCtrl.push(this.newAccessCodeConfigCtrl({ code: code })));
 
-    control.patchValue(null);
+    control.reset(null);
   }
 
   generateGroupPassword() {

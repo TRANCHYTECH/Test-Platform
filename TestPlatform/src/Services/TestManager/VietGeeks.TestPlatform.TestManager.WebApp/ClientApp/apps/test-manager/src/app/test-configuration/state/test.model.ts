@@ -81,7 +81,7 @@ export interface GradeRangeCriteria extends GradingCriteriaConfig {
 }
 
 export interface GradeRangeCriteriaDetail {
-  from: number,
+  id?: string;
   to: number,
   grades: { [key: string]: string }
 }

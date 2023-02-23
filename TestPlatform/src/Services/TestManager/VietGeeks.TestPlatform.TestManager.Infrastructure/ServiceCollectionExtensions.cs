@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
@@ -9,13 +10,25 @@ public static class ServiceCollectionExtensions
 {
     public static void RegisterInfrastructureModule(this IServiceCollection serviceCollection, DatabaseOptions databaseOptions)
     {
-        DB.InitAsync(databaseOptions.DatabaseName, MongoClientSettings.FromConnectionString(databaseOptions.ConnectionString)).Wait();
+        ConfigureDb(databaseOptions);
 
         serviceCollection.AddScoped<ITestManagerService, TestManagerService>();
         serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
         serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
+    }
+
+    private static void ConfigureDb(DatabaseOptions databaseOptions)
+    {
+        var conventionPack = new ConventionPack
+        {
+            new IgnoreExtraElementsConvention(true)
+        };
+
+        ConventionRegistry.Register("TestPlatformDefaultConventions", conventionPack, _ => true);
+
+        DB.InitAsync(databaseOptions.DatabaseName, MongoClientSettings.FromConnectionString(databaseOptions.ConnectionString)).Wait();
     }
 }
 

@@ -25,6 +25,10 @@
   "errors": {
     "required": "The field is required",
     "minlength": "Expected length {{requiredLength}} got {{actualLength}}",
-    "maxlength": "Expected length {{requiredLength}} got {{actualLength}}"
+    "maxlength": "Expected length {{requiredLength}} got {{actualLength}}",
+    "min": "Expected min value {{min}} got {{actual}}",
+    "max": "Expected max value {{max}} got {{actual}}",
+    "email": "The email is invalid",
+    "url": "The url is invalid"
   }
 }

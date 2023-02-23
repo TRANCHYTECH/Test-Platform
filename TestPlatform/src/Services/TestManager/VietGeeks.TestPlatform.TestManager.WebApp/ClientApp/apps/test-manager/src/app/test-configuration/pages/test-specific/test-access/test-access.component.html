@@ -84,7 +84,7 @@
                         <div class="hstack gap-3 mb-3" [formGroup]="codeGenerationForm">
                             <input class="form-control border-dashed" type="number" style="width: 300px;"
                                 formControlName="count">
-                            <button type="button" class="btn btn-secondary flex-shrink-0"
+                            <button type="button" class="btn btn-secondary flex-shrink-0" [disabled]="!canGenerateCodes"
                                 (click)="generateCodes()">Add</button>
                         </div>
                         <div class="gap-3 mb-3">

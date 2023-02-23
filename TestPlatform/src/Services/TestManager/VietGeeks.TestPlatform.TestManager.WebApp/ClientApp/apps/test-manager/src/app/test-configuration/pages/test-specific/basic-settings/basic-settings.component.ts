@@ -73,8 +73,6 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     modalRef.result.then(async (formValue: Partial<TestCategory>) => {
       await firstValueFrom(this._testCategoriesService.add(formValue));
       this.notifyService.success('Test Category created');
-    }, _reason => {
-      this.notifyService.error('Test Category failed. Please try again');
-    })
+    });
   }
 }
