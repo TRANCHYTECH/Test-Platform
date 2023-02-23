@@ -26,7 +26,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xxl-12 project-card" *ngFor="let data of questions$ | async" id="pl1_{{data.id}}">
+  <div class="col-xxl-12 project-card" *ngFor="let data of questions$ | async | slice: (page-1) * pageSize : page * pageSize" id="pl1_{{data.id}}">
     <div class="card card-height-100">
       <div class="card-body">
         <div class="d-flex flex-column h-100">
@@ -101,36 +101,17 @@
 
 <div class="row g-0 text-center text-sm-start align-items-center mb-4">
   <div class="col-sm-6">
-    <div>
-      <p class="mb-sm-0 text-muted">Showing <span class="fw-semibold">1</span> to <span class="fw-semibold">10</span> of
-        <span class="fw-semibold text-decoration-underline">12</span>
+    <!-- <div>
+      <p class="mb-sm-0 text-muted">Showing <span class="fw-semibold">{{page - 1 * pageSize}}</span> to <span class="fw-semibold">{{(page + 1) * pageSize}}</span> of
+        <span class="fw-semibold text-decoration-underline">{{(questions$ | async)?.length}}</span>
         entries</p>
-    </div>
+    </div> -->
   </div>
   <!-- end col -->
   <div class="col-sm-6">
-    <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
-      <li class="page-item disabled">
-        <a href="javascript:void(0);" class="page-link">Previous</a>
-      </li>
-      <li class="page-item active">
-        <a href="javascript:void(0);" class="page-link">1</a>
-      </li>
-      <li class="page-item ">
-        <a href="javascript:void(0);" class="page-link">2</a>
-      </li>
-      <li class="page-item">
-        <a href="javascript:void(0);" class="page-link">3</a>
-      </li>
-      <li class="page-item">
-        <a href="javascript:void(0);" class="page-link">4</a>
-      </li>
-      <li class="page-item">
-        <a href="javascript:void(0);" class="page-link">5</a>
-      </li>
-      <li class="page-item">
-        <a href="javascript:void(0);" class="page-link">Next</a>
-      </li>
-    </ul>
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="(questions$ | async)?.length ?? 0"></ngb-pagination>
   </div><!-- end col -->
 </div><!-- end row -->

@@ -25,6 +25,17 @@ public class QuestionManagerService : IQuestionManagerService
         return _mapper.Map<List<QuestionViewModel>>(entities);
     }
 
+    public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, int pageIndex, int pageSize, CancellationToken cancellationToken)
+    {
+        var entities = await _managerDbContext.Find<QuestionDefinition>()
+            .Skip(pageIndex*pageSize)
+            .Limit(pageSize)
+            .Sort(q => q.QuestionNo, Order.Ascending)
+            .ManyAsync(q => q.TestId == testId, cancellationToken);
+
+        return _mapper.Map<List<QuestionViewModel>>(entities);
+    }
+
     public async Task<QuestionViewModel> GetQuestion(string id, CancellationToken cancellationToken)
     {
         var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync();
