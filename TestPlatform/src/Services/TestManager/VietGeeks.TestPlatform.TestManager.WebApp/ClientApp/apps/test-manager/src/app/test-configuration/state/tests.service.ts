@@ -68,6 +68,10 @@ export class TestsService {
     return codes;
   }
 
+  generateRandomCode() {
+    return defKSUID32().next();
+  }
+
   private get testManagerApiBaseUrl() {
     return this._appSettingService.get<AppSettings>().testManagerApiBaseUrl;
   }

@@ -51,7 +51,7 @@
                         </div>
                     </ngb-alert>
                     <div class="mb-3">
-                        <label>Maximum possible score (100%): 0p.</label>
+                        <label>Maximum possible score (100%): {{gradeFormConfigs.maxPoint}}p.</label>
                     </div>
                     <div class="mb-3" formGroupName="{{GradingCriteriaConfigTypeRef.PassMask.toString()}}">
                         <div class="hstack form-check form-switch form-switch-lg ms-auto">
@@ -102,20 +102,20 @@
                         <div class="card" formArrayName="details">
                             <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
                             <div class="card-body">
-                                <div class="mb-3" *ngFor="let ctrl of gradeRangesDetailsCtrl.controls; let i = index">
+                                <div class="mb-3" *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
                                     <ng-container [formGroup]="ctrl">
                                         <div class="hstack">
                                             <div class="d-inline-flex align-items-center mb-3 gap-1">
                                                 <label class="fw-bold">Range {{i +
-                                                    1}}:</label><label>From:</label><label>{{ctrl.controls['from'].value}}
-                                                    p.</label><label>not less
-                                                    than:</label>
+                                                    1}}:</label>
+                                                <label>From:</label>
+                                                <label>{{getToValueOfGradeRangesDetails(i - 1)}}p.</label>
+                                                <label>to:</label>
                                                 <input type="number" class="form-control border-dashed"
-                                                    style="width: 100px;" formControlName="to"><label>p.</label>
+                                                    style="width: 100px;" formControlName="to"><label>{{selectedGradeRangeUnit}}</label>
                                             </div>
                                             <i class="ri-delete-bin-line delete-icon ms-auto"
-                                                [swal]="{ title: 'Confirmation', text: 'You want to delete this grade!', showCancelButton: true }"
-                                                (confirm)="gradeRangesDetailsCtrl.removeAt(i)"></i>
+                                                (click)="gradeRangesDetailsCtrl.removeAt(i)"></i>
                                         </div>
                                         <ng-container formGroupName="grades">
                                             <div class="mb-3">

@@ -55,7 +55,7 @@ public class TestProfile : Profile
         CreateMap<Contract.ViewModels.GradeRangeCriteriaDetail, Core.Models.GradeRangeCriteriaDetail>();
         CreateMap<Contract.ViewModels.TestEndConfig, Core.Models.TestEndConfig>();
         CreateMap<Contract.ViewModels.InformRespondentConfig, Core.Models.InformRespondentConfig>();
-        CreateMap<Contract.ViewModels.CreateOrupdateGradingSettings, Core.Models.GradingSettingsPart>();
+        CreateMap<Contract.ViewModels.CreateOrUpdateGradingSettings, Core.Models.GradingSettingsPart>();
 
         CreateMap<Core.Models.GradingCriteriaConfig, Contract.ViewModels.GradingCriteriaConfig>().IncludeAllDerived();
         CreateMap<Core.Models.PassMaskCriteria, Contract.ViewModels.PassMaskCriteria>();

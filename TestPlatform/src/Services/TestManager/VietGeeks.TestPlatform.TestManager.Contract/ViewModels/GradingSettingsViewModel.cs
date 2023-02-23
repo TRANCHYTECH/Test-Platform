@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
 
-public class CreateOrupdateGradingSettings
+public class CreateOrUpdateGradingSettings
 {
     public TestEndConfig TestEndConfig { get; set; } = default!;
 
@@ -77,8 +77,6 @@ public class GradeRangeCriteria : GradingCriteriaConfig
 
 public class GradeRangeCriteriaDetail
 {
-    public int From { get; set; }
-
     public int To { get; set; }
 
     public Dictionary<string, string> Grades { get; set; } = new Dictionary<string, string>();

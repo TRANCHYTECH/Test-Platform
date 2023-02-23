@@ -1,7 +1,7 @@
 <div class="row">
     <ng-container *ngIf="readyForUI$ | async">
         <div class="col-lg-12">
-            <div class="card" [formGroup]="testSetsForm" errorTailor>
+            <div class="card" [formGroup]="testSetsForm">
                 <h5 class="card-header border-bottom-0">QUESTIONS ORDER</h5>
                 <div class="card-body">
                     <label>Select one of the options:</label>
@@ -27,7 +27,6 @@
                                 </ng-container>
                             </div>
                         <ng-template controlErrorAnchor #anchor="controlErrorAnchor"></ng-template>
-
                         </ng-container>
                     </ng-container>
                     <!-- <div class="form-check form-switch form-switch-lg mb-3">

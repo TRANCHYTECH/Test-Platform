@@ -18,7 +18,7 @@ public class UpdateTestDefinitionViewModel
 
     public CreateOrUpdateTestAccessSettingsViewModel? TestAccessSettings { get; set; }
 
-    public CreateOrupdateGradingSettings? GradingSettings { get; set; }
+    public CreateOrUpdateGradingSettings? GradingSettings { get; set; }
 
     public CreateOrUpdateTimeSettingsViewModel? TimeSettings { get; set; }
 
