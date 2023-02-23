@@ -142,7 +142,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
       details: this.fb.array([])
     }));
 
-    // Path curremt values.
+    // Path current values.
     const testEndConfig = this.test.gradingSettings?.testEndConfig;
     this.testEndConfigCtrl.patchValue(testEndConfig || {});
 
@@ -258,7 +258,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     const form = this.fb.group({});
     forIn(GradeType, (v) => {
       const existingValue = grades && grades[v];
-      form.addControl(v.toString(), this.fb.control(existingValue));
+      form.addControl(v.toString(), this.fb.control(existingValue, { validators: [Validators.required] }));
     });
 
     return form;
