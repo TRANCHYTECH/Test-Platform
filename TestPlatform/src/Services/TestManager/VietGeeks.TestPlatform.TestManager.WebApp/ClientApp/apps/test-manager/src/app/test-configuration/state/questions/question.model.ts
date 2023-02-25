@@ -18,8 +18,8 @@ export interface Question {
 }
 
 export interface ScoreSettings {
-  correctPoint: number;
-  incorrectPoint: number;
+  correctPoint?: number;
+  incorrectPoint?: number;
   isPartialAnswersEnabled?: boolean;
   maxPoints?: number;
   maxWords?: number;

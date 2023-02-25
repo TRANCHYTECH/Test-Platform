@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { isNumber } from 'lodash';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -11,16 +12,11 @@ import { CreateCategoryComponent } from '../../../components/create-test-categor
 import { QuestionCategory } from '../../../state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../../state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../../state/question-categories/question-categories.service';
-import { Answer, AnswerType, Question } from '../../../state/questions/question.model';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../../state/questions/question.model';
 import { QuestionsQuery } from '../../../state/questions/question.query';
 import { QuestionService } from '../../../state/questions/question.service';
 import { AnswerTypes } from './data';
-
-interface QuestionForm {
-  questionDescription: FormControl<string | null>;
-  category: FormControl<string | null>;
-  answerType: FormControl<string | null>;
-}
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 @UntilDestroy()
 @Component({
@@ -60,18 +56,32 @@ export class EditQuestionComponent implements OnInit {
     this.isMultipleChoiceAnswer = false;
     this.isPartialScore = false;
     this.questionForm = this._fb.group({
-      description: '',
-      categoryId: '',
-      answerType: 0,
+      description: ['', [Validators.required]],
+      categoryId: ['', [Validators.required]],
+      answerType: ['', [Validators.required]],
       answers: this._fb.array([])
     });
 
+    const pointMandatoryCondition = () => (this.answerType == AnswerType.SingleChoice || this.answerType == AnswerType.MultipleChoice) && !this.isPartialScore;
+    const partialPointMandatoryCondition =
+    () => {
+      return this.answerType === AnswerType.MultipleChoice && this.isPartialScore;
+    }
+
     this.scoreSettingsForm = this._fb.group({
-      correctPoint: 0,
-      incorrectPoint: 0,
+      correctPoint: [0, [RxwebValidators.compose({
+        validators: [Validators.required], conditionalExpression: pointMandatoryCondition
+      })]],
+      incorrectPoint: [0, [RxwebValidators.compose({
+        validators: [Validators.required], conditionalExpression: pointMandatoryCondition
+      })]],
       isPartialAnswersEnabled: false,
-      totalPoints: 0,
-      partialIncorrectPoint: 0,
+      totalPoints: [0, [RxwebValidators.compose({
+        validators: [Validators.required], conditionalExpression: partialPointMandatoryCondition
+      })]],
+      partialIncorrectPoint: [0, [RxwebValidators.compose({
+        validators: [Validators.required], conditionalExpression: partialPointMandatoryCondition
+      })]],
       isDisplayMaximumScore: false,
       mustAnswerToContinue: false,
       isMandatory: false
@@ -165,32 +175,54 @@ export class EditQuestionComponent implements OnInit {
 };
 
   async submit() {
-    if (this.questionForm.invalid) {
-      return;
-    }
+    try {
+      if (this.questionForm.invalid || this.scoreSettingsForm.invalid) {
+        return;
+      }
 
-    const formValue = this.questionForm.value;
-    const question: Question = {
-      ...formValue,
-      answerType: parseInt(formValue.answerType),
-      questionNo: 1,//TODO
-      scoreSettings: this.scoreSettingsForm.value,
-      id: this.questionId
-    };
+      const formValue = this.questionForm.value;
+      const question: Question = {
+        ...formValue,
+        answerType: parseInt(formValue.answerType),
+        questionNo: 1,//TODO
+        scoreSettings: this.getScoreSettingsFormValue(),
+        id: this.questionId
+      };
 
-    if (!this.isMultipleChoice(question.answerType)) {
-      question.answers?.forEach((a, idx) => a.isCorrect = idx === this.singleChoiceIndex);
-    }
+      if (!this.isMultipleChoice(question.answerType)) {
+        question.answers?.forEach((a, idx) => a.isCorrect = idx === this.singleChoiceIndex);
+      }
 
-    if (this.questionId === 'new') {
-      await lastValueFrom(this._questionService.add(this.testId, question));
-      this.router.navigate(['tests', this.testId, 'manage-questions']);
-      this.notifyService.success('Question created');
-    } else {
-        await this._questionService.update(this.testId, this.questionId, question);
+      if (this.questionId === 'new') {
+        await lastValueFrom(this._questionService.add(this.testId, question));
         this.router.navigate(['tests', this.testId, 'manage-questions']);
-        this.notifyService.success('Question updated');
+        this.notifyService.success('Question created');
+      } else {
+          await this._questionService.update(this.testId, this.questionId, question);
+          this.router.navigate(['tests', this.testId, 'manage-questions']);
+          this.notifyService.success('Question updated');
+      }
     }
+    catch (e) {
+      this.notifyService.error('Error occured while saving question');
+    }
+  }
+
+  private getScoreSettingsFormValue(): ScoreSettings {
+    const formValue: ScoreSettings = this.scoreSettingsForm.value;
+    if (!(isNumber(formValue.correctPoint))) {
+      formValue.correctPoint = undefined;
+    }
+    if (!(isNumber(formValue.incorrectPoint))) {
+      formValue.incorrectPoint = undefined;
+    }
+    if (!(isNumber(formValue.totalPoints))) {
+      formValue.totalPoints = undefined;
+    }
+    if (!(isNumber(formValue.partialIncorrectPoint))) {
+      formValue.partialIncorrectPoint = undefined;
+    }
+    return formValue;
   }
 
   private registerControlEvents() {
@@ -203,7 +235,11 @@ export class EditQuestionComponent implements OnInit {
     const isPartialAnswersEnabledControl = this.scoreSettingsForm.get('isPartialAnswersEnabled') as FormControl;
     isPartialAnswersEnabledControl.valueChanges.pipe(untilDestroyed(this)).subscribe(v => {
       this.isPartialScore = v;
-  });
+      this.scoreSettingsForm.get('correctPoint')?.updateValueAndValidity();
+      this.scoreSettingsForm.get('incorrectPoint')?.updateValueAndValidity();
+      this.scoreSettingsForm.get('totalPoints')?.updateValueAndValidity();
+      this.scoreSettingsForm.get('partialIncorrectPoint')?.updateValueAndValidity();
+    });
   }
 
   private isMultipleChoice(answerType?: AnswerType): boolean {
@@ -213,7 +249,7 @@ export class EditQuestionComponent implements OnInit {
   private addAnswer(answer: Answer) {
     const formGroup = this._fb.group({
       id: answer.id,
-      answerDescription : answer.answerDescription,
+      answerDescription : [answer.answerDescription,[Validators.required]],
       answerPoint: answer.answerPoint,
       isCorrect: answer.isCorrect,
       selectedIndex: this.singleChoiceIndex
