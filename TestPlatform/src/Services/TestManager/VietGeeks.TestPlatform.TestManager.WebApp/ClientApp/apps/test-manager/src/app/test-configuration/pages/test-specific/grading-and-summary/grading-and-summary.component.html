@@ -8,7 +8,7 @@
                         <label>Configure a message to be displayed to all respondents at the end of the test, regardless
                             of
                             its results.</label>
-                        <editor [formControlName]="'message'" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
+                        <editor formControlName="message" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
                     </div>
                     <div class="form-check form-switch form-switch-lg mb-3">
                         <input type="checkbox" role="switch" id="i3" class="form-check-input"
@@ -167,11 +167,11 @@
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have passed:</label>
-                        <!-- <ckeditor [editor]="Editor" class="short-editor" formControlName="passedMessage"></ckeditor> -->
+                        <editor formControlName="passedMessage" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have failed:</label>
-                        <!-- <ckeditor [editor]="Editor" class="short-editor" formControlName="failedMessage"></ckeditor> -->
+                        <editor formControlName="failedMessage" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
                     </div>
                     <div class="form-check form-switch form-switch-lg">
                         <input type="checkbox" role="switch" id="informViaEmailToggler" class="form-check-input"

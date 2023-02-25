@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { find, findIndex, forIn } from 'lodash';
 import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, TestEndConfig } from '../../../state/test.model';
@@ -74,7 +74,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     maxPoint: 12,
     maxPercentage: 100
   };
-
+  
   get gradingCriteriasCtrl() {
     return this.gradeForm.controls['gradingCriterias'] as FormGroup;
   }
