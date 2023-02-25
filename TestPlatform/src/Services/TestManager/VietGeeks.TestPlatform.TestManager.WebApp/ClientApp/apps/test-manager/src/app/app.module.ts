@@ -7,7 +7,7 @@ import { appRoutes } from './app.routes';
 import { AuthClientConfig, AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { HttpBackend, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppSettingsService, CoreModule } from '@viet-geeks/core';
-import { SharedModule } from '@viet-geeks/shared';
+import { SharedModule, EDITOR_API_KEY } from '@viet-geeks/shared';
 import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
 import { of, tap } from 'rxjs';
@@ -22,6 +22,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
+import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -60,6 +61,11 @@ import { provideErrorTailorConfig } from '@ngneat/error-tailor';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor, multi: true
     },
+    {
+      provide: EDITOR_API_KEY,
+      //todo: use configuration from server.
+      useValue: 'x0yf00jatpue54s2pib29qju4ql049rbbv602narz7nfx4p2'
+    },
     provideErrorTailorConfig({
       errors: {
         useFactory(translateService: TranslateService) {
@@ -76,7 +82,8 @@ import { provideErrorTailorConfig } from '@ngneat/error-tailor';
           }
         }, deps: [TranslateService]
       }
-    })
+    }),
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' }
   ],
   bootstrap: [AppComponent],
 })

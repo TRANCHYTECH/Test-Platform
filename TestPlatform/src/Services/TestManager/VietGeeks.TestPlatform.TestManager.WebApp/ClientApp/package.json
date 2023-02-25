@@ -71,10 +71,13 @@
     "@ngneat/until-destroy": "^9.2.2",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
+    "@nrwl/nx-cloud": "^15.1.1",
     "@popperjs/core": "^2.11.6",
     "@rxweb/reactive-form-validators": "^13.0.0",
     "@sweetalert2/ngx-sweetalert2": "^12.1.0",
     "@thi.ng/ksuid": "^3.0.1",
+    "@tinymce/tinymce-angular": "^7.0.0",
+    "@uploadcare/upload-client": "^6.2.1",
     "angular-feather": "^6.5.0",
     "angularx-flatpickr": "^7.0.0",
     "bootstrap": "^5.2.3",
@@ -89,6 +92,7 @@
     "ngx-spinner": "^15.0.1",
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.7.1",
+    "tinymce": "^6.3.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   }

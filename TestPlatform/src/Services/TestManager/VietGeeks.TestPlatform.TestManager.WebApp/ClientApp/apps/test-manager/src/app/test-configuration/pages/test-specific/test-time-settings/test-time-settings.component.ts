@@ -7,6 +7,7 @@ import { TestSpecificBaseComponent } from '../base/test-specific-base.component'
 import { createMask, InputmaskOptions } from '@ngneat/input-mask';
 import { duration } from 'moment';
 import * as moment from 'moment';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 export const TestDurationMethod =
 {
@@ -57,7 +58,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
 
   hhmmInputMask = createMask({
     mask: "99:99",
-    
+
     placeholder: "00:00",
     inputmode: 'text',
     parser: (value: string) => {
@@ -86,9 +87,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     }
   });
 
-
-
-  readonly durationInputMasks: {[key: string]: InputmaskOptions<string>} = {
+  readonly durationInputMasks: { [key: string]: InputmaskOptions<string> } = {
     1: this.hhmmInputMask,
     2: this.mmssInputMask
   }
@@ -106,10 +105,17 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       testDurationMethod: this.fb.group({
         type: timeSettings?.testDurationMethod.$type || TestDurationMethod.CompleteTestTime,
         1: this.fb.group({
-          duration: timeSettings?.testDurationMethod.$type === TestDurationMethod.CompleteTestTime ? (<CompleteTestDuration>timeSettings?.testDurationMethod).duration : null,
+          duration: [
+            timeSettings?.testDurationMethod.$type === TestDurationMethod.CompleteTestTime ? (<CompleteTestDuration>timeSettings?.testDurationMethod).duration : null,
+            [RxwebValidators.required({
+              conditionalExpression: (parent: { type: number; }, root: any) => root.testDurationMethod.type === TestDurationMethod.CompleteTestTime
+            })]]
         }),
         2: this.fb.group({
-          duration: timeSettings?.testDurationMethod.$type === TestDurationMethod.CompleteQuetsionTime ? (<CompleteQuestionDuration>timeSettings?.testDurationMethod).duration : null
+          duration: [timeSettings?.testDurationMethod.$type === TestDurationMethod.CompleteQuetsionTime ? (<CompleteQuestionDuration>timeSettings?.testDurationMethod).duration : null,
+            [RxwebValidators.required({
+              conditionalExpression: (parent: { type: number; }, root: any) => root.testDurationMethod.type === TestDurationMethod.CompleteQuetsionTime
+            })]]
         })
       }),
       testActivationMethod: this.fb.group({

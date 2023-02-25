@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
-import { ToastService } from "@viet-geeks/shared";
+import { EDITOR_API_KEY, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
 import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, firstValueFrom } from "rxjs";
 import { Test, createTest } from "../../../state/test.model";
@@ -25,6 +25,9 @@ export abstract class TestSpecificBaseComponent implements OnInit {
 
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
+
+    textEditorConfigs = inject(TextEditorConfigsService);
+    editorApiKey = inject<string>(EDITOR_API_KEY);
 
     notifyService = inject(ToastService);
     private _spinner = inject(NgxSpinnerService);

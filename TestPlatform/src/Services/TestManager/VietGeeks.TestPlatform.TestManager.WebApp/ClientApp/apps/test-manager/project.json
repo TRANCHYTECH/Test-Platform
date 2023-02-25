@@ -18,7 +18,12 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/test-manager/src/favicon.ico",
-          "apps/test-manager/src/assets"
+          "apps/test-manager/src/assets",
+          {
+            "glob": "**/*",
+            "input": "node_modules/tinymce",
+            "output": "/assets/tinymce/"
+          }
         ],
         "styles": [
           "apps/test-manager/src/assets/scss/config/minimal/bootstrap.scss",

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormArray, FormGroup, Validators } from '@angular/forms';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { find, findIndex, forIn } from 'lodash';
 import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, TestEndConfig } from '../../../state/test.model';
@@ -48,7 +47,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   GradeTypeRef = GradeType;
   InformFactorRef = InformFactor;
 
-  Editor = ClassicEditor;
   gradeForm!: FormGroup;
   gradeFormConfigs = {
     rangeUnits: [{
@@ -119,7 +117,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   afterGetTest(): void {
     this.gradeForm = this.fb.group({
       testEndConfig: this.fb.group({
-        message: ['', [Validators.maxLength(200)]],
+        message: ['', [Validators.required, Validators.maxLength(200)]],
         redirectTo: false,
         toAddress: ['', [RxwebValidators.compose({
           validators: [Validators.required, RxwebValidators.url()], conditionalExpression: (f: TestEndConfig) => f.redirectTo === true
@@ -286,7 +284,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   }
 
   get canSubmit(): boolean {
-    return this.gradeForm.valid;
+    return this.gradeForm.dirty && this.gradeForm.valid;
   }
 
   async submit() {
