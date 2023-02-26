@@ -10,19 +10,18 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SubmitButtonComponent } from './components/submit-button.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     HttpClientModule,
     FeatherModule.pick(allIcons),
     NgbToastModule,
-    EditorModule
+    EditorModule,
   ],
-  declarations: [
-    BreadcrumbsComponent,
-    SubmitButtonComponent
-  ],
+  declarations: [BreadcrumbsComponent, SubmitButtonComponent],
   exports: [
     HttpClientModule,
     TranslateModule,

@@ -74,13 +74,17 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     maxPoint: 12,
     maxPercentage: 100
   };
-  
+
   get gradingCriteriasCtrl() {
     return this.gradeForm.controls['gradingCriterias'] as FormGroup;
   }
 
   get testEndConfigCtrl() {
     return this.gradeForm.get(['testEndConfig']) as FormGroup;
+  }
+
+  get informRespondentConfigCtrl() {
+    return this.gradeForm.controls['informRespondentConfig'] as FormGroup;
   }
 
   getGradingCriteriaCtrl(control: number) {
@@ -117,7 +121,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   afterGetTest(): void {
     this.gradeForm = this.fb.group({
       testEndConfig: this.fb.group({
-        message: ['', [Validators.required, Validators.maxLength(200)]],
+        message: ['', [Validators.maxLength(200)]],
         redirectTo: false,
         toAddress: ['', [RxwebValidators.compose({
           validators: [Validators.required, RxwebValidators.url()], conditionalExpression: (f: TestEndConfig) => f.redirectTo === true
@@ -133,12 +137,9 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     control.disable();
     this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.PassMask.toString(), control);
 
-    this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.GradeRanges.toString(), this.fb.group({
-      $type: GradingCriteriaConfigType.GradeRanges,
-      gradeType: [GradeType.Grade, [Validators.required]],
-      unit: [RangeUnit.Percent, [Validators.required]],
-      details: this.fb.array([])
-    }));
+    const newGradingCriterial = this.newGradingCriterial();
+    newGradingCriterial.disable();
+    this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.GradeRanges.toString(), newGradingCriterial);
 
     // Path current values.
     const testEndConfig = this.test.gradingSettings?.testEndConfig;
@@ -171,8 +172,8 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     const informRespondentConfig = this.test.gradingSettings?.informRespondentConfig;
     this.gradeForm.addControl('informRespondentConfig', this.fb.group({
       informViaEmail: informRespondentConfig?.informViaEmail || false,
-      passedMessage: informRespondentConfig?.passedMessage,
-      failedMessage: informRespondentConfig?.failedMessage,
+      passedMessage: [informRespondentConfig?.passedMessage, [Validators.maxLength(200)]],
+      failedMessage: [informRespondentConfig?.failedMessage, [Validators.maxLength(200)]],
       informFactors: this.createInformFactorsCtrl(informRespondentConfig?.informFactors)
     }))
 
@@ -188,8 +189,18 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     });
 
     this.maskReadyForUI();
+    //todo: validate word count html instead of all html length.
     //todo(tau): check issue why have to click on ui one time, to make ui show errors and change form state?
     //todo(tau): reload/reset form after successfully updated.
+  }
+
+  private newGradingCriterial(): FormGroup {
+    return this.fb.group({
+      $type: GradingCriteriaConfigType.GradeRanges,
+      gradeType: [GradeType.Grade, [Validators.required]],
+      unit: [RangeUnit.Percent, [Validators.required]],
+      details: this.fb.array([])
+    });
   }
 
   private newPassMaskGradeCriteria(): FormGroup {
@@ -221,16 +232,16 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
           dynamicConfig: (parent, root) => {
             //todo(tau): refactor this code block.
             console.log('min range number validator run', parent);
-            const details = ((root as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
-            const foundIdx = findIndex(details, d => d.id === parent['id']);
-            const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
-            return { value };
+              const details = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
+              const foundIdx = findIndex(details, d => d.id === parent['id']);
+              const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
+              return { value };
           }
         }),
         RxwebValidators.maxNumber({
-          dynamicConfig: (parent, root) => {
-            console.log('max range number validator run', parent);
-            const criteria = ((root as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria);
+          dynamicConfig: (parent, root, config) => {
+            console.log('max range number validator run', root);
+            const criteria = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria);
             const value = criteria.unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
             return { value };
           }
@@ -255,6 +266,10 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   private createGradeMask(grades?: { [key: string]: string }) {
     const form = this.fb.group({});
     forIn(GradeType, (v) => {
+      if(v === GradeType.GradeAndDescriptive) {
+        return;
+      }
+      
       const existingValue = grades && grades[v];
       form.addControl(v.toString(), this.fb.control(existingValue, { validators: [Validators.required] }));
     });
@@ -269,6 +284,8 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     } else {
       this.getGradingCriteriaCtrl(event.id).disable();
     }
+
+    this.gradeForm.markAsDirty();
   }
 
   addNewGradeRange() {
@@ -284,6 +301,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   }
 
   get canSubmit(): boolean {
+    console.log('form errors', this.gradeForm);
     return this.gradeForm.dirty && this.gradeForm.valid;
   }
 
