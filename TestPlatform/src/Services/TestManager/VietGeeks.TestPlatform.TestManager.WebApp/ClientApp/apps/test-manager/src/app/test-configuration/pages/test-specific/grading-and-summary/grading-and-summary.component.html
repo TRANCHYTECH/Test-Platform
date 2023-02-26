@@ -8,7 +8,11 @@
                         <label>Configure a message to be displayed to all respondents at the end of the test, regardless
                             of
                             its results.</label>
-                        <editor formControlName="message" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
+                        <editor (onBlur)="testEndConfigCtrl.get('message')?.markAsTouched()"
+                            (onFocusOut)="gdprErrorTailor.showError()" formControlName="message" [apiKey]="editorApiKey"
+                            [init]="textEditorConfigs.simpleEditorConfig" #gdprErrorTailor="errorTailor"
+                            [controlErrorAnchor]="messageAnchor"></editor>
+                        <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
                     </div>
                     <div class="form-check form-switch form-switch-lg mb-3">
                         <input type="checkbox" role="switch" id="i3" class="form-check-input"
@@ -60,7 +64,8 @@
                                 (change)="toggleGradeCriteria({id: GradingCriteriaConfigTypeRef.PassMask, originEvent: $event})">
                             <label for="passmask-criteria-toggler" class="form-check-label">Pass mark</label>
                         </div>
-                        <div class="row">
+                        <div class="row"
+                            [attr.hidden]="getGradingCriteriaCtrl(GradingCriteriaConfigTypeRef.PassMask).enabled ? null : ''">
                             <div class="col-sm-auto">
                                 <label for="mask-value" class="form-label">Value</label>
                                 <input type="number" class="form-control" formControlName="value">
@@ -77,63 +82,68 @@
                     <div class="mb-3" formGroupName="{{GradingCriteriaConfigTypeRef.GradeRanges.toString()}}">
                         <div class="hstack form-check form-switch form-switch-lg mb-3">
                             <input type="checkbox" role="switch" id="grade-ranges-toggler" class="form-check-input"
-                                [checked]="getGradingCriteriaCtrl(GradingCriteriaConfigTypeRef.GradeRanges).enable"
+                                [checked]="getGradingCriteriaCtrl(GradingCriteriaConfigTypeRef.GradeRanges).enabled"
                                 (change)="toggleGradeCriteria({id: GradingCriteriaConfigTypeRef.GradeRanges, originEvent: $event})">
                             <label for="grade-ranges-toggler" class="form-check-label">Define grade ranges based
                                 on
                                 points or percents</label>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-auto">
-                                <label class="form-label">Types of grades:</label>
-                                <select class="form-select" formControlName="gradeType">
-                                    <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.gradeTypes">{{r.key}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-sm-auto">
-                                <label class="form-label">Ranges unit:</label>
-                                <select class="form-select" formControlName="unit">
-                                    <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.rangeUnits">{{r.key}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="card" formArrayName="details">
-                            <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
-                            <div class="card-body">
-                                <div class="mb-3" [formGroup]="ctrl"
-                                    *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
-                                    <div class="hstack">
-                                        <div class="d-inline-flex align-items-center mb-3 gap-1">
-                                            <label class="fw-bold">Range {{i +
-                                                1}}:</label>
-                                            <label>From:</label>
-                                            <label>{{getToValueOfGradeRangesDetails(i - 1)}} points.</label>
-                                            <label>to:</label>
-                                            <input type="number" class="form-control border-dashed"
-                                                style="width: 100px;"
-                                                formControlName="to"><label>{{selectedGradeRangeUnit}}</label>
-                                        </div>
-                                        <i class="ri-delete-bin-line delete-icon ms-auto"
-                                            (click)="gradeRangesDetailsCtrl.removeAt(i)"></i>
-                                    </div>
-                                    <ng-container formGroupName="grades">
-                                        <div class="mb-3">
-                                            <label class="text-muted">Grade:</label>
-                                            <input type="text" class="form-control"
-                                                formControlName="{{GradeTypeRef.Grade.toString()}}">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="text-muted">Descriptive grade:</label>
-                                            <textarea class="form-control"
-                                                formControlName="{{GradeTypeRef.Descriptive.toString()}}"></textarea>
-                                        </div>
-                                    </ng-container>
+                        <div
+                            [attr.hidden]="getGradingCriteriaCtrl(GradingCriteriaConfigTypeRef.GradeRanges).enabled ? null : ''">
+                            <div class="row mb-3">
+                                <div class="col-sm-auto">
+                                    <label class="form-label">Types of grades:</label>
+                                    <select class="form-select" formControlName="gradeType">
+                                        <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.gradeTypes">
+                                            {{r.key}}
+                                        </option>
+                                    </select>
                                 </div>
-                                <button type="button" class="btn btn-outline-secondary btn-label"
-                                    (click)="addNewGradeRange()">
-                                    <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add range</button>
+                                <div class="col-sm-auto">
+                                    <label class="form-label">Ranges unit:</label>
+                                    <select class="form-select" formControlName="unit">
+                                        <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.rangeUnits">
+                                            {{r.key}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card" formArrayName="details">
+                                <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
+                                <div class="card-body">
+                                    <div class="mb-3" [formGroup]="ctrl"
+                                        *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
+                                        <div class="hstack">
+                                            <div class="d-inline-flex align-items-center mb-3 gap-1">
+                                                <label class="fw-bold">Range {{i +
+                                                    1}}:</label>
+                                                <label>From:</label>
+                                                <label>{{getToValueOfGradeRangesDetails(i - 1)}} points.</label>
+                                                <label>to:</label>
+                                                <input type="number" class="form-control border-dashed"
+                                                    style="width: 100px;"
+                                                    formControlName="to"><label>{{selectedGradeRangeUnit}}</label>
+                                            </div>
+                                            <i class="ri-delete-bin-line delete-icon ms-auto"
+                                                (click)="gradeRangesDetailsCtrl.removeAt(i)"></i>
+                                        </div>
+                                        <ng-container formGroupName="grades">
+                                            <div class="mb-3">
+                                                <label class="text-muted">Grade:</label>
+                                                <input type="text" class="form-control"
+                                                    formControlName="{{GradeTypeRef.Grade.toString()}}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="text-muted">Descriptive grade:</label>
+                                                <textarea class="form-control"
+                                                    formControlName="{{GradeTypeRef.Descriptive.toString()}}"></textarea>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-label"
+                                        (click)="addNewGradeRange()">
+                                        <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add range</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -167,11 +177,21 @@
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have passed:</label>
-                        <editor formControlName="passedMessage" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
+                        <editor formControlName="passedMessage" [apiKey]="editorApiKey"
+                            (onBlur)="informRespondentConfigCtrl.get('passedMessage')?.markAsTouched()"
+                            (onFocusOut)="passedMessageErrorTailor.showError()"
+                            [init]="textEditorConfigs.simpleEditorConfig" #passedMessageErrorTailor="errorTailor"
+                            [controlErrorAnchor]="passedMessageAnchor"></editor>
+                        <ng-template controlErrorAnchor #passedMessageAnchor="controlErrorAnchor"></ng-template>
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have failed:</label>
-                        <editor formControlName="failedMessage" [apiKey]="editorApiKey" [init]="textEditorConfigs.simpleEditorConfig"></editor>
+                        <editor formControlName="failedMessage" [apiKey]="editorApiKey"
+                            (onBlur)="informRespondentConfigCtrl.get('failedMessage')?.markAsTouched()"
+                            (onFocusOut)="failedMessageErrorTailor.showError()"
+                            [init]="textEditorConfigs.simpleEditorConfig" #failedMessageErrorTailor="errorTailor"
+                            [controlErrorAnchor]="failedMessageAnchor"></editor>
+                        <ng-template controlErrorAnchor #failedMessageAnchor="controlErrorAnchor"></ng-template>
                     </div>
                     <div class="form-check form-switch form-switch-lg">
                         <input type="checkbox" role="switch" id="informViaEmailToggler" class="form-check-input"
