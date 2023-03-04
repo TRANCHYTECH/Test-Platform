@@ -3,7 +3,7 @@ using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models
 {
-    [Collection("QuestionDefinition2")]
+    [Collection("QuestionDefinition")]
     public class QuestionDefinition: EntityBase
     {
         public string TestId { get; set; }
