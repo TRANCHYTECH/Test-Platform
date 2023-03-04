@@ -41,6 +41,7 @@ export interface Answer {
 export interface QuestionSummary {
   categoryId: string;
   numberOfQuestions: number;
+  totalPoints: number;
 }
 
 export function createQuestion(params: Partial<Question>) {

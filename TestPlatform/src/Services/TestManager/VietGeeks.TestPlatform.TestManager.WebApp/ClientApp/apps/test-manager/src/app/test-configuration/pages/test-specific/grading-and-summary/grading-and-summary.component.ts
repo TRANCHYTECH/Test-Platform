@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { find, findIndex, forIn } from 'lodash';
+import { find, findIndex, forIn, sumBy } from 'lodash';
 import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, TestEndConfig } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { QuestionService } from '../../../state/questions/question.service';
+import { QuestionSummary } from '../../../state/questions/question.model';
 
 export const InformFactor =
 {
@@ -75,6 +77,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     maxPercentage: 100
   };
 
+
   get gradingCriteriasCtrl() {
     return this.gradeForm.controls['gradingCriterias'] as FormGroup;
   }
@@ -87,10 +90,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     return this.gradeForm.controls['informRespondentConfig'] as FormGroup;
   }
 
-  getGradingCriteriaCtrl(control: number) {
-    return this.gradingCriteriasCtrl.controls[control.toString()] as FormGroup;
-  }
-
   get gradeRangesDetailsCtrl() {
     return this.getGradingCriteriaCtrl(GradingCriteriaConfigType.GradeRanges).controls['details'] as FormArray<FormGroup>;
   }
@@ -99,6 +98,12 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     const unit = this.getGradingCriteriaCtrl(GradingCriteriaConfigType.GradeRanges).controls['unit'].value;
 
     return find(this.gradeFormConfigs.rangeUnits, c => c.value === unit)?.key;
+  }
+
+  private _questionService = inject(QuestionService);
+
+  getGradingCriteriaCtrl(control: number) {
+    return this.gradingCriteriasCtrl.controls[control.toString()] as FormGroup;
   }
 
   getToValueOfGradeRangesDetails(atIndex: number) {
@@ -118,7 +123,9 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     //
   }
 
-  afterGetTest(): void {
+  async afterGetTest(): Promise<void> {
+    const configs = await Promise.all([this._questionService.getSummary(this.testId)]);
+    this.gradeFormConfigs.maxPoint = sumBy(configs[0], (c: QuestionSummary) => c.totalPoints);
     this.gradeForm = this.fb.group({
       testEndConfig: this.fb.group({
         message: ['', [Validators.maxLength(200)]],
@@ -229,17 +236,17 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
       to: [detail?.to, [
         Validators.required,
         RxwebValidators.minNumber({
-          dynamicConfig: (parent, root) => {
+          dynamicConfig: (parent) => {
             //todo(tau): refactor this code block.
             console.log('min range number validator run', parent);
-              const details = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
-              const foundIdx = findIndex(details, d => d.id === parent['id']);
-              const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
-              return { value };
+            const details = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
+            const foundIdx = findIndex(details, d => d.id === parent['id']);
+            const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
+            return { value };
           }
         }),
         RxwebValidators.maxNumber({
-          dynamicConfig: (parent, root, config) => {
+          dynamicConfig: (_parent, root) => {
             console.log('max range number validator run', root);
             const criteria = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria);
             const value = criteria.unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
@@ -266,10 +273,10 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   private createGradeMask(grades?: { [key: string]: string }) {
     const form = this.fb.group({});
     forIn(GradeType, (v) => {
-      if(v === GradeType.GradeAndDescriptive) {
+      if (v === GradeType.GradeAndDescriptive) {
         return;
       }
-      
+
       const existingValue = grades && grades[v];
       form.addControl(v.toString(), this.fb.control(existingValue, { validators: [Validators.required] }));
     });
