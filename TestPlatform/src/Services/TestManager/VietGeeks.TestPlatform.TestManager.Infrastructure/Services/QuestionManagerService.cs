@@ -73,12 +73,13 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<IEnumerable<QuestionSummaryViewModel>> GetQuestionSummary(string testId, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.Find<QuestionDefinition>().Project(q => new QuestionDefinition { ID = q.ID, CategoryId = q.CategoryId }).ManyAsync(q => q.TestId == testId, cancellationToken);
+        var entities = await _managerDbContext.Find<QuestionDefinition>().Project(q => new QuestionDefinition { ID = q.ID, CategoryId = q.CategoryId, ScoreSettings = q.ScoreSettings }).ManyAsync(q => q.TestId == testId, cancellationToken);
 
         return entities.GroupBy(c => c.CategoryId).Select(c => new QuestionSummaryViewModel
         {
             CategoryId = c.Key,
-            NumberOfQuestions = c.Count()
+            NumberOfQuestions = c.Count(),
+            TotalPoints = c.Sum(q => q.ScoreSettings.TotalPoints.GetValueOrDefault())
         });
     }
 }
