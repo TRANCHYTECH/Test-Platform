@@ -76,7 +76,7 @@ export class EditQuestionComponent implements OnInit {
         validators: [Validators.required], conditionalExpression: pointMandatoryCondition
       })]],
       isPartialAnswersEnabled: false,
-      totalPoints: [0, [RxwebValidators.compose({
+      bonusPoints: [0, [RxwebValidators.compose({
         validators: [Validators.required], conditionalExpression: partialPointMandatoryCondition
       })]],
       partialIncorrectPoint: [0, [RxwebValidators.compose({
@@ -107,7 +107,7 @@ export class EditQuestionComponent implements OnInit {
             correctPoint: question.scoreSettings.correctPoint,
             incorrectPoint: question.scoreSettings.incorrectPoint,
             isPartialAnswersEnabled: question.scoreSettings.isPartialAnswersEnabled,
-            totalPoints: question.scoreSettings.totalPoints,
+            bonusPoints: question.scoreSettings.bonusPoints,
             partialIncorrectPoint: question.scoreSettings.partialIncorrectPoint,
             isDisplayMaximumScore: question.scoreSettings.isDisplayMaximumScore,
             mustAnswerToContinue: question.scoreSettings.mustAnswerToContinue,
@@ -181,11 +181,12 @@ export class EditQuestionComponent implements OnInit {
       }
 
       const formValue = this.questionForm.value;
+      const answerType = parseInt(formValue.answerType);
       const question: Question = {
         ...formValue,
-        answerType: parseInt(formValue.answerType),
+        answerType: answerType,
         questionNo: 1,//TODO
-        scoreSettings: this.getScoreSettingsFormValue(),
+        scoreSettings: this.getScoreSettingsFormValue(answerType),
         id: this.questionId
       };
 
@@ -208,7 +209,7 @@ export class EditQuestionComponent implements OnInit {
     }
   }
 
-  private getScoreSettingsFormValue(): ScoreSettings {
+  private getScoreSettingsFormValue(answerType: number): ScoreSettings {
     const formValue: ScoreSettings = this.scoreSettingsForm.value;
     if (!(isNumber(formValue.correctPoint))) {
       formValue.correctPoint = undefined;
@@ -216,13 +217,17 @@ export class EditQuestionComponent implements OnInit {
     if (!(isNumber(formValue.incorrectPoint))) {
       formValue.incorrectPoint = undefined;
     }
-    if (!(isNumber(formValue.totalPoints))) {
-      formValue.totalPoints = undefined;
+    if (!(isNumber(formValue.bonusPoints))) {
+      formValue.bonusPoints = undefined;
     }
     if (!(isNumber(formValue.partialIncorrectPoint))) {
       formValue.partialIncorrectPoint = undefined;
     }
-    return formValue;
+
+    return {
+      $type: answerType,
+      ...formValue
+    };
   }
 
   private registerControlEvents() {
@@ -237,7 +242,7 @@ export class EditQuestionComponent implements OnInit {
       this.isPartialScore = v;
       this.scoreSettingsForm.get('correctPoint')?.updateValueAndValidity();
       this.scoreSettingsForm.get('incorrectPoint')?.updateValueAndValidity();
-      this.scoreSettingsForm.get('totalPoints')?.updateValueAndValidity();
+      this.scoreSettingsForm.get('bonusPoints')?.updateValueAndValidity();
       this.scoreSettingsForm.get('partialIncorrectPoint')?.updateValueAndValidity();
     });
   }

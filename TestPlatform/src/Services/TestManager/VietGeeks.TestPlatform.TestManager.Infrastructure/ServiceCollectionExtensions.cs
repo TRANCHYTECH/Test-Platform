@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ITestManagerService, TestManagerService>();
         serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
         serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
+        serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
     }

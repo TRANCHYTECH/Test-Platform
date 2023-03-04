@@ -3,7 +3,7 @@ using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models
 {
-    [Collection("QuestionDefinition")]
+    [Collection("QuestionDefinition2")]
     public class QuestionDefinition: EntityBase
     {
         public string TestId { get; set; }
@@ -16,18 +16,35 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
         public bool IsMandatory { get; set; }
     }
 
-    public class ScoreSettings
+
+
+    [BsonKnownTypes(typeof(SingleChoiceScoreSettings), typeof(MultipleChoiceScoreSettings))]
+    public abstract class ScoreSettings
     {
-        public int? CorrectPoint { get; set; }
-        public int? IncorrectPoint { get; set; }
-        public bool IsPartialAnswersEnabled { get; set; }
-        public int? MaxPoints { get; set; }
-        public int? MaxWords { get; set; }
         public int? TotalPoints { get; set; }
-        public int? PartialIncorrectPoint { get; set; }
         public bool IsDisplayMaximumScore { get; set; }
         public bool MustAnswerToContinue { get; set; }
         public bool IsMandatory { get; set; }
+    }
+
+    public class SingleChoiceScoreSettings: ScoreSettings
+    {
+        public int? CorrectPoint { get; set; }
+        public int? IncorrectPoint { get; set; }
+    }
+
+    public class MultipleChoiceScoreSettings : ScoreSettings
+    {
+        public int? CorrectPoint { get; set; }
+        public int? IncorrectPoint { get; set; }
+        public bool? IsPartialAnswersEnabled { get; set; }
+        public int? BonusPoints { get; set; }
+        public int? PartialIncorrectPoint { get; set; }
+    }
+
+    public class ShortAnswerScoreSettings : ScoreSettings
+    {
+        public int? MaxWords { get; set; }
     }
 
     public class Answer
