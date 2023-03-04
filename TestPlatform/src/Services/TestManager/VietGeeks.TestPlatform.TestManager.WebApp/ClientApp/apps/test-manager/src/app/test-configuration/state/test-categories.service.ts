@@ -5,7 +5,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { TestCategory } from './test-category.model';
 import { TestCategoriesStore } from './test-categories.store';
 import { TestCategoriesQuery } from './test-categories.query';
-import { EMPTY } from 'rxjs';
+import { of } from 'rxjs';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
 
@@ -25,7 +25,7 @@ export class TestCategoriesService {
       this._testCategoriesStore.set(entities);
       }));
 
-      return hasCache ? EMPTY : apiCall;
+      return hasCache ? of([]) : apiCall;
     }))
   }
 
