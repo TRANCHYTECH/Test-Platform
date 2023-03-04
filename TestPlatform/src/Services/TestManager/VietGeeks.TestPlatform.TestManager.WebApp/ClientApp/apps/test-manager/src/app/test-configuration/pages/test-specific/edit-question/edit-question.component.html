@@ -41,6 +41,7 @@
             <tr class="text-center">
               <th scope="col">Correct answer</th>
               <th scope="col">Description</th>
+              <th scope="col" *ngIf="isMultipleChoiceAnswer">Point</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -55,6 +56,9 @@
                 </td>
                 <td>
                   <input type="text" class="form-control" formControlName="answerDescription">
+                </td>
+                <td class="hstack gap-2" *ngIf="isMultipleChoiceAnswer">
+                  <input type="number" class="form-control" formControlName="answerPoint">
                 </td>
                 <td>
                   <div class="hstack gap-2">
@@ -146,10 +150,10 @@
                   <label for="mask-value" class="form-label">Bonus points for all correct partial answers</label>
                   <input type="number" class="form-control" id="mask-value" placeholder="" formControlName="bonusPoints" />
                 </div>
-                <div class="col-sm-auto">
+                <!-- <div class="col-sm-auto">
                   <label for="mask-value" class="form-label">Number of points for each incorrect partial answer</label>
                   <input type="number" class="form-control" id="mask-value" placeholder="" formControlName="partialIncorrectPoint">
-                </div>
+                </div> -->
               </div>
             </div>
           </ng-container>

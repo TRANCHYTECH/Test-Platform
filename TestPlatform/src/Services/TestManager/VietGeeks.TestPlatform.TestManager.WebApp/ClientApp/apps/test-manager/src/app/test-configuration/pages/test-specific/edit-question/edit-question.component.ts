@@ -255,7 +255,9 @@ export class EditQuestionComponent implements OnInit {
     const formGroup = this._fb.group({
       id: answer.id,
       answerDescription : [answer.answerDescription,[Validators.required]],
-      answerPoint: answer.answerPoint,
+      answerPoint: [answer.answerPoint, [RxwebValidators.compose({
+        validators: [Validators.required], conditionalExpression: () => (this.answerType == AnswerType.MultipleChoice)
+      })]],
       isCorrect: answer.isCorrect,
       selectedIndex: this.singleChoiceIndex
     });
