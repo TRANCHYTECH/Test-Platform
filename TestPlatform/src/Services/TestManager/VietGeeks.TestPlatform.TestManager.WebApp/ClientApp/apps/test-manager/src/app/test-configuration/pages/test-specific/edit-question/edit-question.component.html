@@ -143,12 +143,12 @@
               </div>
               <div class="row" *ngIf="isPartialScore">
                 <div class="col-sm-auto">
-                  <label for="mask-value" class="form-label">Number of points for all correct partial answers</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="totalPoints" />
+                  <label for="mask-value" class="form-label">Bonus points for all correct partial answers</label>
+                  <input type="number" class="form-control" id="mask-value" placeholder="" formControlName="bonusPoints" />
                 </div>
                 <div class="col-sm-auto">
                   <label for="mask-value" class="form-label">Number of points for each incorrect partial answer</label>
-                  <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="partialIncorrectPoint">
+                  <input type="number" class="form-control" id="mask-value" placeholder="" formControlName="partialIncorrectPoint">
                 </div>
               </div>
             </div>

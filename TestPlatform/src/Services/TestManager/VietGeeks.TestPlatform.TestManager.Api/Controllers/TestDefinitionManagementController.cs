@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
-using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 

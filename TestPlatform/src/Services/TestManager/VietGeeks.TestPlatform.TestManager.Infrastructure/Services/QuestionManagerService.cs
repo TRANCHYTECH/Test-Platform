@@ -11,11 +11,13 @@ public class QuestionManagerService : IQuestionManagerService
 {
     private readonly IMapper _mapper;
     private readonly TestManagerDbContext _managerDbContext;
+    private readonly IQuestionPointCalculationService _questionPointCalculationService;
 
-    public QuestionManagerService(IMapper mapper, TestManagerDbContext managerDbContext)
+    public QuestionManagerService(IMapper mapper, TestManagerDbContext managerDbContext, IQuestionPointCalculationService questionPointCalculationService)
     {
         _mapper = mapper;
         _managerDbContext = managerDbContext;
+        this._questionPointCalculationService = questionPointCalculationService;
     }
 
     public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, CancellationToken cancellationToken)
@@ -45,6 +47,7 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<QuestionViewModel> CreateQuestion(string testId, NewQuestionViewModel questionViewModel, CancellationToken cancellationToken)
     {
+        _questionPointCalculationService.CalculateTotalPoints(questionViewModel);
         var entity = _mapper.Map<QuestionDefinition>(questionViewModel);
         entity.TestId = testId;
         await _managerDbContext.SaveAsync(entity, cancellationToken);
@@ -58,6 +61,7 @@ public class QuestionManagerService : IQuestionManagerService
         if (existingEntity == null)
             throw new EntityNotFoundException(id, nameof(QuestionDefinition));
 
+        _questionPointCalculationService.CalculateTotalPoints(questionViewModel);
         var updatedEntity = _mapper.Map<QuestionDefinition>(questionViewModel);
         updatedEntity.ID = id;
         updatedEntity.TestId = existingEntity.TestId;

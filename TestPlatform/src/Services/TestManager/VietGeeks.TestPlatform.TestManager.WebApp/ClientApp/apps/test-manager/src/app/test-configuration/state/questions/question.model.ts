@@ -18,16 +18,18 @@ export interface Question {
 }
 
 export interface ScoreSettings {
+  $type?: number;
   correctPoint?: number;
   incorrectPoint?: number;
   isPartialAnswersEnabled?: boolean;
   maxPoints?: number;
   maxWords?: number;
-  totalPoints?: number;
+  bonusPoints?: number;
   partialIncorrectPoint?: number;
   isDisplayMaximumScore: boolean;
   mustAnswerToContinue: boolean;
   isMandatory: boolean;
+  totalPoints?: number;
 }
 
 export interface Answer {

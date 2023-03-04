@@ -12,8 +12,11 @@ public class QuestionProfile : Profile
         CreateMap<QuestionViewModel, QuestionDefinition>().ReverseMap();
         CreateMap<QuestionCategoryViewModel, QuestionCategory>().ReverseMap();
         CreateMap<NewQuestionCategoryViewModel, QuestionCategory>();
-        CreateMap<ScoreSettingsViewModel, ScoreSettings>().ReverseMap();
         CreateMap<AnswerViewModel, Answer>().ReverseMap();
+
+        CreateMap<ScoreSettingsViewModel, ScoreSettings>().IncludeAllDerived();
+        CreateMap<ScoreSettings,ScoreSettingsViewModel>().IncludeAllDerived();;
+        CreateMap<SingleChoiceScoreSettingsViewModel, SingleChoiceScoreSettings>().ReverseMap();
+        CreateMap<MultipleChoiceScoreSettingsViewModel, MultipleChoiceScoreSettings>().ReverseMap();
     }
 }
-
