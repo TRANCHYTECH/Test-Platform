@@ -28,4 +28,20 @@ export class ToastService {
       title: message
     })
   }
+
+  confirm(message: string) {
+    return Swal.fire({
+      title: message,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No',
+      customClass: {
+        actions: 'my-actions',
+        cancelButton: 'order-1 right-gap',
+        confirmButton: 'order-2',
+        denyButton: 'order-3',
+      }
+    });
+  }
 }

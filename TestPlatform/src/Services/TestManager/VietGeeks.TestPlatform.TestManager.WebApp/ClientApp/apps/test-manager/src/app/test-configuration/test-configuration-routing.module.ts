@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
+import { CanDeactivateGuard } from '@viet-geeks/shared';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { TestListComponent } from './pages/test-list/test-list.component';
 import { BasicSettingsComponent } from './pages/test-specific/basic-settings/basic-settings.component';
@@ -40,7 +41,8 @@ const routes: Routes = [
         path: ':id/manage-questions/:question-id',
         component: EditQuestionComponent,
         title: 'Edit Question',
-        canActivate: [isExistingTest()]
+        canActivate: [isExistingTest()],
+        canDeactivate: [CanDeactivateGuard]
       },
       {
         path: ':id/test-sets',

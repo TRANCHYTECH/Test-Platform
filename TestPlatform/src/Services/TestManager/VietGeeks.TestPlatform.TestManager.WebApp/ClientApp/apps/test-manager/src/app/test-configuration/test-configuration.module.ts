@@ -13,7 +13,7 @@ import { TestStartPageComponent } from './pages/test-specific/test-start-page/te
 import { GradingAndSummaryComponent } from './pages/test-specific/grading-and-summary/grading-and-summary.component';
 import { TestTimeSettingsComponent } from './pages/test-specific/test-time-settings/test-time-settings.component';
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
-import { SharedModule } from '@viet-geeks/shared';
+import { CanDeactivateGuard, SharedModule } from '@viet-geeks/shared';
 import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbModalModule, NgbNavModule, NgbProgressbar, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
@@ -61,6 +61,7 @@ import { errorTailorImports } from '@ngneat/error-tailor';
     DragDropModule,
     NgbPaginationModule,
     errorTailorImports
-  ]
+  ],
+  providers: [CanDeactivateGuard]
 })
 export class TestConfigurationModule { }

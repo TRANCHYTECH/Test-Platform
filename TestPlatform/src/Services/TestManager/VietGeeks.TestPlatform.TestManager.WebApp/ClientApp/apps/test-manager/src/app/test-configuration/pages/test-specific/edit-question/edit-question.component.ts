@@ -5,9 +5,9 @@ import { isNumber } from 'lodash';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ToastService } from '@viet-geeks/shared';
+import { ToastService,CanComponentDeactivate } from '@viet-geeks/shared';
 import { IdService } from '../../../../../app/common/services/id.service';
-import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
 import { CreateCategoryComponent } from '../../../components/create-test-category/create-test-category.component';
 import { QuestionCategory } from '../../../state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../../state/question-categories/question-categories.query';
@@ -18,13 +18,14 @@ import { QuestionService } from '../../../state/questions/question.service';
 import { AnswerTypes } from './data';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
+
 @UntilDestroy()
 @Component({
   selector: 'viet-geeks-edit-question',
   templateUrl: './edit-question.component.html',
   styleUrls: ['./edit-question.component.scss'],
 })
-export class EditQuestionComponent implements OnInit {
+export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   Editor = ClassicEditor;
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
@@ -86,6 +87,16 @@ export class EditQuestionComponent implements OnInit {
       mustAnswerToContinue: false,
       isMandatory: false
     });
+  }
+  canDeactivate() {
+    if (!this.canSubmit) {
+      return of(true);
+    }
+
+    return from(this.notifyService.confirm('You have unsave changed. Are you sure you want to leave?')
+    .then((result) => {
+      return result.isConfirmed;
+    }));
   }
 
   ngOnInit(): void {
