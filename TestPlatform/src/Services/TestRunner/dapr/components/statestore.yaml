@@ -1,0 +1,22 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: mongdbstate
+spec:
+  type: state.mongodb
+  version: v1
+  metadata:
+  - name: server
+    value: cluster0.agnomfq.mongodb.net
+  - name: username
+    value: testmaster
+  - name: password
+    value: jZeAEmK8TwGslaiP
+  - name: databaseName
+    value: daprstore
+  - name: actorStateStore
+    value: true
+  - name: operationTimeout
+    value: 10s
+  - name: writeConcern
+    value: majority
