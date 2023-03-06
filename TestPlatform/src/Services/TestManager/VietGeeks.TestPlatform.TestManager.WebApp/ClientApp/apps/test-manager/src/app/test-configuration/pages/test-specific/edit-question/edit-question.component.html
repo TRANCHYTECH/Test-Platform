@@ -41,7 +41,7 @@
             <tr class="text-center">
               <th scope="col">Correct answer</th>
               <th scope="col">Description</th>
-              <th scope="col" *ngIf="isMultipleChoiceAnswer">Point</th>
+              <th scope="col" *ngIf="isMultipleChoiceAnswer && isPartialScore">Point</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -57,7 +57,7 @@
                 <td>
                   <input type="text" class="form-control" formControlName="answerDescription">
                 </td>
-                <td class="hstack gap-2" *ngIf="isMultipleChoiceAnswer">
+                <td class="hstack gap-2" *ngIf="isMultipleChoiceAnswer && isPartialScore">
                   <input type="number" class="form-control" formControlName="answerPoint">
                 </td>
                 <td>
