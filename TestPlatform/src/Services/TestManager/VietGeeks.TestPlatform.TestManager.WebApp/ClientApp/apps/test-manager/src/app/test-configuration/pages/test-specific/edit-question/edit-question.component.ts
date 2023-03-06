@@ -18,7 +18,6 @@ import { QuestionService } from '../../../state/questions/question.service';
 import { AnswerTypes } from './data';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
-
 @UntilDestroy()
 @Component({
   selector: 'viet-geeks-edit-question',
@@ -42,6 +41,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   answerType?: AnswerType;
   isPartialScore: boolean;
   singleChoiceIndex?: number;
+  private isSubmitted = false;
 
   constructor(
     private _fb: FormBuilder,
@@ -89,7 +89,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
     });
   }
   canDeactivate() {
-    if (!this.canSubmit) {
+    if (!this.canSubmit || this.isSubmitted) {
       return of(true);
     }
 
@@ -214,6 +214,8 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
           this.router.navigate(['tests', this.testId, 'manage-questions']);
           this.notifyService.success('Question updated');
       }
+
+      this.isSubmitted = true;
     }
     catch (e) {
       this.notifyService.error('Error occured while saving question');
