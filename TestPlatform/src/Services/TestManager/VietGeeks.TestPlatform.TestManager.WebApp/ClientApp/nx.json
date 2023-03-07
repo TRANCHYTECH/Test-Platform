@@ -8,6 +8,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
+        "useDaemonProcess": false,
         "cacheableOperations": [
           "build",
           "lint",
