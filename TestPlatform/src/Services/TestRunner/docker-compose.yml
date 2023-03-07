@@ -1,9 +1,10 @@
 version: '3.4'
 
 services:
-  vietgeeks.testplatform.testrunner.api:
-    image: ${DOCKER_REGISTRY-}vietgeeks.testplatform.testrunner.api
+
+  vietgeeks.testplatform.testrunner.webapp:
+    image: ${DOCKER_REGISTRY-}vietgeeks.testplatform.testrunner.webapp
     build:
-      context: .
-      dockerfile: VietGeeks.TestPlatform.TestRunner.Api/Dockerfile
+      context: ../../
+      dockerfile: Services/TestRunner/VietGeeks.TestPlatform.TestRunner.WebApp/Dockerfile
 

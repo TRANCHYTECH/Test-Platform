@@ -1,7 +1,8 @@
 version: '3.4'
 
 services:
-  vietgeeks.testplatform.testrunner.api:
+ 
+  vietgeeks.testplatform.testrunner.webapp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

@@ -11,6 +11,7 @@ COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/
 COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/package-lock.json", "."]
 RUN npm install -g npm@9.2.0
 RUN npm install --force
+RUN set NX_DAEMON=false
 COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/", "."]
 RUN npm run build:test-manager
 
