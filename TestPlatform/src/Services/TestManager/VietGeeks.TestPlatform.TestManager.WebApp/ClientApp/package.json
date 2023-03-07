@@ -6,7 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "build:test-manager": "nx build test-manager",
-    "build:test-runner": "nx build test-runner --verbose",
+    "build:test-runner": "export NX_DAEMON=false; nx build test-runner --verbose",
     "test": "nx test"
   },
   "private": true,
@@ -19,7 +19,7 @@
     "@angular/compiler-cli": "~15.0.0",
     "@angular/language-service": "~15.0.0",
     "@datorama/akita-ngdevtools": "^7.0.0",
-    "@nrwl/angular": "^15.3.0",
+    "@nrwl/angular": "15.3.0",
     "@nrwl/cypress": "15.3.0",
     "@nrwl/eslint-plugin-nx": "15.3.0",
     "@nrwl/jest": "15.3.0",

@@ -39,6 +39,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-co
 		Services\TestRunner\docker-compose.yml = Services\TestRunner\docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{52971842-F85E-4D38-AFBF-F9CFDBA6F044}"
+	ProjectSection(SolutionItems) = preProject
+		Services\TestManager\docker-compose.override.yml = Services\TestManager\docker-compose.override.yml
+		Services\TestManager\docker-compose.yml = Services\TestManager\docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +113,7 @@ Global
 		{A2E2BA42-EA46-444F-8110-31CF4465EEBD} = {13A3E6AE-69E8-4F6B-8254-1E756F7EC585}
 		{C1497B01-0853-4694-B1E0-4896DD838009} = {13A3E6AE-69E8-4F6B-8254-1E756F7EC585}
 		{910CE482-C69F-4531-9074-F51C1D426753} = {13A3E6AE-69E8-4F6B-8254-1E756F7EC585}
+		{52971842-F85E-4D38-AFBF-F9CFDBA6F044} = {C4EB9E0A-995E-4B67-B644-1C7EF8DC0063}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11EC26A0-B2C1-4D0F-A042-ABDACADBEB33}
