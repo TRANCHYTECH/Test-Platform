@@ -28,4 +28,4 @@ jobs:
     - name: Build the NuGet package
       run: dotnet pack ./TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/VietGeeks.TestPlatform.AspNetCore.csproj --configuration Release --output ${{env.DOTNET_ROOT}}/Package
     - name: Publish NuGet Package
-      run: dotnet nuget push ${{env.DOTNET_ROOT}}/Package/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ${{env.DOTNET_ROOT}}/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
