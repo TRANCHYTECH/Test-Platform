@@ -14,12 +14,23 @@
         "main": "apps/test-runner/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/test-runner/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
+        "inlineStyleLanguage": "scss", 
         "assets": [
           "apps/test-runner/src/favicon.ico",
-          "apps/test-runner/src/assets"
+          "apps/test-runner/src/assets",
+          {
+            "glob": "**/*",
+            "input": "node_modules/tinymce",
+            "output": "/assets/tinymce/"
+          }
         ],
-        "styles": ["apps/test-runner/src/styles.scss"],
+        "styles": [
+          "apps/test-runner/src/assets/scss/config/minimal/bootstrap.scss",
+          "apps/test-runner/src/assets/scss/icons.scss",
+          "apps/test-runner/src/assets/scss/config/minimal/app.scss",
+          "node_modules/ngx-spinner/animations/ball-fussion.css",
+          "apps/test-runner/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
