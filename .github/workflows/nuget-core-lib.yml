@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Setting up build version
       run: |
-          $version = "1.0.{0:#}" -f $GITHUB_RUN_NUMBER
+          $version = 1.0.${{GITHUB_RUN_NUMBER}}
           echo "BUILD_VERSION=$version" | Out-File -FilePath $EGITHUB_ENV -Encoding utf8 -Append
           
     - name: Setup .NET
@@ -33,4 +33,4 @@ jobs:
     - name: Build the NuGet package
       run: dotnet pack ./TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/VietGeeks.TestPlatform.AspNetCore.csproj --configuration Release --output ${{env.DOTNET_ROOT}}/Package
     - name: Publish NuGet Package
-      run: dotnet nuget push ${{env.DOTNET_ROOT}}/Package/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push1 ${{env.DOTNET_ROOT}}/Package/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
