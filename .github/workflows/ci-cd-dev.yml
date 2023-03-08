@@ -1,9 +1,12 @@
 name: viet-geeks-test-platform-ci-cd-dev
 on:
   workflow_dispatch:
-  pull_request:
+  push:
     branches:
       - master
+    paths:
+      - 'TestPlatform/src/Services/TestManager/**'
+      - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/apps/test-runner/**'
 jobs:
   build-api-webapp-images:
     runs-on: ubuntu-latest
