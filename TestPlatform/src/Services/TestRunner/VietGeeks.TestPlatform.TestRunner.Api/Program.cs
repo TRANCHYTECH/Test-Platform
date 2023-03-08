@@ -41,7 +41,7 @@ app.MapGet("/test/start-mininal/{code}", (string code) =>
     return code;
 });
 
-app.Run("http://localhost:6000");
+app.Run();
 
 //dapr run --app-id testrunner --app-port 6000 --dapr-http-port 3600 --dapr-grpc-port 60000 dotnet run -p VietGeeks.TestPlatform.TestRunner.Api --urls 
 // dapr run --app-id trafficcontrolservice --app-port 6000 --dapr-http-port 3600 --dapr-grpc-port 60000 --config ../dapr/config/config.yaml --components-path ../dapr/components dotnet run
