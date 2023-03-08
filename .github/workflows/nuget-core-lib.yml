@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Setting up build version
       run: |
-          $version = "1.0.{0:#}" -f $($GITHUB_RUN_NUMBER)
+          $version = "1.0.{0:#}" -f $GITHUB_RUN_NUMBER
           echo "BUILD_VERSION=$version" | Out-File -FilePath $EGITHUB_ENV -Encoding utf8 -Append
           
     - name: Setup .NET
