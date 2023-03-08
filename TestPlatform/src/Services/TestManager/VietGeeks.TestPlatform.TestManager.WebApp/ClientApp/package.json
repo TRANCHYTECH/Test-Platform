@@ -6,7 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "build:test-manager": "nx build test-manager",
-    "build:test-runner": "export NX_DAEMON=false; nx build test-runner --verbose",
+    "build:test-runner": "nx build test-runner",
     "test": "nx test"
   },
   "private": true,
