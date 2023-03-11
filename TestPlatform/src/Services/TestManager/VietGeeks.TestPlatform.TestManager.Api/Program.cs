@@ -23,7 +23,13 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<QuestionValidator>();
-builder.Services.RegisterInfrastructureModule(builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions());
+var dataOptions = new InfrastructureDataOptions
+{
+    Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
+    ServiceBus = builder.Configuration.GetSection("TestManagerServiceBus").Get<ServiceBusOptions>() ?? new ServiceBusOptions(),
+};
+
+builder.Services.RegisterInfrastructureModule(dataOptions);
 var app = builder.Build();
 
 app.UseCors("dev");

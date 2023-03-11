@@ -24,6 +24,7 @@ import { InputMaskModule } from '@ngneat/input-mask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
+import { TestStatusPipe } from './pipes/test-status.pipe';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { errorTailorImports } from '@ngneat/error-tailor';
     TestStartPageComponent,
     GradingAndSummaryComponent,
     TestTimeSettingsComponent,
-    TestSpecificLayoutComponent
+    TestSpecificLayoutComponent,
+    TestStatusPipe
   ],
   imports: [
     CommonModule,

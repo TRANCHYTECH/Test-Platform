@@ -7,6 +7,14 @@ export interface Test {
   timeSettings?: TimeSettings;
   testStartSettings?: TestStartSettings;
   createdOn: Date;
+  isEnabled: boolean;
+  status: TestStatus;
+}
+
+export enum TestStatus {
+  Draft = 1,
+  Activated = 2,
+  Finished = 3
 }
 
 export interface TimeSettings {

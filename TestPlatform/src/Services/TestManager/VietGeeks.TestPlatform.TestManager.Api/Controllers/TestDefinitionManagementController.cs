@@ -81,4 +81,12 @@ public class TestDefinitionManagementController : ControllerBase
 
         return Ok(testDefinition);
     }
+
+    [HttpPost("{id}/Activate")]
+    public async Task<IActionResult> Activate(string id)
+    {
+       var testDefiniton = await _testManagerService.ActivateTestDefinition(id);
+
+        return Ok(testDefiniton);
+    }
 }

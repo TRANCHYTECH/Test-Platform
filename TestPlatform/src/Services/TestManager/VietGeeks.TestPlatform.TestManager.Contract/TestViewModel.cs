@@ -63,6 +63,8 @@ public class TestDefinitionViewModel
 
     public TestStartSettingsViewModel? TestStartSettings { get; set; }
 
+    public TestDefinitionStatus Status { get; set; }
+
     public DateTime CreatedOn { get; set; }
 
     public DateTime ModifiedOn { get; set; }
@@ -111,6 +113,15 @@ public enum TestSetGeneratorType
     Default = 1,
     RandomByCategories = 2
 }
+
+public enum TestDefinitionStatus
+{
+    Draft = 1,
+    Activated = 2,
+    Finished = 3,
+    Deleted = 10
+}
+
 
 
 
