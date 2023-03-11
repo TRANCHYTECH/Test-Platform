@@ -34,7 +34,7 @@
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex">
                         <div class="flex-grow-1 mb-4">
-                            <span class="btn btn-outline-info btn-sm me-1">In Progress</span>
+                            <span class="btn btn-outline-info btn-sm me-1">{{test.status | testStatus}}</span>
                             <span class="text-muted">{{test.createdOn | date}}</span>
                         </div>
                         <div class="flex-shrink-0">

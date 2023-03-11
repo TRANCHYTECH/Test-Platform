@@ -58,6 +58,7 @@ export abstract class TestSpecificBaseComponent implements OnInit {
                 }
 
                 this.test = testDef;
+                this.testsService.setActive(testDef.id);
             }
 
             this.afterGetTest();

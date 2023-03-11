@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
@@ -8,9 +9,9 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static void RegisterInfrastructureModule(this IServiceCollection serviceCollection, DatabaseOptions databaseOptions)
+    public static void RegisterInfrastructureModule(this IServiceCollection serviceCollection, InfrastructureDataOptions options)
     {
-        ConfigureDb(databaseOptions);
+        ConfigureDb(options.Database);
 
         serviceCollection.AddScoped<ITestManagerService, TestManagerService>();
         serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
@@ -18,6 +19,11 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
+
+        serviceCollection.AddAzureClients(builder =>
+        {
+            builder.AddServiceBusClient(options.ServiceBus.ConnectionString);
+        });
     }
 
     private static void ConfigureDb(DatabaseOptions databaseOptions)
@@ -38,4 +44,16 @@ public class DatabaseOptions
     public string DatabaseName { get; set; } = default!;
 
     public string ConnectionString { get; set; } = default!;
+}
+
+public class ServiceBusOptions
+{
+    public string ConnectionString { get; set; } = default!;
+}
+
+public class InfrastructureDataOptions
+{
+    public DatabaseOptions Database { get; set; } = default!;
+
+    public ServiceBusOptions ServiceBus { get; set; } = default!;
 }

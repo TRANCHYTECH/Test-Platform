@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, filter } from 'rxjs';
+import { ToastService } from '@viet-geeks/shared';
+import { BehaviorSubject, filter, Subject } from 'rxjs';
+import { TestsQuery } from '../../state/tests.query';
+import { TestsService } from '../../state/tests.service';
 
 @UntilDestroy()
 @Component({
@@ -10,60 +13,78 @@ import { BehaviorSubject, filter } from 'rxjs';
   styleUrls: ['./test-specific-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestSpecificLayoutComponent {
-  title? = '';
+export class TestSpecificLayoutComponent implements OnInit {
+  title?= '';
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
+  testId!: string;
+  testStatus = new Subject<number>();
+  private _testsService = inject(TestsService);
+  private _testsQuery = inject(TestsQuery);
+  private _notifyService = inject(ToastService);
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
-      const testSpecificPartRoute =  this.route.snapshot.children[0];
-      const testId = testSpecificPartRoute.params['id'];
+      const testSpecificPartRoute = this.route.snapshot.children[0];
+      this.testId = testSpecificPartRoute.params['id'];
       this.title = testSpecificPartRoute.title;
-      const isNewTest = testId === 'new';
+      const isNewTest = this.testId === 'new';
       this.menus$.next([
         {
-          routerLink: [testId, 'basic-settings'],
+          routerLink: [this.testId, 'basic-settings'],
           text: 'Basic Settings',
           icon: 'ri-settings-2-line',
           disable: false
         },
         {
-          routerLink: [testId, 'manage-questions'],
+          routerLink: [this.testId, 'manage-questions'],
           text: 'Manage Questions',
           icon: 'ri-equalizer-fill',
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'test-sets'],
+          routerLink: [this.testId, 'test-sets'],
           text: 'Test Sets',
           icon: 'ri-tools-line',
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'test-access'],
+          routerLink: [this.testId, 'test-access'],
           text: 'Test Access',
           icon: 'ri-shield-keyhole-line',
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'test-start-page'],
+          routerLink: [this.testId, 'test-start-page'],
           text: 'Test Start Page',
           icon: 'ri-eye-line',
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'grading-and-summary'],
+          routerLink: [this.testId, 'grading-and-summary'],
           text: 'Grading and summary',
           icon: 'ri-mark-pen-line',
           disable: isNewTest
         },
         {
-          routerLink: [testId, 'time-settings'],
+          routerLink: [this.testId, 'time-settings'],
           text: 'Time Settings',
           icon: 'ri-time-line',
           disable: isNewTest
         }
       ]);
     });
+  }
+
+  ngOnInit(): void {
+    this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
+      if (test !== undefined) {
+        this.testStatus.next(test.status);
+      }
+    });
+  }
+
+  async activateTest() {
+    await this._testsService.activate(this.testId);
+    this._notifyService.success('Test activated successfully');
   }
 }

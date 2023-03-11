@@ -43,7 +43,7 @@ public class PrivateAccessCodeConfig
 {
     public string Code { get; set; } = default!;
 
-    public string? Email { get; set; }
+    public string Email { get; set; } = default!;
 
     public string? SetId { get; set; }
 

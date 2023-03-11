@@ -2,6 +2,9 @@
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
+using VietGeeks.TestPlatform.Integration.Contracts;
+using Azure.Messaging.ServiceBus;
+using System.Text.Json;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -9,11 +12,13 @@ public class TestManagerService : ITestManagerService
 {
     private readonly IMapper _mapper;
     private readonly TestManagerDbContext _managerDbContext;
+    private readonly ServiceBusClient _bus;
 
-    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext)
+    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus)
     {
         _mapper = mapper;
         _managerDbContext = managerDbContext;
+        _bus = bus;
     }
 
     public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
@@ -103,5 +108,43 @@ public class TestManagerService : ITestManagerService
         await _managerDbContext.SaveAsync(testCategoryEntity);
 
         return _mapper.Map<TestCategoryViewModel>(testCategoryEntity);
+    }
+
+    public async Task<TestDefinitionViewModel> ActivateTestDefinition(string id)
+    {
+        // Find test definition
+        var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+
+        // Check status
+        if(!entity.CanActivate)
+        {
+            throw new Exception("Unable to activate the test");
+        }
+
+        entity.Activate();
+        await _managerDbContext.SaveOnlyAsync(entity, new[] { nameof(TestDefinition.Status) });
+
+        // Send access code invitations.
+        if(entity.TestAccessSettings?.AccessType == TestAcessType.PrivateAccessCode && entity.TestAccessSettings.Settings != null)
+        {
+            var settings = (PrivateAccessCodeType)entity.TestAccessSettings.Settings;
+            var receivers = settings.Configs.Where(c => !string.IsNullOrEmpty(c.Email)).Select(c => new Receiver(c.Code, c.Email)).ToArray();
+            if(receivers.Length == 0)
+            {
+                return _mapper.Map<TestDefinitionViewModel>(entity);
+            }
+
+            var request = new SendTestAccessCodeRequest
+            {
+                TestUrl = $"https://testmaster.io/start/{id}",
+                TestDefinitionId = id,
+                Receivers = receivers
+            };
+
+            var sender = _bus.CreateSender("send-test-access-code");
+            await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
+        }
+
+        return _mapper.Map<TestDefinitionViewModel>(entity);
     }
 }

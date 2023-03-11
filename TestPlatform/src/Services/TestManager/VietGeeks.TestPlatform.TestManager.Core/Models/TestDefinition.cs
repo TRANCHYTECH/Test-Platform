@@ -18,8 +18,24 @@ public class TestDefinition: EntityBase
 
     public TestStartSettingsPart? TestStartSettings { get; set; }
 
-    public bool IsActivated { get; set; }
+    public TestDefinitionStatus Status { get; private set; } = TestDefinitionStatus.Draft;
 
-    public bool IsEnabled { get; set; }
+    public bool CanActivate => Status == TestDefinitionStatus.Draft;
+
+    public void Activate()
+    {
+        if(CanActivate)
+        {
+            Status = TestDefinitionStatus.Activated;
+        }
+    }
+}
+
+public enum TestDefinitionStatus
+{
+    Draft = 1,
+    Activated = 2,
+    Finished = 3,
+    Deleted = 10
 }
 

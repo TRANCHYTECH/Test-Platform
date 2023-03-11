@@ -72,6 +72,12 @@ export class TestsService {
     return defKSUID32().next();
   }
 
+  activate(id: string) {
+    return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/Activate`, null).pipe(tap(rs => {
+      this._testsStore.update(id, rs);
+    })));
+  }
+
   private get testManagerApiBaseUrl() {
     return this._appSettingService.get<AppSettings>().testManagerApiBaseUrl;
   }
