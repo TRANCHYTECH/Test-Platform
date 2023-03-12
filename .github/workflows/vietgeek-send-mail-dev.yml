@@ -12,7 +12,7 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 7.0.x
-  WORKING_DIRECTORY: Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail
+  WORKING_DIRECTORY: ./TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail
   DOTNET_CORE_VERSION_INPROC: 6.0.x
 jobs:
   build:
