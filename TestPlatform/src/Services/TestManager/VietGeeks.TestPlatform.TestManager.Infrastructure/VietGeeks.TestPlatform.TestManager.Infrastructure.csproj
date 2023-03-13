@@ -8,10 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\IntegrationBlocks\VietGeek.TestPlatform.Integration.Contract\VietGeek.TestPlatform.Integration.Contract.csproj" />
+    <ProjectReference Include="..\..\..\IntegrationBlocks\VietGeeks.TestPlatform.Integration.Contract\VietGeeks.TestPlatform.Integration.Contract.csproj" />
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj" />
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Contract\VietGeeks.TestPlatform.TestManager.Contract.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
 
   </ItemGroup>
   <ItemGroup>
@@ -28,5 +27,6 @@
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.2" />
     <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.0.24" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.12.0" />
+    <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.1" />
   </ItemGroup>
 </Project>
