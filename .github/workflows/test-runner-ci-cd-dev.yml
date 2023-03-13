@@ -1,4 +1,4 @@
-name: viet-geeks-test-runner-ci-cd-dev
+name: Dev:Test-Runner
 on:
   workflow_dispatch:
   push:

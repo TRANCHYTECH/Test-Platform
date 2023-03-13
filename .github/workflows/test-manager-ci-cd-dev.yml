@@ -1,4 +1,4 @@
-name: viet-geeks-test-platform-ci-cd-dev
+name: Dev:Test-Manager
 on:
   workflow_dispatch:
   push:

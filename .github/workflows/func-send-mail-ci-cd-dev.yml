@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Function App vietgeek-send-mail-dev
+name: Dev:Function-Send-Mail
 on:
   workflow_dispatch:
   push:
