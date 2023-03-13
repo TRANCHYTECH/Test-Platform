@@ -31,5 +31,4 @@ jobs:
     - name: Build the NuGet package
       run: dotnet pack ./TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/VietGeeks.TestPlatform.AspNetCore.csproj --configuration Release --output ${{env.DOTNET_ROOT}}/Package /p:PackageVersion=$BUILD_VERSION
     - name: Publish NuGet Package
-      if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
       run: dotnet nuget push ${{env.DOTNET_ROOT}}/Package/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
