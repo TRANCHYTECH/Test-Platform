@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VietGeeks.TestPlatform.TestRunner.Contract\VietGeeks.TestPlatform.TestRunner.Contract.csproj" />
+    <ProjectReference Include="..\..\TestManager\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="ListShuffle" Version="1.1.5" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,4 @@
-using Dapr.Client.Autogen.Grpc.v1;
-using Microsoft.Extensions.DependencyInjection;
+using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +20,13 @@ builder.Services.AddActors(options =>
     options.Actors.RegisterActor<ProctorActor>();
 });
 
+var dataOptions = new InfrastructureDataOptions
+{
+    Database = builder.Configuration.GetSection("TestRunnerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions()
+};
+
+builder.Services.RegisterInfrastructureModule(dataOptions);
+
 var app = builder.Build();
 
 app.MapActorsHandlers();
@@ -36,12 +42,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/test/start-mininal/{code}", (string code) =>
-{
-    return code;
-});
-
 app.Run();
-
-//dapr run --app-id testrunner --app-port 6000 --dapr-http-port 3600 --dapr-grpc-port 60000 dotnet run -p VietGeeks.TestPlatform.TestRunner.Api --urls 
-// dapr run --app-id trafficcontrolservice --app-port 6000 --dapr-http-port 3600 --dapr-grpc-port 60000 --config ../dapr/config/config.yaml --components-path ../dapr/components dotnet run

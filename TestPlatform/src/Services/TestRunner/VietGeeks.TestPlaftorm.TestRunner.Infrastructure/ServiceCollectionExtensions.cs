@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Azure;
+﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
@@ -13,22 +13,21 @@ public static class ServiceCollectionExtensions
     {
         ConfigureDb(options.Database);
 
-        serviceCollection.AddScoped<ITestManagerService, TestManagerService>();
-        serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
-        serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
-        serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
-        serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
-        serviceCollection.AddScoped<TestManagerDbContext>();
+        serviceCollection.AddScoped<IProctorService, ProctorService>();
+        //serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
+        //serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
+        //serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
+        //serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
+        serviceCollection.AddScoped<DBContext>();
 
-        serviceCollection.AddAzureClients(builder => builder.AddServiceBusClient(options.ServiceBus.ConnectionString));
     }
 
     private static void ConfigureDb(DatabaseOptions databaseOptions)
     {
         var conventionPack = new ConventionPack
-        {
-            new IgnoreExtraElementsConvention(true)
-        };
+    {
+        new IgnoreExtraElementsConvention(true)
+    };
 
         ConventionRegistry.Register("TestPlatformDefaultConventions", conventionPack, _ => true);
 
@@ -54,3 +53,4 @@ public class InfrastructureDataOptions
 
     public ServiceBusOptions ServiceBus { get; set; } = default!;
 }
+
