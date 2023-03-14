@@ -1,8 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TestRespondentField } from '../../../state/test.model';
 import { ProctorService } from '../../proctor.service';
 import { TestStartConfig } from './data';
+
 @Component({
   selector: 'viet-geeks-test-start',
   templateUrl: './test-start.component.html',
@@ -11,6 +13,7 @@ import { TestStartConfig } from './data';
 export class TestStartComponent implements OnInit {
 
   proctorService = inject(ProctorService);
+  router = inject(Router);
   config = TestStartConfig;
   respondentIdentifyForm: FormGroup;
   labels: string[] = [];
@@ -26,6 +29,10 @@ export class TestStartComponent implements OnInit {
       this.addField(f);
       this.labels[i] = f.fieldLabel;
     });
+  }
+
+  startTest() {
+    this.router.navigate(['test/question']);
   }
 
   get fields() {
