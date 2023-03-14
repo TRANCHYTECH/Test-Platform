@@ -7,7 +7,5 @@ namespace VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 
 public interface IProctorActor : IActor
 {
-    Task<TestViewModel> StartTest(string testCode);
-
-    Task<TestViewModel> SubmitTest(string testCode);
+    Task StartExam(StartExamInput input);
 }

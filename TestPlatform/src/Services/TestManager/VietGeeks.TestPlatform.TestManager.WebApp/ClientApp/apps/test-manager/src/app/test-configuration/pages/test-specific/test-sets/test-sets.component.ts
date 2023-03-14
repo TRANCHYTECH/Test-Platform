@@ -90,7 +90,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   async submit() {
     const model = <TestSets>this.testSetsForm.value;
     if (model.generatorType === GeneratorTypes.Default) {
-      model.generator = undefined;
+      model.generator = { $type: model.generatorType, configs: undefined };
     }
     await this.testsService.update(this.testId, { testSetSettings: model });
     this.notifyService.success('Test sets updated');

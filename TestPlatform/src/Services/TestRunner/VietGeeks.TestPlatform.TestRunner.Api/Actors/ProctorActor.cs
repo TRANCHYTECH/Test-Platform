@@ -1,6 +1,7 @@
 ﻿using Dapr.Actors.Runtime;
 using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.ViewModels;
+using VietGeeks.TestPlatform.TestRunner.Contract;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
 
@@ -10,21 +11,8 @@ public class ProctorActor : Actor, IProctorActor
     {
     }
 
-    public async Task<TestViewModel> StartTest(string testCode)
+    public async Task StartExam(StartExamInput input)
     {
-        if (await StateManager.ContainsStateAsync(testCode))
-        {
-            var id = await StateManager.GetStateAsync<string>(testCode);
-            return new TestViewModel { Id = id };
-        }
-
-        var newId = Guid.NewGuid().ToString();
-        await StateManager.SetStateAsync(testCode, newId);
-        return new TestViewModel { Id = newId };
-    }
-
-    public Task<TestViewModel> SubmitTest(string testCode)
-    {
-        return Task.FromResult(new TestViewModel { Id = Guid.NewGuid().ToString() });
+        await StateManager.SetStateAsync("input", input.TestDefinitionId);
     }
 }
