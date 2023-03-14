@@ -21,13 +21,17 @@ public class TestProfile : Profile
 
         // Test set settings mapping.
         CreateMap<TestSetGeneratorViewModel, TestSetGenerator>()
+            .Include<DefaultGeneratorViewModel, DefaultGenerator>()
             .Include<RandomByCategoriesGeneratorViewModel, RandomFromCategoriesGenerator>();
+        CreateMap<DefaultGeneratorViewModel, DefaultGenerator>();
         CreateMap<RandomByCategoriesGeneratorViewModel, RandomFromCategoriesGenerator>();
         CreateMap<RandomByCategoriesGeneratorConfigViewModel, RandomFromCategoriesGeneratorConfig>();
         CreateMap<CreateOrUpdateTestSetSettingsViewModel, TestSetSettingsPart>();
 
         CreateMap<TestSetGenerator, TestSetGeneratorViewModel>()
+            .Include<DefaultGenerator, DefaultGeneratorViewModel>()
             .Include<RandomFromCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
+        CreateMap<DefaultGenerator, DefaultGeneratorViewModel>();
         CreateMap<RandomFromCategoriesGenerator, RandomByCategoriesGeneratorViewModel>();
         CreateMap<RandomFromCategoriesGeneratorConfig, RandomByCategoriesGeneratorConfigViewModel>();
         CreateMap<TestSetSettingsPart, TestSetSettingsViewModel>();

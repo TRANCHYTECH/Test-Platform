@@ -3,9 +3,9 @@
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 public interface IProctorService
 {
-    Task<VerifyTestResultViewModel> VerifyTest(VerifyTestViewModel viewModel);
+    Task<VerifyTestResultViewModel> VerifyTest(VerifyTestInput viewModel);
 
-    Task<string> ProvideExamineeInfo(ProvideExamineeInfoInputViewModel viewModel);
+    Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput viewModel);
 
-    Task<List<dynamic>> GenerateExamContent(GenerateExamContentInput input);
+    Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input);
 }

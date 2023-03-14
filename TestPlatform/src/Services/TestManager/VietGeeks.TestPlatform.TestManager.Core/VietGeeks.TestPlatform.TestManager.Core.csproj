@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MongoDB.Entities" Version="21.0.2" />
+    <PackageReference Include="ListShuffle" Version="1.1.5" />
   </ItemGroup>
 </Project>

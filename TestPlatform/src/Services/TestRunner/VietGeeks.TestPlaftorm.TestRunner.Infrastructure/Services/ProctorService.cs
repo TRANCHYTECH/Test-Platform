@@ -2,6 +2,7 @@
 using ListShuffle;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.TestManager.Core.Logics;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 
@@ -9,34 +10,17 @@ namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
 public class ProctorService : IProctorService
 {
-    private readonly DBContext _dbContext;
-
-    public ProctorService(DBContext dbContext)
+    public async Task<VerifyTestResultViewModel> VerifyTest(VerifyTestInput input)
     {
-        _dbContext = dbContext;
-    }
-
-    public async Task<VerifyTestResultViewModel> VerifyTest(VerifyTestViewModel viewModel)
-    {
-        if (!string.IsNullOrEmpty(viewModel.TestId))
+        if (!string.IsNullOrEmpty(input.TestId))
         {
-            var test = await _dbContext.Find<TestDefinition>().Match(c => c.ID == viewModel.TestId && c.Status == TestDefinitionStatus.Activated).ExecuteFirstAsync();
-            return test == null
-                ? new VerifyTestResultViewModel
-                {
-                    IsValid = false
-                }
-                : new VerifyTestResultViewModel
-                {
-                    TestId = test.ID,
-                    IsValid = true
-                };
+            var testDefinition = await DB.Find<TestDefinition>().Match(c => c.ID == input.TestId && c.Status == TestDefinitionStatus.Activated).ExecuteFirstAsync();
+            return testDefinition == null? VerifyTestResultViewModel.Invalid(): VerifyTestResultViewModel.Valid(testDefinition.ID);
         }
 
-         if (!string.IsNullOrEmpty(viewModel.AccessCode))
+         if (!string.IsNullOrEmpty(input.AccessCode))
         {
-            // Use raw query.
-            var pipeline = new Template<TestDefinition>(@"
+            var getActivatedTestDefinitionQuery = new Template<TestDefinition>(@"
                 [
                     {
                         '$match': {
@@ -46,30 +30,19 @@ public class ProctorService : IProctorService
                         }
                     }
                 ]
-            ")
-                .Tag("status", $"{((int)TestDefinitionStatus.Activated)}")
-                .Tag("access_code", viewModel.AccessCode);
-            var test = await DB.PipelineSingleAsync(pipeline);
-            //todo: move condition to db also.
-            return test == null
-                ? new VerifyTestResultViewModel
-                {
-                    IsValid = false
-                }
-                : new VerifyTestResultViewModel
-            {
-                TestId = test.ID,
-                AccessCode = viewModel.AccessCode,
-                IsValid = true
-            };
+            ").Tag("status", $"{((int)TestDefinitionStatus.Activated)}").Tag("access_code", input.AccessCode);
+
+            var testDefinition = await DB.PipelineSingleAsync(getActivatedTestDefinitionQuery);
+
+            return testDefinition == null ? VerifyTestResultViewModel.Invalid() : VerifyTestResultViewModel.Valid((testDefinition.ID, input.AccessCode));
         }
 
         throw new Exception("Input not valid");
     }
 
-    public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInputViewModel viewModel)
+    public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
-        var existingExam = await DB.Find<Exam>().Match(c => c.TestId == viewModel.TestId && c.AccessCode == viewModel.AccessCode).ExecuteFirstAsync();
+        var existingExam = await DB.Find<Exam>().Match(c => c.TestId == input.TestId && c.AccessCode == input.AccessCode).ExecuteFirstAsync();
 
         if (existingExam != null)
         {
@@ -78,9 +51,9 @@ public class ProctorService : IProctorService
 
         var exam = new Exam
         {
-            TestId = viewModel.TestId,
-            AccessCode = viewModel.AccessCode,
-            ExamineeInfo = viewModel.ExamineeInfo
+            TestId = input.TestId,
+            AccessCode = input.AccessCode,
+            ExamineeInfo = input.ExamineeInfo
         };
 
         await DB.InsertAsync(exam);
@@ -88,7 +61,7 @@ public class ProctorService : IProctorService
         return exam.ID;
     }
 
-    public async Task<List<dynamic>> GenerateExamContent(GenerateExamContentInput input)
+    public async Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input)
     {
         // Get test defintion and validate it
         var testDefinition = await DB.Find<TestDefinition>().MatchID(input.TestDefinitionId).ExecuteSingleAsync();
@@ -98,39 +71,27 @@ public class ProctorService : IProctorService
         }
 
         // Get questions of test definition.
-        var questions = await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == input.TestDefinitionId);
-
-        var rs = new List<dynamic>();
-        if(!string.IsNullOrEmpty(input.AccessCode) && questions != null)
+        var questions = await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == testDefinition.ID);
+        var result = new ExamContentOutput
         {
-           if (testDefinition.TestSetSettings?.GeneratorType == TestSetGeneratorType.Default)
-            {
-                questions.Shuffle();
+            Questions = testDefinition.GenerateTestSet(questions, input.AccessCode).Select(ToViewModel).ToArray()
+        };
 
-                rs.AddRange(questions);
-            }
-           else if(testDefinition.TestSetSettings?.GeneratorType == TestSetGeneratorType.RandomByCategories)
-            {
-                var configs = testDefinition.TestSetSettings.Generator as RandomFromCategoriesGenerator;
-                if(configs == null)
-                {
-                    throw new Exception("");
-                }
-                foreach (var g in questions.GroupBy(c => c.CategoryId))
-                {
-                    var qs = g.ToList();
-                    qs.Shuffle();
-                    var foundConfig = configs.Configs.FirstOrDefault(c => c.QuestionCategoryId == g.Key);
-                    if(foundConfig != null)
-                    {
-                        //todo: check out of range.
-                        rs.AddRange(qs.GetRange(0, foundConfig.DrawNumber));
-                    }
-                }
-            }
-        }
+        return result;
+    }
 
-        return rs;
+    private static ExamQuestion ToViewModel(QuestionDefinition c)
+    {
+        return new ExamQuestion
+        {
+            Id = c.ID,
+            Description = c.Description,
+            AnswerType = c.AnswerType,
+            Answers = c.Answers.Select(c => new ExamAnswer
+            {
+                Id = c.Id,
+                Description = c.AnswerDescription
+            }).ToArray()
+        };
     }
 }
-

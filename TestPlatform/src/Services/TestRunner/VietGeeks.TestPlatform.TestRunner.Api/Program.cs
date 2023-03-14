@@ -1,14 +1,14 @@
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
+using VietGeeks.TestPlatform.TestRunner.Api.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => c.OperationFilter<TestSessionHeaderFilter>());
 var daprHttpPort = Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3600";
 var daprGrpcPort = Environment.GetEnvironmentVariable("DAPR_GRPC_PORT") ?? "60000";
 builder.Services.AddDaprClient(builder => builder

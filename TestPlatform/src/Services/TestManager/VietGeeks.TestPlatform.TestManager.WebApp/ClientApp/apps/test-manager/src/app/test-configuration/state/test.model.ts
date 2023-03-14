@@ -98,7 +98,7 @@ export interface TestSets {
   generatorType: number;
   generator?: {
     $type: number;
-    configs: { id: string, draw: number }[]
+    configs: { id: string, draw: number }[] | undefined
   }
 }
 

@@ -14,11 +14,7 @@ public static class ServiceCollectionExtensions
         ConfigureDb(options.Database);
 
         serviceCollection.AddScoped<IProctorService, ProctorService>();
-        //serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
-        //serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
-        //serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
-        //serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
-        serviceCollection.AddScoped<DBContext>();
+        serviceCollection.AddScoped<TestRunnerDbContext>();
 
     }
 

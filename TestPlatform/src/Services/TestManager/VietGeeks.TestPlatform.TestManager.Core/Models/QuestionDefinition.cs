@@ -49,6 +49,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
 
     public class Answer
     {
+        public string Id { get; set; }
         public string AnswerDescription { get; set; }
         public int AnswerPoint { get; set; }
         public bool IsCorrect { get; set; }

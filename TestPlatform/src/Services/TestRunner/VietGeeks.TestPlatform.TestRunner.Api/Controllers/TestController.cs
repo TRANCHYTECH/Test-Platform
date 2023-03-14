@@ -3,7 +3,6 @@ using Dapr.Actors;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 using VietGeeks.TestPlatform.TestRunner.Contract;
-using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
@@ -11,7 +10,6 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[AllowAnonymous]
 public class TestController : ControllerBase
 {
     private readonly IProctorService _proctorService;
@@ -22,87 +20,124 @@ public class TestController : ControllerBase
     }
 
     [HttpPost("PreStart/Verify")]
-    public async Task<IActionResult> Verify(VerifyTestViewModel data)
+    public async Task<IActionResult> Verify(VerifyTestInput input)
     {
-        var verifyResult = await _proctorService.VerifyTest(data);
-
-        var session = EncryptToken(new TestStartContinousToken
-        {
-            TestId = verifyResult.TestId,
-            AccessCode = verifyResult.AccessCode,
-            PreviousStep = PreStartSteps.Verify,
-            ClientFootage = "some data"
-        });
-        return Ok(new { continousToken = session });
-    }
-
-    [HttpPost("PreStart/ProvideExamineeInfo")]
-    public async Task<IActionResult> ProvideExamineeInfo([FromHeader(Name = "ContinousToken")] string continousToken, ProvideExamineeInfoViewModel data)
-    {
-        var previousToken = DecryptToken(continousToken);
-
-        var input = new ProvideExamineeInfoInputViewModel
-        {
-            TestId = previousToken.TestId,
-            AccessCode = previousToken.AccessCode,
-            ExamineeInfo = data.ExamineeInfo
-        };
-
-        var examId = await _proctorService.ProvideExamineeInfo(input);
-        var session = new TestStartContinousToken
-        {
-            ExamId = examId,
-            TestId = previousToken.TestId,
-            AccessCode = previousToken.AccessCode,
-            PreviousStep = PreStartSteps.ProvideExamineeInfo,
-            ClientFootage = previousToken.ClientFootage
-        };
-
-        var encryptedSession = EncryptToken(session);
-        return Ok(new { continousToken = encryptedSession });
-    }
-
-    [HttpPost("Start")]
-    public async Task<IActionResult> StartTest([FromHeader(Name = "ContinousToken")] string continousToken)
-    {
-        var previousToken = DecryptToken(continousToken);
-        if (previousToken == null)
+        var verifyResult = await _proctorService.VerifyTest(input);
+        if (!verifyResult.IsValid)
         {
             return BadRequest();
         }
 
-        // Generate exam content: questions.
-
-        var examContent = await _proctorService.GenerateExamContent(new GenerateExamContentInput
+        SetTestSession(new()
         {
-            TestDefinitionId = previousToken.TestId,
-            AccessCode = previousToken.AccessCode,
+            TestId = verifyResult.TestId,
+            AccessCode = verifyResult.AccessCode,
+            PreviousStep = PreStartSteps.Verified,
+            ClientProof = "some data"
         });
 
-        //var actorId = new ActorId(previousToken.AccessCode);
-        //var proxy = ActorProxy.Create<IProctorActor>(actorId, "ProctorActor");
-        //var startedTest = await proxy.StartTest(previousToken.AccessCode);
+        return Ok();
+    }
+
+    [HttpPost("PreStart/ProvideExamineeInfo")]
+    public async Task<IActionResult> ProvideExamineeInfo(ProvideExamineeInfoViewModel data)
+    {
+        var testSession = GetTestSession();
+        if (testSession.PreviousStep != PreStartSteps.Verified)
+        {
+            return BadRequest("Invalid Step");
+        }
+
+        var examId = await _proctorService.ProvideExamineeInfo(new()
+        {
+            TestId = testSession.TestId,
+            AccessCode = testSession.AccessCode,
+            ExamineeInfo = data.ExamineeInfo
+        });
+
+        SetTestSession(new()
+        {
+            ExamId = examId,
+            TestId = testSession.TestId,
+            AccessCode = testSession.AccessCode,
+            PreviousStep = PreStartSteps.ProvidedExamineeInfo,
+            ClientProof = testSession.ClientProof
+        });
+
+        return Ok();
+    }
+
+    [HttpPost("Start")]
+    public async Task<IActionResult> StartTest()
+    {
+        var testSession = GetTestSession();
+        if (testSession.PreviousStep != PreStartSteps.ProvidedExamineeInfo)
+        {
+            return BadRequest("Invalid Step");
+        }
+
+        // Generate exam content: questions.
+        var examContent = await _proctorService.GenerateExamContent(new()
+        {
+            TestDefinitionId = testSession.TestId,
+            AccessCode = testSession.AccessCode,
+        });
+
+        var proctorExamActor = ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");
+        await proctorExamActor.StartExam(new()
+        {
+            ExamId = testSession.ExamId,
+            TestDefinitionId = testSession.TestId,
+            Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray())
+        });
+
+        SetTestSession(new()
+        {
+            ExamId = testSession.ExamId,
+            TestId = testSession.TestId,
+            AccessCode = testSession.AccessCode,
+            PreviousStep = PreStartSteps.Started,
+            ClientProof = testSession.ClientProof
+        });
 
         return Ok(examContent);
     }
 
     [HttpPost("SubmitAnwser")]
-    public IActionResult SubmitAnwser([FromHeader(Name = "ContinousToken")] string continousToken)
+    public IActionResult SubmitAnwser()
     {
+        var testSession = GetTestSession();
+        if (testSession.PreviousStep != PreStartSteps.Started)
+        {
+            return BadRequest("Invalid Step");
+        }
+
+
         return Ok();
     }
 
-    private static string EncryptToken(TestStartContinousToken session)
+    private void SetTestSession(TestSession testSession)
     {
+        Response.Headers.Add(nameof(TestSession), EncryptTestSession(testSession));
+    }
 
+    private TestSession GetTestSession()
+    {
+        var session = Request.Headers[nameof(TestSession)];
+
+        return DecryptTestSession(session.ToString());
+    }
+
+    private static string EncryptTestSession(TestSession session)
+    {
         //todo: Use data protection feature of .net
         return Convert.ToBase64String(Encoding.ASCII.GetBytes(System.Text.Json.JsonSerializer.Serialize(session)));
     }
 
-    private static TestStartContinousToken DecryptToken(string token)
+    private static TestSession DecryptTestSession(string token)
     {
         var str = Encoding.ASCII.GetString(Convert.FromBase64String(token)) ?? throw new InvalidCastException();
-        var session = System.Text.Json.JsonSerializer.Deserialize<TestStartContinousToken>(str);
+        var session = System.Text.Json.JsonSerializer.Deserialize<TestSession>(str);
         return session ?? throw new InvalidCastException();
     }
 }
