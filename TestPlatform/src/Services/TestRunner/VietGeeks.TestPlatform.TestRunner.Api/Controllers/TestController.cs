@@ -5,6 +5,8 @@ using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using System.Text;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using System.Text.Json;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
@@ -142,14 +144,21 @@ public class TestController : ControllerBase
     private static string EncryptTestSession(TestSession session)
     {
         //todo: Use data protection feature of .net
-        return Convert.ToBase64String(Encoding.ASCII.GetBytes(System.Text.Json.JsonSerializer.Serialize(session)));
+        return Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(session)));
     }
 
     private static TestSession DecryptTestSession(string token)
     {
-        var str = Encoding.ASCII.GetString(Convert.FromBase64String(token)) ?? throw new InvalidCastException();
-        var session = System.Text.Json.JsonSerializer.Deserialize<TestSession>(str);
-        return session ?? throw new InvalidCastException();
+        try
+        {
+            var str = Encoding.ASCII.GetString(Convert.FromBase64String(token));
+            return JsonSerializer.Deserialize<TestSession>(str) ?? throw new TestPlatformException("InvalidTestSession");
+        }
+        catch (Exception ex)
+        {
+            throw new TestPlatformException("InvalidTestSession", ex);
+        }
+       
     }
 }
 
