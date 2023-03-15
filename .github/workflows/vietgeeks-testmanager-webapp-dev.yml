@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'TestPlatform/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.WebApp/**'
+      - 'TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/**'
       - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/apps/test-runner/**'
 env:
   CONTAINER_APP_CONTAINER_NAME: vietgeeks-testmanager-webapp
