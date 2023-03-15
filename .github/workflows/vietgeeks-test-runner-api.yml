@@ -1,0 +1,56 @@
+name: Dev:Test-Runner-Api
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'TestPlatform/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/**'
+env:
+  CONTAINER_APP_CONTAINER_NAME: vietgeeks-test-runner-api
+  CONTAINER_APP_NAME: vietgeeks-test-runner-api
+  CONTAINER_APP_RESOURCE_GROUP_NAME: az-vietgeeks
+  CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
+  DOCKER_FILE_PATH: Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/Dockerfile
+  PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformtestrunnerapi
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout to the branch
+      uses: actions/checkout@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Log in to container registry
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_9A97 }}
+        password: ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_9A97 }}
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v2
+      with:
+        context: ./TestPlatform/src
+        push: true
+        tags: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+        file: ${{ env.DOCKER_FILE_PATH }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.vietgeeks_testmanager_webapp_SPN }}
+    - name: Deploy to containerapp
+      uses: azure/CLI@v1
+      with:
+        inlineScript: >
+          az config set extension.use_dynamic_install=yes_without_prompt
+
+          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_9A97 }} --password ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_9A97 }}
+
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+    - name: logout
+      run: >
+        az logout
