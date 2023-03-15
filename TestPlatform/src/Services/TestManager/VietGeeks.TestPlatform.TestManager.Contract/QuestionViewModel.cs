@@ -54,6 +54,7 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
 
     public class AnswerViewModel
     {
+        public string Id { get; set; }
         public string AnswerDescription { get; set; }
         public int AnswerPoint { get; set; }
         public bool IsCorrect { get; set; }
