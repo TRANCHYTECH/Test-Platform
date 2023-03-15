@@ -1,14 +1,18 @@
-name: Build and deploy .NET application to container app vietgeeks-testmanager-webapp
+name: Dev:TestRunner-Webapp
 on:
+  workflow_dispatch:
   push:
     branches:
-    - master
+      - master
+    paths:
+      - 'TestPlatform/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.WebApp/**'
+      - 'TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/apps/test-runner/**'
 env:
   CONTAINER_APP_CONTAINER_NAME: vietgeeks-testmanager-webapp
   CONTAINER_APP_NAME: vietgeeks-testmanager-webapp
   CONTAINER_APP_RESOURCE_GROUP_NAME: az-vietgeeks
   CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
-  DOCKER_FILE_PATH: Services/TestRunner/VietGeeks.TestPlatform.TestRunner.WebApp/Dockerfile
+  DOCKER_FILE_PATH: TestPlatform/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.WebApp/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformtestrunnerwebapp
 jobs:
   build:
