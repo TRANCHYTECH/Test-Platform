@@ -1,6 +1,7 @@
 ﻿using Dapr.Actors.Runtime;
 using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.Contracts;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
 
