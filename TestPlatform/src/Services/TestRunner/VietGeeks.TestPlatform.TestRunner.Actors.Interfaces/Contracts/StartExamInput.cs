@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.ViewModels
+namespace VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.Contracts
 {
-
     public class StartExamInput
     {
         public string ExamId { get; set; } = default!;
@@ -13,4 +12,3 @@ namespace VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.ViewModels
         public Dictionary<string, string[]> Questions { get; set; } = default!;
     }
 }
-

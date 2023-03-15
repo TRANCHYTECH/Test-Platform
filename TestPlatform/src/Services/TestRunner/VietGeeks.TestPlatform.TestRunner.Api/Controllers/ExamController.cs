@@ -5,16 +5,18 @@ using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using System.Text;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using System.Text.Json;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TestController : ControllerBase
+public class ExamController : ControllerBase
 {
     private readonly IProctorService _proctorService;
 
-    public TestController(IProctorService proctorService)
+    public ExamController(IProctorService proctorService)
     {
         _proctorService = proctorService;
     }
@@ -36,7 +38,11 @@ public class TestController : ControllerBase
             ClientProof = "some data"
         });
 
-        return Ok();
+        return Ok(new
+        {
+            verifyResult.ConsentMessage,
+            verifyResult.InstructionMessage
+        });
     }
 
     [HttpPost("PreStart/ProvideExamineeInfo")]
@@ -80,10 +86,10 @@ public class TestController : ControllerBase
         var examContent = await _proctorService.GenerateExamContent(new()
         {
             TestDefinitionId = testSession.TestId,
-            AccessCode = testSession.AccessCode,
+            AccessCode = testSession.AccessCode
         });
 
-        var proctorExamActor = ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");
+        var proctorExamActor = GetProctorActor(testSession);
         await proctorExamActor.StartExam(new()
         {
             ExamId = testSession.ExamId,
@@ -104,7 +110,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPost("SubmitAnwser")]
-    public IActionResult SubmitAnwser()
+    public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
         var testSession = GetTestSession();
         if (testSession.PreviousStep != PreStartSteps.Started)
@@ -112,8 +118,19 @@ public class TestController : ControllerBase
             return BadRequest("Invalid Step");
         }
 
+        var proctorExamActor = GetProctorActor(testSession);
+        await proctorExamActor.SubmitAnswer(new()
+        {
+            QuestionId = data.QuestionId,
+            AnswerId = data.AnswerId
+        });
 
         return Ok();
+    }
+
+    private static IProctorActor GetProctorActor(TestSession testSession)
+    {
+        return ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");
     }
 
     private void SetTestSession(TestSession testSession)
@@ -131,14 +148,21 @@ public class TestController : ControllerBase
     private static string EncryptTestSession(TestSession session)
     {
         //todo: Use data protection feature of .net
-        return Convert.ToBase64String(Encoding.ASCII.GetBytes(System.Text.Json.JsonSerializer.Serialize(session)));
+        return Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(session)));
     }
 
     private static TestSession DecryptTestSession(string token)
     {
-        var str = Encoding.ASCII.GetString(Convert.FromBase64String(token)) ?? throw new InvalidCastException();
-        var session = System.Text.Json.JsonSerializer.Deserialize<TestSession>(str);
-        return session ?? throw new InvalidCastException();
+        try
+        {
+            var str = Encoding.ASCII.GetString(Convert.FromBase64String(token));
+            return JsonSerializer.Deserialize<TestSession>(str) ?? throw new TestPlatformException("InvalidTestSession");
+        }
+        catch (Exception ex)
+        {
+            throw new TestPlatformException("InvalidTestSession", ex);
+        }
+       
     }
 }
 

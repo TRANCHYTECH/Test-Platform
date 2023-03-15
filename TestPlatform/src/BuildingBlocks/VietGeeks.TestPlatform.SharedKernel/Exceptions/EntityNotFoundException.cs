@@ -1,6 +1,6 @@
 ﻿namespace VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
-public class EntityNotFoundException: TestPlatformExecption
+public class EntityNotFoundException: TestPlatformException
 {
     public string EntityId { get; set; }
 

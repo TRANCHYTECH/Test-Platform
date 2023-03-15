@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <img src="assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="logo dark" height="17">
+      <img src="assets/images/logo-light.png" class="card-logo card-logo-light" alt="logo light" height="17">
+    </a>
+    <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <i class="mdi mdi-menu"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="mx-auto mt-2 mt-lg-0">
+        <h3>{{metaData.testName}}</h3>
+      </div>
+      <div class="">
+        Time left: {{hoursToDday}}h {{minutesToDday}}min. {{secondsToDday}}sec.
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-12" [formGroup]="answerForm">
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <h5 class="text-uppercase">{{'Question ' + (index + 1) + '/' + questions.length}}</h5>
+          </div>
+          <div class="mb-3">
+            <p [innerHTML]="question.description"></p>
+          </div>
+          <ng-container [ngSwitch]="question.answerType">
+            <div class="mb-3" *ngSwitchCase="1">
+              <div class="flex-grow-1">
+                <div *ngFor="let answer of question.answers">
+                  <div class="form-check form-check-outline form-check-primary mb-3">
+                    <input class="form-check-input" type="checkbox" id="answer_{{answer.id}}"
+                      [attr.checked]="answer.isCorrect">
+                    <label class="form-check-label" for="formCheck13">
+                      {{answer.answerDescription}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3" *ngSwitchCase="2">
+              <div class="form-check mb-3" *ngFor="let answer of question.answers">
+                <input type="radio" [value]="answer.id" class="form-check-input" name="selectedAnswer" id="{{answer.id}}" formControlName="selectedAnswer">
+                <label for="answer_{{answer.id}}" class="form-check-label">{{answer.answerDescription}}</label>
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <button class="btn btn-primary" type="submit" (click)="submit()">Submit answer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
