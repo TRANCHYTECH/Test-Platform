@@ -31,14 +31,12 @@ public class ProctorActor : Actor, IProctorActor
         {
             if (!examState.Questions.ContainsKey(input.QuestionId))
             {
-                //todo: shared kernel exception.
-                throw new Exception("Not found question");
+                throw new TestPlatformException("NotFoundQuestion");
             }
 
             if (!examState.Answers.ContainsKey(input.AnswerId))
             {
-                //todo: shared kernel exception.
-                throw new Exception("Already answsered");
+                throw new TestPlatformException("AlreadyAnswered");
             }
 
             examState.Answers[input.QuestionId] = input.AnswerId;
@@ -47,15 +45,8 @@ public class ProctorActor : Actor, IProctorActor
 
     private async Task ExamStateAction(Action<ExamState> action)
     {
-        var examState = await StateManager.GetStateAsync<ExamState>(ExamStateName);
-        if (examState == null)
-        {
-            //todo(tau): use shared kernel exception.
-            throw new Exception("Not found state");
-        }
-
+        var examState = await StateManager.GetStateAsync<ExamState>(ExamStateName) ?? throw new TestPlatformException("NotFoundExam");
         action(examState);
-
         await StateManager.SetStateAsync(ExamStateName, examState);
     }
 
