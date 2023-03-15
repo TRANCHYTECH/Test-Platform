@@ -1,4 +1,4 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
@@ -9,6 +9,10 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["NuGet.config", "."]
 COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/VietGeeks.TestPlatform.TestRunner.Api.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/"]
+COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Actors.Interfaces/VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Actors.Interfaces/"]
+COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Contract/VietGeeks.TestPlatform.TestRunner.Contract.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Contract/"]
+COPY ["Services/TestRunner/VietGeeks.TestPlaftorm.TestRunner.Infrastructure/VietGeeks.TestPlaftorm.TestRunner.Infrastructure.csproj", "Services/TestRunner/VietGeeks.TestPlaftorm.TestRunner.Infrastructure/"]
+COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.Core/VietGeeks.TestPlatform.TestManager.Core.csproj", "Services/TestManager/VietGeeks.TestPlatform.TestManager.Core/"]
 RUN dotnet restore "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/VietGeeks.TestPlatform.TestRunner.Api.csproj"
 COPY . .
 WORKDIR "/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api"
