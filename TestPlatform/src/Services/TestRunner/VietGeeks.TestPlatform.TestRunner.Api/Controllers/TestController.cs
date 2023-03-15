@@ -83,7 +83,7 @@ public class TestController : ControllerBase
             AccessCode = testSession.AccessCode,
         });
 
-        var proctorExamActor = ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");
+        var proctorExamActor = GetProctorActor(testSession);
         await proctorExamActor.StartExam(new()
         {
             ExamId = testSession.ExamId,
@@ -104,7 +104,7 @@ public class TestController : ControllerBase
     }
 
     [HttpPost("SubmitAnwser")]
-    public IActionResult SubmitAnwser()
+    public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
         var testSession = GetTestSession();
         if (testSession.PreviousStep != PreStartSteps.Started)
@@ -112,8 +112,19 @@ public class TestController : ControllerBase
             return BadRequest("Invalid Step");
         }
 
+        var proctorExamActor = GetProctorActor(testSession);
+        await proctorExamActor.SubmitAnswer(new()
+        {
+            QuestionId = data.QuestionId,
+            AnswerId = data.AnswerId
+        });
 
         return Ok();
+    }
+
+    private static IProctorActor GetProctorActor(TestSession testSession)
+    {
+        return ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");
     }
 
     private void SetTestSession(TestSession testSession)

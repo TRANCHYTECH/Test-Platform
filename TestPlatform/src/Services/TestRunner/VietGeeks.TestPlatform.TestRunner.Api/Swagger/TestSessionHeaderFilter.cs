@@ -10,7 +10,8 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            if(new string[] { nameof(TestController.ProvideExamineeInfo), nameof(TestController.StartTest), nameof(TestController.SubmitAnwser) }.Contains(context.MethodInfo.Name) == false)
+            var methods = new string[] { nameof(TestController.ProvideExamineeInfo), nameof(TestController.StartTest), nameof(TestController.SubmitAnswer) };
+            if(methods.Contains(context.MethodInfo.Name) == false)
             {
                 return;
             }
