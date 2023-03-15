@@ -1,6 +1,4 @@
-﻿using System;
-using ListShuffle;
-using MongoDB.Entities;
+﻿using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
@@ -15,10 +13,10 @@ public class ProctorService : IProctorService
         if (!string.IsNullOrEmpty(input.TestId))
         {
             var testDefinition = await DB.Find<TestDefinition>().Match(c => c.ID == input.TestId && c.Status == TestDefinitionStatus.Activated).ExecuteFirstAsync();
-            return testDefinition == null? VerifyTestResultViewModel.Invalid(): VerifyTestResultViewModel.Valid(testDefinition.ID);
+            return testDefinition == null ? VerifyTestResultViewModel.Invalid() : VerifyTestResultViewModel.Valid(testDefinition.ID);
         }
 
-         if (!string.IsNullOrEmpty(input.AccessCode))
+        if (!string.IsNullOrEmpty(input.AccessCode))
         {
             var getActivatedTestDefinitionQuery = new Template<TestDefinition>(@"
                 [
@@ -65,7 +63,7 @@ public class ProctorService : IProctorService
     {
         // Get test defintion and validate it
         var testDefinition = await DB.Find<TestDefinition>().MatchID(input.TestDefinitionId).ExecuteSingleAsync();
-        if(testDefinition == null)
+        if (testDefinition == null)
         {
             throw new EntityNotFoundException(input.TestDefinitionId, nameof(TestDefinition));
         }
@@ -89,7 +87,7 @@ public class ProctorService : IProctorService
             AnswerType = c.AnswerType,
             Answers = c.Answers.Select(c => new ExamAnswer
             {
-                Id = c.Id,
+                Id = Guid.NewGuid().ToString(), //c.Id,
                 Description = c.AnswerDescription
             }).ToArray()
         };

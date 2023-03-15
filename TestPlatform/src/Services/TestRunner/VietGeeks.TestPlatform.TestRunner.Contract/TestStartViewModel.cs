@@ -54,6 +54,13 @@ public class VerifyTestResultViewModel
 
 public class SubmitAnswerViewModel
 {
+    public string QuestionId { get; set; } = default!;
+
+    public string AnswerId { get; set; } = default!;
+}
+
+public class SubmitAnswerInput
+{
 
 }
 
