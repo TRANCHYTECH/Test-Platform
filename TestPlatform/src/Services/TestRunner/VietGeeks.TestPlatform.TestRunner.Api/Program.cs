@@ -1,14 +1,9 @@
-using Microsoft.AspNetCore.Diagnostics;
-using System.Net;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
-using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Api.Swagger;
-using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -35,12 +30,7 @@ var app = builder.Build();
 
 app.MapActorsHandlers();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseVietGeeksEssentialFeatures();
 
 app.UseAuthorization();
 

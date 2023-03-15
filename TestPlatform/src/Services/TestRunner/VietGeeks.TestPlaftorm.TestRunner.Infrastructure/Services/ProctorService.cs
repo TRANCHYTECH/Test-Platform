@@ -13,7 +13,8 @@ public class ProctorService : IProctorService
         if (!string.IsNullOrEmpty(input.TestId))
         {
             var testDefinition = await DB.Find<TestDefinition>().Match(c => c.ID == input.TestId && c.Status == TestDefinitionStatus.Activated).ExecuteFirstAsync();
-            return testDefinition == null ? VerifyTestResultViewModel.Invalid() : VerifyTestResultViewModel.Valid(testDefinition.ID);
+
+            return ToVerifyResult(testDefinition);
         }
 
         if (!string.IsNullOrEmpty(input.AccessCode))
@@ -32,10 +33,28 @@ public class ProctorService : IProctorService
 
             var testDefinition = await DB.PipelineSingleAsync(getActivatedTestDefinitionQuery);
 
-            return testDefinition == null ? VerifyTestResultViewModel.Invalid() : VerifyTestResultViewModel.Valid((testDefinition.ID, input.AccessCode));
+            return ToVerifyResult(testDefinition, input.AccessCode);
         }
 
-        throw new Exception("Input not valid");
+        throw new TestPlatformException("InvalidInput");
+    }
+
+    private static VerifyTestResultViewModel ToVerifyResult(TestDefinition testDefinition, string? accessCode = null)
+    {
+        if (testDefinition == null)
+        {
+            return VerifyTestResultViewModel.Invalid();
+        }
+
+        var res = VerifyTestResultViewModel.Valid((testDefinition.ID, accessCode));
+        var testStartSettings = testDefinition.TestStartSettings;
+        if (testStartSettings != null)
+        {
+            res.InstructionMessage = testStartSettings.Instruction;
+            res.ConsentMessage = testStartSettings.Consent;
+        }
+
+        return res;
     }
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
@@ -62,11 +81,7 @@ public class ProctorService : IProctorService
     public async Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input)
     {
         // Get test defintion and validate it
-        var testDefinition = await DB.Find<TestDefinition>().MatchID(input.TestDefinitionId).ExecuteSingleAsync();
-        if (testDefinition == null)
-        {
-            throw new EntityNotFoundException(input.TestDefinitionId, nameof(TestDefinition));
-        }
+        var testDefinition = await DB.Find<TestDefinition>().MatchID(input.TestDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException ("NotFoundTestDefinition");
 
         // Get questions of test definition.
         var questions = await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == testDefinition.ID);

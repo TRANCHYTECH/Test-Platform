@@ -12,11 +12,11 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TestController : ControllerBase
+public class ExamController : ControllerBase
 {
     private readonly IProctorService _proctorService;
 
-    public TestController(IProctorService proctorService)
+    public ExamController(IProctorService proctorService)
     {
         _proctorService = proctorService;
     }
@@ -38,7 +38,11 @@ public class TestController : ControllerBase
             ClientProof = "some data"
         });
 
-        return Ok();
+        return Ok(new
+        {
+            verifyResult.ConsentMessage,
+            verifyResult.InstructionMessage
+        });
     }
 
     [HttpPost("PreStart/ProvideExamineeInfo")]
@@ -82,7 +86,7 @@ public class TestController : ControllerBase
         var examContent = await _proctorService.GenerateExamContent(new()
         {
             TestDefinitionId = testSession.TestId,
-            AccessCode = testSession.AccessCode,
+            AccessCode = testSession.AccessCode
         });
 
         var proctorExamActor = GetProctorActor(testSession);

@@ -31,6 +31,10 @@ public class VerifyTestResultViewModel
 
     public string? AccessCode { get; set; } = default!;
 
+    public string? InstructionMessage { get; set; }
+
+    public string? ConsentMessage { get; set; }
+
     public bool IsValid { get; private set; }
 
     public static VerifyTestResultViewModel Invalid() => new VerifyTestResultViewModel
@@ -38,19 +42,14 @@ public class VerifyTestResultViewModel
         IsValid = false
     };
 
-    public static VerifyTestResultViewModel Valid(string testId) => new VerifyTestResultViewModel
-    {
-        TestId = testId,
-        IsValid = true
-    };
-
-    public static VerifyTestResultViewModel Valid((string testId, string accessCode) data) => new VerifyTestResultViewModel
+    public static VerifyTestResultViewModel Valid((string testId, string? accessCode) data) => new()
     {
         TestId = data.testId,
         AccessCode = data.accessCode,
         IsValid = true
     };
 }
+
 
 public class SubmitAnswerViewModel
 {
