@@ -11,7 +11,7 @@ env:
   CONTAINER_APP_NAME: vietgeeks-test-runner-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: az-vietgeeks
   CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
-  DOCKER_FILE_PATH: Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/Dockerfile
+  DOCKER_FILE_PATH: TestPlatform/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformtestrunnerapi
 jobs:
   build:

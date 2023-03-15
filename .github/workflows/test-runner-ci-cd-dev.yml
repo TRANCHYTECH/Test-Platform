@@ -5,8 +5,8 @@ on:
     branches:
       - master
     paths:
-      - 'TestPlatform/src/Services/TestRunner/**'
-      - 'TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/apps/test-runner/**'
+      - 'TestPlatform1/src/Services/TestRunner/**'
+      - 'TestPlatform1/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/apps/test-runner/**'
 jobs:
   build-test-runner-images:
     runs-on: ubuntu-latest
