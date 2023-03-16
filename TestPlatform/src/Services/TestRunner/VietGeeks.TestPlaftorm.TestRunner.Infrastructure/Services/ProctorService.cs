@@ -102,7 +102,7 @@ public class ProctorService : IProctorService
             AnswerType = c.AnswerType,
             Answers = c.Answers.Select(c => new ExamAnswer
             {
-                Id = Guid.NewGuid().ToString(), //c.Id,
+                Id = c.Id,
                 Description = c.AnswerDescription
             }).ToArray()
         };
