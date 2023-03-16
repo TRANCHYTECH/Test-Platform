@@ -20,7 +20,6 @@ builder.Services.AddCors(options =>
                       });
 });
 
-
 builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<QuestionValidator>();
 var dataOptions = new InfrastructureDataOptions

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { TestRespondentField } from '../../../state/test.model';
 import { ProctorService } from '../../proctor.service';
 import { TestStartConfig } from './data';
@@ -24,11 +25,17 @@ export class TestStartComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.config.respondentIdentifyFields.forEach((f,i) => {
+  async ngOnInit(): Promise<void> {
+    this.config.respondentIdentifyFields.forEach((f, i) => {
       this.addField(f);
       this.labels[i] = f.fieldLabel;
     });
+
+    //todo: remove demo
+    await firstValueFrom(this.proctorService.verifyTest('0efy7IyYsEG5ciOPuDOl1RAs12p'));
+    await firstValueFrom(this.proctorService.provideExamineeInfo({ firstName: 'tau', lastName: 'dang' }));
+    const questions = await firstValueFrom(this.proctorService.startExam());
+    console.log('exam', questions);
   }
 
   startTest() {

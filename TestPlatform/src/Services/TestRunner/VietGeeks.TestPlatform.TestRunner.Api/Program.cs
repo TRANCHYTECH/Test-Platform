@@ -8,6 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => c.OperationFilter<TestSessionHeaderFilter>());
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "dev",
+                      builder =>
+                      {
+                          builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                      });
+});
+
 var daprHttpPort = Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3600";
 var daprGrpcPort = Environment.GetEnvironmentVariable("DAPR_GRPC_PORT") ?? "60000";
 builder.Services.AddDaprClient(builder => builder
@@ -27,6 +39,8 @@ var dataOptions = new InfrastructureDataOptions
 builder.Services.RegisterInfrastructureModule(dataOptions);
 
 var app = builder.Build();
+
+app.UseCors("dev");
 
 app.MapActorsHandlers();
 

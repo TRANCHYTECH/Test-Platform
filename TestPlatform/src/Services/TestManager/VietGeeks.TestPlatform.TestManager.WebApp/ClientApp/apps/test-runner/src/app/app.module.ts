@@ -8,10 +8,11 @@ import { LayoutModule } from './layout/layout.module';
 import { AppSettingsService, CoreModule } from '@viet-geeks/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@viet-geeks/shared';
-import { HttpBackend, HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { of, tap } from 'rxjs';
 import { AppSettings } from './app-setting.model';
+import { TestSessionInterceptor } from './test-session.intercepter';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,10 +31,15 @@ import { AppSettings } from './app-setting.model';
       deps: [HttpBackend, AppSettingsService],
       multi: true
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TestSessionInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
 
 function appInitializerFactory(httpBackend: HttpBackend, appSettingsService: AppSettingsService) {
   return () => {
