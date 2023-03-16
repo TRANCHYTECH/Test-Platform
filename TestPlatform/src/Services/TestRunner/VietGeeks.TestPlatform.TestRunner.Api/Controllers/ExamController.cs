@@ -109,7 +109,7 @@ public class ExamController : ControllerBase
         return Ok(examContent);
     }
 
-    [HttpPost("SubmitAnwser")]
+    [HttpPost("SubmitAnswer")]
     public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
         var testSession = GetTestSession();

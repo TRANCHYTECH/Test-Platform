@@ -32,9 +32,11 @@ export class TestStartComponent implements OnInit {
     });
 
     //todo: remove demo
-    await firstValueFrom(this.proctorService.verifyTest('0efy7IyYsEG5ciOPuDOl1RAs12p'));
+    await firstValueFrom(this.proctorService.verifyTest({ accessCode: '0efy7IyYsEG5ciOPuDOl1RAs12p' }));
     await firstValueFrom(this.proctorService.provideExamineeInfo({ firstName: 'tau', lastName: 'dang' }));
     const questions = await firstValueFrom(this.proctorService.startExam());
+    const q1 = questions.questions[0];
+    await firstValueFrom(this.proctorService.submitAnswer({ questionId: q1.id, answerId: q1.answers[0].id }));
     console.log('exam', questions);
   }
 
