@@ -135,6 +135,7 @@ public class ExamController : ControllerBase
 
     private void SetTestSession(TestSession testSession)
     {
+        Response.Headers.Add("Access-Control-Expose-Headers", nameof(TestSession));
         Response.Headers.Add(nameof(TestSession), EncryptTestSession(testSession));
     }
 
