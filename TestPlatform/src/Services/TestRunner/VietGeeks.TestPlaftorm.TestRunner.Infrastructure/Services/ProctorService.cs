@@ -10,7 +10,7 @@ namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 public class ProctorService : IProctorService
 {
     //todo: need to refactor this class, instead of directly access to original database, it should be a separate microservice.
-    public async Task<VerifyTestResultViewModel> VerifyTest(VerifyTestInput input)
+    public async Task<VerifyTestResult> VerifyTest(VerifyTestInput input)
     {
         if (!string.IsNullOrEmpty(input.TestId))
         {
@@ -53,22 +53,24 @@ public class ProctorService : IProctorService
         throw new TestPlatformException("InvalidInput");
     }
 
-    private static VerifyTestResultViewModel ToVerifyResult(TestDefinition testDefinition, string accessCode)
+    private static VerifyTestResult ToVerifyResult(TestDefinition testDefinition, string accessCode)
     {
         if (testDefinition == null)
         {
-            return VerifyTestResultViewModel.Invalid();
+            return VerifyTestResult.Invalid();
         }
 
-        var res = VerifyTestResultViewModel.Valid((testDefinition.ID, accessCode));
+        var result = VerifyTestResult.Valid((testDefinition.ID, accessCode));
+        result.TestName = testDefinition.BasicSettings.Name;
+
         var testStartSettings = testDefinition.TestStartSettings;
         if (testStartSettings != null)
         {
-            res.InstructionMessage = testStartSettings.Instruction;
-            res.ConsentMessage = testStartSettings.Consent;
+            result.InstructionMessage = testStartSettings.Instruction;
+            result.ConsentMessage = testStartSettings.Consent;
         }
 
-        return res;
+        return result;
     }
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
@@ -95,12 +97,12 @@ public class ProctorService : IProctorService
     {
         // Ensure exam is processed by order
         var exam = await DB.Find<Exam>().MatchID(input.ExamId).ExecuteFirstAsync();
-        if(exam == null)
+        if (exam == null)
         {
             throw new TestPlatformException("NotFoundExam");
         }
 
-        if(exam.Questions != null)
+        if (exam.Questions != null)
         {
             return new() { Questions = exam.Questions.Select(ToViewModel).ToArray() };
         }

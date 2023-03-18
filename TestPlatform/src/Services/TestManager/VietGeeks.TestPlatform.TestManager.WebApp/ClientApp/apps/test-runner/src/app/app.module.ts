@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { of, tap } from 'rxjs';
 import { AppSettings } from './app-setting.model';
 import { TestSessionInterceptor } from './test-session.intercepter';
+import { ApiModule } from './api/api.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,7 +23,8 @@ import { TestSessionInterceptor } from './test-session.intercepter';
     BrowserModule,
     LayoutModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
-    NgbModule
+    NgbModule,
+    ApiModule.forRoot({ rootUrl: environment.testRunnerApiBaseUrl })
   ],
   providers: [
     {

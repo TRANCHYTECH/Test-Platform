@@ -3,7 +3,7 @@
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 public interface IProctorService
 {
-    Task<VerifyTestResultViewModel> VerifyTest(VerifyTestInput input);
+    Task<VerifyTestResult> VerifyTest(VerifyTestInput input);
 
     Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input);
 

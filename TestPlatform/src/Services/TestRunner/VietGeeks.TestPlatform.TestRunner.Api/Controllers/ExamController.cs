@@ -9,6 +9,8 @@ using System.Text.Json;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 using System.Linq;
+using System.Net;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
@@ -24,7 +26,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("PreStart/Verify")]
-    [ProducesResponseType(typeof(VerifyTestOutput), 200)]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(VerifyTestOutputViewModel))]
     public async Task<IActionResult> Verify(VerifyTestInput input)
     {
         var verifyResult = await _proctorService.VerifyTest(input);
@@ -41,10 +43,11 @@ public class ExamController : ControllerBase
             ClientProof = "some data"
         });
 
-        return Ok(new VerifyTestOutput
+        return Ok(new VerifyTestOutputViewModel
         {
-            ConsentMessage = verifyResult.ConsentMessage,
-            InstructionMessage = verifyResult.InstructionMessage
+            TestName = verifyResult.TestName,
+            ConsentMessage = verifyResult.ConsentMessage ?? "DefaultConsentMessage",
+            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage"
         });
     }
 

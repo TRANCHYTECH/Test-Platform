@@ -24,15 +24,18 @@ public class VerifyTestInput
     public string? AccessCode { get; set; }
 }
 
-public class VerifyTestOutput
+public class VerifyTestOutputViewModel
 {
-    public string? ConsentMessage { get; set; }
-    public string? InstructionMessage { get; set; }
+    public string TestName { get; set; } = default!;
+    public string ConsentMessage { get; set; } = default!;
+    public string InstructionMessage { get; set; } = default!;
 }
 
-public class VerifyTestResultViewModel
+public class VerifyTestResult
 {
     public string TestId { get; set; } = default!;
+
+    public string TestName { get; set; } = default!;
 
     public string AccessCode { get; set; } = default!;
 
@@ -42,12 +45,12 @@ public class VerifyTestResultViewModel
 
     public bool IsValid { get; private set; }
 
-    public static VerifyTestResultViewModel Invalid() => new VerifyTestResultViewModel
+    public static VerifyTestResult Invalid() => new VerifyTestResult
     {
         IsValid = false
     };
 
-    public static VerifyTestResultViewModel Valid((string testId, string accessCode) data) => new()
+    public static VerifyTestResult Valid((string testId, string accessCode) data) => new()
     {
         TestId = data.testId,
         AccessCode = data.accessCode,
@@ -68,7 +71,7 @@ public class ProvideExamineeInfoViewModel
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 }
 
-public class ProvideExamineeInfoInput: ProvideExamineeInfoViewModel
+public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
 {
     public string TestId { get; set; } = default!;
 

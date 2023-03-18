@@ -1,11 +1,24 @@
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="text-center mb-5">
-                <h1 class="mb-3 ff-secondary fw-semibold lh-base">Test Master </h1>
-                <p class="text-muted">Enter private code</p>
-                <input>
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" [formGroup]="verifyTestForm">
+          <div class="text-center">
+            <h4 class="text-center">Enter access code</h4>
+            <div class="row d-flex justify-content-center mb-3">
+              <div class="col-md-4">
+                <input type="text" class="form-control text-center" id="mask-value" placeholder="Enter your code"
+                  formControlName="accessCode">
+              </div>
             </div>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-4">
+                <button class="btn btn-primary" style="text-transform: uppercase" type="submit" [disabled]="isLoading" (click)="verify()">Verify code</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
