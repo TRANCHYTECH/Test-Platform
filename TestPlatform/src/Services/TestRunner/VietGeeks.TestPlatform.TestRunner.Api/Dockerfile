@@ -9,7 +9,6 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["NuGet.config", "."]
 COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/VietGeeks.TestPlatform.TestRunner.Api.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/"]
-COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Actors.Interfaces/VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Actors.Interfaces/"]
 COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Contract/VietGeeks.TestPlatform.TestRunner.Contract.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Contract/"]
 COPY ["Services/TestRunner/VietGeeks.TestPlaftorm.TestRunner.Infrastructure/VietGeeks.TestPlaftorm.TestRunner.Infrastructure.csproj", "Services/TestRunner/VietGeeks.TestPlaftorm.TestRunner.Infrastructure/"]
 COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.Core/VietGeeks.TestPlatform.TestManager.Core.csproj", "Services/TestManager/VietGeeks.TestPlatform.TestManager.Core/"]
