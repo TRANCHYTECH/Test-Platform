@@ -21,7 +21,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
     [BsonKnownTypes(typeof(SingleChoiceScoreSettings), typeof(MultipleChoiceScoreSettings))]
     public abstract class ScoreSettings
     {
-        public int? TotalPoints { get; set; }
+        public int TotalPoints { get; set; }
         public bool IsDisplayMaximumScore { get; set; }
         public bool MustAnswerToContinue { get; set; }
         public bool IsMandatory { get; set; }
@@ -37,7 +37,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
     {
         public int? CorrectPoint { get; set; }
         public int? IncorrectPoint { get; set; }
-        public bool? IsPartialAnswersEnabled { get; set; }
+        public bool IsPartialAnswersEnabled { get; set; }
         public int? BonusPoints { get; set; }
         public int? PartialIncorrectPoint { get; set; }
     }
@@ -49,8 +49,8 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
 
     public class Answer
     {
-        public string Id { get; set; }
-        public string AnswerDescription { get; set; }
+        public string Id { get; set; } = default!;
+        public string AnswerDescription { get; set; } = default!;
         public int AnswerPoint { get; set; }
         public bool IsCorrect { get; set; }
     }

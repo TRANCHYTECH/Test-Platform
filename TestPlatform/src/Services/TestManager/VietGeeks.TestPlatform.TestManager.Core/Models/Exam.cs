@@ -12,5 +12,5 @@ public class Exam : EntityBase
 
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
-    // Question info.
+    public List<QuestionDefinition> Questions { get; set; } = default!;
 }

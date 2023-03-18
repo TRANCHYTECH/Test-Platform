@@ -29,7 +29,7 @@
     <Folder Include="Actors\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VietGeeks.TestPlatform.TestRunner.Actors.Interfaces\VietGeeks.TestPlatform.TestRunner.Actors.Interfaces.csproj">
+    <ProjectReference Include="..\..\TestManager\VietGeeks.TestPlatform.TestManager.Infrastructure\VietGeeks.TestPlatform.TestManager.Infrastructure.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestRunner.Contract\VietGeeks.TestPlatform.TestRunner.Contract.csproj">
