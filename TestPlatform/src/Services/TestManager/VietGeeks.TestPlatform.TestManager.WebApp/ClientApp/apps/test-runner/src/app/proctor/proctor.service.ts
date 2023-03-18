@@ -4,7 +4,7 @@ import { AppSettingsService } from '@viet-geeks/core';
 import { catchError, of } from 'rxjs';
 import { AppSettings } from '../app-setting.model';
 import { ExamContent } from '../state/exam-content.model';
-import { VerifyTestResult } from '../state/verify-test.model';
+import { ApiExamService } from '../api/services';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,7 @@ import { VerifyTestResult } from '../state/verify-test.model';
 export class ProctorService {
 
   private _appSettingService = inject(AppSettingsService);
+  private _examService = inject(ApiExamService);
 
   private _httpClient = inject(HttpClient);
 
@@ -20,14 +21,16 @@ export class ProctorService {
   }
 
   verifyTest(input: Partial<{ accessCode: string, testId: string }>) {
-    return this._httpClient.post<VerifyTestResult>(`${this.testRunnerApiBaseUrl}/Exam/PreStart/Verify`, input).pipe(catchError(error => {
+    return this._examService.verify({
+      body: input
+    }).pipe(catchError(error => {
       console.log('error', error);
       return of(null);
     }));
   }
 
   provideExamineeInfo(examineeInfo: { [key: string]: string }) {
-    return this._httpClient.post(`${this.testRunnerApiBaseUrl}/Exam/PreStart/ProvideExamineeInfo`, examineeInfo);
+    return this._examService.provideExamineeInfo({ body: examineeInfo });
   }
 
   startExam() {

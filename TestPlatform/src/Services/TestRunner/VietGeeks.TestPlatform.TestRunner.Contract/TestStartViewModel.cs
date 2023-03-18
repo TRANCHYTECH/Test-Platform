@@ -25,9 +25,19 @@ public class VerifyTestInput
     public string? AccessCode { get; set; }
 }
 
+public class VerifyTestOutput
+{
+    public string TestName { get; set; }
+    public string ConsentMessage { get; set; }
+
+    public string InstructionMessage { get; set; }
+}
+
 public class VerifyTestResultViewModel
 {
     public string TestId { get; set; } = default!;
+
+    public string TestName { get; set; } = default!;
 
     public string? AccessCode { get; set; } = default!;
 
