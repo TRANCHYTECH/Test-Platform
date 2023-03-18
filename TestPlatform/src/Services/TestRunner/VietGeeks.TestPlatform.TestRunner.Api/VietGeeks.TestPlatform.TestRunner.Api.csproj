@@ -38,5 +38,8 @@
     <ProjectReference Include="..\VietGeeks.TestPlaftorm.TestRunner.Infrastructure\VietGeeks.TestPlaftorm.TestRunner.Infrastructure.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\TestManager\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>
