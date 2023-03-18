@@ -13,3 +13,7 @@ export interface ExamAnswer {
     id: string;
     description: string;
 }
+
+export interface FinishedExam {
+    totalPoints: number;
+}

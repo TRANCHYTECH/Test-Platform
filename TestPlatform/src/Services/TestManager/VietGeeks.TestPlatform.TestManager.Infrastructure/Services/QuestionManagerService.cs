@@ -79,7 +79,7 @@ public class QuestionManagerService : IQuestionManagerService
         {
             CategoryId = c.Key,
             NumberOfQuestions = c.Count(),
-            TotalPoints = c.Sum(q => q.ScoreSettings.TotalPoints.GetValueOrDefault())
+            TotalPoints = c.Sum(q => q.ScoreSettings.TotalPoints)
         });
     }
 }

@@ -1,12 +1,14 @@
 using Dapr.Actors.Client;
 using Dapr.Actors;
 using Microsoft.AspNetCore.Mvc;
-using VietGeeks.TestPlatform.TestRunner.Actors.Interfaces;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using System.Text;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using System.Text.Json;
+using VietGeeks.TestPlatform.TestRunner.Api.Actors;
+using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
+using System.Linq;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
@@ -22,6 +24,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("PreStart/Verify")]
+    [ProducesResponseType(typeof(VerifyTestOutput), 200)]
     public async Task<IActionResult> Verify(VerifyTestInput input)
     {
         var verifyResult = await _proctorService.VerifyTest(input);
@@ -34,26 +37,22 @@ public class ExamController : ControllerBase
         {
             TestId = verifyResult.TestId,
             AccessCode = verifyResult.AccessCode,
-            PreviousStep = PreStartSteps.Verified,
+            PreviousStep = PreStartSteps.VerifyTest,
             ClientProof = "some data"
         });
 
-        return Ok(new
+        return Ok(new VerifyTestOutput
         {
-            verifyResult.ConsentMessage,
-            verifyResult.InstructionMessage
+            ConsentMessage = verifyResult.ConsentMessage,
+            InstructionMessage = verifyResult.InstructionMessage
         });
     }
 
     [HttpPost("PreStart/ProvideExamineeInfo")]
     public async Task<IActionResult> ProvideExamineeInfo(ProvideExamineeInfoViewModel data)
     {
-        var testSession = GetTestSession();
-        if (testSession.PreviousStep != PreStartSteps.Verified)
-        {
-            return BadRequest("Invalid Step");
-        }
-
+        var testSession = GetTestSession(PreStartSteps.ProvideExamineeInfo);
+        //todo: move this logic to Exam actor to prevent frault if mutiple submiting from browsers.
         var examId = await _proctorService.ProvideExamineeInfo(new()
         {
             TestId = testSession.TestId,
@@ -66,7 +65,7 @@ public class ExamController : ControllerBase
             ExamId = examId,
             TestId = testSession.TestId,
             AccessCode = testSession.AccessCode,
-            PreviousStep = PreStartSteps.ProvidedExamineeInfo,
+            PreviousStep = PreStartSteps.ProvideExamineeInfo,
             ClientProof = testSession.ClientProof
         });
 
@@ -74,27 +73,15 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("Start")]
-    public async Task<IActionResult> StartTest()
+    [ProducesResponseType(typeof(StartExamOutput), 200)]
+    public async Task<IActionResult> StartExam()
     {
-        var testSession = GetTestSession();
-        if (testSession.PreviousStep != PreStartSteps.ProvidedExamineeInfo)
-        {
-            return BadRequest("Invalid Step");
-        }
-
-        // Generate exam content: questions.
-        var examContent = await _proctorService.GenerateExamContent(new()
-        {
-            TestDefinitionId = testSession.TestId,
-            AccessCode = testSession.AccessCode
-        });
-
+        var testSession = GetTestSession(PreStartSteps.Start);
         var proctorExamActor = GetProctorActor(testSession);
-        await proctorExamActor.StartExam(new()
+        var examContent = await proctorExamActor.StartExam(new()
         {
             ExamId = testSession.ExamId,
-            TestDefinitionId = testSession.TestId,
-            Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray())
+            TestDefinitionId = testSession.TestId
         });
 
         SetTestSession(new()
@@ -102,7 +89,7 @@ public class ExamController : ControllerBase
             ExamId = testSession.ExamId,
             TestId = testSession.TestId,
             AccessCode = testSession.AccessCode,
-            PreviousStep = PreStartSteps.Started,
+            PreviousStep = PreStartSteps.Start,
             ClientProof = testSession.ClientProof
         });
 
@@ -112,20 +99,25 @@ public class ExamController : ControllerBase
     [HttpPost("SubmitAnswer")]
     public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
-        var testSession = GetTestSession();
-        if (testSession.PreviousStep != PreStartSteps.Started)
-        {
-            return BadRequest("Invalid Step");
-        }
-
+        var testSession = GetTestSession(PreStartSteps.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
         await proctorExamActor.SubmitAnswer(new()
         {
             QuestionId = data.QuestionId,
-            AnswerId = data.AnswerId
+            AnswerIds = data.AnswerIds
         });
 
         return Ok();
+    }
+
+    [HttpPost("Finish")]
+    public async Task<IActionResult> FinishExam()
+    {
+        var testSession = GetTestSession(PreStartSteps.FinishExam);
+        var proctorExamActor = GetProctorActor(testSession);
+        var result = await proctorExamActor.FinishExam();
+
+        return Ok(result);
     }
 
     private static IProctorActor GetProctorActor(TestSession testSession)
@@ -139,11 +131,40 @@ public class ExamController : ControllerBase
         Response.Headers.Add(nameof(TestSession), EncryptTestSession(testSession));
     }
 
-    private TestSession GetTestSession()
+    private TestSession GetTestSession(PreStartSteps forStep)
     {
-        var session = Request.Headers[nameof(TestSession)];
+        var header = Request.Headers[nameof(TestSession)];
+        var session = DecryptTestSession(header.ToString());
 
-        return DecryptTestSession(session.ToString());
+        switch (forStep)
+        {
+            case PreStartSteps.ProvideExamineeInfo:
+            {
+                if(session.PreviousStep != PreStartSteps.VerifyTest) {
+                    throw new TestPlatformException("InvalidStep");
+                }
+                break;
+            }
+            
+            case PreStartSteps.Start:
+            {
+                if(session.PreviousStep != PreStartSteps.ProvideExamineeInfo) {
+                    throw new TestPlatformException("InvalidStep");
+                }
+                break;
+            }
+
+            case PreStartSteps.SubmitAnswer:
+            case PreStartSteps.FinishExam:
+            {
+                if(session.PreviousStep != PreStartSteps.Start) {
+                    throw new TestPlatformException("InvalidStep");
+                }
+                break;
+            }
+        }
+
+        return session;
     }
 
     private static string EncryptTestSession(TestSession session)
@@ -163,7 +184,7 @@ public class ExamController : ControllerBase
         {
             throw new TestPlatformException("InvalidTestSession", ex);
         }
-       
+
     }
 }
 

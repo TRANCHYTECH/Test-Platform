@@ -13,7 +13,7 @@ spec:
   - name: password
     value: jZeAEmK8TwGslaiP
   - name: databaseName
-    value: daprstore
+    value: TestRunnerDevLocal
   - name: actorStateStore
     value: true
   - name: operationTimeout

@@ -10,8 +10,12 @@ public class TestSessionHeaderFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        var methods = new string[] { nameof(ExamController.ProvideExamineeInfo), nameof(ExamController.StartTest), nameof(ExamController.SubmitAnswer) };
-        if(methods.Contains(context.MethodInfo.Name) == false)
+        var methods = new string[] {
+            nameof(ExamController.ProvideExamineeInfo),
+            nameof(ExamController.StartExam),
+            nameof(ExamController.SubmitAnswer),
+            nameof(ExamController.FinishExam) };
+        if (methods.Contains(context.MethodInfo.Name) == false)
         {
             return;
         }
