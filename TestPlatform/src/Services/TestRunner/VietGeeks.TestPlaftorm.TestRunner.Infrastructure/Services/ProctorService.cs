@@ -52,6 +52,7 @@ public class ProctorService : IProctorService
         {
             res.InstructionMessage = testStartSettings.Instruction;
             res.ConsentMessage = testStartSettings.Consent;
+            res.TestName = testDefinition.BasicSettings.Name;
         }
 
         return res;

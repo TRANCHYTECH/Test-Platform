@@ -7,6 +7,8 @@ using System.Text;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using System.Text.Json;
+using System.Net;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
@@ -22,6 +24,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("PreStart/Verify")]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(VerifyTestOutput))]
     public async Task<IActionResult> Verify(VerifyTestInput input)
     {
         var verifyResult = await _proctorService.VerifyTest(input);
@@ -38,10 +41,11 @@ public class ExamController : ControllerBase
             ClientProof = "some data"
         });
 
-        return Ok(new
+        return Ok(new VerifyTestOutput
         {
-            verifyResult.ConsentMessage,
-            verifyResult.InstructionMessage
+            TestName = verifyResult.TestName,
+            ConsentMessage = verifyResult.ConsentMessage,
+            InstructionMessage = verifyResult.InstructionMessage
         });
     }
 

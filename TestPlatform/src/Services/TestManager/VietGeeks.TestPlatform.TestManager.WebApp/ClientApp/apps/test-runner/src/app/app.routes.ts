@@ -7,6 +7,6 @@ export const appRoutes: Route[] = [
     },
     {
         path: '**',
-        redirectTo: 'test/start'
+        redirectTo: 'test/access'
     }
 ];

@@ -1,3 +1,6 @@
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
@@ -7,7 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => c.OperationFilter<TestSessionHeaderFilter>());
+builder.Services.AddSwaggerGen(c => {
+    c.CustomOperationIds(e =>
+    {
+        var attribute = e.CustomAttributes().FirstOrDefault(x => x.GetType() == typeof(SwaggerOperationAttribute));
+        return attribute != null ? ((SwaggerOperationAttribute)attribute).OperationId : e.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null;
+    });
+    c.OperationFilter<TestSessionHeaderFilter>();
+});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "dev",
