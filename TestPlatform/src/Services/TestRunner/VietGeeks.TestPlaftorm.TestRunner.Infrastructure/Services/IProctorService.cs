@@ -10,4 +10,6 @@ public interface IProctorService
     Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input);
 
     Task<FinishExamOutputViewModel> FinishExam(FinishExamInput input);
+
+    Task<ExamContentViewModel> GetExamContent();
 }

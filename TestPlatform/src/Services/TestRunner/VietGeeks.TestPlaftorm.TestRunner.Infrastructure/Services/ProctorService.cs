@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Dapr.Client;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
@@ -7,8 +8,25 @@ using VietGeeks.TestPlatform.TestRunner.Contract;
 
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
+public class ExamContentViewModel
+{
+    public string ExamId { get; set; } = default!;
+}
+
 public class ProctorService : IProctorService
 {
+    private readonly DaprClient _daprClient;
+
+    public ProctorService(DaprClient daprClient)
+    {
+        _daprClient = daprClient;
+    }
+
+    public Task<ExamContentViewModel> GetExamContent()
+    {
+        return _daprClient.InvokeMethodAsync<ExamContentViewModel>(HttpMethod.Get, "proctor-manager", "Exam/Content");
+    }
+
     //todo: need to refactor this class, instead of directly access to original database, it should be a separate microservice.
     public async Task<VerifyTestResult> VerifyTest(VerifyTestInput input)
     {
