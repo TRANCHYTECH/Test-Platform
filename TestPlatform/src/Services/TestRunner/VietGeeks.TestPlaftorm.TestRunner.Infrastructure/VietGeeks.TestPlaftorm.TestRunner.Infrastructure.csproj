@@ -17,8 +17,8 @@
     <ProjectReference Include="..\..\TestManager\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dapr.Client" Version="1.10.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="ListShuffle" Version="1.1.5" />
     <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.3" />
   </ItemGroup>
 </Project>
