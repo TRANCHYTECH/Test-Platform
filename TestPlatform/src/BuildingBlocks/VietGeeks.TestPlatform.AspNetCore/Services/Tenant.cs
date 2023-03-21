@@ -17,7 +17,7 @@ public class Tenant : ITenant
 
     public string UserId => GetClaim(ClaimTypes.NameIdentifier);
 
-    private IEnumerable<Claim> _claims => _httpContextAccessor.HttpContext.User.Claims;
+    private IEnumerable<Claim> _claims => _httpContextAccessor?.HttpContext?.User?.Claims ?? Array.Empty<Claim>();
 
     private string GetClaim(string claimType)
     {
