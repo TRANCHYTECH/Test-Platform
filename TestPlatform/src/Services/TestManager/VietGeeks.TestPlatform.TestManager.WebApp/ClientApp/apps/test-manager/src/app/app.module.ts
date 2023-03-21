@@ -10,7 +10,7 @@ import { AppSettingsService, CoreModule } from '@viet-geeks/core';
 import { SharedModule, EDITOR_API_KEY } from '@viet-geeks/shared';
 import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
-import { of, tap } from 'rxjs';
+import { of, switchMap, tap } from 'rxjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -23,6 +23,35 @@ import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+
+const appInitializerFn = (httpBackend: HttpBackend, authClientConfig: AuthClientConfig, appSettingsService: AppSettingsService) => {
+  return () => {
+    if (!environment.production) {
+      appSettingsService.set<AppSettings>(environment);
+      setAuthClientConfig(authClientConfig, environment);
+
+      return of(true);
+    }
+
+    return (new HttpClient(httpBackend)).get<AppSettings>('/Configuration')
+      .pipe(tap(appSettings => {
+        appSettingsService.set(appSettings);
+        setAuthClientConfig(authClientConfig, appSettings);
+      }), switchMap(() => of(true)));
+  }
+}
+
+const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: AppSettings) => {
+  authClientConfig.set({
+    domain: appSettings.auth.domain,
+    clientId: appSettings.auth.clientId,
+    audience: appSettings.auth.audience,
+    scope: appSettings.auth.scope,
+    httpInterceptor: {
+      allowedList: appSettings.auth.intercepters
+    }
+  });
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -53,7 +82,7 @@ import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: appInitializerFactory,
+      useFactory: appInitializerFn,
       deps: [HttpBackend, AuthClientConfig, AppSettingsService],
       multi: true
     },
@@ -88,35 +117,6 @@ import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
   bootstrap: [AppComponent],
 })
 export class AppModule { }
-
-function appInitializerFactory(httpBackend: HttpBackend, authClientConfig: AuthClientConfig, appSettingsService: AppSettingsService) {
-  return () => {
-    if (!environment.production) {
-      appSettingsService.set<AppSettings>(environment);
-      setAuthClientConfig(authClientConfig, environment);
-
-      return of(true);
-    }
-
-    return (new HttpClient(httpBackend)).get<AppSettings>('/Configuration')
-      .pipe(tap(appSettings => {
-        appSettingsService.set(appSettings);
-        setAuthClientConfig(authClientConfig, appSettings);
-      }));
-  }
-}
-
-function setAuthClientConfig(authClientConfig: AuthClientConfig, appSettings: AppSettings) {
-  authClientConfig.set({
-    domain: appSettings.auth.domain,
-    clientId: appSettings.auth.clientId,
-    audience: appSettings.auth.audience,
-    scope: appSettings.auth.scope,
-    httpInterceptor: {
-      allowedList: appSettings.auth.intercepters
-    }
-  });
-}
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
