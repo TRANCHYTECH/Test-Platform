@@ -2,12 +2,45 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
+using VietGeeks.TestPlatform.TestManager.Core.ReadonlyModels;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Logics;
 
 public static class PointCalculator
 {
-    public static int CalculatePoint(this QuestionDefinition question, string[]? answerIds)
+    public static List<AggregatedGrading> CalculateGrading(this GradingSettingsPart settings, decimal finalMark, decimal totalPoints)
+    {
+        var result = new List<AggregatedGrading>();
+        foreach (var setting in settings.GradingCriterias)
+        {
+            if (setting.Value is PassMaskCriteria passMaskCriteria)
+            {
+                var v = finalMark;
+                if (passMaskCriteria.Unit == RangeUnit.Percent)
+                {
+                    v = (finalMark / totalPoints) * 100;
+                }
+
+                result.Add(new() { GradingType = GradingCriteriaConfigType.PassMask,  PassMark = v >= passMaskCriteria.Value });
+            }
+            else if (setting.Value is GradeRangeCriteria gradeRangeCriteria)
+            {
+                var v = finalMark;
+                if (gradeRangeCriteria.Unit == RangeUnit.Percent)
+                {
+                    v = (finalMark / totalPoints) * 100;
+                }
+
+                var matchedLevel = gradeRangeCriteria.Details.OrderBy(c => c.To).First(c => c.To >= v);
+
+                result.Add(new() { GradingType = GradingCriteriaConfigType.GradeRanges, Grades = matchedLevel.Grades });
+            }
+        }
+
+        return result;
+    }
+
+    public static int CalculateMark(this QuestionDefinition question, string[]? answerIds)
     {
         // Single choice questions.
         if (question.AnswerType == 1)

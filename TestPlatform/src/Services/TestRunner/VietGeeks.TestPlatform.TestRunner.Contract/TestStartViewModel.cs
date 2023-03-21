@@ -31,7 +31,7 @@ public class VerifyTestOutputViewModel
     public string InstructionMessage { get; set; } = default!;
 }
 
-public class VerifyTestResult
+public class VerifyTestOutput
 {
     public string TestId { get; set; } = default!;
 
@@ -45,12 +45,12 @@ public class VerifyTestResult
 
     public bool IsValid { get; private set; }
 
-    public static VerifyTestResult Invalid() => new VerifyTestResult
+    public static VerifyTestOutput Invalid() => new VerifyTestOutput
     {
         IsValid = false
     };
 
-    public static VerifyTestResult Valid((string testId, string accessCode) data) => new()
+    public static VerifyTestOutput Valid((string testId, string accessCode) data) => new()
     {
         TestId = data.testId,
         AccessCode = data.accessCode,
@@ -75,7 +75,7 @@ public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
 {
     public string TestId { get; set; } = default!;
 
-    public string? AccessCode { get; set; } = default;
+    public string AccessCode { get; set; } = default!;
 }
 
 public enum PreStartSteps
@@ -102,9 +102,4 @@ public class FinishExamInput
     public DateTime StartedAt { get; set; }
 
     public Dictionary<string, string[]> Answers = default!;
-}
-
-public class FinishExamOutputViewModel
-{
-    public decimal TotalPoints { get; set; }
 }

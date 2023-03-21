@@ -1,27 +1,27 @@
-﻿using Dapr.Client;
+﻿using AutoMapper;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
+using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
 public class ProctorService : IProctorService
 {
-    private readonly DaprClient _daprClient;
+    private readonly IMapper _mapper;
 
-    public ProctorService(DaprClient daprClient)
-    {
-        _daprClient = daprClient;
+    public ProctorService(IMapper mapper) {
+        _mapper = mapper;
     }
-
-    //todo: need to refactor this class, instead of directly access to original database, it should be a separate microservice.
-    public async Task<VerifyTestResult> VerifyTest(VerifyTestInput input)
+    
+    //todo: PLAN - need to refactor this class, instead of directly access to original database, it should be a separate microservice.
+    public async Task<VerifyTestOutput> VerifyTest(VerifyTestInput input)
     {
         if (!string.IsNullOrEmpty(input.TestId))
         {
-            var getActivatedTestDefinitionQuery = new Template<TestDefinition>(@"
+            var getActivatedTestQuery = new Template<TestDefinition>(@"
                 [
                     {
                         '$match': {
@@ -33,14 +33,14 @@ public class ProctorService : IProctorService
                 ]
             ").Tag("id", input.TestId).Tag("status", $"{((int)TestDefinitionStatus.Activated)}");
 
-            var testDefinition = await DB.PipelineSingleAsync(getActivatedTestDefinitionQuery);
+            var activatedTest = await DB.PipelineSingleAsync(getActivatedTestQuery);
 
-            return ToVerifyResult(testDefinition, Guid.NewGuid().ToString());
+            return activatedTest.ToOutput(Guid.NewGuid().ToString());
         }
 
         if (!string.IsNullOrEmpty(input.AccessCode))
         {
-            var getActivatedTestDefinitionQuery = new Template<TestDefinition>(@"
+            var getActivatedTestQuery = new Template<TestDefinition>(@"
                 [
                     {
                         '$match': {
@@ -52,9 +52,9 @@ public class ProctorService : IProctorService
                 ]
             ").Tag("status", $"{((int)TestDefinitionStatus.Activated)}").Tag("access_code", input.AccessCode);
 
-            var testDefinition = await DB.PipelineSingleAsync(getActivatedTestDefinitionQuery);
+            var activatedTest = await DB.PipelineSingleAsync(getActivatedTestQuery);
 
-            return ToVerifyResult(testDefinition, input.AccessCode);
+            return activatedTest.ToOutput(input.AccessCode);
         }
 
         throw new TestPlatformException("InvalidInput");
@@ -62,112 +62,97 @@ public class ProctorService : IProctorService
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
-        var existingExam = await DB.Find<Exam>().Match(c => c.TestId == input.TestId && c.AccessCode == input.AccessCode).ExecuteFirstAsync();
-        if (existingExam != null)
+        var exam = await GetExam(input.TestId, input.AccessCode);
+        if (exam == null)
         {
-            return existingExam.ID;
+            exam = new Exam
+            {
+                TestId = input.TestId,
+                AccessCode = input.AccessCode,
+                ExamineeInfo = input.ExamineeInfo
+            };
+
+            await DB.InsertAsync(exam);
         }
-
-        var exam = new Exam
-        {
-            TestId = input.TestId,
-            AccessCode = input.AccessCode,
-            ExamineeInfo = input.ExamineeInfo
-        };
-
-        await DB.InsertAsync(exam);
 
         return exam.ID;
     }
 
     public async Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input)
     {
-        // Ensure exam is processed by order
-        var exam = await DB.Find<Exam>().MatchID(input.ExamId).ExecuteFirstAsync();
-        if (exam == null)
+        // Ensure exam is processed by order by checking if exam already created from step providing examinee info.
+        var exam = await EnsureExam(input.ExamId);
+        if (exam.Questions == null)
         {
-            throw new TestPlatformException("NotFoundExam");
+            var testDefinition = await GetTestDefinition(input.TestDefinitionId);
+            var timeSettings = testDefinition.TimeSettings ?? throw new Exception("TimeSettings not configured properly");
+            var gradingSettings = testDefinition.GradingSettings ?? throw new Exception("GradingSettings not configured properly");
+
+            // Get questions of test definition.
+            var testQuestions = await GetTestQuestions(testDefinition.ID);
+
+            exam.Questions = testDefinition.GenerateTestSet(testQuestions, exam.AccessCode);
+            exam.TimeSettings = timeSettings;
+            exam.GradeSettings = gradingSettings;
+            await DB.SaveAsync(exam);
         }
 
-        if (exam.Questions != null)
-        {
-            return new()
-            {
-                TestDuration = exam.TimeSettings.TestDurationMethod.ToViewModel(),
-                Questions = exam.Questions.Select(ExamMapper.ToViewModel).ToArray()
-            };
-        }
-
-        // Get test defintion and validate it
-        var testDefinition = await DB.Find<TestDefinition>().MatchID(input.TestDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
-        var timeSettings = testDefinition.TimeSettings ?? throw new Exception("Test not configured properly");
-
-        // Get questions of test definition.
-        var questions = await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == testDefinition.ID);
-        var testSet = testDefinition.GenerateTestSet(questions, exam.AccessCode);
-        exam.Questions = testSet;
-        exam.TimeSettings = timeSettings;
-
-        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.Questions), nameof(Exam.TimeSettings) });
-
-        return new()
-        {
-            TestDuration = timeSettings.TestDurationMethod.ToViewModel(),
-            Questions = testSet.Select(ExamMapper.ToViewModel).ToArray()
-        };
+        return exam.ToOutput();
     }
 
-    public async Task<FinishExamOutputViewModel> FinishExam(FinishExamInput input)
+    public async Task<FinishExamOutput> FinishExam(FinishExamInput input)
     {
-        var exam = await DB.Find<Exam>().MatchID(input.ExamId).ExecuteFirstAsync();
-        if (exam == null)
-        {
-            throw new TestPlatformException("NotFoundExam");
-        }
-
-        var totalPoints = CalculateExamPoint(exam, input.Answers);
-
+        var exam = await EnsureExam(input.ExamId);
         exam.StartedAt = input.StartedAt;
         exam.FinishedAt = input.FinishededAt;
-        exam.FinalPoints = totalPoints;
+        exam.FinalMark = CalculateExamMark(exam, input.Answers);
+        //todo: check way to get total points of question, because there is field Bonous Point.
+        exam.Grading = exam.GradeSettings.CalculateGrading(exam.FinalMark, exam.Questions.Sum(c=>c.ScoreSettings.TotalPoints));
+        // Calculate pass grading.
+        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark) });
 
-        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalPoints) });
-        return new FinishExamOutputViewModel
+        return new FinishExamOutput
         {
-            TotalPoints = totalPoints
+            FinalMark = exam.FinalMark,
+            Grading = _mapper.Map<List<AggregatedGrading>>(exam.Grading)
         };
     }
 
-    private static int CalculateExamPoint(Exam exam, Dictionary<string, string[]> answers)
+    private static async Task<Exam> GetExam(string testId, string accessCode)
     {
-        int totalPoints = 0;
+        return await DB.Find<Exam>().Match(c => c.TestId == testId && c.AccessCode == accessCode).ExecuteFirstAsync();
+    }
+
+    private static async Task<Exam> GetExam(string examId)
+    {
+        return await DB.Find<Exam>().MatchID(examId).ExecuteSingleAsync();
+    }
+
+    private static async Task<Exam> EnsureExam(string examId)
+    {
+        return await GetExam(examId) ?? throw new TestPlatformException("NotFoundExam");
+    }
+
+    private static async Task<List<QuestionDefinition>> GetTestQuestions(string testDefinitionId)
+    {
+        return await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == testDefinitionId);
+    }
+
+    private static async Task<TestDefinition> GetTestDefinition(string testDefinitionId)
+    {
+        return await DB.Find<TestDefinition>().MatchID(testDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
+    }
+
+    private static int CalculateExamMark(Exam exam, Dictionary<string, string[]> answers)
+    {
+        int finalMark = 0;
         foreach (var question in exam.Questions)
         {
             string[]? answer;
             answers.TryGetValue(question.ID, out answer);
-            totalPoints += question.CalculatePoint(answer);
+            finalMark += question.CalculateMark(answer);
         }
 
-        return totalPoints;
-    }
-    
-    private static VerifyTestResult ToVerifyResult(TestDefinition testDefinition, string accessCode)
-    {
-        if (testDefinition == null)
-        {
-            return VerifyTestResult.Invalid();
-        }
-
-        var result = VerifyTestResult.Valid((testDefinition.ID, accessCode));
-        result.TestName = testDefinition.BasicSettings.Name;
-
-        var testStartSettings = testDefinition.TestStartSettings;
-        if (testStartSettings != null)
-        {
-            result.InstructionMessage = testStartSettings.Instruction;
-            result.ConsentMessage = testStartSettings.Consent;
-        }
-
-        return result;
+        return finalMark;
     }
 }

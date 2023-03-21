@@ -6,6 +6,8 @@ public class ExamContentOutput
     public ExamQuestion[] Questions { get; set; } = default!;
 
     public TestDuration TestDuration { get; set; } = default!;
+    
+    public bool CanSkipQuestion { get; set; }
 }
 
 public class TestDuration
