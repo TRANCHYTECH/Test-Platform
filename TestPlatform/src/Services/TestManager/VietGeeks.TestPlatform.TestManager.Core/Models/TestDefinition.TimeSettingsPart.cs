@@ -48,5 +48,3 @@ public class AnswerQuestionConfig
 {
     public bool SkipQuestion { get; set; }
 }
-
-  

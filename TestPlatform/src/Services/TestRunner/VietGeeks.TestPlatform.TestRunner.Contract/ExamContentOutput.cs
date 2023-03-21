@@ -4,6 +4,22 @@ namespace VietGeeks.TestPlatform.TestRunner.Contract;
 public class ExamContentOutput
 {
     public ExamQuestion[] Questions { get; set; } = default!;
+
+    public TestDuration TestDuration { get; set; } = default!;
+}
+
+public class TestDuration
+{
+    public TestDurationMethodType Method { get; set; }
+
+    public TimeSpan Duration { get; set; }
+}
+
+//todo: duplicate it.
+public enum TestDurationMethodType
+{
+    CompleteTestTime = 1,
+    CompleteQuestionTime = 2
 }
 
 public class ExamQuestion

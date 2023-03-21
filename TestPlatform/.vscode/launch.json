@@ -22,6 +22,7 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "DAPR_HTTP_PORT": "3600",
+                "DAPR_GRPC_PORT": "3700",
                 "ASPNETCORE_URLS": "http://localhost:6200"
             },
             "sourceFileMap": {

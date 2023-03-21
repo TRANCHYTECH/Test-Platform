@@ -14,6 +14,8 @@ spec:
     value: jZeAEmK8TwGslaiP
   - name: databaseName
     value: TestRunnerDevLocal
+  - name: collectionName
+    value: testrunner
   - name: actorStateStore
     value: true
   - name: operationTimeout

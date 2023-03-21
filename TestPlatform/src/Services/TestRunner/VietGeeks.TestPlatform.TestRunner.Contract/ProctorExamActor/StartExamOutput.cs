@@ -7,5 +7,7 @@ public class StartExamOutput
 {
     public ExamQuestion[] Questions { get; set; } = default!;
 
+    public TestDuration TestDuration { get; set; } = default!;
+
     public DateTime StartedAt { get; set; }
 }

@@ -19,26 +19,32 @@ public class ProctorActor : Actor, IProctorActor
     {
         //todo: implement logic if allow to start exam again or not.If not, check exam already started, then fail.
         // also exam finished.
+        //todo: improve logic to get exam content. store in separarte storage within test runner scope? Now questions in exam and exam state might be mistached.
         var examContent = await _proctorService.GenerateExamContent(new()
         {
             ExamId = input.ExamId,
             TestDefinitionId = input.TestDefinitionId
         });
 
-        var examState = new ExamState
+        var examState = await GetExamState();
+        if (examState == null)
         {
-            ExamId = input.ExamId,
-            TestDefinitionId = input.TestDefinitionId,
-            Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray()),
-            StartedAt = DateTime.UtcNow
-        };
+            examState = new ExamState
+            {
+                ExamId = input.ExamId,
+                TestDefinitionId = input.TestDefinitionId,
+                Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray()),
+                StartedAt = DateTime.UtcNow
+            };
 
-        await SaveExamState(examState);
+            await SaveExamState(examState);
+        }
 
         return new()
         {
+            StartedAt = examState.StartedAt,
             Questions = examContent.Questions,
-            StartedAt = examState.StartedAt
+            TestDuration = examContent.TestDuration
         };
     }
 
@@ -66,7 +72,13 @@ public class ProctorActor : Actor, IProctorActor
         var result = await ExamStateAction(async examState =>
         {
             examState.FinishedAt = DateTime.UtcNow;
-            return await _proctorService.FinishExam(new() { ExamId = examState.ExamId, Answers = examState.Answers });
+            return await _proctorService.FinishExam(new()
+            {
+                ExamId = examState.ExamId,
+                Answers = examState.Answers,
+                StartedAt = examState.StartedAt,
+                FinishededAt = examState.FinishedAt.GetValueOrDefault()
+            });
         });
 
         return new()
@@ -93,7 +105,9 @@ public class ProctorActor : Actor, IProctorActor
 
     private async Task<ExamState> GetExamState()
     {
-        return await StateManager.GetStateAsync<ExamState>(ExamStateName) ?? throw new TestPlatformException("NotFoundExam");
+        var state = await StateManager.TryGetStateAsync<ExamState>(ExamStateName);
+
+        return state.Value;
     }
 
     private async Task SaveExamState(ExamState examState)

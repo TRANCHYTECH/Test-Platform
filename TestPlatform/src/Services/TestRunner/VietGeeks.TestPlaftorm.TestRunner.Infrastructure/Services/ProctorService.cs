@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Dapr.Client;
+﻿using Dapr.Client;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
@@ -8,11 +7,6 @@ using VietGeeks.TestPlatform.TestRunner.Contract;
 
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
-public class ExamContentViewModel
-{
-    public string ExamId { get; set; } = default!;
-}
-
 public class ProctorService : IProctorService
 {
     private readonly DaprClient _daprClient;
@@ -20,11 +14,6 @@ public class ProctorService : IProctorService
     public ProctorService(DaprClient daprClient)
     {
         _daprClient = daprClient;
-    }
-
-    public Task<ExamContentViewModel> GetExamContent()
-    {
-        return _daprClient.InvokeMethodAsync<ExamContentViewModel>(HttpMethod.Get, "proctor-manager", "Exam/Content");
     }
 
     //todo: need to refactor this class, instead of directly access to original database, it should be a separate microservice.
@@ -71,26 +60,6 @@ public class ProctorService : IProctorService
         throw new TestPlatformException("InvalidInput");
     }
 
-    private static VerifyTestResult ToVerifyResult(TestDefinition testDefinition, string accessCode)
-    {
-        if (testDefinition == null)
-        {
-            return VerifyTestResult.Invalid();
-        }
-
-        var result = VerifyTestResult.Valid((testDefinition.ID, accessCode));
-        result.TestName = testDefinition.BasicSettings.Name;
-
-        var testStartSettings = testDefinition.TestStartSettings;
-        if (testStartSettings != null)
-        {
-            result.InstructionMessage = testStartSettings.Instruction;
-            result.ConsentMessage = testStartSettings.Consent;
-        }
-
-        return result;
-    }
-
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
         var existingExam = await DB.Find<Exam>().Match(c => c.TestId == input.TestId && c.AccessCode == input.AccessCode).ExecuteFirstAsync();
@@ -122,21 +91,29 @@ public class ProctorService : IProctorService
 
         if (exam.Questions != null)
         {
-            return new() { Questions = exam.Questions.Select(ToViewModel).ToArray() };
+            return new()
+            {
+                TestDuration = exam.TimeSettings.TestDurationMethod.ToViewModel(),
+                Questions = exam.Questions.Select(ExamMapper.ToViewModel).ToArray()
+            };
         }
 
         // Get test defintion and validate it
         var testDefinition = await DB.Find<TestDefinition>().MatchID(input.TestDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
+        var timeSettings = testDefinition.TimeSettings ?? throw new Exception("Test not configured properly");
 
         // Get questions of test definition.
         var questions = await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == testDefinition.ID);
         var testSet = testDefinition.GenerateTestSet(questions, exam.AccessCode);
         exam.Questions = testSet;
-        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.Questions) });
+        exam.TimeSettings = timeSettings;
 
-        return new ExamContentOutput
+        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.Questions), nameof(Exam.TimeSettings) });
+
+        return new()
         {
-            Questions = testSet.Select(ToViewModel).ToArray()
+            TestDuration = timeSettings.TestDurationMethod.ToViewModel(),
+            Questions = testSet.Select(ExamMapper.ToViewModel).ToArray()
         };
     }
 
@@ -148,37 +125,49 @@ public class ProctorService : IProctorService
             throw new TestPlatformException("NotFoundExam");
         }
 
-        // Foreach questions, get point
-        var answers = input.Answers;
-        var totalPoints = 0;
-        foreach (var question in exam.Questions)
-        {
-            string[]? answer;
+        var totalPoints = CalculateExamPoint(exam, input.Answers);
 
-            answers.TryGetValue(question.ID, out answer);
-            totalPoints += question.CalculatePoint(answer);
-        }
+        exam.StartedAt = input.StartedAt;
+        exam.FinishedAt = input.FinishededAt;
+        exam.FinalPoints = totalPoints;
 
-        //todo: store result to db. combine with grading settings.
-        //todo: update exam status.
+        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalPoints) });
         return new FinishExamOutputViewModel
         {
             TotalPoints = totalPoints
         };
     }
 
-    private static ExamQuestion ToViewModel(QuestionDefinition c)
+    private static int CalculateExamPoint(Exam exam, Dictionary<string, string[]> answers)
     {
-        return new ExamQuestion
+        int totalPoints = 0;
+        foreach (var question in exam.Questions)
         {
-            Id = c.ID,
-            Description = c.Description,
-            AnswerType = c.AnswerType,
-            Answers = c.Answers.Select(c => new ExamAnswer
-            {
-                Id = c.Id,
-                Description = c.AnswerDescription,
-            }).ToArray()
-        };
+            string[]? answer;
+            answers.TryGetValue(question.ID, out answer);
+            totalPoints += question.CalculatePoint(answer);
+        }
+
+        return totalPoints;
+    }
+    
+    private static VerifyTestResult ToVerifyResult(TestDefinition testDefinition, string accessCode)
+    {
+        if (testDefinition == null)
+        {
+            return VerifyTestResult.Invalid();
+        }
+
+        var result = VerifyTestResult.Valid((testDefinition.ID, accessCode));
+        result.TestName = testDefinition.BasicSettings.Name;
+
+        var testStartSettings = testDefinition.TestStartSettings;
+        if (testStartSettings != null)
+        {
+            result.InstructionMessage = testStartSettings.Instruction;
+            result.ConsentMessage = testStartSettings.Consent;
+        }
+
+        return result;
     }
 }

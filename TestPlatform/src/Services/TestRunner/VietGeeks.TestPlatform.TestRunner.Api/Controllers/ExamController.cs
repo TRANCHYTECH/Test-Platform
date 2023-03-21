@@ -123,14 +123,6 @@ public class ExamController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("TestServiceInvocation")]
-    public async Task<IActionResult> TestServiceInvocation()
-    {
-        var rs = await _proctorService.GetExamContent();
-
-        return Ok(rs);
-    }
-
     private static IProctorActor GetProctorActor(TestSession testSession)
     {
         return ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");

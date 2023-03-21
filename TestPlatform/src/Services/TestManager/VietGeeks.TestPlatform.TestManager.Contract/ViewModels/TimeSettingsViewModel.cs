@@ -22,8 +22,8 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
     }
 
 
-    [JsonDerivedType(typeof(CompleteTestDuration), (int)TestDurationMethodTypoe.CompleteTestTime)]
-    [JsonDerivedType(typeof(CompleteQuestionDuration), (int)TestDurationMethodTypoe.CompleteQuetsionTime)]
+    [JsonDerivedType(typeof(CompleteTestDuration), (int)TestDurationMethodType.CompleteTestTime)]
+    [JsonDerivedType(typeof(CompleteQuestionDuration), (int)TestDurationMethodType.CompleteQuestionTime)]
     public abstract class TestDurationMethod
     {
     }
@@ -37,7 +37,6 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
     {
         public TimeSpan Duration { get; set; }
     }
-
 
     [JsonDerivedType(typeof(ManualTestActivation), (int)TestActivationMethodType.ManualTest)]
     [JsonDerivedType(typeof(TimePeriodActivation), (int)TestActivationMethodType.TimePeriod)]
@@ -58,10 +57,10 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         public DateTime ActiveUntilDate { get; set; }
     }
 
-    public enum TestDurationMethodTypoe
+    public enum TestDurationMethodType
     {
         CompleteTestTime = 1,
-        CompleteQuetsionTime = 2
+        CompleteQuestionTime = 2
     }
 
     public enum TestActivationMethodType
