@@ -17,7 +17,7 @@
             "appId": "testrunner-api",
             "appPort": 6200,
             "httpPort": 3600,
-            "grpcPort": 60000,
+            "grpcPort": 3700,
             "appSsl": false,
             "label": "testrunner-api-dapr-debug",
             "type": "dapr",

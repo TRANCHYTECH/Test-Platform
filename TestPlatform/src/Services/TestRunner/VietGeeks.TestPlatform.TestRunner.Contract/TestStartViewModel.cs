@@ -92,11 +92,14 @@ public class GenerateExamContentInput
     public string TestDefinitionId { get; set; } = default!;
     public string? AccessCode { get; set; }
     public string ExamId { get; set; } = default!;
+    public DateTime StartedAt { get; set; }
 }
 
 public class FinishExamInput
 {
     public string ExamId { get; set; } = default!;
+    public DateTime FinishededAt { get; set; }
+    public DateTime StartedAt { get; set; }
 
     public Dictionary<string, string[]> Answers = default!;
 }
