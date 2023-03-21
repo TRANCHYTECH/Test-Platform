@@ -8,10 +8,7 @@ using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using System.Text.Json;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
-using System.Linq;
 using System.Net;
-using Swashbuckle.AspNetCore.Annotations;
-
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
 [ApiController]

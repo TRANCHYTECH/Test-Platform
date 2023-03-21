@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Entities;
+using VietGeeks.TestPlatform.TestManager.Core.ReadonlyModels;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
@@ -15,13 +16,15 @@ public class Exam : EntityBase
 
     public List<QuestionDefinition> Questions { get; set; } = default!;
 
-    public int FinalPoints { get; set; }
+    public int FinalMark { get; set; }
 
     public DateTime StartedAt { get; set; }
 
     public DateTime FinishedAt { get; set; }
 
-    public TestDurationMethod TestDurationMethod { get; set; } = default!;
-
     public TimeSettingsPart TimeSettings { get; set; } = default!;
+
+    public GradingSettingsPart GradeSettings { get; set; } = default!;
+    
+    public List<AggregatedGrading>? Grading { get; set; }
 }

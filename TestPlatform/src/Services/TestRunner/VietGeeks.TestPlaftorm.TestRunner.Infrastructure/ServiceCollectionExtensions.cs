@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddScoped<IProctorService, ProctorService>();
         serviceCollection.AddScoped<TestRunnerDbContext>();
-
+        serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
     }
 
     private static void ConfigureDb(DatabaseOptions databaseOptions)

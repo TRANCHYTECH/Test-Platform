@@ -81,10 +81,7 @@ public class ProctorActor : Actor, IProctorActor
             });
         });
 
-        return new()
-        {
-            TotalPoints = result.TotalPoints
-        };
+        return result;
     }
 
     private async Task<T> ExamStateAction<T>(Func<ExamState, Task<T>> action)
