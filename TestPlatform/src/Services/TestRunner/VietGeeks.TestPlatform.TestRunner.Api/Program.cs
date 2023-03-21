@@ -9,8 +9,13 @@ using VietGeeks.TestPlatform.TestRunner.Api.Swagger;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddVietGeeksAspNetCore(new()
+{
+    DataProtection = builder.Configuration.GetSection("DataProtection").Get<DataProtectionOptions>()
+});
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.CustomOperationIds(e =>
     {
         var attribute = e.CustomAttributes().FirstOrDefault(x => x.GetType() == typeof(SwaggerOperationAttribute));
@@ -30,21 +35,16 @@ builder.Services.AddCors(options =>
                       });
 });
 
-var daprHttpPort = Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3600";
-var daprGrpcPort = Environment.GetEnvironmentVariable("DAPR_GRPC_PORT") ?? "60000";
 builder.Services.AddDaprClient();
-
 builder.Services.AddActors(options =>
 {
     options.Actors.RegisterActor<ProctorActor>();
 });
 
-var dataOptions = new InfrastructureDataOptions
+builder.Services.RegisterInfrastructureModule(new()
 {
     Database = builder.Configuration.GetSection("TestRunnerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions()
-};
-
-builder.Services.RegisterInfrastructureModule(dataOptions);
+});
 
 var app = builder.Build();
 

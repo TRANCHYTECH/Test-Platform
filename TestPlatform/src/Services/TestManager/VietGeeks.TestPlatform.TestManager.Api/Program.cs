@@ -5,7 +5,10 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
-builder.Services.AddVietGeeksAspNetCore(builder.Configuration.GetSection("Auth").Get<AuthOptions>() ?? new AuthOptions());
+builder.Services.AddVietGeeksAspNetCore(new()
+{
+    Auth = builder.Configuration.GetSection("Auth").Get<AuthOptions>()
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -21,14 +24,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<QuestionValidator>();
-var dataOptions = new InfrastructureDataOptions
+builder.Services.RegisterInfrastructureModule(new()
 {
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
-    ServiceBus = builder.Configuration.GetSection("TestManagerServiceBus").Get<ServiceBusOptions>() ?? new ServiceBusOptions(),
-};
-
-builder.Services.RegisterInfrastructureModule(dataOptions);
+    ServiceBus = builder.Configuration.GetSection("TestManagerServiceBus").Get<ServiceBusOptions>() ?? new ServiceBusOptions()
+});
 var app = builder.Build();
 
 app.UseCors("dev");

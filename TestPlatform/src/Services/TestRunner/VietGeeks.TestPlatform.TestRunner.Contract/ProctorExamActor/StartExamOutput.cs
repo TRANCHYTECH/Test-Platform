@@ -10,4 +10,6 @@ public class StartExamOutput
     public TestDuration TestDuration { get; set; } = default!;
 
     public DateTime StartedAt { get; set; }
+
+    public TimeSpan TotalDuration => TestDuration.Method == TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : Questions.Length * TestDuration.Duration;
 }

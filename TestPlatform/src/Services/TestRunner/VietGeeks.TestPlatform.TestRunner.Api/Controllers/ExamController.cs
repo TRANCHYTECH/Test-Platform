@@ -9,6 +9,8 @@ using System.Text.Json;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 using System.Net;
+using Microsoft.AspNetCore.DataProtection;
+
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
 [ApiController]
@@ -16,10 +18,12 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 public class ExamController : ControllerBase
 {
     private readonly IProctorService _proctorService;
+    private readonly ITimeLimitedDataProtector _dataProtector;
 
-    public ExamController(IProctorService proctorService)
+    public ExamController(IProctorService proctorService, IDataProtectionProvider dataProtectionProvider)
     {
         _proctorService = proctorService;
+        _dataProtector = dataProtectionProvider.CreateProtector("TestSession").ToTimeLimitedDataProtector();
     }
 
     [HttpPost("PreStart/Verify")]
@@ -34,10 +38,11 @@ public class ExamController : ControllerBase
 
         SetTestSession(new()
         {
-            TestId = verifyResult.TestId,
+            TestDefinitionId = verifyResult.TestId,
             AccessCode = verifyResult.AccessCode,
             PreviousStep = PreStartSteps.VerifyTest,
-            ClientProof = "some data"
+            ClientProof = "some data",
+            LifeTime = TimeSpan.FromMinutes(5)
         });
 
         return Ok(new VerifyTestOutputViewModel
@@ -55,7 +60,7 @@ public class ExamController : ControllerBase
         //todo: move this logic to Exam actor to prevent frault if mutiple submiting from browsers.
         var examId = await _proctorService.ProvideExamineeInfo(new()
         {
-            TestId = testSession.TestId,
+            TestId = testSession.TestDefinitionId,
             AccessCode = testSession.AccessCode,
             ExamineeInfo = data.ExamineeInfo
         });
@@ -63,10 +68,11 @@ public class ExamController : ControllerBase
         SetTestSession(new()
         {
             ExamId = examId,
-            TestId = testSession.TestId,
+            TestDefinitionId = testSession.TestDefinitionId,
             AccessCode = testSession.AccessCode,
             PreviousStep = PreStartSteps.ProvideExamineeInfo,
-            ClientProof = testSession.ClientProof
+            ClientProof = testSession.ClientProof,
+            LifeTime = TimeSpan.FromMinutes(5)
         });
 
         return Ok();
@@ -81,16 +87,18 @@ public class ExamController : ControllerBase
         var examContent = await proctorExamActor.StartExam(new()
         {
             ExamId = testSession.ExamId,
-            TestDefinitionId = testSession.TestId
+            TestDefinitionId = testSession.TestDefinitionId
         });
 
         SetTestSession(new()
         {
             ExamId = testSession.ExamId,
-            TestId = testSession.TestId,
+            TestDefinitionId = testSession.TestDefinitionId,
             AccessCode = testSession.AccessCode,
             PreviousStep = PreStartSteps.Start,
-            ClientProof = testSession.ClientProof
+            ClientProof = testSession.ClientProof,
+            // Logical total duration + estimated delay time 30 mins.
+            LifeTime = examContent.TotalDuration.Add(TimeSpan.FromMinutes(30))
         });
 
         return Ok(examContent);
@@ -167,24 +175,22 @@ public class ExamController : ControllerBase
         return session;
     }
 
-    private static string EncryptTestSession(TestSession session)
+    private string EncryptTestSession(TestSession session)
     {
-        //todo: Use data protection feature of .net
-        return Convert.ToBase64String(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(session)));
+        return _dataProtector.Protect(JsonSerializer.Serialize(session), session.LifeTime);
     }
 
-    private static TestSession DecryptTestSession(string token)
+    private TestSession DecryptTestSession(string protectedSession)
     {
         try
         {
-            var str = Encoding.ASCII.GetString(Convert.FromBase64String(token));
-            return JsonSerializer.Deserialize<TestSession>(str) ?? throw new TestPlatformException("InvalidTestSession");
+            var unprotectedSession = _dataProtector.Unprotect(protectedSession);
+            return JsonSerializer.Deserialize<TestSession>(unprotectedSession) ?? throw new TestPlatformException("InvalidTestSession");
         }
         catch (Exception ex)
         {
             throw new TestPlatformException("InvalidTestSession", ex);
         }
-
     }
 }
 
