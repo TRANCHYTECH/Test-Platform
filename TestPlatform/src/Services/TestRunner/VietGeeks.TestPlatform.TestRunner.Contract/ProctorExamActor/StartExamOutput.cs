@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
@@ -11,5 +11,6 @@ public class StartExamOutput
 
     public DateTime StartedAt { get; set; }
 
+    [JsonIgnore]
     public TimeSpan TotalDuration => TestDuration.Method == TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : Questions.Length * TestDuration.Duration;
 }
