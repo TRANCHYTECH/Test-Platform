@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace VietGeeks.TestPlatform.TestRunner.Contract;
 
 public class TestSession
 {
-    //todo: rename to test defintion id.
-    public string TestId { get; set; } = default!;
+    [JsonPropertyName("tid")]
+    public string TestDefinitionId { get; set; } = default!;
 
     public string AccessCode { get; set; } = default!;
 
@@ -15,6 +16,9 @@ public class TestSession
     public string ClientProof { get; set; } = default!;
 
     public string ExamId { get; set; } = default!;
+
+    [JsonIgnore]
+    public TimeSpan LifeTime { get; set; }
 }
 
 public class VerifyTestInput
