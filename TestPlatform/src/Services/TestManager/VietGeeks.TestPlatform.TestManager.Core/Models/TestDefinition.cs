@@ -3,7 +3,7 @@
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 [Collection("TestDefinition")]
-public class TestDefinition: EntityBase
+public class TestDefinition : EntityBase
 {
     public TestBasicSettingsPart BasicSettings { get; set; } = default!;
 
@@ -19,11 +19,12 @@ public class TestDefinition: EntityBase
 
     public TestDefinitionStatus Status { get; private set; } = TestDefinitionStatus.Draft;
 
-    public bool CanActivate => Status == TestDefinitionStatus.Draft;
+    //todo: replace by method check readiness for activation.
+    public bool CanActivate => Status == TestDefinitionStatus.Draft && TimeSettings != null && TestSetSettings != null && GradingSettings != null && TestAccessSettings != null && TestStartSettings != null;
 
     public void Activate()
     {
-        if(CanActivate)
+        if (CanActivate)
         {
             Status = TestDefinitionStatus.Activated;
         }

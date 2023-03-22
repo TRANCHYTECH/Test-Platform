@@ -10,6 +10,18 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
         public string? Consent { get; set; }
 
         public List<RespondentIdentifyConfig> RespondentIdentifyConfig { get; set; } = default!;
+
+        public static TestStartSettingsPart Default()
+        {
+            return new()
+            {
+                RespondentIdentifyConfig = new List<RespondentIdentifyConfig>
+                {
+                    new(){ FieldId = "FirstName", IsRequired = true },
+                    new(){ FieldId = "LastName", IsRequired = true }
+                }
+            };
+        }
     }
 
     public class RespondentIdentifyConfig

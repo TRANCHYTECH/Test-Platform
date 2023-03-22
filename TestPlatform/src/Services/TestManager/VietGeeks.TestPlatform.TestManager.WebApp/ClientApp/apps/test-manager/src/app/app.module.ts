@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -6,8 +6,8 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { AuthClientConfig, AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { HttpBackend, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppSettingsService, CoreModule } from '@viet-geeks/core';
-import { SharedModule, EDITOR_API_KEY } from '@viet-geeks/shared';
+import { AppSettingsService, CoreModule, HttpErrorResponseInterceptor } from '@viet-geeks/core';
+import { SharedModule, EDITOR_API_KEY, ApiErrorHandler } from '@viet-geeks/shared';
 import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
 import { firstValueFrom, of } from 'rxjs';
@@ -90,6 +90,11 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
       multi: true
     },
     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorResponseInterceptor,
+      multi: true
+    },
+    {
       provide: EDITOR_API_KEY,
       //todo: use configuration from server.
       useValue: 'x0yf00jatpue54s2pib29qju4ql049rbbv602narz7nfx4p2'
@@ -111,7 +116,11 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
         }, deps: [TranslateService]
       }
     }),
-    { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' }
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' },
+    { 
+      provide: ErrorHandler, 
+      useClass: ApiErrorHandler 
+    },
   ],
   bootstrap: [AppComponent],
 })

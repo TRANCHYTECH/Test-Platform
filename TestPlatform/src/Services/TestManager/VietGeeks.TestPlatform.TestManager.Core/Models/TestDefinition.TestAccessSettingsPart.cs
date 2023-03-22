@@ -10,6 +10,19 @@ public class TestAccessSettingsPart
     public TestAccessSettings? Settings { get; set; }
 
     public HonestRespondentRule? HonestRespondentRule { get; set; }
+
+    public static TestAccessSettingsPart Default()
+    {
+        return new()
+        {
+            AccessType = TestAcessType.PublicLink,
+            Settings = new PublicLinkType
+            {
+                RequireAccessCode = false,
+                Attempts = 10
+            }
+        };
+    }
 }
 
 public enum TestAcessType

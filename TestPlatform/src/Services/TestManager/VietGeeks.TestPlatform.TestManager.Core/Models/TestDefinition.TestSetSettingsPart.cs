@@ -11,6 +11,15 @@ public class TestSetSettingsPart
     public TestSetGeneratorType GeneratorType { get; set; }
 
     public TestSetGenerator Generator { get; set; } = new DefaultGenerator();
+
+    public static TestSetSettingsPart Default()
+    {
+        return new()
+        {
+            GeneratorType = Core.Models.TestSetGeneratorType.RandomByCategories,
+            Generator = new RandomFromCategoriesGenerator()
+        };
+    }
 }
 
 public enum TestSetGeneratorType
