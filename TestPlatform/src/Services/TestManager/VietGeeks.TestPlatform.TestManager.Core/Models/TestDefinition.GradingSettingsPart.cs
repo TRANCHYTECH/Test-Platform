@@ -10,6 +10,22 @@ public class GradingSettingsPart
     public Dictionary<string, GradingCriteriaConfig> GradingCriterias { get; set; } = new Dictionary<string, GradingCriteriaConfig>();
 
     public InformRespondentConfig InformRespondentConfig { get; set; } = default!;
+
+    public static GradingSettingsPart Default()
+    {
+        GradingSettingsPart defaultSetting = new()
+        {
+            TestEndConfig = new TestEndConfig()
+        };
+
+        defaultSetting.GradingCriterias.Add(GradingCriteriaConfigType.PassMask.ToString(), new PassMaskCriteria
+        {
+            Unit = RangeUnit.Percent,
+            Value = 50
+        });
+
+        return defaultSetting;
+    }
 }
 
 public class TestEndConfig

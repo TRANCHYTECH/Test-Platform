@@ -10,6 +10,25 @@ public class TimeSettingsPart
     public TestActivationMethod TestActivationMethod { get; set; } = default!;
 
     public AnswerQuestionConfig AnswerQuestionConfig { get; set; } = default!;
+
+    public static TimeSettingsPart Default()
+    {
+        return new()
+        {
+            TestDurationMethod = new CompleteQuestionDuration
+            {
+                Duration = TimeSpan.FromMinutes(2)
+            },
+            TestActivationMethod = new ManualTestActivation
+            {
+                ActiveUntil = TimeSpan.FromDays(30)
+            },
+            AnswerQuestionConfig = new AnswerQuestionConfig
+            {
+                SkipQuestion = false
+            }
+        };
+    }
 }
 
 [BsonKnownTypes(typeof(CompleteTestDuration), typeof(CompleteQuestionDuration))]

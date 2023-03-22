@@ -122,6 +122,13 @@ public enum TestDefinitionStatus
     Deleted = 10
 }
 
+public class ReadyForActivationStatus
+{
+    public bool IsReady { get; set; }
+
+    public string[]? Errors { get; set; }
+}
+
 
 
 

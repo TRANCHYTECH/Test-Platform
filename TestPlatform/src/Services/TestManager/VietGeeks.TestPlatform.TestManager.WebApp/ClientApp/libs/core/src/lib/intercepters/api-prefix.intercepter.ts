@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class ApiPrefixInterceptor implements HttpInterceptor {
-    constructor() {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         req = req.clone({
             //todo: use settings.
@@ -14,3 +14,5 @@ export class ApiPrefixInterceptor implements HttpInterceptor {
         return next.handle(req);
     }
 }
+
+

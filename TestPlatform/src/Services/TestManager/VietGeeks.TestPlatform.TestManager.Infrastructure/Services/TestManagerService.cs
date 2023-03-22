@@ -24,6 +24,14 @@ public class TestManagerService : ITestManagerService
     public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
     {
         var testEntity = _mapper.Map<TestDefinition>(newTest);
+        // Assign default settings.
+        //todo: some default values should be getted from db.
+        testEntity.TestSetSettings = TestSetSettingsPart.Default();
+        testEntity.TestAccessSettings = TestAccessSettingsPart.Default();
+        testEntity.TestStartSettings = TestStartSettingsPart.Default();
+        testEntity.GradingSettings = GradingSettingsPart.Default();
+        testEntity.TimeSettings = TimeSettingsPart.Default();
+
         await _managerDbContext.SaveAsync(testEntity);
 
         return _mapper.Map<TestDefinitionViewModel>(testEntity);
@@ -75,7 +83,7 @@ public class TestManagerService : ITestManagerService
             updatedProperties.Add(nameof(TestDefinition.GradingSettings));
         }
 
-        if(viewModel.TimeSettings != null)
+        if (viewModel.TimeSettings != null)
         {
             entity.TimeSettings = _mapper.Map<TimeSettingsPart>(viewModel.TimeSettings);
             updatedProperties.Add(nameof(TestDefinition.TimeSettings));
@@ -116,27 +124,35 @@ public class TestManagerService : ITestManagerService
         var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
 
         // Check status
-        if(!entity.CanActivate)
+        if (!entity.CanActivate)
         {
-            throw new Exception("Unable to activate the test");
+            throw new TestPlatformException("Test not ready for activation");
+        }
+
+        // Combine with checking questions.
+        var questionCount = await _managerDbContext.CountAsync<QuestionDefinition>(c => c.TestId == id);
+        if(questionCount == 0)
+        {
+            throw new TestPlatformException("Test not ready for activation");
         }
 
         entity.Activate();
         await _managerDbContext.SaveOnlyAsync(entity, new[] { nameof(TestDefinition.Status) });
 
         // Send access code invitations.
-        if(entity.TestAccessSettings?.AccessType == TestAcessType.PrivateAccessCode && entity.TestAccessSettings.Settings != null)
+        if (entity.TestAccessSettings?.AccessType == TestAcessType.PrivateAccessCode && entity.TestAccessSettings.Settings != null)
         {
             var settings = (PrivateAccessCodeType)entity.TestAccessSettings.Settings;
             var receivers = settings.Configs.Where(c => !string.IsNullOrEmpty(c.Email)).Select(c => new Receiver(c.Code, c.Email)).ToArray();
-            if(receivers.Length == 0)
+            if (receivers.Length == 0)
             {
                 return _mapper.Map<TestDefinitionViewModel>(entity);
             }
 
             var request = new SendTestAccessCodeRequest
             {
-                TestUrl = $"https://testmaster.io/start/{id}",
+                //todo: configure test url.
+                TestUrl = $"https://dev.test-runner.testmaster.io/start/{id}",
                 TestDefinitionId = id,
                 Receivers = receivers
             };
@@ -146,5 +162,38 @@ public class TestManagerService : ITestManagerService
         }
 
         return _mapper.Map<TestDefinitionViewModel>(entity);
+    }
+
+    public async Task<ReadyForActivationStatus> CheckTestDefinitionReadyForActivation(string id)
+    {
+        var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && c.Status == Core.Models.TestDefinitionStatus.Draft &&
+        c.TimeSettings != null &&
+        c.TestSetSettings != null &&
+        c.TestAccessSettings != null &&
+        c.GradingSettings != null &&
+        c.TestStartSettings != null).IgnoreGlobalFilters().Project(c => new TestDefinition { ID = c.ID }).ExecuteFirstAsync();
+        if (validEntity == null)
+        {
+            return new()
+            {
+                IsReady = false,
+                Errors = new[] { "NotFoundEntity" }
+            };
+        }
+
+        var questionCount = await _managerDbContext.CountAsync<QuestionDefinition>(c => c.TestId == id, ignoreGlobalFilters: true);
+        if (questionCount == 0)
+        {
+            return new()
+            {
+                IsReady = false,
+                Errors = new[] { "QuestionMissing" }
+            };
+        }
+
+        return new()
+        {
+            IsReady = true
+        };
     }
 }

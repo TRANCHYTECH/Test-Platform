@@ -12,7 +12,6 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 public class TestDefinitionManagementController : ControllerBase
 {
     private readonly ILogger<TestDefinitionManagementController> _logger;
-
     private readonly IValidator<UpdateTestDefinitionViewModel> _updateTestValidator;
     private readonly ITestManagerService _testManagerService;
 
@@ -63,7 +62,6 @@ public class TestDefinitionManagementController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
 
-
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);
@@ -82,10 +80,19 @@ public class TestDefinitionManagementController : ControllerBase
         return Ok(testDefinition);
     }
 
+    [HttpGet("{id}/ReadyForActivation")]
+    [AllowAnonymous]
+    public async Task<IActionResult> CheckStatus(string id)
+    {
+       var  checkResult = await _testManagerService.CheckTestDefinitionReadyForActivation(id);
+
+        return Ok(checkResult);
+    }
+
     [HttpPost("{id}/Activate")]
     public async Task<IActionResult> Activate(string id)
     {
-       var testDefiniton = await _testManagerService.ActivateTestDefinition(id);
+        var testDefiniton = await _testManagerService.ActivateTestDefinition(id);
 
         return Ok(testDefiniton);
     }

@@ -33,13 +33,7 @@ var app = builder.Build();
 
 app.UseCors("dev");
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseVietGeeksEssentialFeatures();
 
 app.UseHttpsRedirection();
 

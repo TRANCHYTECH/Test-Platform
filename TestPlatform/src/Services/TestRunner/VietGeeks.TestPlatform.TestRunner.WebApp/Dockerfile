@@ -5,7 +5,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM node:16.13.0 as node-build
+FROM node:16.19.1 as node-build
 WORKDIR /client/src
 COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/package.json", "."]
 COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/package-lock.json", "."]

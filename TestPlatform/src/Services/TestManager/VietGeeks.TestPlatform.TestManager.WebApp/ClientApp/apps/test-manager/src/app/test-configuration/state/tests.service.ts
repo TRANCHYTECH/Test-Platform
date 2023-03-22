@@ -7,7 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { Test } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
-import { forEach, range } from 'lodash';
+import { forEach, range } from 'lodash-es';
 import { defKSUID32 } from '@thi.ng/ksuid';
 
 @Injectable({ providedIn: 'root' })
