@@ -10,7 +10,7 @@ import { AppSettingsService, CoreModule } from '@viet-geeks/core';
 import { SharedModule, EDITOR_API_KEY } from '@viet-geeks/shared';
 import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
-import { of, switchMap, tap } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -29,15 +29,13 @@ const appInitializerFn = (httpBackend: HttpBackend, authClientConfig: AuthClient
     if (!environment.production) {
       appSettingsService.set<AppSettings>(environment);
       setAuthClientConfig(authClientConfig, environment);
-
-      return of(true);
+      return;
     }
 
-    return (new HttpClient(httpBackend)).get<AppSettings>('/Configuration')
-      .pipe(tap(appSettings => {
-        appSettingsService.set(appSettings);
-        setAuthClientConfig(authClientConfig, appSettings);
-      }), switchMap(() => of(true)));
+    return firstValueFrom((new HttpClient(httpBackend)).get<AppSettings>('/Configuration')).then(appSettings => {
+      appSettingsService.set(appSettings);
+      setAuthClientConfig(authClientConfig, appSettings);
+    });
   }
 }
 
@@ -62,7 +60,7 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
     BrowserModule,
     BrowserAnimationsModule,
     LayoutsModule,
-    RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
+    RouterModule.forRoot(appRoutes),
     NgbModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
@@ -70,7 +68,7 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
       defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
+        useFactory: createTranslateLoader,
         deps: [HttpClient]
       }
     }),
@@ -88,7 +86,8 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthHttpInterceptor, multi: true
+      useClass: AuthHttpInterceptor,
+      multi: true
     },
     {
       provide: EDITOR_API_KEY,
