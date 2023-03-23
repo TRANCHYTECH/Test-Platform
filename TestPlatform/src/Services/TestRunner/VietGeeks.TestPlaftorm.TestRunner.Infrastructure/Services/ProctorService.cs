@@ -82,7 +82,7 @@ public class ProctorService : IProctorService
     {
         // Ensure exam is processed by order by checking if exam already created from step providing examinee info.
         var exam = await EnsureExam(input.ExamId);
-        if (exam.Questions == null)
+        if (exam.Questions == null || !exam.Questions.Any())
         {
             var testDefinition = await GetTestDefinition(input.TestDefinitionId);
             var timeSettings = testDefinition.TimeSettings ?? throw new Exception("TimeSettings not configured properly");
