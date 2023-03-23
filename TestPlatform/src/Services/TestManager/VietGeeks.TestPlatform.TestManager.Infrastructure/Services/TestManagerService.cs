@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Contract;
+using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.Integration.Contracts;
 using Azure.Messaging.ServiceBus;
 using System.Text.Json;
+using MongoDB.Bson;
+using Microsoft.Extensions.Logging;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -13,12 +16,14 @@ public class TestManagerService : ITestManagerService
     private readonly IMapper _mapper;
     private readonly TestManagerDbContext _managerDbContext;
     private readonly ServiceBusClient _bus;
+    private readonly ILogger<TestManagerService> _logger;
 
-    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus)
+    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger)
     {
         _mapper = mapper;
         _managerDbContext = managerDbContext;
         _bus = bus;
+        _logger = logger;
     }
 
     public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
@@ -120,46 +125,42 @@ public class TestManagerService : ITestManagerService
 
     public async Task<TestDefinitionViewModel> ActivateTestDefinition(string id)
     {
-        // Find test definition
         var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        var questions = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id);
 
-        // Check status
-        if (!entity.CanActivate)
+        // Check if can activate test.
+        var testRunTime = entity.EnsureCanActivate(questions.Count);
+
+        using (var ctx = _managerDbContext.Transaction())
         {
-            throw new TestPlatformException("Test not ready for activation");
-        }
-
-        // Combine with checking questions.
-        var questionCount = await _managerDbContext.CountAsync<QuestionDefinition>(c => c.TestId == id);
-        if(questionCount == 0)
-        {
-            throw new TestPlatformException("Test not ready for activation");
-        }
-
-        entity.Activate();
-        await _managerDbContext.SaveOnlyAsync(entity, new[] { nameof(TestDefinition.Status) });
-
-        // Send access code invitations.
-        if (entity.TestAccessSettings?.AccessType == TestAcessType.PrivateAccessCode && entity.TestAccessSettings.Settings != null)
-        {
-            var settings = (PrivateAccessCodeType)entity.TestAccessSettings.Settings;
-            var receivers = settings.Configs.Where(c => !string.IsNullOrEmpty(c.Email)).Select(c => new Receiver(c.Code, c.Email)).ToArray();
-            if (receivers.Length == 0)
+            // Create test run.
+            var testRun = new TestRun
             {
-                return _mapper.Map<TestDefinitionViewModel>(entity);
-            }
-
-            var request = new SendTestAccessCodeRequest
-            {
-                //todo: configure test url.
-                TestUrl = $"https://dev.test-runner.testmaster.io/start/{id}",
-                TestDefinitionId = id,
-                Receivers = receivers
+                ID = ObjectId.GenerateNewId().ToString(),
+                StartAtUtc = testRunTime.StartAtUtc,
+                EndAtUtc = testRunTime.EndAtUtc,
+                TestDefinitionSnapshot = entity
             };
 
-            var sender = _bus.CreateSender("send-test-access-code");
-            await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
+            // Copy questions.
+            var testRunQuestionBatches = questions.Chunk(10).Select(q => new TestRunQuestion
+            {
+                TestRunId = testRun.ID,
+                Batch = q.ToArray()
+            });
+
+            // Set current activated test run.
+            entity.Activate(testRun.ID);
+
+            await _managerDbContext.InsertAsync(testRun);
+            await _managerDbContext.InsertAsync(testRunQuestionBatches);
+            await _managerDbContext.SaveOnlyAsync(entity, new[] { nameof(TestDefinition.Status), nameof(TestDefinition.CurrentTestRun) });
+
+            await ctx.CommitTransactionAsync();
         }
+
+        //todo: might make it loose couplely.
+        await SendAccessCodes(entity);
 
         return _mapper.Map<TestDefinitionViewModel>(entity);
     }
@@ -195,5 +196,33 @@ public class TestManagerService : ITestManagerService
         {
             IsReady = true
         };
+    }
+
+    private async Task SendAccessCodes(TestDefinition entity)
+    {
+        try
+        {
+            if ((entity.TestAccessSettings?.Settings is PrivateAccessCodeType config))
+            {
+                var receivers = config.Configs.Where(c => !string.IsNullOrEmpty(c.Email)).Select(c => new Receiver(c.Code, c.Email)).ToArray();
+                if (receivers.Length > 0)
+                {
+                    var request = new SendTestAccessCodeRequest
+                    {
+                        //todo: configure test url.
+                        TestUrl = $"https://dev.test-runner.testmaster.io/start/{entity.ID}",
+                        TestDefinitionId = entity.ID,
+                        Receivers = receivers
+                    };
+
+                    var sender = _bus.CreateSender("send-test-access-code");
+                    await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Could not send access code", ex);
+        }
     }
 }

@@ -18,7 +18,7 @@ public class GradingSettingsPart
             TestEndConfig = new TestEndConfig()
         };
 
-        defaultSetting.GradingCriterias.Add(GradingCriteriaConfigType.PassMask.ToString(), new PassMaskCriteria
+        defaultSetting.GradingCriterias.Add($"{(int)GradingCriteriaConfigType.PassMask}", new PassMaskCriteria
         {
             Unit = RangeUnit.Percent,
             Value = 50

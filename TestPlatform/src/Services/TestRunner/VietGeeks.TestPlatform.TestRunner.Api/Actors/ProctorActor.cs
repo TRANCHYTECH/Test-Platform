@@ -22,8 +22,7 @@ public class ProctorActor : Actor, IProctorActor
         //todo: improve logic to get exam content. store in separarte storage within test runner scope? Now questions in exam and exam state might be mistached.
         var examContent = await _proctorService.GenerateExamContent(new()
         {
-            ExamId = input.ExamId,
-            TestDefinitionId = input.TestDefinitionId
+            ExamId = input.ExamId
         });
 
         var examState = await GetExamState();
@@ -32,7 +31,7 @@ public class ProctorActor : Actor, IProctorActor
             examState = new ExamState
             {
                 ExamId = input.ExamId,
-                TestDefinitionId = input.TestDefinitionId,
+                TestRunId = input.TestRunId,
                 Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray()),
                 StartedAt = DateTime.UtcNow
             };
@@ -125,5 +124,7 @@ public class ProctorActor : Actor, IProctorActor
         public DateTime StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
+        
+        public string TestRunId { get; set; } = default!;
     }
 }

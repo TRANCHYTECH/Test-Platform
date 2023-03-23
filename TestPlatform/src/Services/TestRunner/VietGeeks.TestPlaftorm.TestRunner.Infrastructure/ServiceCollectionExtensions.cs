@@ -3,9 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
+using VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
-namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
+//todo: rename wrong namespace
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
@@ -14,6 +17,7 @@ public static class ServiceCollectionExtensions
         ConfigureDb(options.Database);
 
         serviceCollection.AddScoped<IProctorService, ProctorService>();
+        serviceCollection.AddSingleton<ITime, Time>();
         serviceCollection.AddScoped<TestRunnerDbContext>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
     }

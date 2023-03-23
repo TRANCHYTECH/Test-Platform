@@ -53,16 +53,14 @@ public static class ManualMapper
         };
     }
 
-    public static VerifyTestOutput ToOutput(this TestDefinition testDefinition, string accessCode)
+    public static VerifyTestOutput ToOutput(this TestRun testRun, TestDefinition testDefinition, string accessCode)
     {
-        if (testDefinition == null)
-        {
-            return VerifyTestOutput.Invalid();
-        }
-
-        var result = VerifyTestOutput.Valid((testDefinition.ID, accessCode));
+        var result = new VerifyTestOutput();
+        result.TestRunId = testRun.ID;
+        result.StartAtUtc = testRun.StartAtUtc;
+        result.EndAtUtc = testRun.EndAtUtc;
+        result.AccessCode = accessCode;
         result.TestName = testDefinition.BasicSettings.Name;
-
         var testStartSettings = testDefinition.TestStartSettings;
         if (testStartSettings != null)
         {

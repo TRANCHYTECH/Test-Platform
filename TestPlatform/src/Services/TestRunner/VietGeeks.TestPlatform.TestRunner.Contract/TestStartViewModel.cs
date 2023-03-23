@@ -6,8 +6,7 @@ namespace VietGeeks.TestPlatform.TestRunner.Contract;
 
 public class TestSession
 {
-    [JsonPropertyName("tid")]
-    public string TestDefinitionId { get; set; } = default!;
+    public string TestRunId { get; set; } = default!;
 
     public string AccessCode { get; set; } = default!;
 
@@ -37,7 +36,7 @@ public class VerifyTestOutputViewModel
 
 public class VerifyTestOutput
 {
-    public string TestId { get; set; } = default!;
+    public string TestRunId { get; set; } = default!;
 
     public string TestName { get; set; } = default!;
 
@@ -47,21 +46,10 @@ public class VerifyTestOutput
 
     public string? ConsentMessage { get; set; }
 
-    public bool IsValid { get; private set; }
-
-    public static VerifyTestOutput Invalid() => new VerifyTestOutput
-    {
-        IsValid = false
-    };
-
-    public static VerifyTestOutput Valid((string testId, string accessCode) data) => new()
-    {
-        TestId = data.testId,
-        AccessCode = data.accessCode,
-        IsValid = true
-    };
+    public DateTime StartAtUtc { get; set; }
+    
+    public DateTime EndAtUtc { get; set; }
 }
-
 
 public class SubmitAnswerViewModel
 {
@@ -77,9 +65,9 @@ public class ProvideExamineeInfoViewModel
 
 public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
 {
-    public string TestId { get; set; } = default!;
-
+    public string TestRunId { get; set; } = default!;
     public string AccessCode { get; set; } = default!;
+    public string ExamId { get; set; } = default!;
 }
 
 public enum PreStartSteps

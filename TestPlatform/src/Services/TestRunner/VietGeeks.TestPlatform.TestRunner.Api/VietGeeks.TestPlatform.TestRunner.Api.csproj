@@ -27,16 +27,7 @@
     <Folder Include="Actors\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TestManager\VietGeeks.TestPlatform.TestManager.Infrastructure\VietGeeks.TestPlatform.TestManager.Infrastructure.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\VietGeeks.TestPlatform.TestRunner.Contract\VietGeeks.TestPlatform.TestRunner.Contract.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
     <ProjectReference Include="..\VietGeeks.TestPlaftorm.TestRunner.Infrastructure\VietGeeks.TestPlaftorm.TestRunner.Infrastructure.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TestManager\VietGeeks.TestPlatform.TestManager.Core\VietGeeks.TestPlatform.TestManager.Core.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
