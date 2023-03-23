@@ -17,17 +17,17 @@ public class TestDefinition : EntityBase
 
     public TestStartSettingsPart? TestStartSettings { get; set; }
 
+    public CurrentTestRunPart? CurrentTestRun { get; set; }
+
     public TestDefinitionStatus Status { get; private set; } = TestDefinitionStatus.Draft;
 
-    //todo: replace by method check readiness for activation.
-    public bool CanActivate => Status == TestDefinitionStatus.Draft && TimeSettings != null && TestSetSettings != null && GradingSettings != null && TestAccessSettings != null && TestStartSettings != null;
-
-    public void Activate()
+    public void Activate(string testRunId)
     {
-        if (CanActivate)
+        Status = TestDefinitionStatus.Activated;
+        CurrentTestRun = new CurrentTestRunPart
         {
-            Status = TestDefinitionStatus.Activated;
-        }
+            Id = testRunId
+        };
     }
 }
 
@@ -35,6 +35,7 @@ public enum TestDefinitionStatus
 {
     Draft = 1,
     Activated = 2,
-    Finished = 3,
+    Scheduled = 3,
+    Ended = 4,
     Deleted = 10
 }

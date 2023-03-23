@@ -5,6 +5,7 @@ using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Api.Swagger;
+using VietGeeks.TestPlatform.TestRunner.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

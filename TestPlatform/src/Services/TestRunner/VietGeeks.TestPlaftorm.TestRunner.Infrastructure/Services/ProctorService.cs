@@ -1,73 +1,94 @@
 ﻿using AutoMapper;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
+using VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
 public class ProctorService : IProctorService
 {
     private readonly IMapper _mapper;
+    private readonly ITime _time;
 
-    public ProctorService(IMapper mapper) {
+    public ProctorService(IMapper mapper, ITime time)
+    {
         _mapper = mapper;
+        _time = time;
     }
-    
+
     //todo: PLAN - need to refactor this class, instead of directly access to original database, it should be a separate microservice.
+    // For verifying test, still use test definition instead of test run.
     public async Task<VerifyTestOutput> VerifyTest(VerifyTestInput input)
     {
+        TestDefinition? matchedTestDef = null;
+        string accessCode = string.Empty;
         if (!string.IsNullOrEmpty(input.TestId))
         {
-            var getActivatedTestQuery = new Template<TestDefinition>(@"
-                [
-                    {
-                        '$match': {
-                            '_id': <id>,
-                            'Status': <status>,
-                            'TestAccessSettings.Settings._t': 'PublicLinkType'
-                        }
-                    }
-                ]
-            ").Tag("id", input.TestId).Tag("status", $"{((int)TestDefinitionStatus.Activated)}");
-
-            var activatedTest = await DB.PipelineSingleAsync(getActivatedTestQuery);
-
-            return activatedTest.ToOutput(Guid.NewGuid().ToString());
+            matchedTestDef = await DB.Find<TestDefinition>().MatchID(input.TestId).ExecuteFirstAsync();
+            accessCode = Guid.NewGuid().ToString();
         }
-
-        if (!string.IsNullOrEmpty(input.AccessCode))
+        else if (!string.IsNullOrEmpty(input.AccessCode))
         {
-            var getActivatedTestQuery = new Template<TestDefinition>(@"
+            var getTestQuery = new Template<TestDefinition>(@"
                 [
                     {
                         '$match': {
-                            'Status': <status>,
                             'TestAccessSettings.Settings._t': 'PrivateAccessCodeType', 
                             'TestAccessSettings.Settings.Configs.Code': '<access_code>'
                         }
                     }
                 ]
-            ").Tag("status", $"{((int)TestDefinitionStatus.Activated)}").Tag("access_code", input.AccessCode);
-
-            var activatedTest = await DB.PipelineSingleAsync(getActivatedTestQuery);
-
-            return activatedTest.ToOutput(input.AccessCode);
+            ").Tag("access_code", input.AccessCode);
+            matchedTestDef = await DB.PipelineSingleAsync(getTestQuery);
+            accessCode = input.AccessCode;
         }
 
-        throw new TestPlatformException("InvalidInput");
+        if (matchedTestDef == null || string.IsNullOrEmpty(accessCode))
+        {
+            throw new TestPlatformException("Not found test with access code");
+        }
+
+        // Check if test is activated/scheduled, and on time.
+        if (!matchedTestDef.TestInRunning())
+        {
+            throw new TestPlatformException("The test is not activated/scheduled or ended");
+        }
+
+        // Get test run
+        var testRun = await DB.Find<TestRun>().MatchID(matchedTestDef.CurrentTestRun?.Id).ExecuteSingleAsync();
+        if (testRun == null)
+        {
+            throw new TestPlatformException("Not found test run for the test definition");
+        }
+
+        // Check period time of test run is still valid.
+        var checkMoment = _time.UtcNow();
+        if (testRun.ExplicitEnd || checkMoment > testRun.EndAtUtc)
+        {
+            throw new TestPlatformException("The test is already ended");
+        }
+
+        if (checkMoment < testRun.StartAtUtc)
+        {
+            throw new TestPlatformException("The test is not started yet");
+        }
+
+        return testRun.ToOutput(matchedTestDef, accessCode);
     }
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
-        var exam = await GetExam(input.TestId, input.AccessCode);
+        var exam = await GetExam(input.TestRunId, input.AccessCode);
         if (exam == null)
         {
             exam = new Exam
             {
-                TestId = input.TestId,
+                TestRunId = input.TestRunId,
                 AccessCode = input.AccessCode,
                 ExamineeInfo = input.ExamineeInfo
             };
@@ -84,16 +105,21 @@ public class ProctorService : IProctorService
         var exam = await EnsureExam(input.ExamId);
         if (exam.Questions == null || !exam.Questions.Any())
         {
-            var testDefinition = await GetTestDefinition(input.TestDefinitionId);
+            var testRun = await DB.Find<TestRun>().Match(exam.TestRunId).ExecuteSingleAsync();
+            var testDefinition = testRun.TestDefinitionSnapshot;
+            //todo: discuss based on test portal. That can edit time settings and other parts. currently assume all info not changed when activated.
             var timeSettings = testDefinition.TimeSettings ?? throw new Exception("TimeSettings not configured properly");
             var gradingSettings = testDefinition.GradingSettings ?? throw new Exception("GradingSettings not configured properly");
 
-            // Get questions of test definition.
-            var testQuestions = await GetTestQuestions(testDefinition.ID);
+            // Get questions of test run.
+            var questions = await GetTestRunQuestions(testRun.ID);
 
-            exam.Questions = testDefinition.GenerateTestSet(testQuestions, exam.AccessCode);
+            //todo: only store brief info of questions.
+            exam.Questions = testDefinition.GenerateTestSet(questions, exam.AccessCode);
+            //todo: check if no need to store, query when finishing.
             exam.TimeSettings = timeSettings;
             exam.GradeSettings = gradingSettings;
+            
             await DB.SaveAsync(exam);
         }
 
@@ -107,7 +133,7 @@ public class ProctorService : IProctorService
         exam.FinishedAt = input.FinishededAt;
         exam.FinalMark = CalculateExamMark(exam, input.Answers);
         //todo: check way to get total points of question, because there is field Bonous Point.
-        exam.Grading = exam.GradeSettings.CalculateGrading(exam.FinalMark, exam.Questions.Sum(c=>c.ScoreSettings.TotalPoints));
+        exam.Grading = exam.GradeSettings.CalculateGrading(exam.FinalMark, exam.Questions.Sum(c => c.ScoreSettings.TotalPoints));
         // Calculate pass grading.
         await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark) });
 
@@ -118,27 +144,29 @@ public class ProctorService : IProctorService
         };
     }
 
-    private static async Task<Exam> GetExam(string testId, string accessCode)
+    private async Task<Exam> GetExam(string testRunId, string accessCode)
     {
-        return await DB.Find<Exam>().Match(c => c.TestId == testId && c.AccessCode == accessCode).ExecuteFirstAsync();
+        return await DB.Find<Exam>().Match(c => c.TestRunId == testRunId && c.AccessCode == accessCode).ExecuteSingleAsync();
     }
 
-    private static async Task<Exam> GetExam(string examId)
+    private async Task<Exam> GetExam(string examId)
     {
         return await DB.Find<Exam>().MatchID(examId).ExecuteSingleAsync();
     }
 
-    private static async Task<Exam> EnsureExam(string examId)
+    private async Task<Exam> EnsureExam(string examId)
     {
         return await GetExam(examId) ?? throw new TestPlatformException("NotFoundExam");
     }
 
-    private static async Task<List<QuestionDefinition>> GetTestQuestions(string testDefinitionId)
+    private async Task<List<QuestionDefinition>> GetTestRunQuestions(string testRunId)
     {
-        return await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == testDefinitionId);
+        var batches = await DB.Find<TestRunQuestion>().ManyAsync(c => c.TestRunId == testRunId);
+
+        return batches.SelectMany(c => c.Batch).ToList();
     }
 
-    private static async Task<TestDefinition> GetTestDefinition(string testDefinitionId)
+    private async Task<TestDefinition> GetTestDefinition(string testDefinitionId)
     {
         return await DB.Find<TestDefinition>().MatchID(testDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
     }

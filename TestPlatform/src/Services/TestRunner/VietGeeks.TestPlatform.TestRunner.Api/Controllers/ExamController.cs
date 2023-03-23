@@ -31,14 +31,9 @@ public class ExamController : ControllerBase
     public async Task<IActionResult> Verify(VerifyTestInput input)
     {
         var verifyResult = await _proctorService.VerifyTest(input);
-        if (!verifyResult.IsValid)
-        {
-            return BadRequest();
-        }
-
         SetTestSession(new()
         {
-            TestDefinitionId = verifyResult.TestId,
+            TestRunId = verifyResult.TestRunId,
             AccessCode = verifyResult.AccessCode,
             PreviousStep = PreStartSteps.VerifyTest,
             ClientProof = "some data",
@@ -58,9 +53,10 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(PreStartSteps.ProvideExamineeInfo);
         //todo: move this logic to Exam actor to prevent frault if mutiple submiting from browsers.
+        // by checking exist exam with composite id.
         var examId = await _proctorService.ProvideExamineeInfo(new()
         {
-            TestId = testSession.TestDefinitionId,
+            TestRunId = testSession.TestRunId,
             AccessCode = testSession.AccessCode,
             ExamineeInfo = data.ExamineeInfo
         });
@@ -68,7 +64,8 @@ public class ExamController : ControllerBase
         SetTestSession(new()
         {
             ExamId = examId,
-            TestDefinitionId = testSession.TestDefinitionId,
+            //todo: consider to remove 2 below props because seem no need them
+            TestRunId = testSession.TestRunId,
             AccessCode = testSession.AccessCode,
             PreviousStep = PreStartSteps.ProvideExamineeInfo,
             ClientProof = testSession.ClientProof,
@@ -87,13 +84,13 @@ public class ExamController : ControllerBase
         var examContent = await proctorExamActor.StartExam(new()
         {
             ExamId = testSession.ExamId,
-            TestDefinitionId = testSession.TestDefinitionId
+            TestRunId = testSession.TestRunId
         });
 
         SetTestSession(new()
         {
             ExamId = testSession.ExamId,
-            TestDefinitionId = testSession.TestDefinitionId,
+            TestRunId = testSession.TestRunId,
             AccessCode = testSession.AccessCode,
             PreviousStep = PreStartSteps.Start,
             ClientProof = testSession.ClientProof,
