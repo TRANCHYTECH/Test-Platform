@@ -60,11 +60,10 @@ public class RandomFromCategoriesGenerator : TestSetGenerator
             var radomizedQuestions = questionsByCategory.ToList();
             radomizedQuestions.Shuffle();
 
-            var foundConfig = Configs.FirstOrDefault(c => c.QuestionCategoryId == questionsByCategory.Key);
-            if (foundConfig != null)
-            {
-                result.AddRange(radomizedQuestions.GetRange(0, Math.Max(radomizedQuestions.Count, foundConfig.DrawNumber)));
-            }
+            var matchedConfig = Configs.FirstOrDefault(c => c.QuestionCategoryId == questionsByCategory.Key);
+            // When user selected this generator, but there is no specified config or wrong configured value. We should get best value.
+            var questionCount = matchedConfig != null ? Math.Max(radomizedQuestions.Count, matchedConfig.DrawNumber) : radomizedQuestions.Count;
+            result.AddRange(radomizedQuestions.GetRange(0, questionCount));
         }
 
         return result;
