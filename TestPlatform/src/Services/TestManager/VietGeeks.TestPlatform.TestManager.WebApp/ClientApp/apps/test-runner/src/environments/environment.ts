@@ -1,5 +1,5 @@
 
 export const environment = {
     production: false,
-    testRunnerApiBaseUrl: "https://localhost:7200"
+    testRunnerApiBaseUrl: "https://dev.test-runner-api.testmaster.io"
 }

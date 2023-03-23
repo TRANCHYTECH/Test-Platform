@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ApiExamService } from '../api/services';
+import { ExamQuestion } from '../api/models';
 import { TestSession } from '../state/test-session.model';
 
 @Injectable({ providedIn: 'root' })
 export class TestSessionService {
-  constructor(private _examService: ApiExamService) {}
   private _sessionData: Partial<TestSession> = {};
+  private _questions: ExamQuestion[] = [];
 
   public setSessionData(sessionData: Partial<TestSession>) {
     this._sessionData = {...this._sessionData, ...sessionData};
@@ -14,4 +14,10 @@ export class TestSessionService {
   public getSessionData(): Partial<TestSession> {
     return {...this._sessionData};
   }
+
+  public setQuestions(questions: ExamQuestion[]) {
+    this._questions = questions;
+  }
+
+  public getQuestions = () => this._questions;
 }

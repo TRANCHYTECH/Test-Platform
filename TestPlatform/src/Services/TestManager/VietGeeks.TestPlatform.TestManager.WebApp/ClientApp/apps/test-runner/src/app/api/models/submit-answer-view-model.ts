@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface SubmitAnswerViewModel {
-  answerId?: null | string;
+  answerIds?: null | Array<string>;
   questionId?: null | string;
 }

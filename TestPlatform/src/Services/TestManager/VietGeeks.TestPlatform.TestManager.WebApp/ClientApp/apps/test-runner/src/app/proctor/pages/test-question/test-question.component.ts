@@ -1,9 +1,10 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { interval, Subscription } from 'rxjs';
-import { TestRespondentField } from '../../../state/test.model';
+import { ExamQuestion } from '../../../api/models';
+import { TestSessionService } from '../../../services/test-session.service';
+import { TestSession } from '../../../state/test-session.model';
 import { ProctorService } from '../../proctor.service';
-import { TestQuestions, TestTakerMetaData } from './data';
 @Component({
   selector: 'viet-geeks-test-question',
   templateUrl: './test-question.component.html',
@@ -12,12 +13,14 @@ import { TestQuestions, TestTakerMetaData } from './data';
 export class TestQuestionComponent implements OnInit, OnDestroy  {
 
   proctorService = inject(ProctorService);
-  questions = TestQuestions;
-  metaData = TestTakerMetaData;
+  private _testSessionService = inject(TestSessionService);
+
+  questions: ExamQuestion[] = [];
+  sessionData?: TestSession;
   answerForm: FormGroup;
   labels: string[] = [];
   index = 0;
-  question: any;
+  question?: ExamQuestion;
   endTime: Date;
 
   milliSecondsInASecond = 1000;
@@ -43,7 +46,9 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   }
 
   ngOnInit(): void {
-    this.question = TestQuestions[this.index];
+    this.questions = this._testSessionService.getQuestions() ?? [];
+    this.sessionData = this._testSessionService.getSessionData();
+    this.question = this.questions[this.index];
     this.subscription = interval(1000)
       .subscribe(() => this.getTimeDifference());
   }
@@ -53,8 +58,10 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
  }
 
   submit(): void {
-    this.index++;
-    this.question = TestQuestions[this.index];
+    if (this.index < this.questions.length - 1) {
+      this.index++;
+      this.question = this.questions[this.index];
+    }
   }
 
   private getTimeDifference() {

@@ -1,7 +1,3 @@
-export interface ExamContent {
-    questions: ExamQuestion[];
-}
-
 export interface ExamQuestion {
     id: string;
     description: string;

@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
-import { catchError, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { AppSettings } from '../app-setting.model';
-import { ExamContent, FinishedExam } from '../state/exam-content.model';
+import { FinishedExam } from '../state/exam-content.model';
 import { ApiExamService } from '../api/services';
+import { StartExamOutput } from '../api/models';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class ProctorService {
     return this._examService.provideExamineeInfo({ body: examineeInfo });
   }
 
-  startExam() {
-    return this._httpClient.post<ExamContent>(`${this.testRunnerApiBaseUrl}/Exam/Start`, null);
+  startExam(): Observable<StartExamOutput> {
+    return this._examService.startExam();
   }
 
   submitAnswer(answer: { questionId: string, answerIds: string[] }) {
