@@ -10,9 +10,10 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { ProvideExamineeInfoViewModel } from '../models/provide-examinee-info-view-model';
+import { StartExamOutput } from '../models/start-exam-output';
 import { SubmitAnswerViewModel } from '../models/submit-answer-view-model';
 import { VerifyTestInput } from '../models/verify-test-input';
-import { VerifyTestOutput } from '../models/verify-test-output';
+import { VerifyTestOutputViewModel } from '../models/verify-test-output-view-model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +42,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<VerifyTestOutput>> {
+): Observable<StrictHttpResponse<VerifyTestOutputViewModel>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.VerifyPath, 'post');
     if (params) {
@@ -55,7 +56,7 @@ export class ApiExamService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifyTestOutput>;
+        return r as StrictHttpResponse<VerifyTestOutputViewModel>;
       })
     );
   }
@@ -71,10 +72,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<VerifyTestOutput> {
+): Observable<VerifyTestOutputViewModel> {
 
     return this.verify$Plain$Response(params,context).pipe(
-      map((r: StrictHttpResponse<VerifyTestOutput>) => r.body as VerifyTestOutput)
+      map((r: StrictHttpResponse<VerifyTestOutputViewModel>) => r.body as VerifyTestOutputViewModel)
     );
   }
 
@@ -89,7 +90,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<VerifyTestOutput>> {
+): Observable<StrictHttpResponse<VerifyTestOutputViewModel>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.VerifyPath, 'post');
     if (params) {
@@ -103,7 +104,7 @@ export class ApiExamService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifyTestOutput>;
+        return r as StrictHttpResponse<VerifyTestOutputViewModel>;
       })
     );
   }
@@ -119,10 +120,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<VerifyTestOutput> {
+): Observable<VerifyTestOutputViewModel> {
 
     return this.verify$Response(params,context).pipe(
-      map((r: StrictHttpResponse<VerifyTestOutput>) => r.body as VerifyTestOutput)
+      map((r: StrictHttpResponse<VerifyTestOutputViewModel>) => r.body as VerifyTestOutputViewModel)
     );
   }
 
@@ -180,52 +181,97 @@ export class ApiExamService extends BaseService {
   }
 
   /**
-   * Path part for operation startTest
+   * Path part for operation startExam
    */
-  static readonly StartTestPath = '/Exam/Start';
+  static readonly StartExamPath = '/Exam/Start';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `startTest()` instead.
+   * To access only the response body, use `startExam$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  startTest$Response(params?: {
+  startExam$Plain$Response(params?: {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<void>> {
+): Observable<StrictHttpResponse<StartExamOutput>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ApiExamService.StartTestPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.StartExamPath, 'post');
     if (params) {
     }
 
     return this.http.request(rb.build({
       responseType: 'text',
-      accept: '*/*',
+      accept: 'text/plain',
       context: context
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<StartExamOutput>;
       })
     );
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `startTest$Response()` instead.
+   * To access the full response (for headers, for example), `startExam$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  startTest(params?: {
+  startExam$Plain(params?: {
   },
   context?: HttpContext
 
-): Observable<void> {
+): Observable<StartExamOutput> {
 
-    return this.startTest$Response(params,context).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+    return this.startExam$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<StartExamOutput>) => r.body as StartExamOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `startExam()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  startExam$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<StartExamOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.StartExamPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<StartExamOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `startExam$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  startExam(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StartExamOutput> {
+
+    return this.startExam$Response(params,context).pipe(
+      map((r: StrictHttpResponse<StartExamOutput>) => r.body as StartExamOutput)
     );
   }
 
@@ -278,6 +324,56 @@ export class ApiExamService extends BaseService {
 ): Observable<void> {
 
     return this.submitAnswer$Response(params,context).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation finishExam
+   */
+  static readonly FinishExamPath = '/Exam/Finish';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `finishExam()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  finishExam$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.FinishExamPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `finishExam$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  finishExam(params?: {
+  },
+  context?: HttpContext
+
+): Observable<void> {
+
+    return this.finishExam$Response(params,context).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }

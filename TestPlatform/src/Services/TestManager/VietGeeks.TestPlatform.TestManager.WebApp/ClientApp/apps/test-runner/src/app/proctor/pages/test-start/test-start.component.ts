@@ -39,7 +39,8 @@ export class TestStartComponent implements OnInit {
   async startTest() {
     const respondentIdentify = this.respondentIdentifyForm.value;
     await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify));
-    const questions = await firstValueFrom(this._proctorService.startExam());
+    const startExamOutput = await firstValueFrom(this._proctorService.startExam());
+    this._testSessionService.setQuestions(startExamOutput.questions ?? []);
     this.router.navigate(['test/question']);
   }
 

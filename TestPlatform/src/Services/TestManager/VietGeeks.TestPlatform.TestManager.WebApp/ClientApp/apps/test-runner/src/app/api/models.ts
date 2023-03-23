@@ -1,4 +1,10 @@
+export { ExamAnswer } from './models/exam-answer';
+export { ExamQuestion } from './models/exam-question';
 export { ProvideExamineeInfoViewModel } from './models/provide-examinee-info-view-model';
+export { StartExamOutput } from './models/start-exam-output';
 export { SubmitAnswerViewModel } from './models/submit-answer-view-model';
+export { TestDuration } from './models/test-duration';
+export { TestDurationMethodType } from './models/test-duration-method-type';
+export { TimeSpan } from './models/time-span';
 export { VerifyTestInput } from './models/verify-test-input';
-export { VerifyTestOutput } from './models/verify-test-output';
+export { VerifyTestOutputViewModel } from './models/verify-test-output-view-model';

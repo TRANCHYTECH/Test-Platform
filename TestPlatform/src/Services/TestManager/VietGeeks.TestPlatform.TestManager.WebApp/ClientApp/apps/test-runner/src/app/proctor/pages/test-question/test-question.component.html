@@ -12,7 +12,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="mx-auto mt-2 mt-lg-0">
-        <h3>{{metaData.testName}}</h3>
+        <h3>{{sessionData?.testDescription}}</h3>
       </div>
       <div class="">
         Time left: {{hoursToDday}}h {{minutesToDday}}min. {{secondsToDday}}sec.
@@ -31,26 +31,25 @@
             <h5 class="text-uppercase">{{'Question ' + (index + 1) + '/' + questions.length}}</h5>
           </div>
           <div class="mb-3">
-            <p [innerHTML]="question.description"></p>
+            <p [innerHTML]="question?.description"></p>
           </div>
-          <ng-container [ngSwitch]="question.answerType">
+          <ng-container [ngSwitch]="question?.answerType">
             <div class="mb-3" *ngSwitchCase="1">
               <div class="flex-grow-1">
-                <div *ngFor="let answer of question.answers">
+                <div *ngFor="let answer of question?.answers">
                   <div class="form-check form-check-outline form-check-primary mb-3">
-                    <input class="form-check-input" type="checkbox" id="answer_{{answer.id}}"
-                      [attr.checked]="answer.isCorrect">
+                    <input class="form-check-input" type="checkbox" id="answer_{{answer.id}}">
                     <label for="answer_{{answer.id}}" class="form-check-label" for="formCheck13">
-                      {{answer.answerDescription}}
+                      {{answer?.description}}
                     </label>
                   </div>
                 </div>
               </div>
             </div>
             <div class="mb-3" *ngSwitchCase="2">
-              <div class="form-check mb-3" *ngFor="let answer of question.answers">
+              <div class="form-check mb-3" *ngFor="let answer of question?.answers">
                 <input type="radio" [value]="answer.id" class="form-check-input" name="selectedAnswer" id="answer_{{answer.id}}" formControlName="selectedAnswer">
-                <label for="answer_{{answer.id}}" class="form-check-label">{{answer.answerDescription}}</label>
+                <label for="answer_{{answer.id}}" class="form-check-label">{{answer?.description}}</label>
               </div>
             </div>
           </ng-container>
