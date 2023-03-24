@@ -56,6 +56,9 @@ public class ManualTestActivation : TestActivationMethod
     public TimeSpan ActiveUntil { get; set; }
 }
 
+/// <summary>
+/// All times are in UTC +0.
+/// </summary>
 public class TimePeriodActivation : TestActivationMethod
 {
     public DateTime ActiveFromDate { get; set; }

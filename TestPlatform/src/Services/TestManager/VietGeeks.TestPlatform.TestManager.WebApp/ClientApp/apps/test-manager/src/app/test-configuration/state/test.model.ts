@@ -1,11 +1,11 @@
 export interface Test {
   id: string;
   basicSettings: BasicSettings;
-  testSetSettings?: TestSets;
-  testAccessSettings?: TestAccess;
-  gradingSettings?: GradingSettings;
-  timeSettings?: TimeSettings;
-  testStartSettings?: TestStartSettings;
+  testSetSettings: TestSets;
+  testAccessSettings: TestAccess;
+  gradingSettings: GradingSettings;
+  timeSettings: TimeSettings;
+  testStartSettings: TestStartSettings;
   createdOn: Date;
   isEnabled: boolean;
   status: TestStatus;
@@ -14,7 +14,8 @@ export interface Test {
 export enum TestStatus {
   Draft = 1,
   Activated = 2,
-  Finished = 3
+  Scheduled = 3,
+  Finished = 4
 }
 
 export interface TimeSettings {
@@ -146,6 +147,15 @@ export interface RespondentIdentifyConfig {
   isRequired: boolean;
 }
 
+
+export enum TestActivationMethodType
+{
+    ManualTest = 1,
+    TimePeriod = 2
+}
+
 export function createTest(params: Partial<Test>) {
   return params as Test;
 }
+
+

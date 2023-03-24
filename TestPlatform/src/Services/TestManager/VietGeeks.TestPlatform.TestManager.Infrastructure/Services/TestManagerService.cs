@@ -8,6 +8,7 @@ using Azure.Messaging.ServiceBus;
 using System.Text.Json;
 using MongoDB.Bson;
 using Microsoft.Extensions.Logging;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -17,13 +18,15 @@ public class TestManagerService : ITestManagerService
     private readonly TestManagerDbContext _managerDbContext;
     private readonly ServiceBusClient _bus;
     private readonly ILogger<TestManagerService> _logger;
+    private readonly ITime _time;
 
-    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger)
+    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger, ITime time)
     {
         _mapper = mapper;
         _managerDbContext = managerDbContext;
         _bus = bus;
         _logger = logger;
+        _time = time;
     }
 
     public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
@@ -129,7 +132,7 @@ public class TestManagerService : ITestManagerService
         var questions = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id);
 
         // Check if can activate test.
-        var testRunTime = entity.EnsureCanActivate(questions.Count);
+        var testRunTime = entity.EnsureCanActivate(questions.Count, _time.UtcNow());
 
         using (var ctx = _managerDbContext.Transaction())
         {
@@ -150,7 +153,7 @@ public class TestManagerService : ITestManagerService
             });
 
             // Set current activated test run.
-            entity.Activate(testRun.ID);
+            entity.Activate(testRun.ID, testRunTime.Status);
 
             await _managerDbContext.InsertAsync(testRun);
             await _managerDbContext.InsertAsync(testRunQuestionBatches);

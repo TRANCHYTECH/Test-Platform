@@ -160,7 +160,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
           this.gradingCriteriasCtrl.get(k)?.patchValue(v);
           break;
         case GradingCriteriaConfigType.GradeRanges.toString(): {
-          const config: GradeRangeCriteria = v;
+          const config = v as GradeRangeCriteria;
           this.gradingCriteriasCtrl.get(k)?.patchValue({
             gradeType: config.gradeType,
             unit: config.unit

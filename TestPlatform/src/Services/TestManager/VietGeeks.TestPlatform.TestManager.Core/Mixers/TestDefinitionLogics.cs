@@ -7,13 +7,9 @@ namespace VietGeeks.TestPlatform.TestManager.Core;
 
 public static class TestDefinitionLogics
 {
-    public static (DateTime StartAtUtc, DateTime EndAtUtc) EnsureCanActivate(this TestDefinition testDefinition, int questionCount)
+    public static (TestDefinitionStatus Status, DateTime StartAtUtc, DateTime EndAtUtc) EnsureCanActivate(this TestDefinition testDefinition, int questionCount, DateTime checkMoment)
     {
-        if (testDefinition.Status == TestDefinitionStatus.Ended)
-        {
-            throw new TestPlatformException("TestEnded");
-        }
-
+        (TestDefinitionStatus, DateTime, DateTime) result;
         if (testDefinition.TimeSettings == null || testDefinition.TestSetSettings == null || testDefinition.TestAccessSettings == null || testDefinition.GradingSettings == null || testDefinition.TestStartSettings == null)
         {
             throw new TestPlatformException("IncompleteSetup");
@@ -24,46 +20,51 @@ public static class TestDefinitionLogics
             throw new TestPlatformException("MissTestActivationMethod");
         }
 
-        if ((testDefinition.TimeSettings.TestActivationMethod is ManualTestActivation method) == false)
-        {
-            throw new TestPlatformException("WrongActivationMethod");
-        }
 
         if (questionCount <= 0)
         {
             throw new TestPlatformException("MissQuestion");
         }
 
-        return (DateTime.UtcNow, DateTime.UtcNow.Add(method.ActiveUntil));
-    }
-
-    public static void EnsureCanSchedule(this TestDefinition testDefinition, DateTime scheduledMoment)
-    {
         if (testDefinition.Status == TestDefinitionStatus.Ended)
         {
             throw new TestPlatformException("TestEnded");
-
         }
 
-        if (testDefinition.TimeSettings == null || testDefinition.TestSetSettings == null || testDefinition.TestAccessSettings == null || testDefinition.GradingSettings == null || testDefinition.TestStartSettings == null)
+        if (testDefinition.TestInRunning())
         {
-            throw new TestPlatformException("IncompleteSetup");
+            throw new TestPlatformException("TestIsRunning");
         }
 
-        if (testDefinition.TimeSettings?.TestActivationMethod == null)
+        if (testDefinition.TimeSettings.TestActivationMethod is ManualTestActivation manualTestActivation)
         {
-            throw new TestPlatformException("MissTestActivationMethod");
+            if (manualTestActivation.ActiveUntil == TimeSpan.Zero)
+            {
+                throw new TestPlatformException("InvalidActiveUntil");
+            }
+
+            result = (TestDefinitionStatus.Activated, DateTime.UtcNow, DateTime.UtcNow.Add(manualTestActivation.ActiveUntil));
+        }
+        else if (testDefinition.TimeSettings.TestActivationMethod is TimePeriodActivation timePeriodActivation)
+        {
+            if (checkMoment >= timePeriodActivation.ActiveFromDate)
+            {
+                throw new TestPlatformException("The activate from date is invalid. It's in the pass");
+            }
+
+            if (timePeriodActivation.ActiveFromDate >= timePeriodActivation.ActiveUntilDate)
+            {
+                throw new TestPlatformException("The activate from dates are invalid. It's greater than until date");
+            }
+
+            result = (TestDefinitionStatus.Scheduled, timePeriodActivation.ActiveFromDate, timePeriodActivation.ActiveUntilDate);
+        }
+        else
+        {
+            throw new TestPlatformException("NotSupportedActivationType");
         }
 
-        if ((testDefinition.TimeSettings.TestActivationMethod is TimePeriodActivation method) == false)
-        {
-            throw new TestPlatformException("WrongActivationMethod");
-        }
-
-        if (scheduledMoment > method.ActiveFromDate)
-        {
-            throw new TestPlatformException("InvalidActiveFromDate");
-        }
+        return result;
     }
 
     public static bool TestInRunning(this TestDefinition testDefinition)
