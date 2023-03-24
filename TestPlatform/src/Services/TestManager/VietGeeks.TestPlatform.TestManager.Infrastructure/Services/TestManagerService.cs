@@ -215,6 +215,7 @@ public class TestManagerService : ITestManagerService
                         Receivers = receivers
                     };
 
+                    //todo: prevent harded code here.
                     var sender = _bus.CreateSender("send-test-access-code");
                     await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
                 }

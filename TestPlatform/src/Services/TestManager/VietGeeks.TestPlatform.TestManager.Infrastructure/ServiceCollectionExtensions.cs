@@ -20,7 +20,6 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<ITime, Time>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
-
         serviceCollection.AddAzureClients(builder => builder.AddServiceBusClient(options.ServiceBus.ConnectionString));
     }
 
