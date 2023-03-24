@@ -25,11 +25,26 @@ public class ProctorService : IProctorService
     // For verifying test, still use test definition instead of test run.
     public async Task<VerifyTestOutput> VerifyTest(VerifyTestInput input)
     {
+        if (string.IsNullOrEmpty(input.TestId) && string.IsNullOrEmpty(input.AccessCode))
+        {
+            throw new TestPlatformException("Invalid input");
+        }
+
         TestDefinition? matchedTestDef = null;
         string accessCode = string.Empty;
         if (!string.IsNullOrEmpty(input.TestId))
         {
-            matchedTestDef = await DB.Find<TestDefinition>().MatchID(input.TestId).ExecuteFirstAsync();
+            var getTestQuery = new Template<TestDefinition>(@"
+                [
+                    {
+                        '$match': {
+                            '_id': <id>
+                            'TestAccessSettings.Settings._t': 'PublicLinkType'
+                        }
+                    }
+                ]
+            ").Tag("id", $"ObjectId('{input.TestId}')");
+            matchedTestDef = await DB.PipelineSingleAsync(getTestQuery);
             accessCode = Guid.NewGuid().ToString();
         }
         else if (!string.IsNullOrEmpty(input.AccessCode))
@@ -48,9 +63,18 @@ public class ProctorService : IProctorService
             accessCode = input.AccessCode;
         }
 
-        if (matchedTestDef == null || string.IsNullOrEmpty(accessCode))
+        if (matchedTestDef == null)
         {
-            throw new TestPlatformException("Not found test with access code");
+            throw new TestPlatformException("Not found test");
+        }
+
+        // Check if there is an existing exam created with this access code. Means it is used already.
+        if (!string.IsNullOrEmpty(input.AccessCode))
+        {
+            if (await DB.CountAsync<Exam>(c => c.AccessCode == input.AccessCode) > 0)
+            {
+                throw new TestPlatformException("The access code is used");
+            }
         }
 
         // Check if test is activated/scheduled, and on time.

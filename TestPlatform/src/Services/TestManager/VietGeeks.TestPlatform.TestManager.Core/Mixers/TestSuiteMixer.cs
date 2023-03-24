@@ -12,11 +12,6 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Logics
         {
             // Check test access type.
             var testAccess = testDefinition.TestAccessSettings;
-            if (testAccess == null)
-            {
-                throw new Exception("Not Found Test Access Settings");
-            }
-
             if(testAccess.AccessType == TestAcessType.PublicLink)
             {
                 // Use test sets config

@@ -24,9 +24,6 @@ public class ProctorActor : Actor, IProctorActor
 
     public async Task<StartExamOutput> StartExam(StartExamInput input)
     {
-        //todo: implement logic if allow to start exam again or not.If not, check exam already started, then fail.
-        // also exam finished.
-        //todo: improve logic to get exam content. store in separarte storage within test runner scope? Now questions in exam and exam state might be mistached.
         var examContent = await _proctorService.GenerateExamContent(new()
         {
             ExamId = input.ExamId
