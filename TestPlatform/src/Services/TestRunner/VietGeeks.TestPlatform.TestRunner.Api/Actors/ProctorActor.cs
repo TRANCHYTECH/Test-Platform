@@ -1,6 +1,8 @@
-﻿using Dapr.Actors.Runtime;
+﻿using Dapr.Actors;
+using Dapr.Actors.Runtime;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.TestRunner.Contract;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
@@ -13,6 +15,11 @@ public class ProctorActor : Actor, IProctorActor
     public ProctorActor(ActorHost host, IProctorService proctorService) : base(host)
     {
         _proctorService = proctorService;
+    }
+
+    public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
+    {
+        return await _proctorService.ProvideExamineeInfo(input);
     }
 
     public async Task<StartExamOutput> StartExam(StartExamInput input)
@@ -31,7 +38,6 @@ public class ProctorActor : Actor, IProctorActor
             examState = new ExamState
             {
                 ExamId = input.ExamId,
-                TestRunId = input.TestRunId,
                 Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray()),
                 StartedAt = DateTime.UtcNow
             };
@@ -124,7 +130,5 @@ public class ProctorActor : Actor, IProctorActor
         public DateTime StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
-        
-        public string TestRunId { get; set; } = default!;
     }
 }

@@ -84,17 +84,18 @@ public class ProctorService : IProctorService
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
         var exam = await GetExam(input.TestRunId, input.AccessCode);
-        if (exam == null)
+        if (exam != null)
         {
-            exam = new Exam
-            {
-                TestRunId = input.TestRunId,
-                AccessCode = input.AccessCode,
-                ExamineeInfo = input.ExamineeInfo
-            };
-
-            await DB.InsertAsync(exam);
+            throw new TestPlatformException("The examinee already provided info");
         }
+
+        exam = new Exam
+        {
+            TestRunId = input.TestRunId,
+            AccessCode = input.AccessCode,
+            ExamineeInfo = input.ExamineeInfo
+        };
+        await DB.InsertAsync(exam);
 
         return exam.ID;
     }
@@ -102,40 +103,51 @@ public class ProctorService : IProctorService
     public async Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input)
     {
         // Ensure exam is processed by order by checking if exam already created from step providing examinee info.
+        //todo: 3 queries here, possible to improve.
         var exam = await EnsureExam(input.ExamId);
+        var testRun = await DB.Find<TestRun>().Match(exam.TestRunId).ExecuteSingleAsync();
+        var testDefinition = testRun.TestDefinitionSnapshot;
+        var questions = await GetTestRunQuestions(testRun.ID);
+
+        List<QuestionDefinition> selectedQuestions;
         if (exam.Questions == null || !exam.Questions.Any())
         {
-            var testRun = await DB.Find<TestRun>().Match(exam.TestRunId).ExecuteSingleAsync();
-            var testDefinition = testRun.TestDefinitionSnapshot;
-            //todo: discuss based on test portal. That can edit time settings and other parts. currently assume all info not changed when activated.
-            var timeSettings = testDefinition.TimeSettings ?? throw new Exception("TimeSettings not configured properly");
-            var gradingSettings = testDefinition.GradingSettings ?? throw new Exception("GradingSettings not configured properly");
+            selectedQuestions = testDefinition.GenerateTestSet(questions, exam.AccessCode);
+            exam.Questions = selectedQuestions.Select(c => c.ID).ToArray();
 
-            // Get questions of test run.
-            var questions = await GetTestRunQuestions(testRun.ID);
-
-            //todo: only store brief info of questions.
-            exam.Questions = testDefinition.GenerateTestSet(questions, exam.AccessCode);
-            //todo: check if no need to store, query when finishing.
-            exam.TimeSettings = timeSettings;
-            exam.GradeSettings = gradingSettings;
-            
             await DB.SaveAsync(exam);
         }
+        else
+        {
+            selectedQuestions = exam.Questions.Select(id => questions.Single(o => o.ID == id)).ToList();
+        }
 
-        return exam.ToOutput();
+        return new()
+        {
+            Questions = selectedQuestions.Select(c => c.ToViewModel()).ToArray(),
+            TestDuration = testDefinition.TimeSettings.TestDurationMethod.ToViewModel(),
+            CanSkipQuestion = testDefinition.TimeSettings.AnswerQuestionConfig.SkipQuestion
+        };
     }
 
     public async Task<FinishExamOutput> FinishExam(FinishExamInput input)
     {
         var exam = await EnsureExam(input.ExamId);
+        //todo: 3 queries here, possible to improve. by temp store, then delete when finish. or scheduler. or cache tech.
+        var testRun = await DB.Find<TestRun>().Match(exam.TestRunId).ExecuteSingleAsync();
+        var testDefinition = testRun.TestDefinitionSnapshot;
+        var questions = await GetTestRunQuestions(testRun.ID);
+        var selectedQuestions = exam.Questions.Select(id => questions.Single(o => o.ID == id)).ToList();
+
+        exam.Answers = input.Answers;
         exam.StartedAt = input.StartedAt;
         exam.FinishedAt = input.FinishededAt;
-        exam.FinalMark = CalculateExamMark(exam, input.Answers);
-        //todo: check way to get total points of question, because there is field Bonous Point.
-        exam.Grading = exam.GradeSettings.CalculateGrading(exam.FinalMark, exam.Questions.Sum(c => c.ScoreSettings.TotalPoints));
-        // Calculate pass grading.
-        await DB.SaveOnlyAsync(exam, new[] { nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark) });
+        exam.FinalMark = CalculateExamMark(selectedQuestions, input.Answers);
+
+        exam.Grading = testDefinition.GradingSettings.CalculateGrading(exam.FinalMark, selectedQuestions.Sum(c => c.ScoreSettings.TotalPoints));
+
+        var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading) };
+        await DB.SaveOnlyAsync(exam, changedProps);
 
         return new FinishExamOutput
         {
@@ -171,10 +183,10 @@ public class ProctorService : IProctorService
         return await DB.Find<TestDefinition>().MatchID(testDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
     }
 
-    private static int CalculateExamMark(Exam exam, Dictionary<string, string[]> answers)
+    private static int CalculateExamMark(List<QuestionDefinition> questions, Dictionary<string, string[]> answers)
     {
         int finalMark = 0;
-        foreach (var question in exam.Questions)
+        foreach (var question in questions)
         {
             string[]? answer;
             answers.TryGetValue(question.ID, out answer);

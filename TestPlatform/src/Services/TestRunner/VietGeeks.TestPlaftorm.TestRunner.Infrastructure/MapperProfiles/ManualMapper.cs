@@ -43,19 +43,10 @@ public static class ManualMapper
         throw new Exception("Not supported type");
     }
 
-    public static ExamContentOutput ToOutput(this Exam exam)
-    {
-        return new()
-        {
-            Questions = exam.Questions.Select(ManualMapper.ToViewModel).ToArray(),
-            TestDuration = exam.TimeSettings.TestDurationMethod.ToViewModel(),
-            CanSkipQuestion = exam.TimeSettings.AnswerQuestionConfig.SkipQuestion
-        };
-    }
-
     public static VerifyTestOutput ToOutput(this TestRun testRun, TestDefinition testDefinition, string accessCode)
     {
         var result = new VerifyTestOutput();
+        result.ProctorExamId = $"{testRun.ID}__{accessCode}";
         result.TestRunId = testRun.ID;
         result.StartAtUtc = testRun.StartAtUtc;
         result.EndAtUtc = testRun.EndAtUtc;
