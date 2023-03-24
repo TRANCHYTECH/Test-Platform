@@ -8,6 +8,8 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
 
 public interface IProctorActor : IActor
 {
+    Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input);
+
     Task<StartExamOutput> StartExam(StartExamInput input);
 
     Task SubmitAnswer(SubmitAnswerInput input);

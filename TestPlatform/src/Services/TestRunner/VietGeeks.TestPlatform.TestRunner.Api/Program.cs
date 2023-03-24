@@ -4,12 +4,13 @@ using System.Reflection;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
+using VietGeeks.TestPlatform.TestRunner.Api.Filters;
 using VietGeeks.TestPlatform.TestRunner.Api.Swagger;
 using VietGeeks.TestPlatform.TestRunner.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(c=>c.Filters.Add<ActorInvokeExceptionFilterAttribute>());
 builder.Services.AddVietGeeksAspNetCore(new()
 {
     DataProtection = builder.Configuration.GetSection("DataProtection").Get<DataProtectionOptions>()

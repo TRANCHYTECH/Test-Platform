@@ -14,6 +14,8 @@ public class TestSession
 
     public string ClientProof { get; set; } = default!;
 
+    public string ProctorExamId { get; set; } = default!;
+
     public string ExamId { get; set; } = default!;
 
     [JsonIgnore]
@@ -49,6 +51,9 @@ public class VerifyTestOutput
     public DateTime StartAtUtc { get; set; }
     
     public DateTime EndAtUtc { get; set; }
+
+    public string ProctorExamId { get; set; } = default!;
+
 }
 
 public class SubmitAnswerViewModel
@@ -67,7 +72,6 @@ public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
 {
     public string TestRunId { get; set; } = default!;
     public string AccessCode { get; set; } = default!;
-    public string ExamId { get; set; } = default!;
 }
 
 public enum PreStartSteps

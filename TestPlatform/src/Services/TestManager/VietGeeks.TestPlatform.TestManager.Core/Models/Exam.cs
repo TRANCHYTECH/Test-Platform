@@ -10,24 +10,22 @@ public class Exam : EntityBase
 {
     public string TestRunId { get; set; } = default!;
 
-    public string? AccessCode { get; set; }
+    public string AccessCode { get; set; } = default!;
 
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
+    
+    public string[] Questions { get; set; } = default!;
 
-    //todo: Should store sort version of questions.
-    public List<QuestionDefinition> Questions { get; set; } = default!;
+    public Dictionary<string, string[]> Answers { get; set; } = default!;
 
     public int FinalMark { get; set; }
+
+    public List<AggregatedGrading>? Grading { get; set; }
 
     public DateTime StartedAt { get; set; }
 
     public DateTime FinishedAt { get; set; }
-
-    public TimeSettingsPart TimeSettings { get; set; } = default!;
-
-    public GradingSettingsPart GradeSettings { get; set; } = default!;
     
-    public List<AggregatedGrading>? Grading { get; set; }
 }
 
 

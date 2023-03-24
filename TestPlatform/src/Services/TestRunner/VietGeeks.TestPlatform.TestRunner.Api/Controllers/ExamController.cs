@@ -33,6 +33,7 @@ public class ExamController : ControllerBase
         var verifyResult = await _proctorService.VerifyTest(input);
         SetTestSession(new()
         {
+            ProctorExamId = verifyResult.ProctorExamId,
             TestRunId = verifyResult.TestRunId,
             AccessCode = verifyResult.AccessCode,
             PreviousStep = PreStartSteps.VerifyTest,
@@ -52,23 +53,22 @@ public class ExamController : ControllerBase
     public async Task<IActionResult> ProvideExamineeInfo(ProvideExamineeInfoViewModel data)
     {
         var testSession = GetTestSession(PreStartSteps.ProvideExamineeInfo);
-        //todo: move this logic to Exam actor to prevent frault if mutiple submiting from browsers.
-        // by checking exist exam with composite id.
-        var examId = await _proctorService.ProvideExamineeInfo(new()
+        //todo: validate examinee info.
+
+        var proctorExamActor = GetProctorActor(testSession);
+        var examId = await proctorExamActor.ProvideExamineeInfo(new()
         {
             TestRunId = testSession.TestRunId,
             AccessCode = testSession.AccessCode,
             ExamineeInfo = data.ExamineeInfo
         });
-
         SetTestSession(new()
         {
+            ProctorExamId = testSession.ProctorExamId,
             ExamId = examId,
-            //todo: consider to remove 2 below props because seem no need them
-            TestRunId = testSession.TestRunId,
-            AccessCode = testSession.AccessCode,
             PreviousStep = PreStartSteps.ProvideExamineeInfo,
             ClientProof = testSession.ClientProof,
+            //todo: discuss logic here.
             LifeTime = TimeSpan.FromMinutes(5)
         });
 
@@ -83,19 +83,16 @@ public class ExamController : ControllerBase
         var proctorExamActor = GetProctorActor(testSession);
         var examContent = await proctorExamActor.StartExam(new()
         {
-            ExamId = testSession.ExamId,
-            TestRunId = testSession.TestRunId
+            ExamId = testSession.ExamId
         });
 
         SetTestSession(new()
         {
-            ExamId = testSession.ExamId,
-            TestRunId = testSession.TestRunId,
-            AccessCode = testSession.AccessCode,
+            ProctorExamId = testSession.ProctorExamId,
             PreviousStep = PreStartSteps.Start,
             ClientProof = testSession.ClientProof,
-            // Logical total duration + estimated delay time 30 mins.
-            LifeTime = examContent.TotalDuration.Add(TimeSpan.FromMinutes(30))
+            //todo: discuss logic here. Logical total duration + estimated delay time 5 mins.
+            LifeTime = examContent.TotalDuration.Add(TimeSpan.FromMinutes(5))
         });
 
         return Ok(examContent);
@@ -127,7 +124,7 @@ public class ExamController : ControllerBase
 
     private static IProctorActor GetProctorActor(TestSession testSession)
     {
-        return ActorProxy.Create<IProctorActor>(new ActorId(testSession.ExamId), "ProctorActor");
+        return ActorProxy.Create<IProctorActor>(new ActorId(testSession.ProctorExamId), "ProctorActor");
     }
 
     private void SetTestSession(TestSession testSession)
@@ -144,29 +141,32 @@ public class ExamController : ControllerBase
         switch (forStep)
         {
             case PreStartSteps.ProvideExamineeInfo:
-            {
-                if(session.PreviousStep != PreStartSteps.VerifyTest) {
-                    throw new TestPlatformException("InvalidStep");
+                {
+                    if (session.PreviousStep != PreStartSteps.VerifyTest)
+                    {
+                        throw new TestPlatformException("InvalidStep");
+                    }
+                    break;
                 }
-                break;
-            }
-            
+
             case PreStartSteps.Start:
-            {
-                if(session.PreviousStep != PreStartSteps.ProvideExamineeInfo) {
-                    throw new TestPlatformException("InvalidStep");
+                {
+                    if (session.PreviousStep != PreStartSteps.ProvideExamineeInfo)
+                    {
+                        throw new TestPlatformException("InvalidStep");
+                    }
+                    break;
                 }
-                break;
-            }
 
             case PreStartSteps.SubmitAnswer:
             case PreStartSteps.FinishExam:
-            {
-                if(session.PreviousStep != PreStartSteps.Start) {
-                    throw new TestPlatformException("InvalidStep");
+                {
+                    if (session.PreviousStep != PreStartSteps.Start)
+                    {
+                        throw new TestPlatformException("InvalidStep");
+                    }
+                    break;
                 }
-                break;
-            }
         }
 
         return session;

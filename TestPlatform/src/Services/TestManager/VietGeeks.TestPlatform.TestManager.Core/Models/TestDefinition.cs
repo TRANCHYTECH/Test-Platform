@@ -7,15 +7,15 @@ public class TestDefinition : EntityBase
 {
     public TestBasicSettingsPart BasicSettings { get; set; } = default!;
 
-    public TimeSettingsPart? TimeSettings { get; set; }
+    public TimeSettingsPart TimeSettings { get; set; } = default!;
 
-    public TestSetSettingsPart? TestSetSettings { get; set; }
+    public TestSetSettingsPart TestSetSettings { get; set; } = default!;
 
-    public GradingSettingsPart? GradingSettings { get; set; }
+    public GradingSettingsPart GradingSettings { get; set; } = default!;
 
-    public TestAccessSettingsPart? TestAccessSettings { get; set; }
+    public TestAccessSettingsPart TestAccessSettings { get; set; } = default!;
 
-    public TestStartSettingsPart? TestStartSettings { get; set; }
+    public TestStartSettingsPart TestStartSettings { get; set; } = default!;
 
     public CurrentTestRunPart? CurrentTestRun { get; set; }
 
