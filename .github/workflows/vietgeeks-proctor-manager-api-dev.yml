@@ -43,7 +43,7 @@ jobs:
       with:
         creds: ${{ secrets.vietgeeks_testmanager_webapp_SPN }}
     - name: Deploy to containerapp
-      uses: azure/CLI@v2
+      uses: azure/CLI@v1.0.7
       with:
         inlineScript: >
           az config set extension.use_dynamic_install=yes_without_prompt
