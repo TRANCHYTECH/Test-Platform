@@ -11,11 +11,11 @@
                     <div class="list-group list-group-flush">
                         <ng-container *ngFor="let menu of menus$ | async">
                             <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
-                                [class.disabled]="menu.disable"
-                                class="list-group-item list-group-item-action border-0">
+                                [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
                                 <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
                         </ng-container>
-                        <button *ngIf="(testStatus | async) === 1" class="btn btn-primary w-sm" (click)="activateTest()">Activate Test</button>
+                        <button *ngIf="(testStatus | async) === 1" class="btn btn-primary w-sm"
+                            (click)="activateTest()">{{ "labels." + activateMethod | translate}}</button>
                     </div>
                 </ng-template>
             </ngb-panel>

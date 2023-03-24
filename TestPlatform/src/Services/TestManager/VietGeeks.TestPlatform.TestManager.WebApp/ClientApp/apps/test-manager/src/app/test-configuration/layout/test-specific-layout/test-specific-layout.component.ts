@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService } from '@viet-geeks/shared';
 import { BehaviorSubject, filter, Subject } from 'rxjs';
+import { TestActivationMethodType } from '../../state/test.model';
 import { TestsQuery } from '../../state/tests.query';
 import { TestsService } from '../../state/tests.service';
 
@@ -75,10 +76,17 @@ export class TestSpecificLayoutComponent implements OnInit {
     });
   }
 
+  activateMethod: 'activate' | 'schedule' | '' = '';
+
   ngOnInit(): void {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
         this.testStatus.next(test.status);
+        if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {
+          this.activateMethod = 'activate';
+        } else if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.TimePeriod) {
+          this.activateMethod = 'schedule';
+        }
       }
     });
   }
