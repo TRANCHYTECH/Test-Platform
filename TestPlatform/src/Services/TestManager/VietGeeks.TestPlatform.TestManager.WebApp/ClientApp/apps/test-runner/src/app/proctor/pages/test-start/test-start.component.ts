@@ -1,8 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Timestamp } from 'rxjs';
+import { StartExamOutput, TestDuration, TimeSpan } from '../../../api/models';
 import { TestSessionService } from '../../../services/test-session.service';
+import { TimeSettings } from '../../../state/test-session.model';
 import { TestRespondentField } from '../../../state/test.model';
 import { ProctorService } from '../../proctor.service';
 import { TestStartConfig } from './data';
@@ -40,6 +42,11 @@ export class TestStartComponent implements OnInit {
     const respondentIdentify = this.respondentIdentifyForm.value;
     await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify));
     const startExamOutput = await firstValueFrom(this._proctorService.startExam());
+    this._testSessionService.setSessionData({
+      startTime: new Date(startExamOutput.startedAt ?? ''),
+      timeSettings: this.mapToTimeSettings(startExamOutput.testDuration)
+    });
+
     this._testSessionService.setQuestions(startExamOutput.questions ?? []);
     this.router.navigate(['test/question']);
   }
@@ -60,13 +67,38 @@ export class TestStartComponent implements OnInit {
 
   private setupSessionData() {
     const sessionData = this._testSessionService.getSessionData();
-
-    if (!sessionData?.accessCode) {
-      this.router.navigate(['']);
-    }
-
     this.config.instruction = sessionData.instructionMessage ?? '';
     this.config.name = sessionData.testDescription ?? '';
     this.config.consentMessage = sessionData.consentMessage ?? '';
+  }
+
+
+  private mapToTimeSettings(testDuration?: TestDuration): TimeSettings {
+    if (testDuration == null) {
+      return {};
+    }
+
+    const durationString = testDuration.duration?.toString();
+    if (durationString == null) {
+      return {};
+    }
+
+    const duration = durationString.split(':').reduce((r, v, i) => {
+      switch (i) {
+        case 0:
+          r.hours = parseInt(v);
+          break;
+        case 1:
+          r.minutes = parseInt(v);
+          break;
+      }
+
+      return r;
+    }, {} as TimeSpan)
+
+    return {
+      duration: duration,
+      method: testDuration.method
+    };
   }
 }

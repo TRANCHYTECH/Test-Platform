@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { interval, Subscription } from 'rxjs';
 import { ExamQuestion } from '../../../api/models';
 import { TestSessionService } from '../../../services/test-session.service';
-import { TestSession } from '../../../state/test-session.model';
+import { TestDurationMethod, TestSession } from '../../../state/test-session.model';
 import { ProctorService } from '../../proctor.service';
 @Component({
   selector: 'viet-geeks-test-question',
@@ -16,12 +16,12 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   private _testSessionService = inject(TestSessionService);
 
   questions: ExamQuestion[] = [];
-  sessionData?: TestSession;
+  sessionData: TestSession = {};
   answerForm: FormGroup;
   labels: string[] = [];
   index = 0;
   question?: ExamQuestion;
-  endTime: Date;
+  endTime: Date = new Date();
 
   milliSecondsInASecond = 1000;
   hoursInADay = 24;
@@ -40,16 +40,14 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this.answerForm = this._fb.group({
       selectedAnswer: ''
     });
-
-    this.endTime = new Date();
-    this.endTime.setMinutes(this.endTime.getMinutes() + 30);
   }
 
   ngOnInit(): void {
     this.questions = this._testSessionService.getQuestions() ?? [];
-    this.sessionData = this._testSessionService.getSessionData();
     this.question = this.questions[this.index];
-    this.subscription = interval(1000)
+    this.sessionData = this._testSessionService.getSessionData();
+    this.initEndTime();
+    this.subscription = interval(this.milliSecondsInASecond)
       .subscribe(() => this.getTimeDifference());
   }
 
@@ -62,10 +60,17 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       this.index++;
       this.question = this.questions[this.index];
     }
+
+    this.initEndTime();
   }
 
   private getTimeDifference() {
     this.timeDifference = this.endTime.getTime() - new Date().getTime();
+
+    if (this.timeDifference <= 0) {
+      this.handleEndTime();
+    }
+
     this.allocateTimeUnits(this.timeDifference);
   }
 
@@ -74,5 +79,28 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this.minutesToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour) % this.SecondsInAMinute);
     this.hoursToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute) % this.hoursInADay);
     this.daysToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute * this.hoursInADay));
+  }
+
+  private handleEndTime() {
+    if (this.sessionData?.timeSettings?.method == TestDurationMethod.CompleteTestTime) {
+      // TODO: navigate to Finish
+    } else {
+      this.submit();
+    }
+  }
+
+  private initEndTime() {
+    const timeSettings = this.sessionData.timeSettings;
+    const durationInMinutes = (timeSettings?.duration?.hours ?? 0) * 60 + (timeSettings?.duration?.minutes ?? 0);
+
+    if (timeSettings?.method == TestDurationMethod.CompleteTestTime) {
+      const startTime = this.sessionData.startTime ?? new Date();
+      this.endTime = new Date();
+      this.endTime.setMinutes(startTime.getMinutes() + durationInMinutes);
+    }
+    else {
+      this.endTime = new Date();
+      this.endTime.setMinutes(this.endTime.getMinutes() + durationInMinutes);
+    }
   }
 }
