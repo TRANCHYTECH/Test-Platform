@@ -96,4 +96,12 @@ public class TestDefinitionManagementController : ControllerBase
 
         return Ok(testDefiniton);
     }
+
+    [HttpPost("{id}/End")]
+    public async Task<IActionResult> End(string id)
+    {
+        var testDefiniton = await _testManagerService.EndTestDefinition(id);
+
+        return Ok(testDefiniton);
+    }
 }

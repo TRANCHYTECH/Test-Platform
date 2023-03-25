@@ -94,7 +94,7 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     abstract get canSubmit(): boolean;
 
     get isReadonly(){
-        return this.test.status !== TestStatus.Draft;
+        return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
     }
 
     maskReadyForUI() {

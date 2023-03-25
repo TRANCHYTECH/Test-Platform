@@ -9,6 +9,7 @@ using System.Text.Json;
 using MongoDB.Bson;
 using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -199,6 +200,42 @@ public class TestManagerService : ITestManagerService
         {
             IsReady = true
         };
+    }
+
+    public async Task<TestDefinitionViewModel> EndTestDefinition(string id)
+    {
+        // Verify if status is in running.
+        var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status)).ExecuteSingleAsync();
+        if(validEntity == null)
+        {
+            throw new TestPlatformException("NotFoundTestDefinition");
+        }
+
+        var testRun = await _managerDbContext.Find<TestRun>().Match(c => c.TestDefinitionSnapshot.ID == validEntity.ID).ExecuteSingleAsync();
+        if (testRun == null)
+        {
+            throw new TestPlatformException("NotFoundTestRun");
+        }
+
+        //todo: change to datetime.
+        testRun.ExplicitEnd = true;
+        testRun.TestDefinitionSnapshot = validEntity;
+
+        validEntity.End();
+
+        using (var ctx = _managerDbContext.Transaction())
+        {
+            //todo: improve performance by save affected parts.
+            await _managerDbContext.SaveAsync(validEntity);
+            await _managerDbContext.SaveAsync(testRun);
+            await ctx.CommitTransactionAsync();
+        }
+
+        return _mapper.Map<TestDefinitionViewModel>(validEntity);
+
+        // End test run.
+        // Copy latest test def snapshot.
+        // Change test def status
     }
 
     private async Task SendAccessCodes(TestDefinition entity)

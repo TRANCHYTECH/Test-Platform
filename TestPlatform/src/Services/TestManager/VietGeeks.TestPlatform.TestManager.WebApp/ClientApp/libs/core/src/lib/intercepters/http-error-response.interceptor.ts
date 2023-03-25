@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { inject, Injectable } from "@angular/core";
 import { catchError, Observable, throwError } from "rxjs";
 import { CoreEventsService } from "../services/core-events.service";
+import { has } from 'lodash-es';
 
 @Injectable()
 export class HttpErrorResponseInterceptor implements HttpInterceptor {
@@ -9,19 +10,19 @@ export class HttpErrorResponseInterceptor implements HttpInterceptor {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(req).pipe(catchError((error: HttpErrorResponse) => {
-            if (error.status == 400) {
+        return next.handle(req).pipe(catchError((errorResponse: HttpErrorResponse) => {
+            if (errorResponse.status == 400) {
                 let errorMessage = '';
-                if (error.error instanceof Object) {
-                    errorMessage = error.error.title;
+                if (has(errorResponse.error, 'errors')) {
+                    errorMessage = errorResponse.error.title;
                 } else {
-                    errorMessage = error.error;
+                    errorMessage = errorResponse.error.error;
                 }
 
                 this.coreEventsService.httpCallErrors.next(errorMessage);
             }
 
-            return throwError(() => error);
+            return throwError(() => errorResponse);
         }));
     }
 }

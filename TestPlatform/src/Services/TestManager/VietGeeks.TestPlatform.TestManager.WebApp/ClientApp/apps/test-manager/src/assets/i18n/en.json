@@ -33,6 +33,7 @@
   },
   "labels": {
     "activate": "Activate",
-    "schedule": "Schedule"
+    "schedule": "Schedule",
+    "endTest": "End Test"
   }
 }

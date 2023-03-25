@@ -1,7 +1,7 @@
 <viet-geeks-breadcrumbs [title]="title" [breadcrumbItems]="[]"></viet-geeks-breadcrumbs>
 <div class="row">
     <div class="col-lg-3 col-xl-2">
-        <div class="badge bg-primary text-wrap">{{ testStatus | async | testStatus }}</div>
+        <div class="badge bg-primary text-wrap">{{ (testStatus | async) | testStatus }}</div>
         <ngb-accordion class="accordion-flush" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
             <ngb-panel id="test-config">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
@@ -14,8 +14,10 @@
                                 [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
                                 <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
                         </ng-container>
-                        <button *ngIf="(testStatus | async) === 1" class="btn btn-primary w-sm"
+                        <button *ngIf="(testStatus | async)  === 1" class="btn btn-primary w-sm" style="margin-top: 10px;"
                             (click)="activateTest()">{{ "labels." + activateMethod | translate}}</button>
+                        <button *ngIf="(testStatus | async) === 2 || (testStatus | async) === 3" class="btn btn-primary w-sm" style="margin-top: 10px;"
+                            (click)="endTest()">{{ "labels.endTest" | translate}}</button>
                     </div>
                 </ng-template>
             </ngb-panel>
