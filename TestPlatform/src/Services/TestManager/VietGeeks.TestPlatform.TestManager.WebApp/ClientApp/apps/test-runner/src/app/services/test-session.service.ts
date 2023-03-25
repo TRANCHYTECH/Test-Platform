@@ -7,6 +7,10 @@ export class TestSessionService {
   private _sessionData: Partial<TestSession> = {};
   private _questions: ExamQuestion[] = [];
 
+  public hasSessionData() {
+    return !!this._sessionData.accessCode;
+  }
+
   public setSessionData(sessionData: Partial<TestSession>) {
     this._sessionData = {...this._sessionData, ...sessionData};
   }
