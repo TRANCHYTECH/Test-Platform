@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService } from '@viet-geeks/shared';
 import { BehaviorSubject, filter, Subject } from 'rxjs';
-import { TestActivationMethodType } from '../../state/test.model';
+import { TestActivationMethodType, TestStatus } from '../../state/test.model';
 import { TestsQuery } from '../../state/tests.query';
 import { TestsService } from '../../state/tests.service';
 
@@ -18,7 +18,7 @@ export class TestSpecificLayoutComponent implements OnInit {
   title?= '';
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testId!: string;
-  testStatus = new Subject<number>();
+  testStatus = new Subject<TestStatus>();
   private _testsService = inject(TestsService);
   private _testsQuery = inject(TestsQuery);
   private _notifyService = inject(ToastService);
@@ -81,6 +81,7 @@ export class TestSpecificLayoutComponent implements OnInit {
   ngOnInit(): void {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
+        console.log('test come', test);
         this.testStatus.next(test.status);
         if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {
           this.activateMethod = 'activate';
@@ -95,4 +96,10 @@ export class TestSpecificLayoutComponent implements OnInit {
     await this._testsService.activate(this.testId);
     this._notifyService.success('Test activated successfully');
   }
+
+  async endTest() {
+    await this._testsService.end(this.testId);
+    this._notifyService.success('Test endded successfully');
+  }
+
 }

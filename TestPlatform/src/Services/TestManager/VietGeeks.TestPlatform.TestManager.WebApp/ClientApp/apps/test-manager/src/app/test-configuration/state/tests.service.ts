@@ -78,6 +78,12 @@ export class TestsService {
     })));
   }
 
+  end(id: string) {
+    return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/End`, null).pipe(tap(rs => {
+      this._testsStore.update(id, rs);
+    })));
+  }
+
   private get testManagerApiBaseUrl() {
     return this._appSettingService.get<AppSettings>().testManagerApiBaseUrl;
   }

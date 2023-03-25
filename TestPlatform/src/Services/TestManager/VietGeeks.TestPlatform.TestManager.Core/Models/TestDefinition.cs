@@ -1,6 +1,6 @@
 ﻿using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
-
+using System.Linq;
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 [Collection("TestDefinition")]
@@ -24,7 +24,7 @@ public class TestDefinition : EntityBase
 
     public void Activate(string testRunId, TestDefinitionStatus status)
     {
-        if (status == TestDefinitionStatus.Activated || status == TestDefinitionStatus.Scheduled)
+        if (TestDefinition.ActiveStatuses.Contains(status))
         {
             Status = status;
             CurrentTestRun = new CurrentTestRunPart
@@ -36,8 +36,15 @@ public class TestDefinition : EntityBase
         {
             throw new TestPlatformException("Invalid status");
         }
-
     }
+
+    public void End()
+    {
+        Status = TestDefinitionStatus.Ended;
+        CurrentTestRun = null;
+    }
+
+    public static TestDefinitionStatus[] ActiveStatuses => new[] { TestDefinitionStatus.Activated, TestDefinitionStatus.Scheduled };
 }
 
 public enum TestDefinitionStatus
