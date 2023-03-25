@@ -14,7 +14,7 @@
                             </label>
                         </div>
                         <ng-container formGroupName="{{option.id}}">
-                            <input type="text" class="form-control border-dashed" [inputMask]="mmssInputMask"
+                            <input type="text" class="form-control border-dashed" [inputMask]="option.inputMask"
                                 style="width: 150px;" formControlName="duration">
                         </ng-container>
                     </div>
@@ -87,7 +87,7 @@
                                         style="width: 200px;" formControlName="activeUntilDate">
                                 </div>
                                 <div class="col-lg-12">
-                                    <label>Current server time in your time zone is: <b>10:47 ICT</b>. You can change
+                                    <label>Current server time in your time zone is: <b>{{currentUserTime}} ({{currentUserTimeZone}})</b>. You can change
                                         your
                                         time
                                         zone in : </label>
@@ -112,7 +112,7 @@
                     </div>
                 </div>
             </div>
-            <div class="text-end mb-4">
+            <div class="text-end mb-4" *ngIf="!isReadonly">
                 <div class="d-flex gap-1 justify-content-end">
                     <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
                         [canSubmit]="canSubmit"></viet-geeks-submit-button>

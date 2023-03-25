@@ -6,9 +6,10 @@ import { filter, Observable, tap } from "rxjs";
 export class TestSessionInterceptor implements HttpInterceptor {
     readonly TestSession = 'TestSession';
     private _currentTestSession = '';
-
+    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        
         //todo: remove trick here.
         if (/exam/i.test(req.url)) {
             req = req.clone({

@@ -14,6 +14,7 @@ import { of, tap } from 'rxjs';
 import { AppSettings } from './app-setting.model';
 import { TestSessionInterceptor } from './test-session.intercepter';
 import { ApiModule } from './api/api.module';
+import { FingerprintjsProAngularModule } from '@fingerprintjs/fingerprintjs-pro-angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,7 +25,11 @@ import { ApiModule } from './api/api.module';
     LayoutModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     NgbModule,
-    ApiModule.forRoot({ rootUrl: environment.testRunnerApiBaseUrl })
+    ApiModule.forRoot({ rootUrl: environment.testRunnerApiBaseUrl }),
+    FingerprintjsProAngularModule.forRoot({loadOptions: {
+      apiKey: "JdKT9k9MyKIUAudQFlcB",
+      region: "ap"
+    }}),
   ],
   providers: [
     {

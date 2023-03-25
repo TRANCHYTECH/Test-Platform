@@ -5,7 +5,7 @@ import { untilDestroyed } from "@ngneat/until-destroy";
 import { EDITOR_API_KEY, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
 import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, firstValueFrom } from "rxjs";
-import { Test, createTest } from "../../../state/test.model";
+import { Test, createTest, TestStatus } from "../../../state/test.model";
 import { TestsQuery } from "../../../state/tests.query";
 import { TestsService } from "../../../state/tests.service";
 
@@ -93,6 +93,10 @@ export abstract class TestSpecificBaseComponent implements OnInit {
 
     abstract get canSubmit(): boolean;
 
+    get isReadonly(){
+        return this.test.status !== TestStatus.Draft;
+    }
+
     maskReadyForUI() {
         this._readyForUI.next(true);
     }
@@ -116,5 +120,14 @@ export abstract class TestSpecificBaseComponent implements OnInit {
                 control?.markAsTouched();
             });
         }));
+    }
+
+    listenTypeChange(formGroup: FormGroup, instance: object, controlIds: number[]) {
+        formGroup.get(['type'])?.valueChanges.pipe(untilDestroyed(instance)).subscribe(v => {
+            controlIds.forEach(id => {
+                const ctrl = formGroup.get([id.toString()]);
+                v === id ? ctrl?.enable() : ctrl?.disable();
+            })
+        });
     }
 }
