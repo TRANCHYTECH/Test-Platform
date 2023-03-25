@@ -21,7 +21,7 @@
                                     </div>
                                     <label>Draw</label>
                                     <input class="form-control border-dashed" type="number" style="width: 100px;"
-                                        formControlName="draw" [controlErrorAnchor]="anchor">
+                                        formControlName="draw" [controlErrorAnchor]="anchor" [readOnly]="isReadonly">
                                     <label style="min-width:30%">questions out of
                                         {{control.get('totalQuestions')?.value}}.</label>
                                 </ng-container>
@@ -52,7 +52,7 @@
                 </div> -->
                 </div>
             </div>
-            <div class="text-end mb-4">
+            <div class="text-end mb-4" *ngIf="!isReadonly">
                 <div class="d-flex gap-1 justify-content-end">
                     <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
                         [canSubmit]="canSubmit"></viet-geeks-submit-button>

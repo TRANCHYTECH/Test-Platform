@@ -1,6 +1,6 @@
 <div class="row g-4 mb-3">
   <div class="col-sm-auto">
-    <div>
+    <div *ngIf="!isReadonly">
       <a routerLink="new" class="btn btn-soft-secondary"><i class="ri-add-line align-bottom me-1"></i>Add New</a>
     </div>
   </div>

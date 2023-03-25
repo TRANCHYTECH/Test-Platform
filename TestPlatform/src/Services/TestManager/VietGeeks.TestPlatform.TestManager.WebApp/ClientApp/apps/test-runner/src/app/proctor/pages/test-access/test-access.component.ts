@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '@viet-geeks/shared';
 import { TestSessionService } from '../../../services/test-session.service';
+import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
 
 @UntilDestroy()
 @Component({
@@ -21,7 +22,8 @@ export class TestAccessComponent implements OnInit {
   private _proctorService = inject(ProctorService);
   private _notifyService = inject(ToastService);
   private _testSessionService = inject(TestSessionService);
-
+  private _fingerprintjsProAngularService = inject(FingerprintjsProAngularService);
+  
   verifyTestForm: FormGroup;
   isLoading = false;
 
@@ -32,6 +34,10 @@ export class TestAccessComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._fingerprintjsProAngularService.getVisitorData().then(c => {
+      console.log('visitor info', c);
+    });
+    
     this._route.params.pipe(untilDestroyed(this)).subscribe(p => {
       const accessCode = p['access-code'];
       if (accessCode) {

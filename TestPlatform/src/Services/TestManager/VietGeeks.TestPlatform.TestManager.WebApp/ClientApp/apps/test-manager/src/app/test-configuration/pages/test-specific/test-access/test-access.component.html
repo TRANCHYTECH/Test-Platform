@@ -17,25 +17,26 @@
                         <div class="d-flex gap-3">
                             <button type="radio" [class.active]="activatedAccessType === testAccessTypeDef.PublicLink"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.PublicLink)">
+                                (click)="onAccessTypeSelected(testAccessTypeDef.PublicLink)" [disabled]="isReadonly">
                                 <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>Public link</button>
 
                             <button type="button"
                                 [class.active]="activatedAccessType === testAccessTypeDef.PrivateAccessCode"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.PrivateAccessCode)">
+                                (click)="onAccessTypeSelected(testAccessTypeDef.PrivateAccessCode)"
+                                [disabled]="isReadonly">
                                 <i class="ri-lock-password-line label-icon align-middle fs-24 me-2"></i>Private code
                                 access</button>
 
                             <button type="button"
                                 [class.active]="activatedAccessType === testAccessTypeDef.GroupPassword"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.GroupPassword)">
+                                (click)="onAccessTypeSelected(testAccessTypeDef.GroupPassword)" [disabled]="isReadonly">
                                 <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>Group password</button>
 
                             <button type="button" [class.active]="activatedAccessType === testAccessTypeDef.Training"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.Training)">
+                                (click)="onAccessTypeSelected(testAccessTypeDef.Training)" [disabled]="isReadonly">
                                 <i class="ri-ball-pen-line label-icon align-middle fs-24 me-2"></i>Training</button>
                         </div>
                     </div>
@@ -114,7 +115,9 @@
                                                 <input type="checkbox" class="form-check-input"
                                                     formControlName="sendCode">
                                             </td>
-                                            <td><i class="ri-delete-bin-line delete-icon" [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }" (confirm)="privateAccessCodeConfigsCtrl.removeAt(i)"></i></td>
+                                            <td><i class="ri-delete-bin-line delete-icon"
+                                                    [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }"
+                                                    (confirm)="privateAccessCodeConfigsCtrl.removeAt(i)"></i></td>
                                         </tr>
                                     </ng-container>
                                 </tbody>
@@ -156,10 +159,11 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="activatedAccessType === testAccessTypeDef.Training"
-                    formGroupName="{{activatedAccessType}}">
+                        formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
-                                <i class="ri-airplay-line me-3 align-middle"></i>This access type is for practice only and is not suitable for assessments
+                                <i class="ri-airplay-line me-3 align-middle"></i>This access type is for practice only
+                                and is not suitable for assessments
                             </div>
                         </div>
                     </ng-container>
@@ -219,7 +223,7 @@
             <div class="text-end mb-4">
                 <div class="d-flex gap-1 justify-content-end">
                     <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
-                    [canSubmit]="canSubmit"></viet-geeks-submit-button>
+                        [canSubmit]="canSubmit"></viet-geeks-submit-button>
                 </div>
             </div>
         </div>

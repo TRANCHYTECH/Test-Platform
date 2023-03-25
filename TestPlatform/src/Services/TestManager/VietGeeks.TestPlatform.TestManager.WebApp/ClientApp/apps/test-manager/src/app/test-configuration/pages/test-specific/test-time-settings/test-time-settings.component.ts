@@ -2,17 +2,18 @@ import { Component } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, padStart } from 'lodash';
-import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../../state/test.model';
+import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TestStatus, TimePeriodActivation, TimeSettings } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { createMask, InputmaskOptions } from '@ngneat/input-mask';
 import { duration } from 'moment';
-import * as moment from 'moment';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { utcToZonedTime, format, zonedTimeToUtc } from 'date-fns-tz';
+import { values } from 'lodash-es';
 
 export const TestDurationMethod =
 {
   CompleteTestTime: 1,
-  CompleteQuetsionTime: 2
+  CompleteQuestionTime: 2
 }
 
 export const TestActivationMethodType =
@@ -34,27 +35,8 @@ export function formatDruationValue(value: number) {
 export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   TestActivationMethodTypeRef = TestActivationMethodType;
   timeSettingsForm!: FormGroup;
-  readonly testDurationMethodOptions = [
-    {
-      id: TestDurationMethod.CompleteTestTime,
-      textKey: 'Time to complete the test: (hh:mm)'
-    },
-    {
-      id: TestDurationMethod.CompleteQuetsionTime,
-      textKey: 'Time limit for each test question (mm:ss)'
-    }
-  ];
-
-  readonly testActivationMethodOptions = [
-    {
-      id: TestActivationMethodType.ManualTest,
-      textKey: 'Manual test activation'
-    },
-    {
-      id: TestActivationMethodType.TimePeriod,
-      textKey: 'Activation in set time period'
-    }
-  ];
+  currentUserTimeZone = 'Asia/Ho_Chi_Minh';
+  currentUserTime = format(new Date(), 'd.MM.yyyy HH:mm', { timeZone: this.currentUserTimeZone });
 
   hhmmInputMask = createMask({
     mask: "99:99",
@@ -87,9 +69,45 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     }
   });
 
+  readonly testDurationMethodOptions = [
+    {
+      id: TestDurationMethod.CompleteTestTime,
+      textKey: 'Time to complete the test: (hh:mm). Max value is 23:59',
+      inputMask: this.hhmmInputMask
+    },
+    {
+      id: TestDurationMethod.CompleteQuestionTime,
+      textKey: 'Time limit for each test question (mm:ss). Max value is 59:59',
+      inputMask: this.mmssInputMask
+    }
+  ];
+
+  readonly testActivationMethodOptions = [
+    {
+      id: TestActivationMethodType.ManualTest,
+      textKey: 'Manual test activation'
+    },
+    {
+      id: TestActivationMethodType.TimePeriod,
+      textKey: 'Activation in set time period'
+    }
+  ];
+
   readonly durationInputMasks: { [key: string]: InputmaskOptions<string> } = {
     1: this.hhmmInputMask,
     2: this.mmssInputMask
+  }
+
+  get testDurationMethodCtrl() {
+    return this.timeSettingsForm.get(['testDurationMethod']) as FormGroup;
+  }
+
+  get testActivationMethodCtrl() {
+    return this.timeSettingsForm.get(['testActivationMethod']) as FormGroup;
+  }
+
+  get answerQuestionConfigCtrl() {
+    return this.timeSettingsForm.get(['answerQuestionConfig']) as FormGroup;
   }
 
   onInit(): void {
@@ -97,29 +115,20 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   }
 
   afterGetTest(): void {
-    //
+    //todo: add validation rules for activation in set time period.
     const timeSettings = this.test.timeSettings;
-
-    //todo(tau): refactor durationxxx control name
     this.timeSettingsForm = this.fb.group({
       testDurationMethod: this.fb.group({
-        type: timeSettings?.testDurationMethod.$type || TestDurationMethod.CompleteTestTime,
+        type: [TestDurationMethod.CompleteTestTime],
         1: this.fb.group({
-          duration: [
-            timeSettings?.testDurationMethod.$type === TestDurationMethod.CompleteTestTime ? (<CompleteTestDuration>timeSettings?.testDurationMethod).duration : null,
-            [RxwebValidators.required({
-              conditionalExpression: (parent: { type: number; }, root: any) => root.testDurationMethod.type === TestDurationMethod.CompleteTestTime
-            })]]
+          duration: [null, [RxwebValidators.required()]]
         }),
         2: this.fb.group({
-          duration: [timeSettings?.testDurationMethod.$type === TestDurationMethod.CompleteQuetsionTime ? (<CompleteQuestionDuration>timeSettings?.testDurationMethod).duration : null,
-            [RxwebValidators.required({
-              conditionalExpression: (parent: { type: number; }, root: any) => root.testDurationMethod.type === TestDurationMethod.CompleteQuetsionTime
-            })]]
+          duration: [null, [RxwebValidators.required()]]
         })
       }),
       testActivationMethod: this.fb.group({
-        type: timeSettings?.testActivationMethod.$type || TestActivationMethodType.ManualTest,
+        type: [TestActivationMethodType.ManualTest],
         1: this.fb.group({
           activeUntil: [null, [Validators.required]]
         }),
@@ -129,23 +138,51 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
         })
       }),
       answerQuestionConfig: this.fb.group({
-        skipQuestion: [timeSettings?.answerQuestionConfig?.skipQuestion || false, [Validators.required]]
+        skipQuestion: [false, [Validators.required]]
       })
     });
 
+    this.listenTypeChange(this.testDurationMethodCtrl, this, values(TestDurationMethod));
+    this.listenTypeChange(this.testActivationMethodCtrl, this, values(TestActivationMethodType));
+
+    // Fullfill existing test duration.
+    this.testDurationMethodCtrl.patchValue({
+      type: timeSettings?.testDurationMethod.$type || TestDurationMethod.CompleteTestTime
+    });
+    switch (timeSettings?.testDurationMethod.$type) {
+      case TestDurationMethod.CompleteTestTime: {
+        const method = <CompleteTestDuration>timeSettings.testDurationMethod;
+        this.testDurationMethodCtrl.get([TestDurationMethod.CompleteTestTime])?.patchValue({
+          duration: method.duration
+        });
+        break;
+      }
+      case TestDurationMethod.CompleteQuestionTime: {
+        const method = <CompleteQuestionDuration>timeSettings.testDurationMethod;
+        this.testDurationMethodCtrl.get([TestDurationMethod.CompleteQuestionTime])?.patchValue({
+          duration: method.duration
+        });
+        break;
+      }
+    }
+
+    // Fullfill test activation
+    this.testActivationMethodCtrl.patchValue({
+      type: timeSettings?.testActivationMethod.$type || TestActivationMethodType.ManualTest
+    });
     switch (timeSettings?.testActivationMethod.$type) {
       case TestActivationMethodType.ManualTest: {
         const method = <ManualTestActivation>timeSettings.testActivationMethod;
-        this.timeSettingsForm.get(['testActivationMethod', TestActivationMethodType.ManualTest])?.patchValue({
+        this.testActivationMethodCtrl.get([TestActivationMethodType.ManualTest])?.setValue({
           activeUntil: method.activeUntil
         });
         break;
       }
       case TestActivationMethodType.TimePeriod: {
         const method = <TimePeriodActivation>timeSettings.testActivationMethod;
-        this.timeSettingsForm.get(['testActivationMethod', TestActivationMethodType.TimePeriod])?.setValue({
-          activeFromDate: moment(method.activeFromDate).toISOString().substring(0, 16),
-          activeUntilDate: moment(method.activeUntilDate).toISOString().substring(0, 16)
+        this.testActivationMethodCtrl.get([TestActivationMethodType.TimePeriod])?.setValue({
+          activeFromDate: this.convertUtcToLocalDateString(method.activeFromDate),
+          activeUntilDate: this.convertUtcToLocalDateString(method.activeUntilDate)
         });
         break;
       }
@@ -153,12 +190,16 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
         break;
     }
 
+    // Fullfill answer question config
+    this.answerQuestionConfigCtrl.setValue({
+      skipQuestion: timeSettings?.answerQuestionConfig?.skipQuestion ?? false
+    });
+
     this.maskReadyForUI();
   }
 
   get canSubmit(): boolean {
-    //todo(tau): add validation rules.
-    return true;
+    return this.test.status === TestStatus.Draft && this.timeSettingsForm.valid;
   }
 
   async submit() {
@@ -166,8 +207,8 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     const testActivationMethod = this.timeSettingsForm.controls['testActivationMethod'] as FormGroup;
 
     const model: TimeSettings = {
-      testDurationMethod: this.getSelectedValue(testDuration),
-      testActivationMethod: this.getSelectedValue(testActivationMethod),
+      testDurationMethod: this.getDurationTime(testDuration),
+      testActivationMethod: this.getActivationTime(testActivationMethod),
       answerQuestionConfig: this.timeSettingsForm.controls['answerQuestionConfig'].value
     };
 
@@ -175,8 +216,27 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     this.notifyService.success('Time settings updated');
   }
 
-  private getSelectedValue(form: FormGroup) {
-    const type = form.controls['type'].value;
+  private getDurationTime(form: FormGroup) {
+    const type = <number>form.controls['type'].value;
+
     return assign({ $type: type }, form.controls[`${type}`].value);
+  }
+
+  private getActivationTime(form: FormGroup) {
+    const type = <number>form.controls['type'].value;
+    if (type === TestActivationMethodType.ManualTest) {
+      return assign({ $type: type }, form.controls[`${type}`].value);
+    } else {
+      const dates = form.controls[`${type}`].value;
+      return {
+        $type: type,
+        activeFromDate: zonedTimeToUtc(dates.activeFromDate, this.currentUserTimeZone),
+        activeUntilDate: zonedTimeToUtc(dates.activeUntilDate, this.currentUserTimeZone)
+      };
+    }
+  }
+
+  private convertUtcToLocalDateString(input: Date) {
+    return format(utcToZonedTime(input, this.currentUserTimeZone), 'yyyy-MM-dd HH:mm');
   }
 }
