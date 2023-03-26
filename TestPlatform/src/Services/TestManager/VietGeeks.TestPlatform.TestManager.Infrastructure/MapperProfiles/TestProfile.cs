@@ -13,7 +13,7 @@ public class TestProfile : Profile
         CreateMap<NewTestDefinitionViewModel, TestDefinition>();
         CreateMap<CreateOrUpdateTestBasicSettingsViewModel, TestBasicSettingsPart>();
 
-        CreateMap<TestDefinition, TestDefinitionViewModel>();
+        CreateMap<TestDefinition, TestDefinitionViewModel>().ForMember(d => d.Status, opt => opt.MapFrom(s => s.ActualStatus));
         CreateMap<TestBasicSettingsPart, TestBasicSettingsViewModel>();
 
         CreateMap<NewTestCategoryViewModel, TestCategory>();

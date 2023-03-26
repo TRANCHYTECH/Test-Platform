@@ -57,7 +57,7 @@ public class ManualTestActivation : TestActivationMethod
 }
 
 /// <summary>
-/// All times are in UTC +0.
+/// All times are in UTC.
 /// </summary>
 public class TimePeriodActivation : TestActivationMethod
 {

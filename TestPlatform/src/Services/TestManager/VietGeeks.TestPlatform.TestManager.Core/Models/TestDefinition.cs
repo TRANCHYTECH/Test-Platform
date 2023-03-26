@@ -1,10 +1,13 @@
 ﻿using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using System.Linq;
+using System;
+using System.Net.NetworkInformation;
+
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 [Collection("TestDefinition")]
-public class TestDefinition : EntityBase
+public partial class TestDefinition : EntityBase
 {
     public TestBasicSettingsPart BasicSettings { get; set; } = default!;
 
@@ -18,33 +21,9 @@ public class TestDefinition : EntityBase
 
     public TestStartSettingsPart TestStartSettings { get; set; } = default!;
 
-    public CurrentTestRunPart? CurrentTestRun { get; set; }
+    public CurrentTestRunPart? CurrentTestRun { get; private set; }
 
     public TestDefinitionStatus Status { get; private set; } = TestDefinitionStatus.Draft;
-
-    public void Activate(string testRunId, TestDefinitionStatus status)
-    {
-        if (TestDefinition.ActiveStatuses.Contains(status))
-        {
-            Status = status;
-            CurrentTestRun = new CurrentTestRunPart
-            {
-                Id = testRunId
-            };
-        }
-        else
-        {
-            throw new TestPlatformException("Invalid status");
-        }
-    }
-
-    public void End()
-    {
-        Status = TestDefinitionStatus.Ended;
-        CurrentTestRun = null;
-    }
-
-    public static TestDefinitionStatus[] ActiveStatuses => new[] { TestDefinitionStatus.Activated, TestDefinitionStatus.Scheduled };
 }
 
 public enum TestDefinitionStatus
