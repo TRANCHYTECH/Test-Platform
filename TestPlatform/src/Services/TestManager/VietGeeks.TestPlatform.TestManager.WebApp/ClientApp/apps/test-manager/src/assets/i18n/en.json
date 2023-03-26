@@ -34,6 +34,8 @@
   "labels": {
     "activate": "Activate",
     "schedule": "Schedule",
-    "endTest": "End Test"
+    "endTest": "End test",
+    "changeSettings": "Change settings",
+    "restart": "Start again"
   }
 }
