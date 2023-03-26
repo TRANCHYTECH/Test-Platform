@@ -18,7 +18,7 @@ public partial class TestDefinition
         if (Status == TestDefinitionStatus.Ended)
             return TestDefinitionStatus.Ended;
 
-        if (CurrentTestRun == null)
+        if (CurrentTestRun == null || TimeSettings == null)
             throw new TestPlatformException("Invalid Test Definition");
 
         if (ActiveStatuses.Contains(Status))

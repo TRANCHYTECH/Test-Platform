@@ -5,8 +5,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { TestCategoriesQuery } from '../../state/test-categories.query';
 import { TestCategoriesService } from '../../state/test-categories.service';
 import { TestCategory } from '../../state/test-category.model';
-import { Test } from '../../state/test.model';
-import { TestsQuery } from '../../state/tests.query';
+import { TestOverview } from '../../state/test.model';
 import { TestsService } from '../../state/tests.service';
 
 @UntilDestroy()
@@ -16,7 +15,7 @@ import { TestsService } from '../../state/tests.service';
   styleUrls: ['./test-list.component.scss']
 })
 export class TestListComponent implements OnInit {
-  tests: Test[] = [];
+  tests: TestOverview[] = [];
   testCategories: TestCategory[] = [];
   page = 1;
   pageSize = 10;
@@ -24,13 +23,13 @@ export class TestListComponent implements OnInit {
   private _readyForUI = new BehaviorSubject(false);
   private _spinner = inject(NgxSpinnerService);
 
-  constructor(private _testsQuery: TestsQuery, private _testsService: TestsService, private _testCategoriesQuery: TestCategoriesQuery,
+  constructor(private _testsService: TestsService, private _testCategoriesQuery: TestCategoriesQuery,
     private _testCategoriesService: TestCategoriesService) {
   }
 
   ngOnInit() {
-    Promise.all([firstValueFrom(this._testsService.get()), firstValueFrom(this._testCategoriesService.get())]).then(() => {
-      this.tests = this._testsQuery.getAll();
+    Promise.all([firstValueFrom(this._testsService.getOverviews()), firstValueFrom(this._testCategoriesService.get())]).then((rs) => {
+      this.tests = rs[0];
       this.testCategories = this._testCategoriesQuery.getAll();
       this._readyForUI.next(true);
     });

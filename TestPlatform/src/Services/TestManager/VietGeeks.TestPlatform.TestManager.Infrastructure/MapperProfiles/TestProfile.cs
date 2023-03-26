@@ -10,6 +10,14 @@ public class TestProfile : Profile
 {
     public TestProfile()
     {
+        CreateMap<TestDefinition, TestDefinitionOverview>()
+            .ForMember(d => d.Id, opt => opt.MapFrom(s => s.ID))
+            .ForMember(d => d.Name, opt => opt.MapFrom(s => s.BasicSettings.Name))
+            .ForMember(d => d.Description, opt => opt.MapFrom(s => s.BasicSettings.Description))
+            .ForMember(d => d.CreatedOn, opt => opt.MapFrom(s => s.CreatedOn))
+            .ForMember(d => d.Category, opt => opt.MapFrom(s => s.BasicSettings.Category))
+            .ForMember(d => d.Status, opt => opt.MapFrom(s => s.LatestStatus));
+
         CreateMap<NewTestDefinitionViewModel, TestDefinition>();
         CreateMap<CreateOrUpdateTestBasicSettingsViewModel, TestBasicSettingsPart>();
 

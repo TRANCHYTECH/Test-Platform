@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestManager.Contract;
+using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
@@ -42,7 +43,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var testDefinitions = await _testManagerService.GetTestDefinitions();
+        List<TestDefinitionOverview> testDefinitions = await _testManagerService.GetTestDefinitionOverviews();
 
         return Ok(testDefinitions);
     }
