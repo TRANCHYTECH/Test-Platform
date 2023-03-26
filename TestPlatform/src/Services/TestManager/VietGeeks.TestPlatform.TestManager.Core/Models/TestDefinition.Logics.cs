@@ -8,7 +8,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 public partial class TestDefinition
 {
     [Ignore]
-    public TestDefinitionStatus ActualStatus => GetActualStatus(DateTime.UtcNow);
+    public TestDefinitionStatus LatestStatus => GetActualStatus(DateTime.UtcNow);
 
     public TestDefinitionStatus GetActualStatus(DateTime checkMomentUtc)
     {
@@ -71,7 +71,7 @@ public partial class TestDefinition
 
     public void End()
     {
-        var actualStatus = ActualStatus;
+        var actualStatus = LatestStatus;
 
         if (actualStatus == TestDefinitionStatus.Activated)
         {
