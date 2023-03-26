@@ -15,7 +15,7 @@ export enum TestStatus {
   Draft = 1,
   Activated = 2,
   Scheduled = 3,
-  Finished = 4
+  Ended = 4
 }
 
 export interface TimeSettings {

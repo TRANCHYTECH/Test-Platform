@@ -133,7 +133,7 @@ public class TestManagerService : ITestManagerService
         var questions = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id);
 
         // Check if can activate test.
-        var testRunTime = entity.EnsureCanActivate(questions.Count, _time.UtcNow());
+        var testRunTime = entity.EnsureCanActivate(questions.Count, _time.UtcNow);
 
         using (var ctx = _managerDbContext.Transaction())
         {
@@ -154,7 +154,7 @@ public class TestManagerService : ITestManagerService
             });
 
             // Set current activated test run.
-            entity.Activate(testRun.ID, testRunTime.Status);
+            entity.Activate(testRun.ID, _time.UtcNow, testRunTime.Status);
 
             await _managerDbContext.InsertAsync(testRun);
             await _managerDbContext.InsertAsync(testRunQuestionBatches);
@@ -208,13 +208,13 @@ public class TestManagerService : ITestManagerService
         var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status)).ExecuteSingleAsync();
         if(validEntity == null)
         {
-            throw new TestPlatformException("NotFoundTestDefinition");
+            throw new TestPlatformException("Not Found Activated/Scheduled Test Definition");
         }
 
         var testRun = await _managerDbContext.Find<TestRun>().Match(c => c.TestDefinitionSnapshot.ID == validEntity.ID).ExecuteSingleAsync();
         if (testRun == null)
         {
-            throw new TestPlatformException("NotFoundTestRun");
+            throw new TestPlatformException("Not Found Test Run");
         }
 
         //todo: change to datetime.
@@ -232,10 +232,6 @@ public class TestManagerService : ITestManagerService
         }
 
         return _mapper.Map<TestDefinitionViewModel>(validEntity);
-
-        // End test run.
-        // Copy latest test def snapshot.
-        // Change test def status
     }
 
     private async Task SendAccessCodes(TestDefinition entity)

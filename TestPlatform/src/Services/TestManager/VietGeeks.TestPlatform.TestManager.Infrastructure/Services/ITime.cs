@@ -2,5 +2,5 @@
 
 public interface ITime
 {
-    DateTime UtcNow();
+    DateTime UtcNow { get; }
 }
