@@ -38,7 +38,7 @@ export class ProctorService {
   }
 
   submitAnswer(answer: { questionId: string, answerIds: string[] }) {
-    return this._httpClient.post(`${this.testRunnerApiBaseUrl}/Exam/SubmitAnswer`, answer).pipe(catchError(error => {
+    return this._examService.submitAnswer({body: answer}).pipe(catchError(error => {
       console.log('submit answer error', error);
       return of(null);
     }));
