@@ -17,7 +17,10 @@
                         <button *ngIf="(testStatus | async)  === 1" class="btn btn-primary w-sm" style="margin-top: 10px;"
                             (click)="activateTest()">{{ "labels." + activateMethod | translate}}</button>
                         <button *ngIf="(testStatus | async) === 2 || (testStatus | async) === 3" class="btn btn-primary w-sm" style="margin-top: 10px;"
-                            (click)="endTest()">{{ "labels.endTest" | translate}}</button>
+                            (click)="endTest()">{{ "labels." + endMethod | translate}}</button>
+
+                        <button *ngIf="(testStatus | async)  === 4" class="btn btn-primary w-sm" style="margin-top: 10px;"
+                            (click)="restart()">{{ "labels.restart"  | translate}}</button>
                     </div>
                 </ng-template>
             </ngb-panel>

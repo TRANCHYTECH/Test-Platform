@@ -77,16 +77,23 @@ export class TestSpecificLayoutComponent implements OnInit {
   }
 
   activateMethod: 'activate' | 'schedule' | '' = '';
+  endMethod: 'endTest' | 'changeSettings' | '' = '';
 
   ngOnInit(): void {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
-        console.log('test come', test);
         this.testStatus.next(test.status);
+
         if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {
           this.activateMethod = 'activate';
         } else if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.TimePeriod) {
           this.activateMethod = 'schedule';
+        }
+
+        if(test.status === TestStatus.Activated) {
+          this.endMethod = 'endTest';
+        } else if(test.status === TestStatus.Scheduled) {
+          this.endMethod = 'changeSettings';
         }
       }
     });
@@ -94,12 +101,17 @@ export class TestSpecificLayoutComponent implements OnInit {
 
   async activateTest() {
     await this._testsService.activate(this.testId);
-    this._notifyService.success('Test activated successfully');
+    this._notifyService.success('Test activated/scheduled successfully');
   }
 
   async endTest() {
     await this._testsService.end(this.testId);
-    this._notifyService.success('Test endded successfully');
+    this._notifyService.success('Test ended successfully');
+  }
+
+  async restart() {
+    await this._testsService.restart(this.testId);
+    this._notifyService.success('Test restarted successfully');
   }
 
 }

@@ -8,7 +8,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 public partial class TestDefinition
 {
     [Ignore]
-    public TestDefinitionStatus ActualStatus => GetActualStatus(DateTime.UtcNow);
+    public TestDefinitionStatus LatestStatus => GetActualStatus(DateTime.UtcNow);
 
     public TestDefinitionStatus GetActualStatus(DateTime checkMomentUtc)
     {
@@ -51,7 +51,7 @@ public partial class TestDefinition
         throw new TestPlatformException("Unknown Status");
     }
 
-    public void Activate(string testRunId, DateTime activatedOrScheduledAtUtc, TestDefinitionStatus status)
+    public string[] Activate(string testRunId, DateTime activatedOrScheduledAtUtc, TestDefinitionStatus status)
     {
         if (ActiveStatuses.Contains(status))
         {
@@ -67,20 +67,42 @@ public partial class TestDefinition
         {
             throw new TestPlatformException("Invalid Status Input");
         }
+
+        return new[] { nameof(Status), nameof(CurrentTestRun) };
     }
 
-    public void End()
+    public string[] End()
     {
-        var actualStatus = ActualStatus;
-
+        var actualStatus = LatestStatus;
         if (actualStatus == TestDefinitionStatus.Activated)
         {
             Status = TestDefinitionStatus.Ended;
+            CurrentTestRun = null;
+
         }
         else if (actualStatus == TestDefinitionStatus.Scheduled)
+        {
             Status = TestDefinitionStatus.Draft;
+            CurrentTestRun = null;
+        }
+        else
+        {
+            throw new TestPlatformException("ActionNotAllowed");
+        }
 
-        CurrentTestRun = null;
+        return new[] { nameof(Status), nameof(CurrentTestRun) };
+    }
+
+    public string[] Restart()
+    {
+        if (LatestStatus != TestDefinitionStatus.Ended)
+        {
+            throw new TestPlatformException("ActionNotAllowed");
+        }
+
+        Status = TestDefinitionStatus.Draft;
+
+        return new[] { nameof(Status) };
     }
 
     //todo: combine this and above method

@@ -11,6 +11,6 @@ public interface ITestManagerService
 
     Task<TestCategoryViewModel> CreateTestCategory(NewTestCategoryViewModel newTestCategory);
     Task<List<TestCategoryViewModel>> GetTestCategories();
-    Task<ReadyForActivationStatus> CheckTestDefinitionReadyForActivation(string id);
     Task<TestDefinitionViewModel> EndTestDefinition(string id);
+    Task<TestDefinitionViewModel> RestartTestDefinition(string id);
 }

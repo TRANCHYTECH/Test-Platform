@@ -80,15 +80,6 @@ public class TestDefinitionManagementController : ControllerBase
         return Ok(testDefinition);
     }
 
-    [HttpGet("{id}/ReadyForActivation")]
-    [AllowAnonymous]
-    public async Task<IActionResult> CheckStatus(string id)
-    {
-       var  checkResult = await _testManagerService.CheckTestDefinitionReadyForActivation(id);
-
-        return Ok(checkResult);
-    }
-
     [HttpPost("{id}/Activate")]
     public async Task<IActionResult> Activate(string id)
     {
@@ -101,6 +92,14 @@ public class TestDefinitionManagementController : ControllerBase
     public async Task<IActionResult> End(string id)
     {
         var testDefiniton = await _testManagerService.EndTestDefinition(id);
+
+        return Ok(testDefiniton);
+    }
+
+    [HttpPost("{id}/Restart")]
+    public async Task<IActionResult> Restart(string id)
+    {
+        TestDefinitionViewModel testDefiniton = await _testManagerService.RestartTestDefinition(id);
 
         return Ok(testDefiniton);
     }

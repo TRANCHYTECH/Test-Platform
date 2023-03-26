@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
-using VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
 namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 
 public class ProctorService : IProctorService
 {
     private readonly IMapper _mapper;
-    private readonly ITime _time;
+    private readonly IClock _time;
 
-    public ProctorService(IMapper mapper, ITime time)
+    public ProctorService(IMapper mapper, IClock time)
     {
         _mapper = mapper;
         _time = time;
@@ -91,7 +91,7 @@ public class ProctorService : IProctorService
         }
 
         // Check period time of test run is still valid.
-        var checkMoment = _time.UtcNow();
+        var checkMoment = _time.UtcNow;
         if (testRun.ExplicitEnd || checkMoment > testRun.EndAtUtc)
         {
             throw new TestPlatformException("The test is already ended");

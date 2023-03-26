@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
@@ -154,11 +155,11 @@ public class TestManagerService : ITestManagerService
             });
 
             // Set current activated test run.
-            entity.Activate(testRun.ID, _time.UtcNow, testRunTime.Status);
+            var affectedFields = entity.Activate(testRun.ID, _time.UtcNow, testRunTime.Status);
 
             await _managerDbContext.InsertAsync(testRun);
             await _managerDbContext.InsertAsync(testRunQuestionBatches);
-            await _managerDbContext.SaveOnlyAsync(entity, new[] { nameof(TestDefinition.Status), nameof(TestDefinition.CurrentTestRun) });
+            await _managerDbContext.SaveOnlyAsync(entity, affectedFields);
 
             await ctx.CommitTransactionAsync();
         }
@@ -169,49 +170,16 @@ public class TestManagerService : ITestManagerService
         return _mapper.Map<TestDefinitionViewModel>(entity);
     }
 
-    public async Task<ReadyForActivationStatus> CheckTestDefinitionReadyForActivation(string id)
-    {
-        var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && c.Status == Core.Models.TestDefinitionStatus.Draft &&
-        c.TimeSettings != null &&
-        c.TestSetSettings != null &&
-        c.TestAccessSettings != null &&
-        c.GradingSettings != null &&
-        c.TestStartSettings != null).IgnoreGlobalFilters().Project(c => new TestDefinition { ID = c.ID }).ExecuteFirstAsync();
-        if (validEntity == null)
-        {
-            return new()
-            {
-                IsReady = false,
-                Errors = new[] { "NotFoundEntity" }
-            };
-        }
-
-        var questionCount = await _managerDbContext.CountAsync<QuestionDefinition>(c => c.TestId == id, ignoreGlobalFilters: true);
-        if (questionCount == 0)
-        {
-            return new()
-            {
-                IsReady = false,
-                Errors = new[] { "QuestionMissing" }
-            };
-        }
-
-        return new()
-        {
-            IsReady = true
-        };
-    }
-
     public async Task<TestDefinitionViewModel> EndTestDefinition(string id)
     {
         // Verify if status is in running.
-        var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status)).ExecuteSingleAsync();
+        var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status) && c.CurrentTestRun != null).ExecuteSingleAsync();
         if(validEntity == null)
         {
             throw new TestPlatformException("Not Found Activated/Scheduled Test Definition");
         }
 
-        var testRun = await _managerDbContext.Find<TestRun>().Match(c => c.TestDefinitionSnapshot.ID == validEntity.ID).ExecuteSingleAsync();
+        var testRun = await _managerDbContext.Find<TestRun>().MatchID(validEntity.CurrentTestRun?.Id).ExecuteSingleAsync();
         if (testRun == null)
         {
             throw new TestPlatformException("Not Found Test Run");
@@ -221,17 +189,29 @@ public class TestManagerService : ITestManagerService
         testRun.ExplicitEnd = true;
         testRun.TestDefinitionSnapshot = validEntity;
 
-        validEntity.End();
+        var testDefFieldsAffected = validEntity.End();
 
         using (var ctx = _managerDbContext.Transaction())
         {
+            await _managerDbContext.SaveOnlyAsync(validEntity, testDefFieldsAffected);
             //todo: improve performance by save affected parts.
-            await _managerDbContext.SaveAsync(validEntity);
             await _managerDbContext.SaveAsync(testRun);
             await ctx.CommitTransactionAsync();
         }
 
         return _mapper.Map<TestDefinitionViewModel>(validEntity);
+    }
+
+    public async Task<TestDefinitionViewModel> RestartTestDefinition(string id)
+    {
+        //todo: improve performance by only get parts needed for restart func
+        //todo: concurrency check impl.
+        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new TestPlatformException("NotFoundEntity");
+
+        var affectedFields = testDef.Restart();
+        await _managerDbContext.SaveOnlyAsync(testDef, affectedFields);
+
+        return _mapper.Map<TestDefinitionViewModel>(testDef);
     }
 
     private async Task SendAccessCodes(TestDefinition entity)

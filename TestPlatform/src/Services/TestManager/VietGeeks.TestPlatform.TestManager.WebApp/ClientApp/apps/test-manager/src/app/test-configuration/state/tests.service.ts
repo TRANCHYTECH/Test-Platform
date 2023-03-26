@@ -12,7 +12,6 @@ import { defKSUID32 } from '@thi.ng/ksuid';
 
 @Injectable({ providedIn: 'root' })
 export class TestsService {
-
   constructor(private _testsStore: TestsStore, private _testsQuery: TestsQuery, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
@@ -80,6 +79,12 @@ export class TestsService {
 
   end(id: string) {
     return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/End`, null).pipe(tap(rs => {
+      this._testsStore.update(id, rs);
+    })));
+  }
+
+  restart(id: string) {
+    return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/Restart`, null).pipe(tap(rs => {
       this._testsStore.update(id, rs);
     })));
   }
