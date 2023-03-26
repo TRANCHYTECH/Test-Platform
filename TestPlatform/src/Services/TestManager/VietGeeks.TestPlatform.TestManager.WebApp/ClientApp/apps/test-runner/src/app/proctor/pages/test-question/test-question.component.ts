@@ -1,8 +1,9 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { interval, Subscription } from 'rxjs';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { interval, Subscription, firstValueFrom } from 'rxjs';
 import { ExamQuestion } from '../../../api/models';
 import { TestSessionService } from '../../../services/test-session.service';
+import { AnswerType } from '../../../state/exam-content.model';
 import { TestDurationMethod, TestSession } from '../../../state/test-session.model';
 import { ProctorService } from '../../proctor.service';
 @Component({
@@ -37,15 +38,15 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
-    this.answerForm = this._fb.group({
-      selectedAnswer: ''
-    });
+    this.sessionData = this._testSessionService.getSessionData();
+    this.answerForm = this._fb.group({});
+    this.questions = this._testSessionService.getQuestions() ?? [];
+    this.question = this.questions[this.index];
+
+    this.initAnswerForm();
   }
 
   ngOnInit(): void {
-    this.questions = this._testSessionService.getQuestions() ?? [];
-    this.question = this.questions[this.index];
-    this.sessionData = this._testSessionService.getSessionData();
     this.initEndTime();
     this.subscription = interval(this.milliSecondsInASecond)
       .subscribe(() => this.getTimeDifference());
@@ -55,13 +56,51 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this.subscription?.unsubscribe();
  }
 
-  submit(): void {
+  async submit() {
+    if (this.question) {
+      await firstValueFrom(this.proctorService.submitAnswer({
+        questionId: this.question.id!,
+        answerIds: this.getAnswerIds()
+      }));
+    }
+
     if (this.index < this.questions.length - 1) {
       this.index++;
       this.question = this.questions[this.index];
+      this.initAnswerForm();
+      this.initEndTime();
+    }
+  }
+
+  private getAnswerIds(): string[] {
+    if (this.question!.answerType == AnswerType.SingleChoice) {
+      return [(this.answerForm.value as { selectedAnswer: string; }).selectedAnswer];
     }
 
-    this.initEndTime();
+    return ((this.answerForm.value as { selectedAnswer: {id: string, selected: boolean}[]; }).selectedAnswer).filter((i) => i.selected).map(i => i.id);
+  }
+
+  private initAnswerForm() {
+    if (this.question!.answerType == AnswerType.SingleChoice) {
+      this.answerForm = this._fb.group({
+        selectedAnswer: 0
+      });
+    }
+    else {
+      const selectedAnswerForms = this._fb.array([]) as FormArray;
+
+      this.question!.answers?.forEach(answer => {
+        const formGroup = this._fb.group({
+          id: answer.id,
+          selected: false
+        });
+        selectedAnswerForms.push(formGroup);
+      });
+
+      this.answerForm = this._fb.group({
+        selectedAnswer: selectedAnswerForms
+      });
+    }
   }
 
   private getTimeDifference() {
