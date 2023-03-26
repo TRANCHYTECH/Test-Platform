@@ -2,15 +2,13 @@
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Contract;
-using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.Integration.Contracts;
 using Azure.Messaging.ServiceBus;
 using System.Text.Json;
 using MongoDB.Bson;
 using Microsoft.Extensions.Logging;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
-using MongoDB.Entities;
+using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -54,11 +52,13 @@ public class TestManagerService : ITestManagerService
         return _mapper.Map<TestDefinitionViewModel>(entity);
     }
 
-    public async Task<List<TestDefinitionViewModel>> GetTestDefinitions()
+    public async Task<List<TestDefinitionOverview>> GetTestDefinitionOverviews()
     {
-        var entities = await _managerDbContext.Find<TestDefinition>().ExecuteAsync();
+        var entities = await _managerDbContext.Find<TestDefinition>()
+            .ProjectExcluding(c => new { c.TestAccessSettings, c.GradingSettings, c.TestSetSettings, c.TestStartSettings })
+            .ExecuteAsync();
 
-        return _mapper.Map<List<TestDefinitionViewModel>>(entities);
+        return _mapper.Map<List<TestDefinitionOverview>>(entities);
     }
 
     public async Task<TestDefinitionViewModel> UpdateTestDefinition(string id, UpdateTestDefinitionViewModel viewModel)
@@ -174,7 +174,7 @@ public class TestManagerService : ITestManagerService
     {
         // Verify if status is in running.
         var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status) && c.CurrentTestRun != null).ExecuteSingleAsync();
-        if(validEntity == null)
+        if (validEntity == null)
         {
             throw new TestPlatformException("Not Found Activated/Scheduled Test Definition");
         }

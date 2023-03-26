@@ -1,3 +1,14 @@
+
+export interface TestOverview
+{
+    id: string;
+    name: string;
+    description: string;
+    createdOn: string;
+    status: TestStatus;
+    category: string;
+}
+
 export interface Test {
   id: string;
   basicSettings: BasicSettings;

@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService } from '@viet-geeks/shared';
-import { BehaviorSubject, filter, Subject } from 'rxjs';
+import { BehaviorSubject, filter } from 'rxjs';
 import { TestActivationMethodType, TestStatus } from '../../state/test.model';
 import { TestsQuery } from '../../state/tests.query';
 import { TestsService } from '../../state/tests.service';
@@ -18,10 +18,14 @@ export class TestSpecificLayoutComponent implements OnInit {
   title?= '';
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testId!: string;
-  testStatus = new Subject<TestStatus>();
+  testStatus = TestStatus.Draft;
+  activateMethod: 'activate' | 'schedule' | '' = '';
+  endMethod: 'endTest' | 'changeSettings' | '' = '';
+
   private _testsService = inject(TestsService);
   private _testsQuery = inject(TestsQuery);
   private _notifyService = inject(ToastService);
+  private _changeRef = inject(ChangeDetectorRef);
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
@@ -76,13 +80,10 @@ export class TestSpecificLayoutComponent implements OnInit {
     });
   }
 
-  activateMethod: 'activate' | 'schedule' | '' = '';
-  endMethod: 'endTest' | 'changeSettings' | '' = '';
-
   ngOnInit(): void {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
-        this.testStatus.next(test.status);
+        this.testStatus = test.status;
 
         if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {
           this.activateMethod = 'activate';
@@ -95,6 +96,8 @@ export class TestSpecificLayoutComponent implements OnInit {
         } else if(test.status === TestStatus.Scheduled) {
           this.endMethod = 'changeSettings';
         }
+
+        this._changeRef.markForCheck();
       }
     });
   }

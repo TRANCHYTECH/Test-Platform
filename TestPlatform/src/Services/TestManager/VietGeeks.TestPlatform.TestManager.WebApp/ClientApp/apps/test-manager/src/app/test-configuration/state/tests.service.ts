@@ -4,7 +4,7 @@ import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
 import { EMPTY, firstValueFrom } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { Test } from './test.model';
+import { Test, TestOverview } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
 import { forEach, range } from 'lodash-es';
@@ -15,10 +15,8 @@ export class TestsService {
   constructor(private _testsStore: TestsStore, private _testsQuery: TestsQuery, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
-  get() {
-    return this._http.get<Test[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`).pipe(tap(entities => {
-      this._testsStore.set(entities);
-    }));
+  getOverviews() {
+    return this._http.get<TestOverview[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`);
   }
 
   getById(id: string) {
