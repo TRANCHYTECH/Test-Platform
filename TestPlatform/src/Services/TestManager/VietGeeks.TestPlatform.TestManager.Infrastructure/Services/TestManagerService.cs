@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Models;

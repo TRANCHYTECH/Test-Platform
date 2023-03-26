@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
