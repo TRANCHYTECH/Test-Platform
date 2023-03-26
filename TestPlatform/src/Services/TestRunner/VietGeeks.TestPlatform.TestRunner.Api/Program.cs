@@ -1,7 +1,6 @@
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
-using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Api.Filters;

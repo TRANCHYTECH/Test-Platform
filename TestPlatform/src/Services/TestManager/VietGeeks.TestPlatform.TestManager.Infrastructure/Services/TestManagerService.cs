@@ -19,9 +19,9 @@ public class TestManagerService : ITestManagerService
     private readonly TestManagerDbContext _managerDbContext;
     private readonly ServiceBusClient _bus;
     private readonly ILogger<TestManagerService> _logger;
-    private readonly ITime _time;
+    private readonly IClock _time;
 
-    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger, ITime time)
+    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger, IClock time)
     {
         _mapper = mapper;
         _managerDbContext = managerDbContext;

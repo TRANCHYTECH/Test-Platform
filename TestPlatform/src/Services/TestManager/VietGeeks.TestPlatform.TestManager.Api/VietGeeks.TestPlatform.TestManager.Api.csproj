@@ -36,8 +36,5 @@
     <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Infrastructure\VietGeeks.TestPlatform.TestManager.Infrastructure.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BuildingBlocks\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IQuestionManagerService, QuestionManagerService>();
         serviceCollection.AddScoped<IQuestionCategoryService, QuestionCategoryService>();
         serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
-        serviceCollection.AddSingleton<ITime, Time>();
+        serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
         serviceCollection.AddAzureClients(builder => builder.AddServiceBusClient(options.ServiceBus.ConnectionString));

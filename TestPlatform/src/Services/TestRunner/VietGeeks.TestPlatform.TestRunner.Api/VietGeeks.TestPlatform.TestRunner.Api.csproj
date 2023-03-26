@@ -27,8 +27,6 @@
     <Folder Include="Actors\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VietGeeks.TestPlaftorm.TestRunner.Infrastructure\VietGeeks.TestPlaftorm.TestRunner.Infrastructure.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <ProjectReference Include="..\VietGeeks.TestPlatform.TestRunner.Infrastructure\VietGeeks.TestPlatform.TestRunner.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

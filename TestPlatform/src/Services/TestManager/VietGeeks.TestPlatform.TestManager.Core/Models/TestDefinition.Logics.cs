@@ -21,7 +21,7 @@ public partial class TestDefinition
         if (CurrentTestRun == null)
             throw new TestPlatformException("Invalid Test Definition");
 
-        if (TestDefinition.ActiveStatuses.Contains(Status))
+        if (ActiveStatuses.Contains(Status))
         {
             var safeCheckMoment = checkMomentUtc.ToUniversalTime();
             if (TimeSettings.TestActivationMethod is ManualTestActivation manualTestActivation)
@@ -53,7 +53,7 @@ public partial class TestDefinition
 
     public void Activate(string testRunId, DateTime activatedOrScheduledAtUtc, TestDefinitionStatus status)
     {
-        if (TestDefinition.ActiveStatuses.Contains(status))
+        if (ActiveStatuses.Contains(status))
         {
             Status = status;
             CurrentTestRun = new CurrentTestRunPart
