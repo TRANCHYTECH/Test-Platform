@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="FluentValidation" Version="11.5.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.1" />
-    <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.4" />
+    <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.5" />
   </ItemGroup>
 
   <ItemGroup>

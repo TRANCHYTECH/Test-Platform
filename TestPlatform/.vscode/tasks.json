@@ -28,6 +28,34 @@
             "appId": "testrunner-api",
             "label": "testrunner-api-svc-daprd-down",
             "type": "daprd-down"
+        },
+        {
+            "label": "build-proctormanager-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api/VietGeeks.TestPlatform.ProctorManager.Api.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "proctormanager-api",
+            "appPort": 6200,
+            "httpPort": 3600,
+            "grpcPort": 3700,
+            "appSsl": false,
+            "label": "proctormanager-api-dapr-debug",
+            "type": "dapr",
+            "dependsOn": "build-proctormanager-api",
+            "componentsPath": "./src/Services/ProctorManager/dapr/components"
+        },
+        {
+            "appId": "proctormanager-api",
+            "label": "proctormanager-api-svc-daprd-down",
+            "type": "daprd-down"
         }
     ]
 }

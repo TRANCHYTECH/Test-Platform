@@ -1,0 +1,32 @@
+[
+  {
+    "event": "open",
+    "time": 1679893381,
+    "MessageID": 288230393022514875,
+    "Message_GUID": "53452b09-a1f4-4613-b4a9-aa5628f88df9",
+    "email": "vk1@mailinator.com",
+    "mj_campaign_id": 0,
+    "mj_contact_id": 91535133,
+    "customcampaign": "",
+    "ip": "113.160.224.140",
+    "geo": "VN",
+    "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+    "CustomID": "0g7r0LFMpRvkETKUKw6wmlpTebi",
+    "Payload": ""
+  },
+  {
+    "event": "open",
+    "time": 1679893381,
+    "MessageID": 288230393022514875,
+    "Message_GUID": "53452b09-a1f4-4613-b4a9-aa5628f88df9",
+    "email": "vk1@mailinator.com",
+    "mj_campaign_id": 0,
+    "mj_contact_id": 91535133,
+    "customcampaign": "",
+    "ip": "113.160.224.140",
+    "geo": "VN",
+    "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+    "CustomID": "0g7r0LFMpRvkETKUKw6wmlpTebi",
+    "Payload": ""
+  }
+]
