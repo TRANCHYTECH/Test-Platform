@@ -20,6 +20,6 @@
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.3" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.13.1" />
     <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.4" />
-    <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.4" />
+    <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.5" />
   </ItemGroup>
 </Project>

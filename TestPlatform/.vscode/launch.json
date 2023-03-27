@@ -5,7 +5,7 @@
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-            "name": ".Net Test Runner Dapr",
+            "name": "Test Runner Dapr",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "testrunner-api-dapr-debug",
@@ -29,6 +29,32 @@
                 "/Views": "${workspaceFolder}/Views"
             },
             "postDebugTask": "testrunner-api-svc-daprd-down" 
+        },
+        {
+            "name": "Proctor Manager Dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "proctormanager-api-dapr-debug",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.ProctorManager.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DAPR_HTTP_PORT": "3600",
+                "DAPR_GRPC_PORT": "3700",
+                "ASPNETCORE_URLS": "http://localhost:6200"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "postDebugTask": "proctormanager-api-svc-daprd-down" 
         },
         {
             "name": ".NET Attach",
