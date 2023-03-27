@@ -7,6 +7,7 @@ on:
     paths:
       - 'TestPlatform/src/Services/TestManager/**'
       - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/**'
+      - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**'
 env:
   CONTAINER_APP_CONTAINER_NAME: vietgeeks-test-manager-api
   CONTAINER_APP_NAME: vietgeeks-test-manager-api
