@@ -9,6 +9,8 @@ public class SendTestAccessCodeRequest
     public string TestDefinitionId { get; set; } = default!;
 
     public Receiver[] Receivers { get; set; } = default!;
+
+    public string TestRunId { get; set; } = default!;
 }
 
 public class Receiver

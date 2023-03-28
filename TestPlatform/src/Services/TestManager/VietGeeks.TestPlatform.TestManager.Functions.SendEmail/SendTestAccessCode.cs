@@ -4,7 +4,6 @@ using Mailjet.Client.Resources;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using VietGeeks.TestPlatform.Integration.Contracts;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -26,7 +25,7 @@ public class SendTestAccessCode
         MailjetClient client = new(Environment.GetEnvironmentVariable("MJ_APIKEY_PUBLIC"), Environment.GetEnvironmentVariable("MJ_APIKEY_PRIVATE"));
         var mails = invitation.Receivers.Select(r => new TransactionalEmail
         {
-            CustomID = r.AccessCode,
+            CustomID = string.Join("||", invitation.TestDefinitionId, invitation.TestRunId, r.AccessCode),
             From = new("notify@testmaster.io", "Test Master Notification"),
             To = new List<SendContact>
             {
@@ -42,7 +41,7 @@ public class SendTestAccessCode
             }
         });
         var sendResult = await client.SendTransactionalEmailsAsync(mails);
-        foreach (var item in sendResult.Messages.Where(c=>c.Status != "success"))
+        foreach (var item in sendResult.Messages.Where(c => c.Status != "success"))
         {
             _logger.LogError("Failed to send test access code to email {0}", item.To[0]);
         }

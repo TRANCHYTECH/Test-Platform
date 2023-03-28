@@ -218,7 +218,7 @@ public class TestManagerService : ITestManagerService
     {
         try
         {
-            if ((entity.TestAccessSettings?.Settings is PrivateAccessCodeType config))
+            if (entity != null && entity.CurrentTestRun != null && (entity.TestAccessSettings?.Settings is PrivateAccessCodeType config))
             {
                 var receivers = config.Configs.Where(c => !string.IsNullOrEmpty(c.Email)).Select(c => new Receiver(c.Code, c.Email)).ToArray();
                 if (receivers.Length > 0)
@@ -228,6 +228,7 @@ public class TestManagerService : ITestManagerService
                         //todo: configure test url.
                         TestUrl = $"https://dev.test-runner.testmaster.io/start/{entity.ID}",
                         TestDefinitionId = entity.ID,
+                        TestRunId = entity.CurrentTestRun.Id,
                         Receivers = receivers
                     };
 
