@@ -1,12 +1,11 @@
 
-export interface TestOverview
-{
-    id: string;
-    name: string;
-    description: string;
-    createdOn: string;
-    status: TestStatus;
-    category: string;
+export interface TestOverview {
+  id: string;
+  name: string;
+  description: string;
+  createdOn: string;
+  status: TestStatus;
+  category: string;
 }
 
 export interface Test {
@@ -151,7 +150,8 @@ export interface PrivateAccessCodeType extends IAccessType {
     code: string,
     email: string,
     sendCode: boolean,
-    setId: string
+    setId: string,
+    uiStatuses: any[]
   }[];
   attempts: number;
 }
@@ -171,11 +171,14 @@ export interface RespondentIdentifyConfig {
   isRequired: boolean;
 }
 
+export interface TestInvitationStats {
+  accessCode: string;
+  events: { event: string }[];
+}
 
-export enum TestActivationMethodType
-{
-    ManualTest = 1,
-    TimePeriod = 2
+export enum TestActivationMethodType {
+  ManualTest = 1,
+  TimePeriod = 2
 }
 
 export function createTest(params: Partial<Test>) {

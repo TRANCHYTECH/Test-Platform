@@ -96,7 +96,6 @@ public abstract class MailjetEvent
     public string Payload { get; set; } = default!;
 
     public virtual Dictionary<string, string> GetData() => new Dictionary<string, string>{
-                        {"event","spam"},
                         {"email", email},
                         {"time", time.ToString()}
                     };
@@ -105,6 +104,13 @@ public abstract class MailjetEvent
 public class MailjetSentEvent : MailjetEvent
 {
     public string smtp_reply { get; set; } = default!;
+
+    public override Dictionary<string, string> GetData()
+    {
+        var result = base.GetData();
+        result["event"] = "sent";
+        return result;
+    }
 }
 
 public class MailjetBlockedEvent : MailjetEvent
@@ -115,6 +121,7 @@ public class MailjetBlockedEvent : MailjetEvent
     public override Dictionary<string, string> GetData()
     {
         var result = base.GetData();
+        result["event"] = "blocked";
         result["error"] = error;
 
         return result;
@@ -124,5 +131,13 @@ public class MailjetBlockedEvent : MailjetEvent
 public class MailjetSpamEvent : MailjetEvent
 {
     public string source { get; set; } = default!;
+
+    public override Dictionary<string, string> GetData()
+    {
+        var result = base.GetData();
+        result["event"] = "spam";
+
+        return result;
+    }
 }
 

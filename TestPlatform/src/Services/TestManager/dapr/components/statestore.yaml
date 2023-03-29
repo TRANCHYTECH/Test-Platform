@@ -7,7 +7,7 @@ spec:
   version: v1
   metadata:
   - name: keyPrefix
-    value: proctormanager-api
+    value: proctor-manager
   - name: server
     value: cluster0.agnomfq.mongodb.net
   - name: username
@@ -15,7 +15,7 @@ spec:
   - name: password
     value: jZeAEmK8TwGslaiP
   - name: databaseName
-    value: TestRunnerDevLocal
+    value: TestRunnerDev
   - name: collectionName
     value: testnotification
   - name: operationTimeout

@@ -227,9 +227,10 @@ public class TestManagerService : ITestManagerService
         var keys = input.AccessCodes.Select(c=> $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
         var result = new List<dynamic>();
         var states = await _daprClient.GetBulkStateAsync("general-notify-store", keys.ToArray(), 2);
-        foreach (var state in states.Where(c=>!string.IsNullOrEmpty(c.Value)))
+        foreach (var accessCode in input.AccessCodes)
         {
-            var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(state.Value, _daprClient.JsonSerializerOptions);
+            var foundEvent = states.FirstOrDefault(c => c.Key.EndsWith(accessCode) && !string.IsNullOrEmpty(c.Value));
+            var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(foundEvent.Value, _daprClient.JsonSerializerOptions);
             if (parsedEvents == null)
             {
                 continue;
@@ -241,7 +242,7 @@ public class TestManagerService : ITestManagerService
 
             result.Add(new
             {
-                UniqueId = state.Key,
+                AccessCode = accessCode,
                 parsedEvents.Events
             });
         }
