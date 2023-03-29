@@ -25,7 +25,7 @@ public class SendTestAccessCode
         MailjetClient client = new(Environment.GetEnvironmentVariable("MJ_APIKEY_PUBLIC"), Environment.GetEnvironmentVariable("MJ_APIKEY_PRIVATE"));
         var mails = invitation.Receivers.Select(r => new TransactionalEmail
         {
-            CustomID = string.Join("||", invitation.TestDefinitionId, invitation.TestRunId, r.AccessCode),
+            CustomID = invitation.GenerateReferenceId(r.AccessCode),
             From = new("notify@testmaster.io", "Test Master Notification"),
             To = new List<SendContact>
             {

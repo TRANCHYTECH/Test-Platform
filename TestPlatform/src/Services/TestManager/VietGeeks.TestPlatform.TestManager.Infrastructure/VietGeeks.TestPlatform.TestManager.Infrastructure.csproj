@@ -21,5 +21,6 @@
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.13.1" />
     <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.4" />
     <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.5" />
+    <PackageReference Include="Dapr.Client" Version="1.10.0" />
   </ItemGroup>
 </Project>

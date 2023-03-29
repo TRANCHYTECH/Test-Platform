@@ -9,19 +9,23 @@ using System.Text.Json;
 using MongoDB.Bson;
 using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
+using Dapr.Client;
+using VietGeeks.TestPlatform.Integration.Contract;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 public class TestManagerService : ITestManagerService
 {
+    private readonly DaprClient _daprClient;
     private readonly IMapper _mapper;
     private readonly TestManagerDbContext _managerDbContext;
     private readonly ServiceBusClient _bus;
     private readonly ILogger<TestManagerService> _logger;
     private readonly IClock _time;
 
-    public TestManagerService(IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger, IClock time)
+    public TestManagerService(DaprClient daprClient, IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger, IClock time)
     {
+        _daprClient = daprClient;
         _mapper = mapper;
         _managerDbContext = managerDbContext;
         _bus = bus;
@@ -212,6 +216,37 @@ public class TestManagerService : ITestManagerService
         await _managerDbContext.SaveOnlyAsync(testDef, affectedFields);
 
         return _mapper.Map<TestDefinitionViewModel>(testDef);
+    }
+
+    public async Task<List<dynamic>> GetTestInvitationEvents(TestInvitationStatsInput input)
+    {
+        if(input == null) {
+            throw new TestPlatformException("InvalidInput");
+        }
+
+        var keys = input.AccessCodes.Select(c=> $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
+        var result = new List<dynamic>();
+        var states = await _daprClient.GetBulkStateAsync("GeneralNotifyStore", keys.ToArray(), 2);
+        foreach (var state in states.Where(c=>!string.IsNullOrEmpty(c.Value)))
+        {
+            var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(state.Value, _daprClient.JsonSerializerOptions);
+            if (parsedEvents == null)
+            {
+                continue;
+            }
+            if (parsedEvents.Events == null)
+            {
+                continue;
+            }
+
+            result.Add(new
+            {
+                UniqueId = state.Key,
+                parsedEvents.Events
+            });
+        }
+
+        return result;
     }
 
     private async Task SendAccessCodes(TestDefinition entity)

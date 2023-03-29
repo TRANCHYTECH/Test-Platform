@@ -11,6 +11,10 @@ public class SendTestAccessCodeRequest
     public Receiver[] Receivers { get; set; } = default!;
 
     public string TestRunId { get; set; } = default!;
+
+    public string GenerateReferenceId(string accessCode) {
+        return $"{TestDefinitionId}_{TestRunId}_{accessCode}";
+    }
 }
 
 public class Receiver

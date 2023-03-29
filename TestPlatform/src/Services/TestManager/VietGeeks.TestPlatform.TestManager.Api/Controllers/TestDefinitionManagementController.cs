@@ -104,4 +104,17 @@ public class TestDefinitionManagementController : ControllerBase
 
         return Ok(testDefiniton);
     }
+
+    [HttpPost("{id}/TestInvitationStats")]
+    public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
+    {
+        var result = await _testManagerService.GetTestInvitationEvents(new() {
+            TestDefinitionId = id, 
+            TestRunId = model.TestRunId,
+            AccessCodes = model.AccessCodes
+        });
+        
+        return Ok(result);
+    }
 }
+

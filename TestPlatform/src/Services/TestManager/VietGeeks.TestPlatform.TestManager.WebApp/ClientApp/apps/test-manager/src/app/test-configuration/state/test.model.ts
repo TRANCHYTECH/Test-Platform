@@ -17,6 +17,7 @@ export interface Test {
   gradingSettings: GradingSettings;
   timeSettings: TimeSettings;
   testStartSettings: TestStartSettings;
+  currentTestRun: CurrentTestRun;
   createdOn: Date;
   isEnabled: boolean;
   status: TestStatus;
@@ -33,6 +34,11 @@ export interface TimeSettings {
   testDurationMethod: TestDurationMethod;
   testActivationMethod: TestActivationMethod;
   answerQuestionConfig: AnswerQuestionConfig;
+}
+
+export interface CurrentTestRun {
+  id: string;
+  activatedOrScheduledAtUtc: Date;
 }
 
 export interface TestDurationMethod {
@@ -117,6 +123,13 @@ export interface TestSets {
 export class TestAccess {
   accessType!: number;
   settings!: IAccessType;
+}
+
+export const TestAccessType = {
+  PublicLink: 1,
+  PrivateAccessCode: 2,
+  GroupPassword: 3,
+  Training: 4
 }
 
 export interface IAccessType {
