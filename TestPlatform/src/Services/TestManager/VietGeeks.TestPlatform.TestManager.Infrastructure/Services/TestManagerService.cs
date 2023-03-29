@@ -226,7 +226,7 @@ public class TestManagerService : ITestManagerService
 
         var keys = input.AccessCodes.Select(c=> $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
         var result = new List<dynamic>();
-        var states = await _daprClient.GetBulkStateAsync("GeneralNotifyStore", keys.ToArray(), 2);
+        var states = await _daprClient.GetBulkStateAsync("general-notify-store", keys.ToArray(), 2);
         foreach (var state in states.Where(c=>!string.IsNullOrEmpty(c.Value)))
         {
             var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(state.Value, _daprClient.JsonSerializerOptions);
