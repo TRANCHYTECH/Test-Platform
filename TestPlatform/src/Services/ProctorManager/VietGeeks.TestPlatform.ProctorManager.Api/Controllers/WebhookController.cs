@@ -39,15 +39,15 @@ public class WebhookController : ControllerBase
     public async Task<IActionResult> ProcessMailjetEvents([FromServices] DaprClient client, [FromBody] string @event)
     {
         var parsedEvents = JsonSerializer.Deserialize<MailjetEvent[]>(@event) ?? throw new Exception("Wrong events");
-        foreach (var g in parsedEvents.GroupBy(c => c.CustomID))
+        foreach (var g in parsedEvents.GroupBy(c => c.Payload).Where(c => !string.IsNullOrEmpty(c.Key)))
         {
             var state = await client.GetStateAsync<TestInvitiationEventData>("general-notify-store", g.Key) ?? new TestInvitiationEventData();
 
-            state.Events.AddRange(g.Select(c=>c.GetData()));
+            state.Events.AddRange(g.Select(c => c.GetData()));
             await client.SaveStateAsync("general-notify-store", g.Key, state);
         };
         Console.WriteLine("processed event {0}", parsedEvents.Count());
-        
+
         return Ok();
     }
 
@@ -93,6 +93,7 @@ public abstract class MailjetEvent
     public int mj_campaign_id { get; set; } = default!;
     public int mj_contact_id { get; set; } = default!;
     public string customcampaign { get; set; } = default!;
+    public string Payload { get; set; } = default!;
 
     public virtual Dictionary<string, string> GetData() => new Dictionary<string, string>{
                         {"event","spam"},
@@ -108,7 +109,6 @@ public class MailjetSentEvent : MailjetEvent
 
 public class MailjetBlockedEvent : MailjetEvent
 {
-    public string Payload { get; set; } = default!;
     public string error_related_to { get; set; } = default!;
     public string error { get; set; } = default!;
 
@@ -116,14 +116,13 @@ public class MailjetBlockedEvent : MailjetEvent
     {
         var result = base.GetData();
         result["error"] = error;
-        
+
         return result;
     }
 }
 
 public class MailjetSpamEvent : MailjetEvent
 {
-    public string Payload { get; set; } = default!;
     public string source { get; set; } = default!;
 }
 
