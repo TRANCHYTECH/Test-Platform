@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using Mailjet.Client;
 using Mailjet.Client.Resources;
 using Mailjet.Client.TransactionalEmails;
@@ -25,7 +26,8 @@ public class SendTestAccessCode
         MailjetClient client = new(Environment.GetEnvironmentVariable("MJ_APIKEY_PUBLIC"), Environment.GetEnvironmentVariable("MJ_APIKEY_PRIVATE"));
         var mails = invitation.Receivers.Select(r => new TransactionalEmail
         {
-            CustomID = invitation.GenerateReferenceId(r.AccessCode),
+            CustomID = r.AccessCode,
+            EventPayload = invitation.GenerateReferenceId(r.AccessCode),
             From = new("notify@testmaster.io", "Test Master Notification"),
             To = new List<SendContact>
             {
@@ -43,7 +45,7 @@ public class SendTestAccessCode
         var sendResult = await client.SendTransactionalEmailsAsync(mails);
         foreach (var item in sendResult.Messages.Where(c => c.Status != "success"))
         {
-            _logger.LogError("Failed to send test access code to email {0}", item.To[0]);
+            _logger.LogError("Failed to send test access code to email {0}", JsonSerializer.Serialize(item));
         }
     }
 }
