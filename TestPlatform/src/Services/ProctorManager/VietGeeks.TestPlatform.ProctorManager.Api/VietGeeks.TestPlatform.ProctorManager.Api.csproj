@@ -17,4 +17,15 @@
     <PackageReference Include="Dapr.AspNetCore" Version="1.10.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\IntegrationBlocks\VietGeeks.TestPlatform.Integration.Contract\VietGeeks.TestPlatform.Integration.Contract.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,24 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: GeneralNotifyStore
+spec:
+  type: state.mongodb
+  version: v1
+  metadata:
+  - name: keyPrefix
+    value: proctormanager-api
+  - name: server
+    value: cluster0.agnomfq.mongodb.net
+  - name: username
+    value: testmaster
+  - name: password
+    value: jZeAEmK8TwGslaiP
+  - name: databaseName
+    value: TestRunnerDevLocal
+  - name: collectionName
+    value: testnotification
+  - name: operationTimeout
+    value: 10s
+  - name: writeConcern
+    value: majority

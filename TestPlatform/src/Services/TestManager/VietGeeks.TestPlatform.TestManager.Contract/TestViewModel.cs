@@ -63,6 +63,8 @@ public class TestDefinitionViewModel
 
     public TestStartSettingsViewModel? TestStartSettings { get; set; }
 
+    public CurrentTestRun? CurrentTestRun { get; set; }
+
     public TestDefinitionStatus Status { get; set; }
 
     public DateTime CreatedOn { get; set; }

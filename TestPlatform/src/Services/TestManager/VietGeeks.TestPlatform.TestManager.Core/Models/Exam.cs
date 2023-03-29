@@ -25,7 +25,6 @@ public class Exam : EntityBase
     public DateTime StartedAt { get; set; }
 
     public DateTime FinishedAt { get; set; }
-    
 }
 
 

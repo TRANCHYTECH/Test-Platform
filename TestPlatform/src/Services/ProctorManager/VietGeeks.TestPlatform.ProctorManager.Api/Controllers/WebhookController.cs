@@ -1,81 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Dapr;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
+using VietGeeks.TestPlatform.Integration.Contract;
 
+namespace VietGeeks.TestPlatform.ProctorManager.Api.Controllers;
 
-namespace VietGeeks.TestPlatform.ProctorManager.Api.Controllers
+[ApiController]
+[Route("[controller]")]
+public class WebhookController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WebhookController : ControllerBase
+    private const string MailNotifyBus = "access-code-email-notify-pubsub";
+
+#if DEBUG
+    private const string NotifyQueue = "access-code-email-notification_local";
+#else
+    private const string NotifyQueue = "access-code-email-notification";
+#endif
+
+    private readonly ILogger<WebhookController> _logger;
+
+    public WebhookController(ILogger<WebhookController> logger)
     {
-        private const string MailNotifyBus = "access-code-email-notify-pubsub";
-        private const string NotifyQueue = "access-code-email-notification";
+        _logger = logger;
+    }
 
-        private readonly ILogger<WebhookController> _logger;
+    [HttpPost("Mailjet")]
+    public async Task<IActionResult> Mailjet([FromServices] DaprClient client, [FromBody] MailjetEvent[] events)
+    {
+        await client.PublishEventAsync(MailNotifyBus, NotifyQueue, JsonSerializer.Serialize(events));
 
-        public WebhookController(ILogger<WebhookController> logger)
+        return Ok();
+    }
+
+    [Topic(MailNotifyBus, NotifyQueue)]
+    [HttpPost("ProcessMailjetEvents")]
+    public async Task<IActionResult> ProcessMailjetEvents([FromServices] DaprClient client, [FromBody] string @event)
+    {
+        var parsedEvents = JsonSerializer.Deserialize<MailjetEvent[]>(@event) ?? throw new Exception("Wrong events");
+        foreach (var g in parsedEvents.GroupBy(c => c.CustomID))
         {
-            _logger = logger;
+            var state = await client.GetStateAsync<TestInvitiationEventData>("GeneralNotifyStore", g.Key) ?? new TestInvitiationEventData();
+
+            state.Events.AddRange(g.Select(c=>c.GetData()));
+            await client.SaveStateAsync("GeneralNotifyStore", g.Key, state);
+        };
+        Console.WriteLine("processed event {0}", parsedEvents.Count());
+        
+        return Ok();
+    }
+
+    [HttpGet("TestInvitationEvents")]
+    public async Task<IActionResult> GetTestInvitationEvents([FromServices] DaprClient client, [FromQuery] string[] keys)
+    {
+        var result = new List<dynamic>();
+        IReadOnlyList<BulkStateItem> states = await client.GetBulkStateAsync("GeneralNotifyStore", keys.ToList(), 0);
+        foreach (var state in states)
+        {
+            var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(state.Value, client.JsonSerializerOptions);
+            if (parsedEvents == null)
+            {
+                continue;
+            }
+            if (parsedEvents.Events == null)
+            {
+                continue;
+            }
+
+            result.Add(new
+            {
+                UniqueId = state.Key,
+                Events = parsedEvents.Events
+            });
         }
 
-        [HttpPost("Mailjet")]
-        public async Task<IActionResult> Mailjet([FromServices] DaprClient client, [FromBody] MailjetEvent[] events)
-        {
-            await client.PublishEventAsync(MailNotifyBus, NotifyQueue, System.Text.Json.JsonSerializer.Serialize(events));
-
-            return Ok();
-        }
-
-        [Topic(MailNotifyBus, NotifyQueue)]
-        [HttpPost("MailjetEventReceived")]
-        public IActionResult ProcessMailjetEvents([FromBody]string @event)
-        {
-            var parsedEvents = System.Text.Json.JsonSerializer.Deserialize<MailjetEvent[]>(@event);
-            Console.WriteLine("processed event {0}", parsedEvents?.Count());
-
-            return Ok();
-        }
+        return Ok(result);
     }
+}
 
-    [JsonPolymorphic(TypeDiscriminatorPropertyName = "event")]
-    [JsonDerivedType(typeof(MailjetSentEvent), "sent")]
-    [JsonDerivedType(typeof(MailjetBlockedEvent), "blocked")]
-    [JsonDerivedType(typeof(MailjetSpamEvent), "spam")]
-    public abstract class MailjetEvent
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "event")]
+[JsonDerivedType(typeof(MailjetSentEvent), "sent")]
+[JsonDerivedType(typeof(MailjetBlockedEvent), "blocked")]
+[JsonDerivedType(typeof(MailjetSpamEvent), "spam")]
+public abstract class MailjetEvent
+{
+    public long time { get; set; } = default!;
+    public long MessageID { get; set; } = default!;
+    public string Message_GUID { get; set; } = default!;
+    public string email { get; set; } = default!;
+    public string CustomID { get; set; } = default!;
+    public int mj_campaign_id { get; set; } = default!;
+    public int mj_contact_id { get; set; } = default!;
+    public string customcampaign { get; set; } = default!;
+
+    public virtual Dictionary<string, string> GetData() => new Dictionary<string, string>{
+                        {"event","spam"},
+                        {"email", email},
+                        {"time", time.ToString()}
+                    };
+}
+
+public class MailjetSentEvent : MailjetEvent
+{
+    public string smtp_reply { get; set; } = default!;
+}
+
+public class MailjetBlockedEvent : MailjetEvent
+{
+    public string Payload { get; set; } = default!;
+    public string error_related_to { get; set; } = default!;
+    public string error { get; set; } = default!;
+
+    public override Dictionary<string, string> GetData()
     {
-        public int time { get; set; } = default!;
-        public long MessageID { get; set; } = default!;
-        public string Message_GUID { get; set; } = default!;
-        public string email { get; set; } = default!;
-        public string CustomID { get; set; } = default!;
-        public int mj_campaign_id { get; set; } = default!;
-        public int mj_contact_id { get; set; } = default!;
-        public string customcampaign { get; set; } = default!;
+        var result = base.GetData();
+        result["error"] = error;
+        
+        return result;
     }
+}
 
-    public class MailjetSentEvent : MailjetEvent
-    {
-        public string smtp_reply { get; set; } = default!;
-    }
-
-    public class MailjetBlockedEvent : MailjetEvent
-    {
-        public string Payload { get; set; } = default!;
-        public string error_related_to { get; set; } = default!;
-        public string error { get; set; } = default!;
-    }
-
-    public class MailjetSpamEvent : MailjetEvent
-    {
-        public string Payload { get; set; } = default!;
-        public string source { get; set; } = default!;
-    }
+public class MailjetSpamEvent : MailjetEvent
+{
+    public string Payload { get; set; } = default!;
+    public string source { get; set; } = default!;
 }
 

@@ -4,7 +4,6 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure;
-using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
 //todo: rename wrong namespace
@@ -17,7 +16,7 @@ public static class ServiceCollectionExtensions
         ConfigureDb(options.Database);
 
         serviceCollection.AddScoped<IProctorService, ProctorService>();
-        serviceCollection.AddSingleton<ITime, Time>();
+        serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddScoped<TestRunnerDbContext>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
     }

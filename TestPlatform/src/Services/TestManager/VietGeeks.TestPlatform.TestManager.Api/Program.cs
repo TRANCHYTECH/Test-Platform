@@ -29,6 +29,9 @@ builder.Services.RegisterInfrastructureModule(new()
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
     ServiceBus = builder.Configuration.GetSection("TestManagerServiceBus").Get<ServiceBusOptions>() ?? new ServiceBusOptions()
 });
+
+builder.Services.AddDaprClient();
+
 var app = builder.Build();
 
 app.UseCors("dev");

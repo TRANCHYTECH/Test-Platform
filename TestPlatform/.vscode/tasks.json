@@ -56,6 +56,34 @@
             "appId": "proctormanager-api",
             "label": "proctormanager-api-svc-daprd-down",
             "type": "daprd-down"
+        },
+        {
+            "label": "build-TestManager-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api/VietGeeks.TestPlatform.TestManager.Api.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "TestManager-api",
+            "appPort": 6200,
+            "httpPort": 3600,
+            "grpcPort": 36000,
+            "appSsl": false,
+            "label": "TestManager-api-dapr-debug",
+            "type": "dapr",
+            "dependsOn": "build-TestManager-api",
+            "componentsPath": "./src/Services/TestManager/dapr/components"
+        },
+        {
+            "appId": "TestManager-api",
+            "label": "TestManager-api-svc-daprd-down",
+            "type": "daprd-down"
         }
     ]
 }

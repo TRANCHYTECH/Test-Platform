@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
-import { EMPTY, firstValueFrom } from 'rxjs';
+import { EMPTY, firstValueFrom, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { Test, TestOverview } from './test.model';
+import { PrivateAccessCodeType, Test, TestAccessType, TestOverview } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
 import { forEach, range } from 'lodash-es';
@@ -12,6 +12,7 @@ import { defKSUID32 } from '@thi.ng/ksuid';
 
 @Injectable({ providedIn: 'root' })
 export class TestsService {
+
   constructor(private _testsStore: TestsStore, private _testsQuery: TestsQuery, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
@@ -67,6 +68,20 @@ export class TestsService {
 
   generateRandomCode() {
     return defKSUID32().next();
+  }
+
+  getTestInvitationStats(id: string) {
+    const test = this._testsQuery.getEntity(id);
+    if(test === undefined || test.currentTestRun === null || (test.testAccessSettings.settings === null || test.testAccessSettings.accessType !== TestAccessType.PrivateAccessCode)) {
+      return firstValueFrom(of([]));
+    }
+    const settings = test.testAccessSettings.settings as PrivateAccessCodeType;
+
+    const model = {
+      testRunId : test.currentTestRun.id,
+      accessCodes : settings.configs.map(c => c.code)
+    }
+    return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestInvitationStats`, model));
   }
 
   activate(id: string) {

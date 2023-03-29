@@ -3,15 +3,9 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, range } from 'lodash';
 
-import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess } from '../../../state/test.model';
+import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess, TestAccessType, TestStatus } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 
-export const TestAccessType = {
-  PublicLink: 1,
-  PrivateAccessCode: 2,
-  GroupPassword: 3,
-  Training: 4
-}
 //todo(tau): Implement test set selection
 @UntilDestroy()
 @Component({
@@ -99,6 +93,11 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
         break;
     }
 
+    if(this.test.status === TestStatus.Activated) {
+      this.testsService.getTestInvitationStats(this.test.id).then(r => {
+        console.log('test invitation stats', r);
+      });
+    }
     // Set ready to use.
     this.maskReadyForUI();
   }
