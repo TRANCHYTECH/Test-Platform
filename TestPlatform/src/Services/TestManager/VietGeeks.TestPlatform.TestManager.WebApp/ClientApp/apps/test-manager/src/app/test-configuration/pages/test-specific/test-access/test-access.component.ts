@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, range } from 'lodash';
 
-import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess, TestAccessType, TestStatus } from '../../../state/test.model';
+import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess, TestAccessType, TestInvitationStats as TestInvitationStatistic, TestStatus } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 
 //todo(tau): Implement test set selection
@@ -15,6 +15,8 @@ import { TestSpecificBaseComponent } from '../base/test-specific-base.component'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestAccessComponent extends TestSpecificBaseComponent {
+  testInvitationStats: TestInvitationStatistic[] = [];
+
   testAccessForm: FormGroup;
   codeGenerationForm: FormGroup;
   testAccessFormConfig = {
@@ -56,7 +58,12 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     //
   }
 
-  afterGetTest(): void {
+  getTestInvitationStat(code: string) {
+    const events = this.testInvitationStats.find(c => c.accessCode === code)?.events;
+    return events === undefined ? '' : events.map(c => c.event).join(',');
+  }
+
+  async afterGetTest(): Promise<void> {
     // Init default form.
     this.testAccessForm = this.fb.group({
       accessType: TestAccessType.PublicLink
@@ -93,13 +100,16 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
         break;
     }
 
-    if(this.test.status === TestStatus.Activated) {
-      this.testsService.getTestInvitationStats(this.test.id).then(r => {
-        console.log('test invitation stats', r);
-      });
-    }
     // Set ready to use.
     this.maskReadyForUI();
+
+    // Async get test invitation statistics.
+    if (this.test.status === TestStatus.Activated) {
+       this.testsService.getTestInvitationStats(this.test.id).then(rs => {
+        this.testInvitationStats = rs;
+        this.changeRef.markForCheck();
+       });
+    }
   }
 
   onAccessTypeSelected(accessType: number) {
@@ -178,7 +188,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     this.accessTypeCtrl.patchValue(TestAccessType.Training);
   }
 
-  private newAccessCodeConfigCtrl(code: { code: string; email?: string; sendCode?: boolean; setId?: string; }) {
+  private newAccessCodeConfigCtrl(code: { code: string; email?: string; sendCode?: boolean; setId?: string }) {
     return this.fb.group({
       code: [code.code, [Validators.required]],
       setId: code.setId,

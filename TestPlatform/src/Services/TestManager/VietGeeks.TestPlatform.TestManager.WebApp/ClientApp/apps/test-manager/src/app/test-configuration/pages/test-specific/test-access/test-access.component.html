@@ -114,6 +114,7 @@
                                             <td>
                                                 <input type="checkbox" class="form-check-input"
                                                     formControlName="sendCode">
+                                                    <span>{{getTestInvitationStat(control.get('code')?.value)}}</span>
                                             </td>
                                             <td><i class="ri-delete-bin-line delete-icon"
                                                     [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }"

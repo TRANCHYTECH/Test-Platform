@@ -4,7 +4,7 @@ import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
 import { EMPTY, firstValueFrom, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { PrivateAccessCodeType, Test, TestAccessType, TestOverview } from './test.model';
+import { PrivateAccessCodeType, Test, TestAccessType, TestInvitationStats, TestOverview } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
 import { forEach, range } from 'lodash-es';
@@ -72,16 +72,17 @@ export class TestsService {
 
   getTestInvitationStats(id: string) {
     const test = this._testsQuery.getEntity(id);
-    if(test === undefined || test.currentTestRun === null || (test.testAccessSettings.settings === null || test.testAccessSettings.accessType !== TestAccessType.PrivateAccessCode)) {
+    if (test === undefined || test.currentTestRun === null || (test.testAccessSettings.settings === null || test.testAccessSettings.accessType !== TestAccessType.PrivateAccessCode)) {
       return firstValueFrom(of([]));
     }
     const settings = test.testAccessSettings.settings as PrivateAccessCodeType;
 
     const model = {
-      testRunId : test.currentTestRun.id,
-      accessCodes : settings.configs.map(c => c.code)
-    }
-    return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestInvitationStats`, model));
+      testRunId: test.currentTestRun.id,
+      accessCodes: settings.configs.map(c => c.code)
+    };
+
+    return firstValueFrom(this._http.post<TestInvitationStats[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestInvitationStats`, model));
   }
 
   activate(id: string) {
