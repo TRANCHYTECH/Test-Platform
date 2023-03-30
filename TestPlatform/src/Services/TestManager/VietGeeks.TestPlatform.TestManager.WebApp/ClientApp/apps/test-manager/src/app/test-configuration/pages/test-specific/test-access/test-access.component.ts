@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { assign, range } from 'lodash';
+import { assign, range } from 'lodash-es';
 
 import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess, TestAccessType, TestInvitationStats as TestInvitationStatistic, TestStatus } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';

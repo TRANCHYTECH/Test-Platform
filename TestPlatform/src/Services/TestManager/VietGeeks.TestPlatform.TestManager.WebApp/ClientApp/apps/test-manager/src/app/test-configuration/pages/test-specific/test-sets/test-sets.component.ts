@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators, FormControl } from '@angular/forms';
-import { find, forEach } from 'lodash';
+import { find, forEach } from 'lodash-es';
 import { TestSets } from '../../../state/test.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
