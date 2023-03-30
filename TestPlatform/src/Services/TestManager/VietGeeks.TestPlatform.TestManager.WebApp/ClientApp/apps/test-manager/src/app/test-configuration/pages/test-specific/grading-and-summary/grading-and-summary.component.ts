@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { find, findIndex, forIn, sumBy } from 'lodash';
+import { find, findIndex, forIn, sumBy } from 'lodash-es';
 import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, TestEndConfig } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';

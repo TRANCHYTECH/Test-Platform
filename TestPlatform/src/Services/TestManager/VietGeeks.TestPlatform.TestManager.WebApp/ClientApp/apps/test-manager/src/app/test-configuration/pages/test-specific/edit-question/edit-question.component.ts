@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
