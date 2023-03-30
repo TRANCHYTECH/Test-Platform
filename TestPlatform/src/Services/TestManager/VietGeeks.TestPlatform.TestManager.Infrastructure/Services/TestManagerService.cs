@@ -230,6 +230,10 @@ public class TestManagerService : ITestManagerService
         foreach (var accessCode in input.AccessCodes)
         {
             var foundEvent = states.FirstOrDefault(c => c.Key.EndsWith(accessCode) && !string.IsNullOrEmpty(c.Value));
+            if(foundEvent.Equals(default(BulkStateItem))) {
+                continue;
+            }
+
             var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(foundEvent.Value, _daprClient.JsonSerializerOptions);
             if (parsedEvents == null)
             {
