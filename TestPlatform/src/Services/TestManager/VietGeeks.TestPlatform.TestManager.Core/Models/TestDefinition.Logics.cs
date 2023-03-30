@@ -92,7 +92,8 @@ public partial class TestDefinition
 
         return new[] { nameof(Status), nameof(CurrentTestRun) };
     }
-
+    
+    //todo: verify actual how values are reset.
     public string[] Restart()
     {
         if (LatestStatus != TestDefinitionStatus.Ended)
@@ -101,8 +102,9 @@ public partial class TestDefinition
         }
 
         Status = TestDefinitionStatus.Draft;
+        TestAccessSettings = TestAccessSettingsPart.Default();
 
-        return new[] { nameof(Status) };
+        return new[] { nameof(Status), nameof(TestAccessSettings) };
     }
 
     //todo: combine this and above method

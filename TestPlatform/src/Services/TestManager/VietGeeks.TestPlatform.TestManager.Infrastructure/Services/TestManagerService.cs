@@ -208,7 +208,6 @@ public class TestManagerService : ITestManagerService
 
     public async Task<TestDefinitionViewModel> RestartTestDefinition(string id)
     {
-        //todo: improve performance by only get parts needed for restart func
         //todo: concurrency check impl.
         var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new TestPlatformException("NotFoundEntity");
 
