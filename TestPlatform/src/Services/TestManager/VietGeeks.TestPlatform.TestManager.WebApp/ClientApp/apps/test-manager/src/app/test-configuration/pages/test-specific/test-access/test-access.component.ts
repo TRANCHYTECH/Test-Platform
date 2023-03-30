@@ -60,7 +60,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
 
   getTestInvitationStat(code: string) {
     const events = this.testInvitationStats.find(c => c.accessCode === code)?.events;
-    return events === undefined ? '' : events.map(c => c.event).join(',');
+    return events === undefined ? 'Sending' : events.map(c => c.event).join(',');
   }
 
   async afterGetTest(): Promise<void> {
