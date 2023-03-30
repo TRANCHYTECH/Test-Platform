@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Params, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { EDITOR_API_KEY, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
 import { NgxSpinnerService } from "ngx-spinner";
-import { BehaviorSubject, firstValueFrom } from "rxjs";
+import { BehaviorSubject, filter, firstValueFrom } from "rxjs";
 import { Test, createTest, TestStatus } from "../../../state/test.model";
 import { TestsQuery } from "../../../state/tests.query";
 import { TestsService } from "../../../state/tests.service";
@@ -47,26 +47,36 @@ export abstract class TestSpecificBaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
-            this.testId = p['id'];
-            if (!this.isNewTest) {
-                await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
-                const testDef = this.testsQuery.getEntity(this.testId);
-                if (testDef === undefined) {
-                    await this.router.navigate(['tests']);
-                    return;
-                }
+        this.route.params.pipe(untilDestroyed(this)).subscribe(async params => {
+            console.log('Load test specific page');
+            this.processParams(params);
+        });
 
-                this.test = testDef;
-                this.testsService.setActive(testDef.id);
-            }
-
-            this.afterGetTest();
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
+            console.log('Reload test specific page');
+            this.processParams(this.route.snapshot.params);
         });
 
         this.configureLoadingIndicator();
 
         this.onInit();
+    }
+
+    private async processParams(params: Params) {
+        this.testId = params['id'];
+        if (!this.isNewTest) {
+            await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
+            const testDef = this.testsQuery.getEntity(this.testId);
+            if (testDef === undefined) {
+                await this.router.navigate(['tests']);
+                return;
+            }
+
+            this.test = testDef;
+            this.testsService.setActive(testDef.id);
+        }
+
+        this.afterGetTest();
     }
 
     private configureLoadingIndicator() {

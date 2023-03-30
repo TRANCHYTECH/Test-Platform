@@ -91,9 +91,9 @@ export class TestSpecificLayoutComponent implements OnInit {
           this.activateMethod = 'schedule';
         }
 
-        if(test.status === TestStatus.Activated) {
+        if (test.status === TestStatus.Activated) {
           this.endMethod = 'endTest';
-        } else if(test.status === TestStatus.Scheduled) {
+        } else if (test.status === TestStatus.Scheduled) {
           this.endMethod = 'changeSettings';
         }
 
@@ -115,6 +115,7 @@ export class TestSpecificLayoutComponent implements OnInit {
   async restart() {
     await this._testsService.restart(this.testId);
     this._notifyService.success('Test restarted successfully');
+    this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
   }
 
 }
