@@ -52,7 +52,7 @@ $border-style-mixing: double, dashed, groove, outset, ridge, dotted, inset;
 [data-layout-mode="dark"]{
     .link-dark, .link-light{
         color: var(--#{$prefix}dark) !important;
-        &:focus, &:hover{
+        &:is(:focus, :hover){
             color: rgba(var(--#{$prefix}dark-rgb), 0.75) !important;
         }
     }

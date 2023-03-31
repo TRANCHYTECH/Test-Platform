@@ -77,7 +77,7 @@ ul {
         .me#{$infix}-auto,
         .mx#{$infix}-auto {
             margin-left: auto !important;
-            margin-right: inherit !important;
+            margin-right: 0 !important;
         }
 
         .mb#{$infix}-auto,
@@ -139,8 +139,6 @@ ul {
     }
 }
 
-
-
 // Breadcrumb
 .breadcrumb-item {
 
@@ -165,6 +163,7 @@ ul {
 .btn-label {
     position: relative;
     padding-right: 44px;
+    padding-left: 10px;
 
     .label-icon {
         right: -$btn-border-width;
@@ -181,17 +180,22 @@ ul {
     }
 }
 
-.btn-group>:not(.btn-check)+.btn {
-    border-radius: 0px;
-    border-top-left-radius: $btn-border-radius;
-    border-bottom-left-radius: $btn-border-radius;
+.btn-group > :not(.btn-check:first-child) + .btn,
+.btn-group > .btn-group:not(:first-child) {
+    margin-right: -1px;
+    margin-left: auto;
 }
-
-
-.btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0px;
-    border-top-right-radius: $btn-border-radius;
-    border-bottom-right-radius: $btn-border-radius;
+.btn-group > .btn:nth-child(n + 3), .btn-group > :not(.btn-check) + .btn{
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+.btn-group > .btn:not(:last-child):not(.dropdown-toggle){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
 }
 
 
@@ -616,27 +620,4 @@ $value in $theme-colors {
             left: 18px;
         }
     }
-}
-
-
-.input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: $border-radius;
-    border-top-right-radius: $border-radius;
-}
-
-.input-group>:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
-    margin-right: -1px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: $border-radius;
-    border-top-left-radius: $border-radius;
-}
-
-.input-group.has-validation>:nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: $border-radius;
-    border-top-right-radius: $border-radius;
 }

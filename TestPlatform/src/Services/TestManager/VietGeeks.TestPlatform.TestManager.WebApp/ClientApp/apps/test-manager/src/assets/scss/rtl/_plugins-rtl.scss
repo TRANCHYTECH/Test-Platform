@@ -209,3 +209,83 @@ html {
     right: 0;
     left: auto;
 }
+
+
+// Custom Css
+.table-card th:first-child, .table-card td:first-child{
+    padding-right: 16px;
+}
+.apexcharts-legend-text{
+    padding-right: 5px;
+    margin-right: 0;
+}
+
+// selact 2
+
+.ng-select .ng-select-container .ng-value-container {
+    padding-right: 10px;
+}
+
+// validation
+
+.was-validated .form-control:valid, .form-control.is-valid {
+    padding-left: calc(1.5em + 1rem);
+    padding-right: 0.9rem;
+    background-position: left calc(0.375em + 0.25rem) center;
+}
+
+// wizard
+
+.custom-nav aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li:not(:last-child)::after {
+    right: calc(50% + 15px);
+}
+
+.custom-nav.nav-wizard aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li {
+    text-align: right;
+}
+
+.custom-nav.nav-wizard aw-wizard-navigation-bar.horizontal.large-empty-symbols ul.steps-indicator li .step-indicator {
+    right: 0px;
+}
+
+aw-wizard-navigation-bar.horizontal ul.steps-indicator li {
+    margin: -2px;
+}
+
+
+// form
+
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    margin-right: -1px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: $input-border-radius;
+    border-bottom-left-radius: $input-border-radius;
+}
+
+
+.input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
+ .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation) > .form-floating:not(:last-child) > .form-control, .input-group:not(.has-validation) > .form-floating:not(:last-child) > .form-select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
+}
+
+.input-group.has-validation > :nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating),
+ .input-group.has-validation > .dropdown-toggle:nth-last-child(n+4), .input-group.has-validation > .form-floating:nth-last-child(n+3) > .form-control,
+ .input-group.has-validation > .form-floating:nth-last-child(n+3) > .form-select{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
+}
+
+
+// Table-rating
+
+.table-rating{
+    .stars {
+        display: block !important;
+    }
+}

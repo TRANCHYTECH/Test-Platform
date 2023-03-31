@@ -26,10 +26,10 @@
           }
         ],
         "styles": [
-          "apps/test-manager/src/assets/scss/config/minimal/bootstrap.scss",
+          "apps/test-manager/src/assets/scss/config/corporate/bootstrap.scss",
           "apps/test-manager/src/assets/scss/icons.scss",
           "sweetalert2/src/sweetalert2.scss",
-          "apps/test-manager/src/assets/scss/config/minimal/app.scss",
+          "apps/test-manager/src/assets/scss/config/corporate/app.scss",
           "node_modules/ngx-spinner/animations/ball-fussion.css",
           "apps/test-manager/src/styles.scss"
         ],

@@ -7,7 +7,7 @@ html {
     min-height: 100%;
 }
 
-.h1,
+:is(.h1,
 .h2,
 .h3,
 .h4,
@@ -18,7 +18,7 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6) {
     color: $heading-color;
     font-family: $heading-font-family;
 }
@@ -51,12 +51,12 @@ strong {
 
 // container
 
-.container,
+:is(.container,
 .container-lg,
 .container-md,
 .container-sm,
 .container-xl,
-.container-xxl {
+.container-xxl) {
     @media (min-width: 1200px) {
         max-width: 1140px;
     }

@@ -141,7 +141,7 @@ $value in $theme-colors {
         left: 0;
         bottom: 0;
     }
-    .card-header, .card-footer {
+    :is(.card-header, .card-footer) {
         border-color: rgba($white, 0.15) !important;
     }
 }

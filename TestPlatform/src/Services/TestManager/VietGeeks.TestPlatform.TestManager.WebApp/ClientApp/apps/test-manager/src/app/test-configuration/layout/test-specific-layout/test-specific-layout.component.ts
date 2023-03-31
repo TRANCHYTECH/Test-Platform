@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService } from '@viet-geeks/shared';
@@ -14,7 +14,7 @@ import { TestsService } from '../../state/tests.service';
   styleUrls: ['./test-specific-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestSpecificLayoutComponent implements OnInit {
+export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   title?= '';
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testId!: string;
@@ -100,6 +100,10 @@ export class TestSpecificLayoutComponent implements OnInit {
         this._changeRef.markForCheck();
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    document.documentElement.setAttribute('data-sidebar-size', 'sm');
   }
 
   async activateTest() {
