@@ -31,17 +31,17 @@
 </div>
 
 <div class="row">
-    <div class="col-xxl-3 col-sm-6 project-card"
+    <div class="col-xxl-4 col-sm-6 project-card"
         *ngFor="let test of tests | slice: (page-1) * pageSize : page * pageSize" id="pl1_{{test.id}}">
-        <div class="card card-height-100">
+        <div class="card card-animate ribbon-box border shadow-none card-height-100">
             <div class="card-body">
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex">
                         <div class="flex-grow-1 mb-4">
-                            <span class="btn btn-outline-info btn-sm me-1">{{test.status | testStatus}}</span>
-                            <span class="text-muted">{{test.createdOn | date}}</span>
+                            <span class="ribbon {{(test.status | testStatusClass:'ribbon')}} round-shape">{{test.status | testStatus}}</span>
                         </div>
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 d-flex">
+                            <span class="fs-12 text-muted">{{test.createdOn | date:'dd/MM/yyyy'}}</span>
                             <div class="d-flex gap-1 align-items-center">
                                 <div class="dropdown" ngbDropdown>
                                     <button
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex mb-2">
+                    <div class="d-flex mb-2 mt-2">
                         <div class="flex-grow-1">
                             <h5 class="mb-1 fs-15"><a [routerLink]="[test.id, 'basic-settings']"
                                     class="text-dark">{{test.name}}</a></h5>
@@ -74,12 +74,15 @@
             <div class="card-footer bg-transparent border-top-dashed py-2">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
+
                         <div class="text-muted">
                             <i class="ri-pie-chart-line me-1 align-bottom"></i> -% avg. score| Results (0)
                         </div>
+
                     </div>
                     <div class="flex-shrink-0">
-                        <span class="btn btn-outline-info btn-sm">{{showCategory(test.category)}}</span>
+                        <span class="badge rounded-pill text-bg-light fs-12">{{showCategory(test.category)}}</span>
+
                     </div>
 
                 </div>

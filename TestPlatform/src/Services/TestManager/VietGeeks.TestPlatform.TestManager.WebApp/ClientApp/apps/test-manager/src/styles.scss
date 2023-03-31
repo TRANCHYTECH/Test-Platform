@@ -1,4 +1,6 @@
-
+@import "./node_modules/bootstrap/scss/functions";
+@import "./node_modules/bootstrap/scss/variables";
+@import 'assets/scss/config/corporate/_variables.scss';
 
 .short-editor {
     .ck-editor__editable {
@@ -14,7 +16,8 @@
 
 .form-control {
     &.ng-invalid {
-        border-color: #dc3545;;
+        border-color: #dc3545;
+        ;
     }
 }
 
@@ -23,11 +26,58 @@
     margin-top: 0.25rem;
     font-size: .875em;
     color: #dc3545;
-  }
+}
 
 
-  .btn:disabled {
+.btn:disabled {
     &.active {
         opacity: 1;
+    }
+}
+
+.test-definition-sidebar {
+    --vz-accordion-border-width: 0;
+    --vz-accordion-active-bg: transparent;
+    --vz-accordion-btn-focus-box-shadow: 0;
+
+    .accordion-item {
+        &.setting-parts {
+            .accordion-button {
+                padding-top: 0 !important;
+            }
+        }
+
+        background-color: unset;
+
+        .accordion-header {
+            background-color: unset;
+
+            .accordion-button {
+                background-color: unset;
+                padding: 16px 0 10px 0;
+
+                .panel-title {
+                    padding-right: 10px;
+                }
+            }
+        }
+
+        .accordion-body {
+            padding: 0;
+
+            .list-group {
+                &-item {
+                    background-color: unset;
+
+                    &.active {
+                        background-color: white;
+                        color: var(--vz-list-group-color);
+                        border-radius: 6px;
+                        font-weight: 600;
+                        box-shadow: $card-box-shadow;
+                    }
+                }
+            }
+        }
     }
 }

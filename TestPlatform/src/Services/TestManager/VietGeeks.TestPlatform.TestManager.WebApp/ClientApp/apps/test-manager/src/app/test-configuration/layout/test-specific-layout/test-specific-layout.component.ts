@@ -15,7 +15,9 @@ import { TestsService } from '../../state/tests.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
-  title?= '';
+  pageTitle? = 'LOADING TEST';
+  sectionTitle? = '';
+  breadcrumbs$ = new BehaviorSubject<{label?: string, active?: boolean}[]>([{label: 'Loading test'}]);
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testId!: string;
   testStatus = TestStatus.Draft;
@@ -29,10 +31,13 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
-      const testSpecificPartRoute = this.route.snapshot.children[0];
+      const testSpecificPartRoute = this.route.children[0].snapshot;
       this.testId = testSpecificPartRoute.params['id'];
-      this.title = testSpecificPartRoute.title;
+      this.sectionTitle = testSpecificPartRoute.title;
       const isNewTest = this.testId === 'new';
+      if(isNewTest) {
+        this.pageTitle = 'New Test';
+      } 
       this.menus$.next([
         {
           routerLink: [this.testId, 'basic-settings'],
@@ -83,6 +88,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
+        this.pageTitle = test.basicSettings.name;
         this.testStatus = test.status;
 
         if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {

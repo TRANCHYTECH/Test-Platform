@@ -39,6 +39,14 @@ export class TestsService {
     this._testsStore.setActive(id);
   }
 
+  removeCurrentActive() {
+    const id = this._testsQuery.getActiveId();
+    if (id !== null && id !== undefined) {
+      this._testsStore.removeActive(id);
+    }
+  }
+
+
   add(test: Partial<Test>) {
     return this._http.post<Test>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`, test).pipe(tap(rs => {
       this._testsStore.add(rs);
