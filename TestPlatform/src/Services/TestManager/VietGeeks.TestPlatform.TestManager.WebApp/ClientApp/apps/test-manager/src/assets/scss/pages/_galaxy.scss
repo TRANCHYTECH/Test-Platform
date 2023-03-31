@@ -97,7 +97,7 @@ body {
 }
 
 @media (max-width: 1349.98px) {
-
+    .file-manager-sidebar,
     .email-detail-content,
     .file-manager-detail-content {
         background-color: var(--#{$prefix}card-bg-fill);

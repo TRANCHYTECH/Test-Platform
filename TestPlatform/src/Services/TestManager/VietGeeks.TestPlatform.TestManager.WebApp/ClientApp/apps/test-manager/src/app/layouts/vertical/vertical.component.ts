@@ -16,23 +16,23 @@ export class VerticalComponent implements OnInit {
     document.documentElement.setAttribute('data-layout', 'vertical');
     document.documentElement.setAttribute('data-topbar', 'light');
     document.documentElement.setAttribute('data-sidebar', 'light');
-    document.documentElement.setAttribute('data-sidebar-size', 'lg');
+    document.documentElement.setAttribute('data-sidebar-size', 'md');
     document.documentElement.setAttribute('data-layout-style', 'default');
     document.documentElement.setAttribute('data-layout-mode', 'light');
     document.documentElement.setAttribute('data-layout-width', 'fluid');
     document.documentElement.setAttribute('data-layout-position', 'fixed');
     document.documentElement.setAttribute('data-preloader', 'disable');
-    window.addEventListener('resize' , function(){
-      if (document.documentElement.clientWidth <= 767) {
-        document.documentElement.setAttribute('data-sidebar-size', '');
-      }
-      else if (document.documentElement.clientWidth <= 1024) {
-        document.documentElement.setAttribute('data-sidebar-size', 'sm');
-      }
-      else if (document.documentElement.clientWidth >= 1024) {      
-        document.documentElement.setAttribute('data-sidebar-size', 'lg');
-      }
-    })
+    // window.addEventListener('resize' , function(){
+    //   if (document.documentElement.clientWidth <= 767) {
+    //     document.documentElement.setAttribute('data-sidebar-size', '');
+    //   }
+    //   else if (document.documentElement.clientWidth <= 1024) {
+    //     document.documentElement.setAttribute('data-sidebar-size', 'sm');
+    //   }
+    //   else if (document.documentElement.clientWidth >= 1024) {      
+    //     document.documentElement.setAttribute('data-sidebar-size', 'md');
+    //   }
+    // })
   }
 
   /**
@@ -47,7 +47,7 @@ export class VerticalComponent implements OnInit {
       } else if (currentSIdebarSize == "md") {
         (document.documentElement.getAttribute('data-sidebar-size') == "md") ? document.documentElement.setAttribute('data-sidebar-size', 'sm') : document.documentElement.setAttribute('data-sidebar-size', 'md')
       } else {
-        (document.documentElement.getAttribute('data-sidebar-size') == "sm") ? document.documentElement.setAttribute('data-sidebar-size', 'lg') : document.documentElement.setAttribute('data-sidebar-size', 'sm')
+        (document.documentElement.getAttribute('data-sidebar-size') == "sm") ? document.documentElement.setAttribute('data-sidebar-size', 'md') : document.documentElement.setAttribute('data-sidebar-size', 'sm')
       }
     }
     if (document.documentElement.clientWidth <= 767) {

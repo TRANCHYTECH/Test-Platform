@@ -11,6 +11,9 @@
 
 .upcoming-scheduled{
     position: relative;
+    @media (max-width: 575.98px) {
+        top: 35px !important;
+    }
     .flatpickr-months{
         position: absolute !important;
         top: -45px !important;
@@ -18,7 +21,7 @@
         right: 0px !important;
         width: 200px;
         background-color: transparent;
-        
+
         .flatpickr-month{
             color: $gray-600 !important;
             fill: $gray-600 !important;

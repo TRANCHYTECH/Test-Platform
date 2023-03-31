@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
@@ -14,7 +14,7 @@ import { TestsService } from '../../state/tests.service';
   templateUrl: './test-list.component.html',
   styleUrls: ['./test-list.component.scss']
 })
-export class TestListComponent implements OnInit {
+export class TestListComponent implements OnInit, AfterViewInit{
   tests: TestOverview[] = [];
   testCategories: TestCategory[] = [];
   page = 1;
@@ -35,6 +35,10 @@ export class TestListComponent implements OnInit {
     });
 
     this.configureLoadingIndicator();
+  }
+
+  ngAfterViewInit(): void {
+    document.documentElement.setAttribute('data-sidebar-size', 'md');
   }
 
   showCategory(id: string) {

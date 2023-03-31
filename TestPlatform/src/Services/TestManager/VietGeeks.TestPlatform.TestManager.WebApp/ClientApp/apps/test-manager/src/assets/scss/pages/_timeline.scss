@@ -94,14 +94,14 @@
 @media (max-width: 991.98px) {
     .timeline {
         &::after {
-            left: 112px;
+            left: 24px;
             bottom: 180px;
         }
     }
 
     .timeline-item {
         width: 100%;
-        padding-left: 165px;
+        padding-left: 48px;
         padding-right: 0px;
 
         &.right,  &.left {
@@ -110,9 +110,9 @@
             .icon {
                 width: 45px;
                 height: 45px;
-                top: 37.5px;
+                top: 0;
                 font-size: 18px;
-                left: 90px;
+                left: 0;
             }
 
             &::before {
@@ -122,8 +122,10 @@
 
             .date {
                 right: auto;
-                left: 0px;
+                left: 48px;
                 width: 79px;
+                top: 8px;
+                text-align: left;
             }
         }
     }
@@ -202,6 +204,9 @@
         border-radius: 6px;
         background: var(--#{$prefix}card-bg-custom);
         max-width: 695px;
+        @media (max-width: 991.98px){
+            margin-right: 0;
+        }
 
         &::after {
             content: '';

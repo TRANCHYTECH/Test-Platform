@@ -10,6 +10,7 @@
     z-index: 1002;
     background-color: $header-bg;
     transition: all 0.1s ease-out;
+    border: 1px solid $page-title-border;
 
     &.topbar-shadow {
         box-shadow: $box-shadow;
@@ -311,8 +312,7 @@
                 margin: 0 auto;
             }
 
-            &[data-sidebar-size="sm"],
-            &[data-sidebar-size="sm-hover"] {
+            &:is([data-sidebar-size="sm"], [data-sidebar-size="sm-hover"]) {
                 .navbar-brand-box {
                     background-color: transparent !important;
                     position: relative;
@@ -361,6 +361,10 @@
             margin-top: $header-height;
         }
 
+        @media (max-width: 1024.1px) {
+            padding: calc(45px + #{$grid-gutter-width} * 1.8) calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
+        }
+
         padding: calc(45px + #{$grid-gutter-width}) calc(#{$grid-gutter-width} / 2) $footer-height calc(#{$grid-gutter-width} / 2);
     }
 
@@ -375,8 +379,7 @@
 
 [data-layout="vertical"] {
 
-    &[data-sidebar-size="sm"],
-    &[data-sidebar-size="sm-hover"] {
+    &:is([data-sidebar-size="sm"], [data-sidebar-size="sm-hover"]) {
         #page-topbar {
             @media (min-width: 768px) {
                 left: $vertical-menu-width-sm;

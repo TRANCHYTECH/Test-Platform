@@ -2,8 +2,7 @@
 // _nav.scss
 //
 
-.nav-tabs,
-.nav-pills {
+:is(.nav-tabs, .nav-pills) {
     >li {
         >a {
             color: var(--#{$prefix}gray-700);
@@ -21,8 +20,7 @@
 
 .nav-pills {
 
-    .nav-link.active,
-    .show>.nav-link {
+    :is(.nav-link.active, .show>.nav-link) {
         box-shadow: $element-shadow;
     }
 }

@@ -12,9 +12,7 @@ a {
     box-shadow: $element-shadow;
 }
 
-.btn.show,
-.btn:first-child:active,
-:not(.btn-check)+.btn:active {
+:is(.btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active) {
     border-color: transparent;
 }
 
@@ -32,9 +30,7 @@ a {
     width: calc(#{$btn-padding-y * 2} + #{$btn-line-height}em + #{$btn-border-width * 2});
     padding: 0;
 
-    i,
-    svg,
-    img {
+    :is(i, svg, img) {
         vertical-align: middle;
     }
 
@@ -174,10 +170,7 @@ $value in $theme-colors {
         background-color: $bg;
         border-color: $bg !important;
 
-        &:hover,
-        &:focus,
-        &:active,
-        &:focus-visible {
+        &:is(:hover, :focus, :active, :focus-visible) {
             color: $bg;
             background-color: rgba($bg, 0.1);
         }
@@ -301,10 +294,7 @@ $value in $theme-colors {
     .btn-ghost-light {
         color: var(--#{$prefix}dark);
 
-        &:hover,
-        &:focus,
-        &:active,
-        &:focus-visible {
+        &:is(:hover, :focus, :active, :focus-visible) {
             color: var(--#{$prefix}dark);
             background-color: rgba(var(--#{$prefix}light-rgb), 0.5);
         }
@@ -313,10 +303,7 @@ $value in $theme-colors {
     .btn-ghost-dark {
         color: var(--#{$prefix}dark);
 
-        &:hover,
-        &:focus,
-        &:active,
-        &:focus-visible {
+        &:is(:hover, :focus, :active, :focus-visible) {
             color: var(--#{$prefix}dark);
             background-color: rgba(var(--#{$prefix}dark-rgb), 0.1);
         }
@@ -336,9 +323,7 @@ $value in $theme-colors {
 @each $color,
 $value in $theme-colors {
 
-    .btn-#{$color},
-    .btn-outline-#{$color},
-    .btn-soft-#{$color} {
+    :is(.btn-#{$color}, .btn-outline-#{$color}, .btn-soft-#{$color}) {
         &.btn-border {
             border-bottom: 2px solid darken($value, 8%);
         }

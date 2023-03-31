@@ -245,7 +245,7 @@
         }
     }
 
-    &[data-sidebar="gradient"], &[data-sidebar="gradient-2"], &[data-sidebar="gradient-3"], &[data-sidebar="gradient-4"] {
+    &:is([data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {
         .twocolumn-iconview {
             background-color: $twocolumn-menu-iconview-bg-dark;
     
