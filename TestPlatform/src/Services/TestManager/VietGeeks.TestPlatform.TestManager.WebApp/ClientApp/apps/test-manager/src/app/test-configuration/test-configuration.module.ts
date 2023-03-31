@@ -25,6 +25,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { TestStatusPipe } from './pipes/test-status.pipe';
+import { TestStatusClassPipe } from "./pipes/test-status-class.pipe";
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { TestStatusPipe } from './pipes/test-status.pipe';
     GradingAndSummaryComponent,
     TestTimeSettingsComponent,
     TestSpecificLayoutComponent,
-    TestStatusPipe
+    TestStatusPipe,
+    TestStatusClassPipe
   ],
   imports: [
     CommonModule,

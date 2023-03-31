@@ -1,11 +1,11 @@
-<viet-geeks-breadcrumbs [title]="title" [breadcrumbItems]="[]"></viet-geeks-breadcrumbs>
+<viet-geeks-breadcrumbs [title]="pageTitle"></viet-geeks-breadcrumbs>
 <div class="row">
-    <div class="col-lg-3 col-xl-2">
-        <div class="badge bg-primary text-wrap">{{ testStatus | testStatus }}</div>
-        <ngb-accordion class="accordion-flush" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
-            <ngb-panel id="test-config">
+    <div class="col-lg-auto col-xl-auto">
+       <h5 class="pb-2"><span class="badge {{(testStatus | testStatusClass:'bg')}} text-wrap">{{ testStatus | testStatus }}</span></h5>
+        <ngb-accordion class="accordion-flush test-definition-sidebar" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
+            <ngb-panel id="test-config" [cardClass]="'setting-parts'">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
-                    Test Configuration
+                    <h5 class="panel-title">Test Configuration</h5>
                 </ng-template>
                 <ng-template ngbPanelContent>
                     <div class="list-group list-group-flush">
@@ -25,9 +25,9 @@
                     </div>
                 </ng-template>
             </ngb-panel>
-            <ngb-panel id="test-restult">
+            <ngb-panel id="test-restult" [cardClass]="'result-parts'">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
-                    Test progress & results
+                    <h5 class="panel-title">Test progress & results</h5>
                 </ng-template>
                 <ng-template ngbPanelContent>
                     //todo
@@ -35,10 +35,11 @@
             </ngb-panel>
         </ngb-accordion>
     </div>
-    <div class="col-lg-9 col-xl-10">
+    <div class="col">
         <ngx-spinner>
             <p class="loading">Loading...</p>
         </ngx-spinner>
+        <h5 class="pb-2">{{sectionTitle}}</h5>
         <router-outlet></router-outlet>
     </div>
 </div>

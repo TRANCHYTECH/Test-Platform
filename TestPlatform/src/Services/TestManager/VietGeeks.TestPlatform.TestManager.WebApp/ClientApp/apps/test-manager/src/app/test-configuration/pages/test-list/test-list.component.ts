@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, switchAll } from 'rxjs';
 import { TestCategoriesQuery } from '../../state/test-categories.query';
 import { TestCategoriesService } from '../../state/test-categories.service';
 import { TestCategory } from '../../state/test-category.model';
-import { TestOverview } from '../../state/test.model';
+import { TestOverview, TestStatus } from '../../state/test.model';
 import { TestsService } from '../../state/tests.service';
 
 @UntilDestroy()
@@ -18,7 +18,7 @@ export class TestListComponent implements OnInit, AfterViewInit{
   tests: TestOverview[] = [];
   testCategories: TestCategory[] = [];
   page = 1;
-  pageSize = 10;
+  pageSize = 12;
 
   private _readyForUI = new BehaviorSubject(false);
   private _spinner = inject(NgxSpinnerService);

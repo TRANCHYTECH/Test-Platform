@@ -6,7 +6,9 @@ import { TestStatus } from '../state/test.model';
 })
 export class TestStatusPipe implements PipeTransform {
 
-  transform(status: TestStatus | null): unknown {
+  transform(status: TestStatus | null) {
     return TestStatus[status || TestStatus.Draft];
   }
 }
+
+

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Params, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
@@ -13,7 +13,7 @@ import { TestsService } from "../../../state/tests.service";
     selector: 'viet-geeks-test-specific-base',
     template: ''
 })
-export abstract class TestSpecificBaseComponent implements OnInit {
+export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
     testId!: string;
     test!: Test;
 
@@ -62,6 +62,11 @@ export abstract class TestSpecificBaseComponent implements OnInit {
         this.onInit();
     }
 
+    ngOnDestroy(): void {
+        this.testsService.removeCurrentActive();
+        this.onDestroy();
+    }
+
     private async processParams(params: Params) {
         this.testId = params['id'];
         if (!this.isNewTest) {
@@ -97,13 +102,17 @@ export abstract class TestSpecificBaseComponent implements OnInit {
 
     abstract onInit(): void;
 
+    onDestroy() {
+        // Default do nothing.
+    }
+
     abstract afterGetTest(): void;
 
     abstract submit(): Promise<void>;
 
     abstract get canSubmit(): boolean;
 
-    get isReadonly(){
+    get isReadonly() {
         return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
     }
 
