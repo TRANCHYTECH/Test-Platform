@@ -113,6 +113,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("Finish")]
+    [ProducesResponseType(typeof(FinishExamOutput), 200)]
     public async Task<IActionResult> FinishExam()
     {
         var testSession = GetTestSession(PreStartSteps.FinishExam);

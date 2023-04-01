@@ -1,11 +1,13 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { interval, Subscription, firstValueFrom } from 'rxjs';
-import { ExamQuestion } from '../../../api/models';
-import { TestSessionService } from '../../../services/test-session.service';
+import { ExamQuestion, TimeSpan } from '../../../api/models';
+import { TestSessionService } from '../../services/test-session.service';
 import { AnswerType } from '../../../state/exam-content.model';
 import { TestDurationMethod, TestSession } from '../../../state/test-session.model';
-import { ProctorService } from '../../proctor.service';
+import { ProctorService } from '../../services/proctor.service';
+import { TestDurationService } from '../../services/test-duration.service';
 @Component({
   selector: 'viet-geeks-test-question',
   templateUrl: './test-question.component.html',
@@ -15,6 +17,8 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
 
   proctorService = inject(ProctorService);
   private _testSessionService = inject(TestSessionService);
+  private _testDurationService = inject(TestDurationService);
+  private _router = inject(Router);
 
   questions: ExamQuestion[] = [];
   sessionData: TestSession = {};
@@ -24,21 +28,13 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   question?: ExamQuestion;
   endTime: Date = new Date();
 
-  milliSecondsInASecond = 1000;
-  hoursInADay = 24;
-  minutesInAnHour = 60;
-  SecondsInAMinute = 60;
-
-  public timeDifference?: number;
-  public secondsToDday?: number;
-  public minutesToDday?: number;
-  public hoursToDday?: number;
-  public daysToDday?: number;
+  public remainingTime: TimeSpan = {};
 
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
     this.sessionData = this._testSessionService.getSessionData();
+    this.index = this.sessionData.questionIndex ?? 0;
     this.answerForm = this._fb.group({});
     this.questions = this._testSessionService.getQuestions() ?? [];
     this.question = this.questions[this.index];
@@ -48,7 +44,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
 
   ngOnInit(): void {
     this.initEndTime();
-    this.subscription = interval(this.milliSecondsInASecond)
+    this.subscription = interval(1000)
       .subscribe(() => this.getTimeDifference());
   }
 
@@ -69,6 +65,9 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       this.question = this.questions[this.index];
       this.initAnswerForm();
       this.initEndTime();
+    }
+    else {
+      this.finishExam();
     }
   }
 
@@ -104,28 +103,33 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   }
 
   private getTimeDifference() {
-    this.timeDifference = this.endTime.getTime() - new Date().getTime();
-
-    if (this.timeDifference <= 0) {
+    const timeDifference = this._testDurationService.getTimeDifference(new Date(), this.endTime);
+    if (timeDifference <= 0) {
       this.handleEndTime();
     }
 
-    this.allocateTimeUnits(this.timeDifference);
+    this.allocateTimeUnits(timeDifference);
   }
 
   private allocateTimeUnits(timeDifference: number) {
-    this.secondsToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond) % this.SecondsInAMinute);
-    this.minutesToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour) % this.SecondsInAMinute);
-    this.hoursToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute) % this.hoursInADay);
-    this.daysToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute * this.hoursInADay));
+    this.remainingTime = this._testDurationService.getDurationFromTimeDifference(timeDifference);
   }
 
-  private handleEndTime() {
+  private async handleEndTime() {
     if (this.sessionData?.timeSettings?.method == TestDurationMethod.CompleteTestTime) {
-      // TODO: navigate to Finish
+      await this.finishExam();
     } else {
       this.submit();
     }
+  }
+
+  private async finishExam() {
+    const finishOutput = await firstValueFrom(this.proctorService.finishExam());
+    this._testSessionService.setSessionData({
+      result: finishOutput,
+      endTime: new Date()
+    });
+    this._router.navigate(['test/finish']);
   }
 
   private initEndTime() {

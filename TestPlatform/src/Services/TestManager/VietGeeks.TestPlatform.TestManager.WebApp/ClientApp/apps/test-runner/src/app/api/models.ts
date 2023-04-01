@@ -1,5 +1,7 @@
+export { AggregatedGrading } from './models/aggregated-grading';
 export { ExamAnswer } from './models/exam-answer';
 export { ExamQuestion } from './models/exam-question';
+export { FinishExamOutput } from './models/finish-exam-output';
 export { ProvideExamineeInfoViewModel } from './models/provide-examinee-info-view-model';
 export { StartExamOutput } from './models/start-exam-output';
 export { SubmitAnswerViewModel } from './models/submit-answer-view-model';

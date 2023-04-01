@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProctorService } from '../../proctor.service';
+import { ProctorService } from '../../services/proctor.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '@viet-geeks/shared';
-import { TestSessionService } from '../../../services/test-session.service';
+import { TestSessionService } from '../../services/test-session.service';
 import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
 
 @UntilDestroy()
@@ -23,7 +23,7 @@ export class TestAccessComponent implements OnInit {
   private _notifyService = inject(ToastService);
   private _testSessionService = inject(TestSessionService);
   private _fingerprintjsProAngularService = inject(FingerprintjsProAngularService);
-  
+
   verifyTestForm: FormGroup;
   isLoading = false;
 
@@ -37,7 +37,7 @@ export class TestAccessComponent implements OnInit {
     this._fingerprintjsProAngularService.getVisitorData().then(c => {
       console.log('visitor info', c);
     });
-    
+
     this._route.params.pipe(untilDestroyed(this)).subscribe(p => {
       const accessCode = p['access-code'];
       if (accessCode) {
