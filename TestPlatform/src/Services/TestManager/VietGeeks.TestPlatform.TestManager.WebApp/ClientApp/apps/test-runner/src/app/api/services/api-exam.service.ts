@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { FinishExamOutput } from '../models/finish-exam-output';
 import { ProvideExamineeInfoViewModel } from '../models/provide-examinee-info-view-model';
 import { StartExamOutput } from '../models/start-exam-output';
 import { SubmitAnswerViewModel } from '../models/submit-answer-view-model';
@@ -335,6 +336,51 @@ export class ApiExamService extends BaseService {
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `finishExam$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  finishExam$Plain$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<FinishExamOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.FinishExamPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<FinishExamOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `finishExam$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  finishExam$Plain(params?: {
+  },
+  context?: HttpContext
+
+): Observable<FinishExamOutput> {
+
+    return this.finishExam$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<FinishExamOutput>) => r.body as FinishExamOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `finishExam()` instead.
    *
    * This method doesn't expect any request body.
@@ -343,20 +389,20 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<void>> {
+): Observable<StrictHttpResponse<FinishExamOutput>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.FinishExamPath, 'post');
     if (params) {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
+      responseType: 'json',
+      accept: 'text/json',
       context: context
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<FinishExamOutput>;
       })
     );
   }
@@ -371,10 +417,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<void> {
+): Observable<FinishExamOutput> {
 
     return this.finishExam$Response(params,context).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<FinishExamOutput>) => r.body as FinishExamOutput)
     );
   }
 

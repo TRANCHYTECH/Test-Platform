@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { firstValueFrom, Timestamp } from 'rxjs';
-import { StartExamOutput, TestDuration, TimeSpan } from '../../../api/models';
-import { TestSessionService } from '../../../services/test-session.service';
+import { firstValueFrom } from 'rxjs';
+import { TestDuration } from '../../../api/models';
+import { TestSessionService } from '../../services/test-session.service';
 import { TimeSettings } from '../../../state/test-session.model';
 import { TestRespondentField } from '../../../state/test.model';
-import { ProctorService } from '../../proctor.service';
+import { ProctorService } from '../../services/proctor.service';
 import { TestStartConfig } from './data';
+import { TestDurationService } from '../../services/test-duration.service';
 
 @Component({
   selector: 'viet-geeks-test-start',
@@ -18,6 +19,7 @@ export class TestStartComponent implements OnInit {
 
   private _proctorService = inject(ProctorService);
   private _testSessionService = inject(TestSessionService);
+  private _testDurationService = inject(TestDurationService);
   router = inject(Router);
   config = TestStartConfig;
   respondentIdentifyForm: FormGroup;
@@ -44,7 +46,8 @@ export class TestStartComponent implements OnInit {
     const startExamOutput = await firstValueFrom(this._proctorService.startExam());
     this._testSessionService.setSessionData({
       startTime: new Date(startExamOutput.startedAt ?? ''),
-      timeSettings: this.mapToTimeSettings(startExamOutput.testDuration)
+      timeSettings: this.mapToTimeSettings(startExamOutput.testDuration),
+      respondentFields: (respondentIdentify.fields as { id: string, fieldValue: string }[])
     });
 
     this._testSessionService.setQuestions(startExamOutput.questions ?? []);
@@ -79,26 +82,11 @@ export class TestStartComponent implements OnInit {
     }
 
     const durationString = testDuration.duration?.toString();
-    if (durationString == null) {
-      return {};
-    }
-
-    const duration = durationString.split(':').reduce((r, v, i) => {
-      switch (i) {
-        case 0:
-          r.hours = parseInt(v);
-          break;
-        case 1:
-          r.minutes = parseInt(v);
-          break;
-      }
-
-      return r;
-    }, {} as TimeSpan)
+    const duration  = this._testDurationService.parse(durationString);
 
     return {
       duration: duration,
-      method: testDuration.method
+      method: testDuration.method as number
     };
   }
 }
