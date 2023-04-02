@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { assign, padStart } from 'lodash-es';
+import { assign, isEmpty, isNull, padStart } from 'lodash-es';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TestStatus, TimePeriodActivation, TimeSettings } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { createMask, InputmaskOptions } from '@ngneat/input-mask';
@@ -38,35 +38,41 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   currentUserTimeZone = 'Asia/Ho_Chi_Minh';
   currentUserTime = format(new Date(), 'd.MM.yyyy HH:mm', { timeZone: this.currentUserTimeZone });
 
+  dhhmmssInputMask = createMask({
+    mask: "9{1,2}.99:99:99",
+    inputmode: 'text',
+    // parser: (value: string) => {
+    //   return `${value}:00`;
+    // },
+    // formatter: (value: string) => {
+    //   const hhmmss = duration(value);
+    //   return `${formatDruationValue(hhmmss.hours())}:${formatDruationValue(hhmmss.minutes())}`;
+    // },
+    isComplete: this.isCompleteCheck()
+  });
+
   hhmmInputMask = createMask({
     mask: "99:99",
-
-    placeholder: "00:00",
     inputmode: 'text',
     parser: (value: string) => {
-      console.log('parse', value);
       return `${value}:00`;
     },
     formatter: (value: string) => {
-      console.log('hhmmInputMask', value);
       const hhmmss = duration(value);
       return `${formatDruationValue(hhmmss.hours())}:${formatDruationValue(hhmmss.minutes())}`;
-    }
+    },
+    isComplete: this.isCompleteCheck()
   });
 
   mmssInputMask = createMask({
     mask: "99:99",
-    placeholder: "00:00",
     inputmode: 'text',
     parser: (value: string) => `00:${value}`,
     formatter: (value: string) => {
-
       const hhmmss = duration(value);
-      const rs = `${formatDruationValue(hhmmss.minutes())}:${formatDruationValue(hhmmss.seconds())}`;
-      console.log('mmssInputMask', rs);
-
-      return rs;
-    }
+      return `${formatDruationValue(hhmmss.minutes())}:${formatDruationValue(hhmmss.seconds())}`;
+    },
+    isComplete: this.isCompleteCheck()
   });
 
   readonly testDurationMethodOptions = [
@@ -93,9 +99,87 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     }
   ];
 
-  readonly durationInputMasks: { [key: string]: InputmaskOptions<string> } = {
-    1: this.hhmmInputMask,
-    2: this.mmssInputMask
+  private hhmmValidator = (control: AbstractControl<string>): ValidationErrors | null => {
+    if (isNull(control.value) || isEmpty(control.value) || control.value.indexOf('_') > -1)
+      return null;
+
+    const parts = control.value.split(':');
+    const hh = parseInt(parts[0]);
+    const mm = parseInt(parts[1]);
+    if (isNaN(hh) || isNaN(mm)) {
+      return null;
+    }
+
+
+    const maxHH = 23;
+    if (hh > maxHH) {
+      return {
+        maxHours: {
+          max: maxHH,
+          actual: hh
+        }
+      };
+    }
+
+    const maxMM = 59;
+    if (mm > maxMM) {
+      return {
+        maxMins: {
+          max: maxMM,
+          actual: mm
+        }
+      };
+    }
+
+    return null;
+  };
+
+
+  private mmssValidator = (control: AbstractControl<string>): ValidationErrors | null => {
+    if (isNull(control.value) || isEmpty(control.value) || control.value.indexOf('_') > -1)
+      return null;
+
+    const parts = control.value.split(':');
+    const mm = parseInt(parts[1]);
+    const ss = parseInt(parts[2]);
+    if (isNaN(mm) || isNaN(ss)) {
+      return null;
+    }
+
+    const maxMM = 59;
+    if (mm > maxMM) {
+      return {
+        maxMins: {
+          max: maxMM,
+          actual: mm
+        }
+      };
+    }
+
+    const maxSS = 59;
+    if (ss > maxSS) {
+      return {
+        maxSeconds: {
+          max: maxSS,
+          actual: ss
+        }
+      };
+    }
+
+    return null;
+  };
+
+  private isCompleteCheck() {
+    return (buffer: string[]) => {
+      if (buffer.indexOf('_') > -1)
+        return false;
+
+      const timeParts = buffer.join('').split(':');
+      const part1 = parseInt(timeParts[0]);
+      const part2 = parseInt(timeParts[1]);
+
+      return (!isNaN(part1) && !isNaN(part2)) && (part1 !== 0 || part2 !== 0);
+    };
   }
 
   get testDurationMethodCtrl() {
@@ -121,10 +205,10 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       testDurationMethod: this.fb.group({
         type: [TestDurationMethod.CompleteTestTime],
         1: this.fb.group({
-          duration: [null, [RxwebValidators.required()]]
+          duration: [null, [RxwebValidators.required(), this.hhmmValidator]]
         }),
         2: this.fb.group({
-          duration: [null, [RxwebValidators.required()]]
+          duration: [null, [RxwebValidators.required(), this.mmssValidator]]
         })
       }),
       testActivationMethod: this.fb.group({

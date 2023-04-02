@@ -56,7 +56,7 @@
                             <div class="mb-3" formGroupName="{{TestActivationMethodTypeRef.ManualTest}}">
                                 <label for="flexRadioDefault2">Test will remain active for ([d.]hh:mm:ss):</label>
                                 <input class="form-control border-dashed" type="text" style="width: 150px;"
-                                    [inputMask]="{}" formControlName="activeUntil">
+                                    [inputMask]="dhhmmssInputMask" formControlName="activeUntil">
                             </div>
                         </ng-container>
                         <ng-container *ngIf="option.id === TestActivationMethodTypeRef.TimePeriod">
