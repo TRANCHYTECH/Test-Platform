@@ -28,8 +28,15 @@
     "maxlength": "Expected length {{requiredLength}} got {{actualLength}}",
     "min": "Expected min value {{min}} got {{actual}}",
     "max": "Expected max value {{max}} got {{actual}}",
+    "inputMask": "Invalid input",
+    "maxHours": "Expected max hour value {{max}} got {{actual}}",
+    "maxMins": "Expected max minute value {{max}} got {{actual}}",
+    "maxSeconds": "Expected max second value {{max}} got {{actual}}",
     "email": "The email is invalid",
-    "url": "The url is invalid"
+    "url": "The url is invalid",
+    "duration": "Invalid duration",
+    "furtureDate": "The date must be in furture",
+    "greaterThanDate": "The date must be greater than {{comparedDate}}"
   },
   "labels": {
     "activate": "Activate",
