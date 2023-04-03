@@ -115,7 +115,10 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
             inputMask: () => translateService.instant('errors.inputMask'),
             maxHours: (error) => translateService.instant('errors.maxHours', error),
             maxMins: (error) => translateService.instant('errors.maxMins', error),
-            maxSeconds: (error) => translateService.instant('errors.maxSeconds', error)
+            maxSeconds: (error) => translateService.instant('errors.maxSeconds', error),
+            duration: () => translateService.instant('errors.duration'),
+            greaterThanDate: (error) => translateService.instant('errors.greaterThanDate', error),
+            furtureDate: () => translateService.instant('errors.furtureDate'),
           }
         }, deps: [TranslateService]
       }

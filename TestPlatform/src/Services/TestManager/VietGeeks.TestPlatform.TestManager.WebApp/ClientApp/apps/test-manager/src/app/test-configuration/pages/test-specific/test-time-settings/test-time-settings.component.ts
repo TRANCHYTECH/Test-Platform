@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { assign, isEmpty, isNull, padStart } from 'lodash-es';
+import { assign, isEmpty, isNull, isUndefined, padStart, values } from 'lodash-es';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TestStatus, TimePeriodActivation, TimeSettings } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
-import { createMask, InputmaskOptions } from '@ngneat/input-mask';
-import { duration } from 'moment';
+import { createMask } from '@ngneat/input-mask';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { utcToZonedTime, format, zonedTimeToUtc } from 'date-fns-tz';
-import { values } from 'lodash-es';
 
 export const TestDurationMethod =
 {
@@ -20,10 +18,6 @@ export const TestActivationMethodType =
 {
   ManualTest: 1,
   TimePeriod: 2
-}
-
-export function formatDruationValue(value: number) {
-  return padStart(value.toString(), 2, '0');
 }
 
 @UntilDestroy()
@@ -41,13 +35,6 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   dhhmmssInputMask = createMask({
     mask: "9{1,2}.99:99:99",
     inputmode: 'text',
-    // parser: (value: string) => {
-    //   return `${value}:00`;
-    // },
-    // formatter: (value: string) => {
-    //   const hhmmss = duration(value);
-    //   return `${formatDruationValue(hhmmss.hours())}:${formatDruationValue(hhmmss.minutes())}`;
-    // },
     isComplete: this.isCompleteCheck()
   });
 
@@ -58,8 +45,11 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       return `${value}:00`;
     },
     formatter: (value: string) => {
-      const hhmmss = duration(value);
-      return `${formatDruationValue(hhmmss.hours())}:${formatDruationValue(hhmmss.minutes())}`;
+      if (isNull(value) || isUndefined(value) || value === '')
+        return '';
+
+      const hhmmss = value.split(/\.|:/);
+      return `${hhmmss[0]}:${hhmmss[1]}`;
     },
     isComplete: this.isCompleteCheck()
   });
@@ -69,8 +59,11 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     inputmode: 'text',
     parser: (value: string) => `00:${value}`,
     formatter: (value: string) => {
-      const hhmmss = duration(value);
-      return `${formatDruationValue(hhmmss.minutes())}:${formatDruationValue(hhmmss.seconds())}`;
+      if (isNull(value) || isUndefined(value) || value === '')
+        return '';
+
+      const hhmmss = value.split(/\.|:/);
+      return `${hhmmss[1]}:${hhmmss[2]}`;
     },
     isComplete: this.isCompleteCheck()
   });
@@ -98,6 +91,54 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       textKey: 'Activation in set time period'
     }
   ];
+
+  private dhhmmssValidator = (control: AbstractControl<string>): ValidationErrors | null => {
+    if (isNull(control.value) || isEmpty(control.value) || control.value.indexOf('_') > -1)
+      return null;
+
+    // Validate day.
+    const valueParts = control.value.split(/\.|:/);
+    if (parseInt(valueParts[0]) > 99) {
+      return { duration: false };
+    }
+
+    if (parseInt(valueParts[1]) > 23) {
+      return { duration: false };
+    }
+
+    return null;
+  }
+
+  private furtureDateValidator(): ValidatorFn {
+    return (control: AbstractControl<string>): ValidationErrors | null => {
+      const value = control.value;
+      if (isNull(value) || isUndefined(value)) {
+        return null;
+      }
+
+      if (new Date() >= new Date(value)) {
+        return { furtureDate: true }
+      }
+
+      return null;
+    }
+  }
+
+  private dateGreaterThanValidator({ fieldName }: { fieldName: string }): ValidatorFn {
+    return (control: AbstractControl<string>): ValidationErrors | null => {
+      const comparedValue = control.parent?.get([fieldName])?.value;
+      const value = control.value;
+      if (isNull(comparedValue) || isUndefined(comparedValue) || isNull(value) || isUndefined(value)) {
+        return null;
+      }
+
+      if (new Date(comparedValue) >= new Date(value)) {
+        return { greaterThanDate: { comparedDate: comparedValue } }
+      }
+
+      return null;
+    }
+  }
 
   private hhmmValidator = (control: AbstractControl<string>): ValidationErrors | null => {
     if (isNull(control.value) || isEmpty(control.value) || control.value.indexOf('_') > -1)
@@ -199,26 +240,25 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   }
 
   afterGetTest(): void {
-    //todo: add validation rules for activation in set time period.
     const timeSettings = this.test.timeSettings;
     this.timeSettingsForm = this.fb.group({
       testDurationMethod: this.fb.group({
         type: [TestDurationMethod.CompleteTestTime],
-        1: this.fb.group({
+        [TestDurationMethod.CompleteTestTime]: this.fb.group({
           duration: [null, [RxwebValidators.required(), this.hhmmValidator]]
         }),
-        2: this.fb.group({
+        [TestDurationMethod.CompleteQuestionTime]: this.fb.group({
           duration: [null, [RxwebValidators.required(), this.mmssValidator]]
         })
       }),
       testActivationMethod: this.fb.group({
         type: [TestActivationMethodType.ManualTest],
-        1: this.fb.group({
-          activeUntil: [null, [Validators.required]]
+        [TestActivationMethodType.ManualTest]: this.fb.group({
+          activeUntil: [null, [Validators.required, this.dhhmmssValidator]]
         }),
-        2: this.fb.group({
-          activeFromDate: this.fb.control(null, [Validators.required]),
-          activeUntilDate: this.fb.control(null, [Validators.required])
+        [TestActivationMethodType.TimePeriod]: this.fb.group({
+          activeFromDate: this.fb.control(null, [Validators.required, this.furtureDateValidator()]),
+          activeUntilDate: this.fb.control(null, [Validators.required, this.dateGreaterThanValidator({ fieldName: 'activeFromDate' })])
         })
       }),
       answerQuestionConfig: this.fb.group({
@@ -226,6 +266,8 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       })
     });
 
+    // Use this in combination with dateGreaterThanValidator to trigger validation again when activeFromDate is changed.
+    this.setupControlValidityTrigger(this.testActivationMethodCtrl, [TestActivationMethodType.TimePeriod.toString(), 'activeFromDate'], [[TestActivationMethodType.TimePeriod.toString(), 'activeUntilDate']]);
     this.listenTypeChange(this.testDurationMethodCtrl, this, values(TestDurationMethod));
     this.listenTypeChange(this.testActivationMethodCtrl, this, values(TestActivationMethodType));
 
