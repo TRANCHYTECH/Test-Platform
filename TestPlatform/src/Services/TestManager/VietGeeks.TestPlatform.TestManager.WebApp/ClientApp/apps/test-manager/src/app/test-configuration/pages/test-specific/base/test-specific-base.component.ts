@@ -2,20 +2,21 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angula
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Params, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
-import { EDITOR_API_KEY, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
+import { ToastService } from "@viet-geeks/shared";
 import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, filter, firstValueFrom } from "rxjs";
 import { Test, createTest, TestStatus } from "../../../state/test.model";
 import { TestsQuery } from "../../../state/tests.query";
 import { TestsService } from "../../../state/tests.service";
+import { SupportedEditorComponent } from "./supported-editor.component";
 
 @Component({
     selector: 'viet-geeks-test-specific-base',
     template: ''
 })
-export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
+export abstract class TestSpecificBaseComponent extends SupportedEditorComponent implements OnInit, OnDestroy {
     testId!: string;
-    test!: Test;
+    test: Test = createTest({});
 
     router = inject(Router);
     route = inject(ActivatedRoute);
@@ -25,12 +26,7 @@ export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
 
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
-
-    textEditorConfigs = inject(TextEditorConfigsService);
-    editorApiKey = inject<string>(EDITOR_API_KEY);
-
     notifyService = inject(ToastService);
-    private _spinner = inject(NgxSpinnerService);
 
     get readyForUI$() {
         return this._readyForUI.asObservable();
@@ -40,15 +36,12 @@ export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
         return this.testId === 'new';
     }
 
-    private _readyForUI = new BehaviorSubject(false);
+    private _spinner = inject(NgxSpinnerService);
 
-    constructor() {
-        this.test = createTest({});
-    }
+    private _readyForUI = new BehaviorSubject(false);
 
     ngOnInit(): void {
         this.route.params.pipe(untilDestroyed(this)).subscribe(async params => {
-            console.log('Load test specific page');
             this.processParams(params);
         });
 
@@ -132,7 +125,6 @@ export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
     setupControlValidityTrigger(parent: FormGroup, sourcePath: string[], targetPaths: string[][]) {
         //todo: improve the destroying subscription.
         parent.get(sourcePath)?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => setTimeout(() => {
-            console.log('update trigger');
             targetPaths.forEach(p => {
                 const control = parent.get(p);
                 control?.updateValueAndValidity();

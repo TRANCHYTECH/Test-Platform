@@ -2,40 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { find, findIndex, forIn, sumBy } from 'lodash-es';
-import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, TestEndConfig } from '../../../state/test.model';
+import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, PassMaskCriteria, TestEndConfig } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { QuestionService } from '../../../state/questions/question.service';
 import { QuestionSummary } from '../../../state/questions/question.model';
-
-export const InformFactor =
-{
-  PercentageScore: 1,
-  PointsScore: 2,
-  Grade: 3,
-  DescriptiveGrade: 4,
-  CorrectAnwsers: 5,
-  PassOrFailMessage: 6
-}
-
-export const GradeType =
-{
-  Grade: 1,
-  Descriptive: 2,
-  GradeAndDescriptive: 3
-}
-
-export const GradingCriteriaConfigType =
-{
-  PassMask: 1,
-  GradeRanges: 2
-}
-
-export const RangeUnit =
-{
-  Percent: 1,
-  Point: 2
-}
+import { GradeType, GradeTypeUI, GradingCriteriaConfigType, GradingCriteriaConfigTypeUI, InformFactor, InformFactorCriteriaUI, InformFactorUI, RangeDetailsUI, RangeUnit } from '../../../state/ui/grading-summary-ui.model';
+import { Subject } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -45,9 +18,9 @@ export const RangeUnit =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
-  GradingCriteriaConfigTypeRef = GradingCriteriaConfigType;
-  GradeTypeRef = GradeType;
-  InformFactorRef = InformFactor;
+  GradingCriteriaConfigTypeUI = GradingCriteriaConfigTypeUI;
+  GradeTypeUI = GradeTypeUI;
+  InformFactorUI = InformFactorUI;
 
   gradeForm!: FormGroup;
   gradeFormConfigs = {
@@ -73,10 +46,12 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
         key: 'Grade and descriptive grades'
       },
     ],
-    maxPoint: 12,
+    maxPoint: 0,
     maxPercentage: 100
   };
 
+  private _questionService = inject(QuestionService);
+  private _refreshInforFactorFormReq$ = new Subject<{ criteriaId: number, enabled: boolean }>();
 
   get gradingCriteriasCtrl() {
     return this.gradeForm.controls['gradingCriterias'] as FormGroup;
@@ -90,20 +65,41 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     return this.gradeForm.controls['informRespondentConfig'] as FormGroup;
   }
 
+  getGradingCriteriaCtrl(control: string) {
+    return this.gradingCriteriasCtrl.controls[control] as FormGroup;
+  }
+
+  get passMaskGradeCtrl() {
+    return this.getGradingCriteriaCtrl(GradingCriteriaConfigTypeUI.PassMask);
+  }
+
+  get gradeRangesCtrl() {
+    return this.getGradingCriteriaCtrl(GradingCriteriaConfigTypeUI.GradeRanges);
+  }
+
   get gradeRangesDetailsCtrl() {
-    return this.getGradingCriteriaCtrl(GradingCriteriaConfigType.GradeRanges).controls['details'] as FormArray<FormGroup>;
+    return this.gradeRangesCtrl.controls['details'] as FormArray<FormGroup>;
+  }
+
+  get gradeRangeUnit() {
+     return this.gradeRangesCtrl.controls['unit'].value;
   }
 
   get selectedGradeRangeUnit() {
-    const unit = this.getGradingCriteriaCtrl(GradingCriteriaConfigType.GradeRanges).controls['unit'].value;
-
+    const unit = this.gradeRangeUnit;
     return find(this.gradeFormConfigs.rangeUnits, c => c.value === unit)?.key;
   }
 
-  private _questionService = inject(QuestionService);
+  get selectedGradeRangeType() {
+    return this.gradeRangesCtrl.controls['gradeType'].value;
+  }
 
-  getGradingCriteriaCtrl(control: number) {
-    return this.gradingCriteriasCtrl.controls[control.toString()] as FormGroup;
+  get isPassMaskGradeCtrlEnabled() {
+    return this.passMaskGradeCtrl.enabled;
+  }
+
+  get isGradeRangesCtrlEnabled() {
+    return this.gradeRangesCtrl.enabled;
   }
 
   getToValueOfGradeRangesDetails(atIndex: number) {
@@ -115,10 +111,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     return elementAt === undefined ? 0 : (elementAt.value as GradeRangeCriteriaDetail).to;
   }
 
-  constructor() {
-    super();
-  }
-
   onInit(): void {
     //
   }
@@ -126,73 +118,40 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   async afterGetTest(): Promise<void> {
     const configs = await Promise.all([this._questionService.getSummary(this.testId)]);
     this.gradeFormConfigs.maxPoint = sumBy(configs[0], (c: QuestionSummary) => c.totalPoints);
+    const gradingSettings = this.test.gradingSettings;
     this.gradeForm = this.fb.group({
-      testEndConfig: this.fb.group({
-        message: ['', [Validators.maxLength(200)]],
-        redirectTo: false,
-        toAddress: ['', [RxwebValidators.compose({
-          validators: [Validators.required, RxwebValidators.url()], conditionalExpression: (f: TestEndConfig) => f.redirectTo === true
-        })]]
-      }),
-      gradingCriterias: this.fb.group({})
+      testEndConfig: this.createTestEndConfigFormGroup(gradingSettings),
+      gradingCriterias: this.createGradingCriteriaFormGroup(gradingSettings),
+      informRespondentConfig: this.createInformFactorsFormGroup(gradingSettings)
     });
 
-    // Triggers
+    // Triggers. 
     this.setupControlValidityTrigger(this.testEndConfigCtrl, ['redirectTo'], [['toAddress']]);
+    this.setupControlValidityTrigger(this.passMaskGradeCtrl, ['unit'], [['value']]);
 
-    const control = this.newPassMaskGradeCriteria();
-    control.disable();
-    this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.PassMask.toString(), control);
+    // Trigger running validators of range [From, To].
+    this.gradeRangesCtrl.controls['unit'].valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
+      this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls();
+    });
 
-    const newGradingCriterial = this.newGradingCriterial();
-    newGradingCriterial.disable();
-    this.gradingCriteriasCtrl.addControl(GradingCriteriaConfigType.GradeRanges.toString(), newGradingCriterial);
+    // Trigger to enable/disable grade ranges based on grade type.
+    this.gradeRangesCtrl.controls['gradeType'].valueChanges.pipe(untilDestroyed(this)).subscribe((gradeType) => {
+      this.updateStatuesOfGradeRangeDetailsFormCtrls(gradeType);
+      this._refreshInforFactorFormReq$.next({ criteriaId: GradingCriteriaConfigType.GradeRanges, enabled: true });
+    });
 
-    // Path current values.
-    const testEndConfig = this.test.gradingSettings?.testEndConfig;
-    this.testEndConfigCtrl.patchValue(testEndConfig || {});
-
-    const gradingCriterias = this.test.gradingSettings?.gradingCriterias;
-    forIn(gradingCriterias, (v, k) => {
-      this.gradingCriteriasCtrl.get(k)?.enable();
-      switch (k) {
-        case GradingCriteriaConfigType.PassMask.toString():
-          this.gradingCriteriasCtrl.get(k)?.patchValue(v);
+    // Trigger to enable/disable controls of inform factor form.
+    this._refreshInforFactorFormReq$.pipe(untilDestroyed(this)).subscribe(rs => {
+      switch (rs.criteriaId) {
+        case GradingCriteriaConfigType.PassMask:
+          this.updateInformFactorFormByPassMask(rs.enabled);
           break;
-        case GradingCriteriaConfigType.GradeRanges.toString(): {
-          const config = v as GradeRangeCriteria;
-          this.gradingCriteriasCtrl.get(k)?.patchValue({
-            gradeType: config.gradeType,
-            unit: config.unit
-          });
-          const ctrls = config.details.map(d => this.createNewGradeRangeCtrl(d));
-          const detailsCtrl = this.gradingCriteriasCtrl.get([k, 'details']) as FormArray;
-          ctrls.forEach(ctrl => detailsCtrl.push(ctrl));
+        case GradingCriteriaConfigType.GradeRanges:
+          this.updateInformFactorFormByGradeType(rs.enabled);
           break;
-        }
         default:
           break;
       }
-    });
-
-    //todo: refactor approach, simplify new and patch
-    const informRespondentConfig = this.test.gradingSettings?.informRespondentConfig;
-    this.gradeForm.addControl('informRespondentConfig', this.fb.group({
-      informViaEmail: informRespondentConfig?.informViaEmail || false,
-      passedMessage: [informRespondentConfig?.passedMessage, [Validators.maxLength(200)]],
-      failedMessage: [informRespondentConfig?.failedMessage, [Validators.maxLength(200)]],
-      informFactors: this.createInformFactorsCtrl(informRespondentConfig?.informFactors)
-    }))
-
-    // Setup triggers
-    this.setupControlValidityTrigger(this.gradeForm.get(['gradingCriterias', GradingCriteriaConfigType.PassMask.toString()]) as FormGroup, ['unit'], [['value']]);
-    this.gradeForm.get(['gradingCriterias', GradingCriteriaConfigType.GradeRanges.toString(), 'unit'])?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
-      setTimeout(() => {
-        this.gradeRangesDetailsCtrl.controls.forEach(c => {
-          c.controls['to'].updateValueAndValidity();
-          c.controls['to'].markAsTouched();
-        });
-      });
     });
 
     this.maskReadyForUI();
@@ -201,102 +160,279 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     //todo(tau): reload/reset form after successfully updated.
   }
 
-  private newGradingCriterial(): FormGroup {
-    return this.fb.group({
-      $type: GradingCriteriaConfigType.GradeRanges,
-      gradeType: [GradeType.Grade, [Validators.required]],
-      unit: [RangeUnit.Percent, [Validators.required]],
-      details: this.fb.array([])
+  rangeChanged(atIndex: number) {
+    this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls(atIndex + 1);
+  }
+
+  private forceRunValidatorsOfGrandeRangeDetailsFormCtrls(fromIndex: number = 0) {
+    setTimeout(() => {
+      this.gradeRangesDetailsCtrl.controls.forEach((ctrl, idx) => {
+        if (idx >= fromIndex) {
+          ctrl.controls['to'].updateValueAndValidity();
+          ctrl.controls['to'].markAsTouched();
+        }
+      });
     });
   }
 
-  private newPassMaskGradeCriteria(): FormGroup {
+  private createInformFactorsFormGroup(settings: GradingSettings) {
+    const informRespondentConfig = settings.informRespondentConfig;
+    // Get disabled controls based on grading criteria and selected grade type.
+    const disabled: string[] = [];
+    forIn(GradingCriteriaConfigTypeUI, (type) => {
+      const criterion = settings.gradingCriterias[type];
+      let factorKey: string;
+      switch (type) {
+        case GradingCriteriaConfigTypeUI.PassMask:
+          factorKey = type;
+          break;
+        case GradingCriteriaConfigTypeUI.GradeRanges:
+          factorKey = criterion === undefined ? `${type}_${GradeTypeUI.Grade}` : `${type}_${(<GradeRangeCriteria>criterion).gradeType}`;
+          break;
+        default:
+          throw new Error('not supported type');
+          break;
+      }
+
+      const factor = InformFactorCriteriaUI[factorKey];
+      disabled.push(...(factor.disabled ?? []));
+      if (criterion === undefined) {
+        disabled.push(...(factor.enabled ?? []));
+      }
+    });
+
     return this.fb.group({
-      $type: GradingCriteriaConfigType.PassMask,
-      value: [0, [
+      informViaEmail: informRespondentConfig?.informViaEmail ?? false,
+      passedMessage: [informRespondentConfig?.passedMessage, [Validators.maxLength(200)], [this.EditorMaxLengthValidator('informRespondentConfig.passedMessage', 1000)]],
+      failedMessage: [informRespondentConfig?.failedMessage, [Validators.maxLength(200)], [this.EditorMaxLengthValidator('informRespondentConfig.failedMessage', 1000)]],
+      informFactors: this.createInformFactorsCtrl(disabled, informRespondentConfig?.informFactors)
+    });
+  }
+
+  private createGradingCriteriaFormGroup(settings: GradingSettings) {
+    const result = this.fb.group({});
+
+    forIn(GradingCriteriaConfigTypeUI, (type) => {
+      const criterion = settings.gradingCriterias[type];
+      switch (type) {
+        case GradingCriteriaConfigTypeUI.PassMask: {
+          const passMaskCriteria = criterion as PassMaskCriteria;
+          result.addControl(type, this.createPassMaskCriteriaFormGroup(passMaskCriteria));
+          break;
+        }
+        case GradingCriteriaConfigTypeUI.GradeRanges: {
+          const gradeRangeCriteria = criterion as GradeRangeCriteria;
+          result.addControl(type, this.createGradeRangeCriteriaFormGroup(gradeRangeCriteria));
+          break;
+        }
+        default:
+          break;
+      }
+    });
+
+    return result;
+  }
+
+  private createTestEndConfigFormGroup(settings: GradingSettings) {
+    const testEndConfig = settings.testEndConfig;
+    return this.fb.group({
+      message: this.fb.control(testEndConfig.message, {
+        validators: [Validators.required],
+        asyncValidators: [this.EditorMaxLengthValidator('testEndConfig.message', 1000)]
+      }),
+      redirectTo: testEndConfig.redirectTo,
+      toAddress: [testEndConfig.toAddress, [RxwebValidators.compose({
+        validators: [
+          Validators.required,
+          Validators.maxLength(1000),
+          RxwebValidators.url()
+        ],
+        conditionalExpression: (cfg: TestEndConfig) => cfg.redirectTo === true
+      })]]
+    });
+  }
+
+  private updateStatuesOfGradeRangeDetailsFormCtrls(gradeType?: number) {
+    const selectedGrade = gradeType ?? this.getGradingCriteriaCtrl(GradingCriteriaConfigTypeUI.GradeRanges).get('gradeType')?.getRawValue();
+    console.log('This should not be called first time. updateStatuesOfGradeRangeDetailsFormCtrls called. Grade type', gradeType);
+    const details = this.gradeRangesDetailsCtrl;
+    const affected = RangeDetailsUI[selectedGrade];
+    affected.enabled?.forEach(c => {
+      details.controls.forEach(groupCtrl => {
+        groupCtrl.get(['grades', c])?.enable();
+      });
+    });
+
+    affected.disabled?.forEach(c => {
+      details.controls.forEach(groupCtrl => {
+        groupCtrl.get(['grades', c])?.disable();
+      });
+    });
+  }
+
+  private updateInformFactorFormByPassMask(isEnabled: boolean) {
+    this.updateInformFactorFormByGradeType_(isEnabled, GradingCriteriaConfigTypeUI.PassMask);
+  }
+
+  //todo: rename it
+  private updateInformFactorFormByGradeType(isEnabled: boolean, gradeType?: number) {
+    const selectedGrade = gradeType ?? this.getGradingCriteriaCtrl(GradingCriteriaConfigTypeUI.GradeRanges).get('gradeType')?.getRawValue();
+    this.updateInformFactorFormByGradeType_(isEnabled, GradingCriteriaConfigTypeUI.GradeRanges, selectedGrade);
+  }
+
+  private updateInformFactorFormByGradeType_(isEnabled: boolean, gradeType: string, subGradeType: string = '0') {
+    const ctrls = this.informRespondentConfigCtrl.get('informFactors') as FormGroup;
+    const affectedInformFactors = InformFactorCriteriaUI[subGradeType === '0' ? gradeType : `${gradeType}_${subGradeType}`];
+    if (isEnabled) {
+      affectedInformFactors.enabled?.forEach(c => {
+        ctrls.controls[c].enable();
+      });
+      affectedInformFactors.disabled?.forEach(c => {
+        const ctrl = ctrls.controls[c];
+        ctrl.reset(false);
+        ctrl.disable();
+      });
+    } else {
+      affectedInformFactors.enabled?.forEach(c => {
+        const ctrl = ctrls.controls[c];
+        ctrl.reset(false);
+        ctrl.disable();
+      });
+
+      affectedInformFactors.disabled?.forEach(c => {
+        const ctrl = ctrls.controls[c];
+        ctrl.reset(false);
+        ctrl.disable();
+      });
+    }
+  }
+
+  private createGradeRangeCriteriaFormGroup(criteria?: GradeRangeCriteria): FormGroup {
+    const gradeRanges = this.fb.array<FormGroup>([], Validators.required);
+    criteria?.details.forEach(d => {
+      const ctrl = this.createNewGradeRangeCtrl(criteria?.gradeType ?? GradeType.Grade, d);
+      gradeRanges.push(ctrl);
+    });
+
+    const result = this.fb.group({
+      $type: GradingCriteriaConfigType.GradeRanges,
+      gradeType: [criteria?.gradeType ?? GradeType.Grade, [Validators.required]],
+      unit: [criteria?.unit ?? RangeUnit.Percent, [Validators.required]],
+      details: gradeRanges
+    });
+
+    if (criteria === undefined || criteria === null)
+      result.disable();
+
+    return result;
+  }
+
+  private createPassMaskCriteriaFormGroup(criteria?: PassMaskCriteria): FormGroup {
+    const result = this.fb.group({
+      $type: [GradingCriteriaConfigType.PassMask],
+      value: [criteria?.value, [
         Validators.required,
         RxwebValidators.digit(),
         Validators.min(1),
         RxwebValidators.maxNumber({
           dynamicConfig: (parent) => {
-            //todo(tau): get maxium values from server.
-            console.log('PassMask value validatior run', parent);
-            const value = (parent as GradeRangeCriteria).unit === RangeUnit.Percent ? this.gradeFormConfigs.maxPercentage : this.gradeFormConfigs.maxPoint;
-            return { value };
+            const maxValue = (<PassMaskCriteria>parent).unit === RangeUnit.Percent ? this.gradeFormConfigs.maxPercentage : this.gradeFormConfigs.maxPoint;
+            return { value: maxValue };
           }
         })
       ]],
-      unit: [RangeUnit.Percent, [Validators.required]]
+      unit: [criteria?.unit ?? RangeUnit.Percent, [Validators.required]]
     });
+
+    // In case there is no existing persisted criteria, we disable this form group, to prevent affects on validations
+    if (criteria === undefined || criteria === null) {
+      result.disable();
+    }
+
+    return result;
   }
 
-  private createNewGradeRangeCtrl(detail: Partial<GradeRangeCriteriaDetail>) {
-    const formGroup = this.fb.group({
-      id: this.testsService.generateRandomCode(),
+  private createNewGradeRangeCtrl(gradeType: number, detail: Partial<GradeRangeCriteriaDetail>) {
+    const formGroup = this.fb.nonNullable.group({
+      id: detail?.id ?? this.testsService.generateRandomCode(),
       to: [detail?.to, [
         Validators.required,
         RxwebValidators.minNumber({
           dynamicConfig: (parent) => {
-            //todo(tau): refactor this code block.
-            console.log('min range number validator run', parent);
-            const details = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria).details as GradeRangeCriteriaDetail[];
+            const unit = this.gradeRangeUnit;
+            const details = this.gradeRangesDetailsCtrl.value as GradeRangeCriteriaDetail[];
             const foundIdx = findIndex(details, d => d.id === parent['id']);
-            const value = foundIdx <= 0 ? 1 : details[foundIdx - 1].to;
-            return { value };
+            let minValue = 0;
+            if (foundIdx <= 0) {
+              minValue = 1;
+            } else if (foundIdx < details.length - 1) {
+              minValue = details[foundIdx - 1].to;
+            } else {
+              minValue = unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
+            }
+
+            return { value: minValue };
           }
         }),
         RxwebValidators.maxNumber({
-          dynamicConfig: (_parent, root) => {
-            console.log('max range number validator run', root);
-            const criteria = ((this.gradeForm.getRawValue() as GradingSettings).gradingCriterias[GradingCriteriaConfigType.GradeRanges.toString()] as GradeRangeCriteria);
-            const value = criteria.unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
-            return { value };
+          dynamicConfig: () => {
+            const unit = this.gradeRangeUnit;
+            const maxValue = unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
+
+            return { value: maxValue };
           }
         })
       ]],
-      grades: this.createGradeMask(detail?.grades)
+      grades: this.createGradeMask(gradeType, detail?.grades)
     });
 
     return formGroup;
   }
 
-  private createInformFactorsCtrl(factors?: { [key: string]: string }) {
+  private createInformFactorsCtrl(disabled: string[], factors?: { [key: string]: string }) {
     const form = this.fb.group({});
-    forIn(InformFactor, (v) => {
-      const existingValue = factors && factors[v];
-      form.addControl(v.toString(), this.fb.control(existingValue || false));
+    forIn(InformFactor, (f) => {
+      const id = f.toString();
+      const existingValue = factors && factors[id];
+      form.addControl(id, this.fb.control({ value: existingValue || false, disabled: disabled.indexOf(id) > -1 }));
     });
 
     return form;
   }
 
-  private createGradeMask(grades?: { [key: string]: string }) {
+  private createGradeMask(gradeType: number, grades?: { [key: string]: string }) {
     const form = this.fb.group({});
-    forIn(GradeType, (v) => {
-      if (v === GradeType.GradeAndDescriptive) {
+    forIn(GradeTypeUI, gt => {
+      if (gt === GradeTypeUI.GradeAndDescriptive) {
         return;
       }
 
-      const existingValue = grades && grades[v];
-      form.addControl(v.toString(), this.fb.control(existingValue, { validators: [Validators.required] }));
+      const existingValue = grades && grades[gt];
+      const enabled = gradeType === GradeType.GradeAndDescriptive || gradeType === parseInt(gt);
+      form.addControl(gt, this.fb.control({ value: existingValue, disabled: !enabled }, { validators: [Validators.required] }));
     });
 
     return form;
   }
 
-  toggleGradeCriteria(event: { id: number, originEvent: Event }) {
-    const enabled = (event.originEvent.target as HTMLInputElement).checked;
-    if (enabled) {
-      this.getGradingCriteriaCtrl(event.id).enable();
-    } else {
-      this.getGradingCriteriaCtrl(event.id).disable();
+  // Enable/disable grading criteria.
+  toggleGradeCriteria(event: { id: string, originEvent?: Event, enabled?: boolean }) {
+    const enabled = event.enabled ?? (event.originEvent?.target as HTMLInputElement).checked;
+    const criteriaId = parseInt(event.id);
+    const action = enabled ? 'enable' : 'disable';
+    // Note: it's important to set emitEvent = false
+    this.getGradingCriteriaCtrl(event.id)[action]({ emitEvent: false });
+    // In case grade range details form control is enabled, we should restore status of individual controls.
+    if (enabled && criteriaId === GradingCriteriaConfigType.GradeRanges) {
+      this.updateStatuesOfGradeRangeDetailsFormCtrls();
     }
 
-    this.gradeForm.markAsDirty();
+    // Also publish event to update status of inform factor controls.
+    this._refreshInforFactorFormReq$.next({ criteriaId: parseInt(event.id), enabled });
   }
 
   addNewGradeRange() {
-    this.gradeRangesDetailsCtrl.push(this.createNewGradeRangeCtrl({}));
+    this.gradeRangesDetailsCtrl.push(this.createNewGradeRangeCtrl(this.selectedGradeRangeType ?? GradeType.Grade, {}));
   }
 
   deleteGrade(i: number) {
@@ -308,7 +444,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   }
 
   get canSubmit(): boolean {
-    console.log('form errors', this.gradeForm);
     return this.gradeForm.dirty && this.gradeForm.valid;
   }
 

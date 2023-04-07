@@ -3,7 +3,7 @@ import { EditorComponent } from '@tinymce/tinymce-angular';
 import { UploadClient } from '@uploadcare/upload-client'
 
 const EditorPlugins = {
-  simple: ['lists', 'table', 'code']
+  simple: ['lists', 'table', 'code', 'wordcount']
 };
 
 const Toolbars = {
@@ -23,12 +23,12 @@ export class TextEditorConfigsService {
     menubar: false,
     plugins: EditorPlugins.simple,
     toolbar: Toolbars.simple,
-    min_height: 300
+    height: 300
   };
 
   simpleEditorWithImage: EditorComponent['init'] = {
     menubar: false,
-    min_height: 300,
+    height: 300,
     plugins: [
       ...EditorPlugins.simple,
       'image'
@@ -44,10 +44,8 @@ export class TextEditorConfigsService {
     paste_data_images: true,
     images_upload_handler: (blobInfo) => {
       const uploadTask = this._client.uploadFile(blobInfo.blob(), { fileName: blobInfo.filename() });
-
       return new Promise<string>((resolve, reject) => {
         uploadTask.then(rs => {
-          console.log('upload done', rs);
           resolve(rs.cdnUrl || '');
         }, err => reject(err))
       });
