@@ -4,3 +4,11 @@
         cursor: pointer;
     }
 }
+
+::ng-deep {
+    .range-to-value {
+        control-error {
+            position: absolute;
+        }
+    }
+}

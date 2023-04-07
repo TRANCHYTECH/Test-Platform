@@ -10,7 +10,7 @@ import { AppSettingsService, CoreModule, HttpErrorResponseInterceptor } from '@v
 import { SharedModule, EDITOR_API_KEY, ApiErrorHandler } from '@viet-geeks/shared';
 import { AppSettings } from './app-setting.model';
 import { environment } from '../environments/environment';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -22,7 +22,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
-import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 const appInitializerFn = (httpBackend: HttpBackend, authClientConfig: AuthClientConfig, appSettingsService: AppSettingsService) => {
   return () => {
@@ -72,6 +72,7 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
         deps: [HttpClient]
       }
     }),
+    EditorModule,
     FlatpickrModule.forRoot(),
     SweetAlert2Module.forRoot(),
     InputMaskModule.forRoot({ inputSelector: 'input', isAsync: true }),
@@ -123,7 +124,7 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
         }, deps: [TranslateService]
       }
     }),
-    { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' },
+    // { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' },
     { 
       provide: ErrorHandler, 
       useClass: ApiErrorHandler 
