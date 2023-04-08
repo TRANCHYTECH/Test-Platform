@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isNumber } from 'lodash-es';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService,CanComponentDeactivate } from '@viet-geeks/shared';
@@ -17,6 +16,7 @@ import { QuestionsQuery } from '../../../state/questions/question.query';
 import { QuestionService } from '../../../state/questions/question.service';
 import { AnswerTypes } from './data';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { SupportedEditorComponent } from '../base/supported-editor.component';
 
 @UntilDestroy()
 @Component({
@@ -24,8 +24,7 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
   templateUrl: './edit-question.component.html',
   styleUrls: ['./edit-question.component.scss'],
 })
-export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
-  Editor = ClassicEditor;
+export class EditQuestionComponent extends SupportedEditorComponent implements OnInit, CanComponentDeactivate {
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
   scoreSettingsForm: FormGroup;
@@ -52,6 +51,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
     private _questionQuery: QuestionsQuery,
     private _modalService: NgbModal
   ) {
+    super();
     this.questionId = '';
     this.testId = '';
     this.isMultipleChoiceAnswer = false;

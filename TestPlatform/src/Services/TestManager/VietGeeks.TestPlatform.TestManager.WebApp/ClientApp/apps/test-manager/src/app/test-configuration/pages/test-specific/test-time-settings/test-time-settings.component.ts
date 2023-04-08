@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { assign, isEmpty, isNull, isUndefined, padStart, values } from 'lodash-es';
+import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TestStatus, TimePeriodActivation, TimeSettings } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { createMask } from '@ngneat/input-mask';
