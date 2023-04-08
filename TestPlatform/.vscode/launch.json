@@ -23,7 +23,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "DAPR_HTTP_PORT": "3700",
                 "DAPR_GRPC_PORT": "37000",
-                "ASPNETCORE_URLS": "http://localhost:7300"
+                "ASPNETCORE_URLS": "http://localhost:6300"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -47,9 +47,9 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "DAPR_HTTP_PORT": "3600",
-                "DAPR_GRPC_PORT": "3700",
-                "ASPNETCORE_URLS": "http://localhost:6200"
+                "DAPR_HTTP_PORT": "3800",
+                "DAPR_GRPC_PORT": "38000",
+                "ASPNETCORE_URLS": "http://localhost:6400"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -75,7 +75,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "DAPR_HTTP_PORT": "3600",
                 "DAPR_GRPC_PORT": "36000",
-                "ASPNETCORE_URLS": "https://localhost:6300"
+                "ASPNETCORE_URLS": "https://localhost:6200"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

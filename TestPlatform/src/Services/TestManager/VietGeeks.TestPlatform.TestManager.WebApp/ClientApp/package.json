@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "start:test-runner": "nx serve test-runner",
-    "build": "nx build",
+    "start:test-manager": "nx serve test-manager --port 4200",
+    "start:test-runner": "nx serve test-runner --port 4300",
     "build:test-manager": "nx build test-manager",
     "build:test-runner": "nx build test-runner",
     "test": "nx test",
