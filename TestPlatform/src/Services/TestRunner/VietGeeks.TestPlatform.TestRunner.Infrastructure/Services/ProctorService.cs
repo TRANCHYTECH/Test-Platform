@@ -2,7 +2,6 @@
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
-using VietGeeks.TestPlatform.TestManager.Core;
 using VietGeeks.TestPlatform.TestManager.Core.Logics;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
@@ -138,6 +137,7 @@ public class ProctorService : IProctorService
         {
             selectedQuestions = testDefinition.GenerateTestSet(questions, exam.AccessCode);
             exam.Questions = selectedQuestions.Select(c => c.ID).ToArray();
+            exam.CurrentQuestionId = selectedQuestions.FirstOrDefault()?.ID;
 
             await DB.SaveAsync(exam);
         }
@@ -149,6 +149,7 @@ public class ProctorService : IProctorService
         return new()
         {
             Questions = selectedQuestions.Select(c => c.ToViewModel()).ToArray(),
+            ActiveQuestion = selectedQuestions.FirstOrDefault(q => q.ID == exam.CurrentQuestionId)?.ToViewModel(),
             TestDuration = testDefinition.TimeSettings.TestDurationMethod.ToViewModel(),
             CanSkipQuestion = testDefinition.TimeSettings.AnswerQuestionConfig.SkipQuestion
         };
@@ -178,6 +179,21 @@ public class ProctorService : IProctorService
             FinalMark = exam.FinalMark,
             Grading = _mapper.Map<List<AggregatedGrading>>(exam.Grading)
         };
+    }
+
+    public async Task<ExamQuestion?> GetTestRunQuestion(string examId, string questionId)
+    {
+        var exam = await GetExam(examId);
+
+        if (exam == null)
+        {
+            return null;
+        }
+
+        var batches = await DB.Find<TestRunQuestion>().ManyAsync(c => c.TestRunId == exam.TestRunId && c.Batch.Any(i => i.ID == questionId));
+        var question = batches.SelectMany(c => c.Batch).SingleOrDefault(i => i.ID == questionId);
+
+        return question?.ToViewModel();
     }
 
     private async Task<Exam> GetExam(string testRunId, string accessCode)

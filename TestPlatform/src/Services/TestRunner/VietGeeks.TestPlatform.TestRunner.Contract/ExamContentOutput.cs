@@ -8,6 +8,7 @@ public class ExamContentOutput
     public TestDuration TestDuration { get; set; } = default!;
     
     public bool CanSkipQuestion { get; set; }
+    public ExamQuestion? ActiveQuestion { get; set; } = default!;
 }
 
 public class TestDuration

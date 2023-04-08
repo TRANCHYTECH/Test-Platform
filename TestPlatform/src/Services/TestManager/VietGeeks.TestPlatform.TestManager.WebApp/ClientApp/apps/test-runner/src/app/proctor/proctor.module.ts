@@ -7,7 +7,6 @@ import { ProctorRoutingModule } from './proctor-routing.module';
 import { TestAccessComponent } from './pages/test-access/test-access.component';
 import { TestQuestionComponent } from './pages/test-question/test-question.component';
 import { TestStartComponent } from './pages/test-start/test-start.component';
-import { InTestSession } from './pages/common/guard/in-test-session.guard';
 import { TestFinishComponent } from './pages/test-finish/test-finish.component';
 import { FormatLocalDateTimePipe } from './pipes/format-local-datetime.pipe';
 import { FormatTimespanPipe } from './pipes/format-timespan.pipe';
@@ -16,6 +15,6 @@ import { FormatTimespanPipe } from './pipes/format-timespan.pipe';
 @NgModule({
   declarations: [TestStartComponent, TestAccessComponent, TestQuestionComponent, TestFinishComponent, FormatLocalDateTimePipe, FormatTimespanPipe],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, ProctorRoutingModule, NgApexchartsModule],
-  providers: [InTestSession],
+  providers: [],
 })
 export class ProctorModule { }

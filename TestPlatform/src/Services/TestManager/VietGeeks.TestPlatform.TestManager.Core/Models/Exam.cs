@@ -18,6 +18,8 @@ public class Exam : EntityBase
 
     public Dictionary<string, string[]> Answers { get; set; } = default!;
 
+    public string? CurrentQuestionId { get; set; }
+
     public int FinalMark { get; set; }
 
     public List<AggregatedGrading>? Grading { get; set; }

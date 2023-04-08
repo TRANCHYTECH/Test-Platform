@@ -1,9 +1,13 @@
 export { AggregatedGrading } from './models/aggregated-grading';
 export { ExamAnswer } from './models/exam-answer';
 export { ExamQuestion } from './models/exam-question';
+export { ExamStatus } from './models/exam-status';
+export { ExamStep } from './models/exam-step';
 export { FinishExamOutput } from './models/finish-exam-output';
+export { ProvideExamineeInfoOutput } from './models/provide-examinee-info-output';
 export { ProvideExamineeInfoViewModel } from './models/provide-examinee-info-view-model';
-export { StartExamOutput } from './models/start-exam-output';
+export { StartExamOutputViewModel } from './models/start-exam-output-view-model';
+export { SubmitAnswerOutput } from './models/submit-answer-output';
 export { SubmitAnswerViewModel } from './models/submit-answer-view-model';
 export { TestDuration } from './models/test-duration';
 export { TestDurationMethodType } from './models/test-duration-method-type';

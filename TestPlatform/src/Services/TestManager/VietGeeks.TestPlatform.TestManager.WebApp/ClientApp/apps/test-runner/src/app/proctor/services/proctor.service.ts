@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of } from 'rxjs';
 import { ApiExamService } from '../../api/services';
-import { StartExamOutput } from '../../api/models';
-
+import { StartExamOutputViewModel, SubmitAnswerOutput } from '../../api/models';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,11 +21,11 @@ export class ProctorService {
     return this._examService.provideExamineeInfo({ body: examineeInfo });
   }
 
-  startExam(): Observable<StartExamOutput> {
+  startExam(): Observable<StartExamOutputViewModel> {
     return this._examService.startExam();
   }
 
-  submitAnswer(answer: { questionId: string, answerIds: string[] }) {
+  submitAnswer(answer: { questionId: string, answerIds: string[] }): Observable<SubmitAnswerOutput | null> {
     return this._examService.submitAnswer({body: answer}).pipe(catchError(error => {
       console.log('submit answer error', error);
       return of(null);

@@ -5,8 +5,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '@viet-geeks/shared';
-import { TestSessionService } from '../../services/test-session.service';
 import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
+import { TestSessionStore } from '../../../state/test-session.store';
 
 @UntilDestroy()
 @Component({
@@ -21,7 +21,7 @@ export class TestAccessComponent implements OnInit {
   private _router = inject(Router);
   private _proctorService = inject(ProctorService);
   private _notifyService = inject(ToastService);
-  private _testSessionService = inject(TestSessionService);
+  private _testSessionStore = inject(TestSessionStore);
   private _fingerprintjsProAngularService = inject(FingerprintjsProAngularService);
 
   verifyTestForm: FormGroup;
@@ -57,12 +57,15 @@ export class TestAccessComponent implements OnInit {
       this._notifyService.error('Access code is not valid');
     }
     else {
-      this._testSessionService.setSessionData({
+      this._testSessionStore.set([{
+        id: 1,
         accessCode: accessCode,
         consentMessage: result.consentMessage,
         instructionMessage: result.instructionMessage,
-        testDescription: result.testName
-      })
+        testDescription: result.testName,
+        examStep: result.step as number
+      }]);
+      this._testSessionStore.setActive(1);
       this._router.navigate(['test','start']);
     }
     this.disableLoading();
