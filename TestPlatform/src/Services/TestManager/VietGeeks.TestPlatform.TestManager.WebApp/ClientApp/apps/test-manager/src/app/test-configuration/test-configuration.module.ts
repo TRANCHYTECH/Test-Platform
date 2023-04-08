@@ -15,9 +15,6 @@ import { TestTimeSettingsComponent } from './pages/test-specific/test-time-setti
 import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
 import { CanDeactivateGuard, SharedModule } from '@viet-geeks/shared';
 import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbModalModule, NgbNavModule, NgbProgressbar, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { DropzoneModule } from 'ngx-dropzone-wrapper';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
@@ -53,9 +50,6 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     NgbProgressbar,
     NgbTooltip,
     NgbDropdownModule,
-    NgSelectModule,
-    DropzoneModule,
-    CKEditorModule,
     FlatpickrModule,
     NgbNavModule,
     NgbAccordionModule,

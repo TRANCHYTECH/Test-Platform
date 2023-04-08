@@ -126,7 +126,7 @@
                                                 <label>{{selectedGradeRangeUnit}}</label>
                                             </div>
                                             <i class="ri-delete-bin-line delete-icon ms-auto"
-                                                (click)="gradeRangesDetailsCtrl.removeAt(i)"></i>
+                                                (click)="removeRangeDetail(i)"></i>
                                         </div>
                                         <ng-container formGroupName="grades">
                                             <div class="mb-3" *ngIf="ctrl.get(['grades', GradeTypeUI.Grade])?.enabled">

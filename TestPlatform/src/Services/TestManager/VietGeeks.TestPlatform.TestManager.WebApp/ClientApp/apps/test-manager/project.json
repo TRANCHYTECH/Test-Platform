@@ -14,7 +14,7 @@
         "main": "apps/test-manager/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/test-manager/tsconfig.app.json",
-        "allowedCommonJsDependencies": ["inputmask", "moment"],
+        "allowedCommonJsDependencies": ["bson-objectid", "inputmask", "sweetalert2", "date-fns/fp/_lib/convertToFP/index.js"],
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/test-manager/src/favicon.ico",

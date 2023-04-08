@@ -164,6 +164,11 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls(atIndex + 1);
   }
 
+  removeRangeDetail(i: number) {
+    this.gradeRangesDetailsCtrl.removeAt(i);
+    this.gradeForm.markAsDirty();
+  }
+
   private forceRunValidatorsOfGrandeRangeDetailsFormCtrls(fromIndex: number = 0) {
     setTimeout(() => {
       this.gradeRangesDetailsCtrl.controls.forEach((ctrl, idx) => {
