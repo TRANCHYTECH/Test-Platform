@@ -325,7 +325,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   }
 
   get canSubmit(): boolean {
-    return this.test.status === TestStatus.Draft && this.timeSettingsForm.valid;
+    return this.test.status === TestStatus.Draft && this.timeSettingsForm.dirty && this.timeSettingsForm.valid;
   }
 
   async submit() {

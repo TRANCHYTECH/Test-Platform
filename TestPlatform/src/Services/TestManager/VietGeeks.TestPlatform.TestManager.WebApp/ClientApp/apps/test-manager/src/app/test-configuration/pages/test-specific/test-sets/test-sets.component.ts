@@ -28,7 +28,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   private _questionCategoriesService = inject(QuestionCategoriesService);
   private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
 
-  testSetsForm: FormGroup;
+  testSetsForm!: FormGroup;
 
   questionCategories: QuestionCategory[] = [];
   questionSummaries: QuestionSummary[] = [];
@@ -60,7 +60,6 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
 
   constructor() {
     super();
-    this.testSetsForm = this.fb.group({});
   }
 
   onInit() {
@@ -84,7 +83,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   }
 
   get canSubmit(): boolean {
-    return this.testSetsForm.valid;
+    return this.testSetsForm.dirty && this.testSetsForm.valid;
   }
 
   async submit() {

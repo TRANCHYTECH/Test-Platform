@@ -3,11 +3,10 @@ import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
 import { EMPTY, firstValueFrom, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { PrivateAccessCodeType, Test, TestAccessType, TestInvitationStats, TestOverview } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
-import { forEach, range } from 'lodash-es';
 import { defKSUID32 } from '@thi.ng/ksuid';
 
 @Injectable({ providedIn: 'root' })
@@ -63,15 +62,14 @@ export class TestsService {
     this._testsStore.remove(id);
   }
 
-  generateAccessCodes(count: number) {
-    const codes: string[] = [];
-    // https://en.wikipedia.org/wiki/Hexspeak
-    const id = defKSUID32();
-    forEach(range(count), () => {
-      codes.push(id.next());
-    });
+  generateAccessCodes(id: string, quantity: number) {
+    return firstValueFrom(this._http.get<{accessCodes: string[]}>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/GenerateAccessCodes/${quantity}`).pipe(switchMap(rs => {
+      return of(rs.accessCodes);
+    })));
+  }
 
-    return codes;
+  removeAccessCode(id: string, code: string) {
+    return firstValueFrom(this._http.delete(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/RemoveAccessCode/${code}`));
   }
 
   generateRandomCode() {

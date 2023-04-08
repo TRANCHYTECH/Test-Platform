@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 using Dapr.Client;
 using VietGeeks.TestPlatform.Integration.Contract;
+using shortid;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -87,7 +88,19 @@ public class TestManagerService : ITestManagerService
 
         if (viewModel.TestAccessSettings != null)
         {
+            var updatedTestAccessSettings = _mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
+            // BUSINESS: User are not allowed to change access codes with this flow. So we have to verify input codes match exactly with existing.
+            if (updatedTestAccessSettings.AccessType == TestAcessType.PrivateAccessCode && entity.TestAccessSettings.AccessType == TestAcessType.PrivateAccessCode)
+            {
+                var currentCodes = GetPrivateAccessCodes(entity.TestAccessSettings.Settings);
+                var updatedCodes = GetPrivateAccessCodes(updatedTestAccessSettings.Settings);
+                if (currentCodes.Except(updatedCodes).Count() > 0)
+                {
+                    throw new TestPlatformException("Mismatched Access Codes");
+                }
+            }
             entity.TestAccessSettings = _mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
+
             updatedProperties.Add(nameof(TestDefinition.TestAccessSettings));
         }
 
@@ -115,6 +128,11 @@ public class TestManagerService : ITestManagerService
         }
 
         return _mapper.Map<TestDefinitionViewModel>(entity);
+    }
+
+    private static string[] GetPrivateAccessCodes(TestAccessSettings settings)
+    {
+        return ((PrivateAccessCodeType)settings).Configs.Select(c => c.Code).ToArray();
     }
 
     public async Task<List<TestCategoryViewModel>> GetTestCategories()
@@ -219,17 +237,19 @@ public class TestManagerService : ITestManagerService
 
     public async Task<List<dynamic>> GetTestInvitationEvents(TestInvitationStatsInput input)
     {
-        if(input == null) {
+        if (input == null)
+        {
             throw new TestPlatformException("InvalidInput");
         }
 
-        var keys = input.AccessCodes.Select(c=> $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
+        var keys = input.AccessCodes.Select(c => $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
         var result = new List<dynamic>();
         var states = await _daprClient.GetBulkStateAsync("general-notify-store", keys.ToArray(), 2);
         foreach (var accessCode in input.AccessCodes)
         {
             var foundEvent = states.FirstOrDefault(c => c.Key.EndsWith(accessCode) && !string.IsNullOrEmpty(c.Value));
-            if(foundEvent.Equals(default(BulkStateItem))) {
+            if (foundEvent.Equals(default(BulkStateItem)))
+            {
                 continue;
             }
 
@@ -259,7 +279,7 @@ public class TestManagerService : ITestManagerService
         {
             if (entity != null && entity.CurrentTestRun != null && (entity.TestAccessSettings?.Settings is PrivateAccessCodeType config))
             {
-                var receivers = config.Configs.Where(c => !string.IsNullOrEmpty(c.Email)).Select(c => new Receiver(c.Code, c.Email)).ToArray();
+                var receivers = config.Configs.Where(c => !string.IsNullOrEmpty(c.Email) && c.SendCode).Select(c => new Receiver(c.Code, c.Email)).ToArray();
                 if (receivers.Length > 0)
                 {
                     var request = new SendTestAccessCodeRequest
@@ -281,5 +301,75 @@ public class TestManagerService : ITestManagerService
         {
             _logger.LogError("Could not send access code", ex);
         }
+    }
+
+    public async Task<List<string>> GenerateAccessCodes(string id, int quantity)
+    {
+        if (quantity <= 0)
+            throw new TestPlatformException("Invalid argument quantity");
+
+        // Get and verify the test definition.
+        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
+        {
+            throw new TestPlatformException("Invalid entity");
+        }
+
+        if (testDef.LatestStatus == Core.Models.TestDefinitionStatus.Ended)
+        {
+            throw new TestPlatformException("Invalid status");
+        }
+
+        if (testDef.TestAccessSettings.Settings is PrivateAccessCodeType privateAccessCodeSettings == false)
+        {
+            throw new TestPlatformException("Invalid settings");
+        }
+
+        // Generate access codes.
+        var accessCodes = new List<string>();
+        for (int i = 0; i < quantity; i++)
+        {
+            var accessCode = ShortId.Generate(new(true, false, 10));
+            privateAccessCodeSettings.Configs.Add(new()
+            {
+                Code = accessCode
+            });
+            accessCodes.Add(accessCode);
+        }
+
+        // Update affected property: TestAccessSettings.
+        await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
+
+        return accessCodes;
+    }
+
+    public async Task RemoveAccessCode(string id, string code)
+    {
+        //todo: reuse logic for 2 same methods.
+        // Get and verify the test definition.
+        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
+        {
+            throw new TestPlatformException("Invalid entity");
+        }
+
+        if (testDef.LatestStatus == Core.Models.TestDefinitionStatus.Ended)
+        {
+            throw new TestPlatformException("Invalid status");
+        }
+
+        if (testDef.TestAccessSettings.Settings is PrivateAccessCodeType privateAccessCodeSettings == false)
+        {
+            throw new TestPlatformException("Invalid settings");
+        }
+
+        var existingAccessCode = privateAccessCodeSettings.Configs.SingleOrDefault(c => c.Code == code);
+        if (existingAccessCode == null)
+            throw new TestPlatformException("Invalid access code");
+
+        privateAccessCodeSettings.Configs.Remove(existingAccessCode);
+
+        // Update affected property: TestAccessSettings.
+        await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
     }
 }

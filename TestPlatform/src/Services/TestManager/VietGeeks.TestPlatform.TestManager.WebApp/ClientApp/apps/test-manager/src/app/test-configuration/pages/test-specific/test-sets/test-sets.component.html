@@ -14,19 +14,20 @@
                     <ng-container *ngIf="isRandomByCategorySelected" formGroupName="generator">
                         <ng-container
                             *ngFor="let control of randomByCategoriesGeneratorConfigs.controls; let i = index">
-                            <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="d-flex align-items-center gap-2 pb-4 pt-3">
                                 <ng-container [formGroup]="control">
                                     <div class="me-auto">
                                         <h4><span class="badge bg-secondary">{{control.get('name')?.value}}</span></h4>
                                     </div>
                                     <label>Draw</label>
+                                    <div class="draw-number-value">
                                     <input class="form-control border-dashed" type="number" style="width: 100px;"
-                                        formControlName="draw" [controlErrorAnchor]="anchor" [readOnly]="isReadonly">
+                                        formControlName="draw" [readOnly]="isReadonly">
+                                    </div>
                                     <label style="min-width:30%">questions out of
                                         {{control.get('totalQuestions')?.value}}.</label>
                                 </ng-container>
                             </div>
-                        <ng-template controlErrorAnchor #anchor="controlErrorAnchor"></ng-template>
                         </ng-container>
                     </ng-container>
                     <!-- <div class="form-check form-switch form-switch-lg mb-3">

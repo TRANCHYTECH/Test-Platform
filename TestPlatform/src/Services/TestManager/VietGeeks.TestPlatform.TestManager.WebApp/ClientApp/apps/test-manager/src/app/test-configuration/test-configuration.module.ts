@@ -26,7 +26,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { TestStatusPipe } from './pipes/test-status.pipe';
 import { TestStatusClassPipe } from "./pipes/test-status-class.pipe";
-
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,8 @@ import { TestStatusClassPipe } from "./pipes/test-status-class.pipe";
     InputMaskModule,
     DragDropModule,
     NgbPaginationModule,
-    errorTailorImports
+    errorTailorImports,
+    ClipboardModule
   ],
   providers: [CanDeactivateGuard]
 })

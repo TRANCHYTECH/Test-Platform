@@ -105,15 +105,32 @@ public class TestDefinitionManagementController : ControllerBase
         return Ok(testDefiniton);
     }
 
+    [HttpGet("{id}/TestAccess/GenerateAccessCodes/{quantity:range(1,50)}")]
+    public async Task<IActionResult> GenerateAccessCodes(string id, int quantity)
+    {
+        List<string> accessCodes = await _testManagerService.GenerateAccessCodes(id, quantity);
+
+        return Ok(new { AccessCodes = accessCodes });
+    }
+
+    [HttpDelete("{id}/TestAccess/RemoveAccessCode/{code}")]
+    public async Task<IActionResult> RemoveAccessCode(string id, string code)
+    {
+        await _testManagerService.RemoveAccessCode(id, code);
+
+        return Ok();
+    }
+
     [HttpPost("{id}/TestInvitationStats")]
     public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
     {
-        var result = await _testManagerService.GetTestInvitationEvents(new() {
-            TestDefinitionId = id, 
+        var result = await _testManagerService.GetTestInvitationEvents(new()
+        {
+            TestDefinitionId = id,
             TestRunId = model.TestRunId,
             AccessCodes = model.AccessCodes
         });
-        
+
         return Ok(result);
     }
 }

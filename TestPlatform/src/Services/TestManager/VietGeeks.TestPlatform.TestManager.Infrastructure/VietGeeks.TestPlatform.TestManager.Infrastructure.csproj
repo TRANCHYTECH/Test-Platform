@@ -22,5 +22,6 @@
     <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.4" />
     <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.5" />
     <PackageReference Include="Dapr.Client" Version="1.10.0" />
+    <PackageReference Include="shortid" Version="4.0.0" />
   </ItemGroup>
 </Project>

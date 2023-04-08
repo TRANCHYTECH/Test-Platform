@@ -131,6 +131,13 @@ export const TestAccessType = {
   Training: 4
 }
 
+export const TestAccessTypeUI = {
+  PublicLink: TestAccessType.PublicLink.toString(),
+  PrivateAccessCode: TestAccessType.PrivateAccessCode.toString(),
+  GroupPassword: TestAccessType.GroupPassword.toString(),
+  Training: TestAccessType.Training.toString()
+}
+
 export interface IAccessType {
   $type: number;
 }

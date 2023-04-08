@@ -15,45 +15,43 @@
                     <div class="mb-3">
                         <h5>Access type</h5>
                         <div class="d-flex gap-3">
-                            <button type="radio" [class.active]="activatedAccessType === testAccessTypeDef.PublicLink"
+                            <button type="radio" [class.active]="activatedAccessType === TestAccessType.PublicLink"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.PublicLink)" [disabled]="isReadonly">
+                                (click)="onAccessTypeSelected(TestAccessType.PublicLink)" [disabled]="isReadonly">
                                 <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>Public link</button>
 
                             <button type="button"
-                                [class.active]="activatedAccessType === testAccessTypeDef.PrivateAccessCode"
+                                [class.active]="activatedAccessType === TestAccessType.PrivateAccessCode"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.PrivateAccessCode)"
+                                (click)="onAccessTypeSelected(TestAccessType.PrivateAccessCode)"
                                 [disabled]="isReadonly">
                                 <i class="ri-lock-password-line label-icon align-middle fs-24 me-2"></i>Private code
                                 access</button>
 
-                            <button type="button"
-                                [class.active]="activatedAccessType === testAccessTypeDef.GroupPassword"
+                            <button type="button" [class.active]="activatedAccessType === TestAccessType.GroupPassword"
                                 class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.GroupPassword)" [disabled]="isReadonly">
+                                (click)="onAccessTypeSelected(TestAccessType.GroupPassword)" [disabled]="true">
                                 <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>Group password</button>
 
-                            <button type="button" [class.active]="activatedAccessType === testAccessTypeDef.Training"
-                                class="btn btn-primary btn-label"
-                                (click)="onAccessTypeSelected(testAccessTypeDef.Training)" [disabled]="isReadonly">
+                            <button type="button" [class.active]="activatedAccessType === TestAccessType.Training"
+                                class="btn btn-primary btn-label" [disabled]="true"
+                                (click)="onAccessTypeSelected(TestAccessType.Training)" [disabled]="true">
                                 <i class="ri-ball-pen-line label-icon align-middle fs-24 me-2"></i>Training</button>
                         </div>
                     </div>
-                    <ng-container *ngIf="activatedAccessType === testAccessTypeDef.PublicLink"
+                    <ng-container *ngIf="activatedAccessType === TestAccessType.PublicLink"
                         formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
-                                <i class="ri-airplay-line me-3 align-middle"></i>Anyone who has a link will be able to
-                                take
-                                the
-                                test
+                                <i class="ri-airplay-line me-3 align-middle"></i><span>Anyone who has a link will be
+                                    able to take the test</span>
                             </div>
                         </div>
                         <div class="hstack gap-3 mb-3">
-                            <a class="form-control" [href]="testAccessFormConfig.testLink"
-                                target="_blank">{{testAccessFormConfig.testLink}}</a>
-                            <button type="button" class="btn btn-outline-secondary flex-shrink-0">Copy link</button>
+                            <a class="form-control" [href]="publicTestAccessLink"
+                                target="_blank">{{publicTestAccessLink}}</a>
+                            <button type="button" class="btn btn-outline-secondary flex-shrink-0"
+                                [cdkCopyToClipboard]="publicTestAccessLink">Copy link</button>
                         </div>
                         <div class="hstack form-check form-switch form-switch-lg mb-3">
                             <input type="checkbox" role="switch" id="requireAccessCode" class="form-check-input"
@@ -74,19 +72,23 @@
                             <i class="ri-window-line label-icon align-middle fs-24 me-2"></i>How to embed a test on a
                             website?</button>
                     </ng-container>
-                    <ng-container *ngIf="activatedAccessType === testAccessTypeDef.PrivateAccessCode"
+                    <ng-container *ngIf="activatedAccessType === TestAccessType.PrivateAccessCode"
                         formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
-                                <i class="ri-airplay-line me-3 align-middle"></i>Anyone who has a link will be able to
-                                take the test
+                                <i class="ri-airplay-line me-3 align-middle"></i><span>Test access will be possible only
+                                    with an individual access code</span>
                             </div>
                         </div>
-                        <div class="hstack gap-3 mb-3" [formGroup]="codeGenerationForm">
-                            <input class="form-control border-dashed" type="number" style="width: 300px;"
-                                formControlName="count">
-                            <button type="button" class="btn btn-secondary flex-shrink-0" [disabled]="!canGenerateCodes"
-                                (click)="generateCodes()">Add</button>
+                        <div class="hstack gap-3 mb-3 align-items-start" [formGroup]="codeGenerationForm">
+                            <div>
+                                <input class="form-control border-dashed" type="number" style="width: 300px;"
+                                    formControlName="count">
+                            </div>
+                            <viet-geeks-submit-button [class]="'btn btn-secondary flex-shrink-0'"
+                                [submitFunc]="generateCodesFunc" [canSubmit]="canGenerateCodes" text="Generate"
+                                processingText="Generating..."></viet-geeks-submit-button>
+
                         </div>
                         <div class="gap-3 mb-3">
                             <table class="table table-striped align-middle" formArrayName="configs">
@@ -95,30 +97,35 @@
                                         <th scope="col"></th>
                                         <th scope="col">#</th>
                                         <th scope="col">Access code</th>
-                                        <th scope="col">Set</th>
+                                        <th scope="col">Test Set</th>
                                         <th scope="col">Email</th>
-                                        <th scope="col">Send a code</th>
+                                        <th scope="col"><input type="checkbox" class="form-check-input"
+                                                (change)="toggleSelectAllSendCode()"><span class="ms-2">Send a
+                                                code</span></th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <ng-container
                                         *ngFor="let control of privateAccessCodeConfigsCtrl.controls; let i = index">
-                                        <tr [formGroup]="control">
+                                        <tr [formGroup]="control" class="align-baseline">
                                             <th></th>
                                             <td>{{i + 1}}</td>
                                             <td>{{control.get('code')?.value}}</td>
-                                            <td>{{control.get('setId')?.value}}</td>
-                                            <td> <input class="form-control border-dashed" type="text"
+                                            <td>{{control.get('setId')?.value ?? '[Auto]'}}</td>
+                                            <td><input class="form-control border-dashed" type="text"
                                                     style="max-width: 300px;" formControlName="email"></td>
                                             <td>
                                                 <input type="checkbox" class="form-check-input"
                                                     formControlName="sendCode">
-                                                    <span class="btn btn-outline-info btn-sm me-1">{{getTestInvitationStat(control.get('code')?.value)}}</span>
+                                                <span
+                                                    class="btn btn-outline-info btn-sm ms-2">{{getTestInvitationStat(control.get('code')?.value)}}</span>
                                             </td>
-                                            <td><i class="ri-delete-bin-line delete-icon"
+                                            <td>
+                                                <i class="ri-delete-bin-line delete-icon"
                                                     [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }"
-                                                    (confirm)="privateAccessCodeConfigsCtrl.removeAt(i)"></i></td>
+                                                    (confirm)="removeAccessCode(i)"></i>
+                                            </td>
                                         </tr>
                                     </ng-container>
                                 </tbody>
@@ -133,7 +140,7 @@
                             <small class="text-muted">Number of times a respondent can take test.</small>
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="activatedAccessType === testAccessTypeDef.GroupPassword"
+                    <ng-container *ngIf="activatedAccessType === TestAccessType.GroupPassword"
                         formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
@@ -159,7 +166,7 @@
                             <small class="text-muted">Number of times a respondent can take test.</small>
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="activatedAccessType === testAccessTypeDef.Training"
+                    <ng-container *ngIf="activatedAccessType === TestAccessType.Training"
                         formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
@@ -207,15 +214,15 @@
                     </ngb-alert>
                     <div class="d-inline-flex flex-wrap gap-3 mb-3">
                         <div class="form-check form-check-secondary">
-                            <input class="form-check-input" type="radio" id="percentage-score">
+                            <input class="form-check-input" type="radio" id="percentage-score" [disabled]="true">
                             <label class="form-check-label" for="percentage-score">Disable</label>
                         </div>
                         <div class="form-check form-check-secondary">
-                            <input class="form-check-input" type="radio" id="p2">
+                            <input class="form-check-input" type="radio" id="p2" [disabled]="true">
                             <label class="form-check-label" for="p2">Enable warnings only</label>
                         </div>
                         <div class="form-check form-check-secondary">
-                            <input class="form-check-input" type="radio" id="p3">
+                            <input class="form-check-input" type="radio" id="p3" [disabled]="true">
                             <label class="form-check-label" for="p3">Enable warning and test block</label>
                         </div>
                     </div>
