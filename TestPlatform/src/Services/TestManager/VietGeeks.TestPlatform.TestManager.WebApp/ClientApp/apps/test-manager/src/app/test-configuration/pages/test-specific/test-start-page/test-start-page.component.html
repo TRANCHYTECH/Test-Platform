@@ -5,7 +5,11 @@
                 <h5 class="card-header border-bottom-0">INSTRUCTIONS FOR RESPONDENTS</h5>
                 <div class="card-body">
                     <label>Provide test instructions to be displayed to respondents on the test start page.</label>
-                    <ckeditor [editor]="Editor" formControlName="instruction"></ckeditor>
+                    <editor formControlName="instruction" [apiKey]="editorApiKey"
+                        (onInit)="handleEditorInit('testEndConfig.message', $event)"
+                        (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
+                        #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>
+                    <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
                 </div>
             </div>
             <div class="card">
@@ -24,7 +28,7 @@
                             <ng-container *ngFor="let control of respondentIdentifyConfig.controls; let i = index">
                                 <tr [formGroup]="control">
                                     <td>
-                                        <select data-choices formControlName="fieldId" class="form-select">
+                                        <select data-choices formControlName="fieldId" class="form-select" readonly>
                                             <option [ngValue]="field.value" *ngFor="let field of fieldConfigs">
                                                 {{field.key}}</option>
                                         </select>
@@ -51,7 +55,7 @@
                     <div class="hstack gap-3">
                         <button type="button" class="btn btn-outline-secondary btn-label" (click)="addNewField()">
                             <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add a field</button>
-                        <button type="button" class="btn btn-outline-secondary btn-label">
+                        <button type="button" class="btn btn-outline-secondary btn-label" disabled>
                             <i class="ri-pencil-line label-icon align-middle fs-24 me-2"></i>Manage custom
                             Fields</button>
                     </div>
@@ -62,7 +66,11 @@
                 <div class="card-body">
                     <label>If you require consent or acceptance before respondents can take the test, specify it
                         below.</label>
-                    <ckeditor [editor]="Editor" class="short-editor" formControlName="consent"></ckeditor>
+                    <editor formControlName="consent" [apiKey]="editorApiKey"
+                        (onInit)="handleEditorInit('testEndConfig.message', $event)"
+                        (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
+                        #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>
+                    <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
                 </div>
             </div>
             <div class="text-end mb-4">

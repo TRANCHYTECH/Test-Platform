@@ -14,4 +14,6 @@ public interface ITestManagerService
     Task<TestDefinitionViewModel> EndTestDefinition(string id);
     Task<TestDefinitionViewModel> RestartTestDefinition(string id);
     Task<List<dynamic>> GetTestInvitationEvents(TestInvitationStatsInput input);
+    Task<List<string>> GenerateAccessCodes(string id, int quantity);
+    Task RemoveAccessCode(string id, string code);
 }

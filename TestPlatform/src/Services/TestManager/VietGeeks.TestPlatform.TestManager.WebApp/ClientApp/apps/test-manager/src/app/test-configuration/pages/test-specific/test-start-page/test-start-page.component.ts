@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { RespondentIdentifyConfig } from '../../../state/test.model';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
+import { differenceWith } from 'lodash-es';
 
 @UntilDestroy()
 @Component({
@@ -12,18 +12,28 @@ import { TestSpecificBaseComponent } from '../base/test-specific-base.component'
   styleUrls: ['./test-start-page.component.scss'],
 })
 export class TestStartPageComponent extends TestSpecificBaseComponent {
-  Editor = ClassicEditor;
-
   testStartPageForm!: FormGroup;
 
   fieldConfigs = [
     {
       key: 'First name - text field',
-      value: 'firstName'
+      value: 'FirstName'
     },
     {
       key: 'Last name - text field',
-      value: 'lastName'
+      value: 'LastName'
+    },
+    {
+      key: 'City - text field',
+      value: 'City'
+    },
+    {
+      key: 'Organization Name - text field',
+      value: 'OrganizationName'
+    },
+    {
+      key: 'Phone - text field',
+      value: 'Phone'
     }
   ];
 
@@ -36,7 +46,6 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
   }
 
   afterGetTest(): void {
-    //
     const testStartSettings = this.test.testStartSettings;
     this.testStartPageForm = this.fb.group({
       instruction: [testStartSettings?.instruction],
@@ -52,7 +61,16 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
   }
 
   addNewField() {
-    this.addField({ fieldId: '', isRequired: false });
+    const available = this.availableFields;
+    if (available.length === 0)
+      return;
+
+    this.addField({ fieldId: available[0].value, isRequired: false });
+  }
+
+  get availableFields() {
+    const selectedFields = this.respondentIdentifyConfig.value as { fieldId: string }[];
+    return differenceWith(this.fieldConfigs, selectedFields, (a, b) => a.value === b.fieldId);
   }
 
   private addField(c: RespondentIdentifyConfig) {

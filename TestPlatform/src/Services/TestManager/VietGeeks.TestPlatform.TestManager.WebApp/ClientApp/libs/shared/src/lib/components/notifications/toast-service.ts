@@ -29,6 +29,13 @@ export class ToastService {
     })
   }
 
+  info(message: string) {
+    this.toast.fire({
+      icon: 'info',
+      title: message
+    })
+  }
+
   confirm(message: string) {
     return Swal.fire({
       title: message,

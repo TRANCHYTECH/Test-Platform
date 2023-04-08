@@ -7,7 +7,7 @@ public class TestAccessSettingsPart
 {
     public TestAcessType AccessType { get; set; }
 
-    public TestAccessSettings? Settings { get; set; }
+    public TestAccessSettings Settings { get; set; } = default!;
 
     public HonestRespondentRule? HonestRespondentRule { get; set; }
 

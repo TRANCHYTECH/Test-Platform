@@ -20,7 +20,6 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
 
     router = inject(Router);
     route = inject(ActivatedRoute);
-    changeDetector = inject(ChangeDetectorRef);
     fb = inject(FormBuilder);
     changeRef = inject(ChangeDetectorRef);
 
@@ -41,10 +40,12 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
     private _readyForUI = new BehaviorSubject(false);
 
     ngOnInit(): void {
+        // Listen to process the first time.
         this.route.params.pipe(untilDestroyed(this)).subscribe(async params => {
             this.processParams(params);
         });
 
+        // Listen to reload the page.
         this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
             console.log('Reload test specific page');
             this.processParams(this.route.snapshot.params);
@@ -61,6 +62,8 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
     }
 
     private async processParams(params: Params) {
+        this._readyForUI.next(false);
+        
         this.testId = params['id'];
         if (!this.isNewTest) {
             await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
@@ -119,6 +122,9 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
         }
 
         await this.submit();
+
+        // Refresh the page to bind latest info.
+        this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
     };
 
     //todo(tau): how to generalize it?
