@@ -2,8 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { TestDuration } from '../../../api/models';
-import { ExamCurrentStep, TestSession, TimeSettings } from '../../../state/test-session.model';
+import { ExamCurrentStep } from '../../../state/test-session.model';
 import { TestRespondentField } from '../../../state/test.model';
 import { ProctorService } from '../../services/proctor.service';
 import { TestStartConfig } from './data';
@@ -46,7 +45,7 @@ export class TestStartComponent implements OnInit {
     const respondentIdentify = this.respondentIdentifyForm.value;
     const sessionData = this._testSessionQuery.getEntity(1);
     if ((sessionData?.examStep ?? 1) < ExamCurrentStep.ProvideExamineeInfo) {
-      const provideExamineeInfoOutput = await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify));
+      await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify));
       this._testSessionStore.update(1, {
         examStep: ExamCurrentStep.ProvideExamineeInfo
       });
@@ -56,9 +55,10 @@ export class TestStartComponent implements OnInit {
 
     this._testSessionStore.update(1, {
       startTime: new Date(startExamOutput.startedAt ?? ''),
-      timeSettings: this.mapToTimeSettings(startExamOutput.testDuration),
+      timeSettings: this._testDurationService.mapToTimeSettings(startExamOutput.testDuration),
       respondentFields: (respondentIdentify.fields as { id: string, fieldValue: string }[]),
       activeQuestion: startExamOutput.activeQuestion,
+      questionCount: startExamOutput.totalQuestion,
       examStep: startExamOutput.step as number
     });
 
@@ -86,17 +86,5 @@ export class TestStartComponent implements OnInit {
     this.config.consentMessage = sessionData.consentMessage ?? '';
   }
 
-  private mapToTimeSettings(testDuration?: TestDuration): TimeSettings {
-    if (testDuration == null) {
-      return {};
-    }
 
-    const durationString = testDuration.duration?.toString();
-    const duration  = this._testDurationService.parse(durationString);
-
-    return {
-      duration: duration,
-      method: testDuration.method as number
-    };
-  }
 }

@@ -7,8 +7,7 @@ import { AnswerType } from '../../../state/exam-content.model';
 import { ExamCurrentStep, TestDurationMethod, TestSession } from '../../../state/test-session.model';
 import { ProctorService } from '../../services/proctor.service';
 import { TestDurationService } from '../../services/test-duration.service';
-import { TestSessionQuery } from '../../../state/test-session.query';
-import { TestSessionStore } from '../../../state/test-session.store';
+import { TestSessionService } from '../../services/test-session.service';
 @Component({
   selector: 'viet-geeks-test-question',
   templateUrl: './test-question.component.html',
@@ -18,8 +17,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
 
   proctorService = inject(ProctorService);
   private _testDurationService = inject(TestDurationService);
-  private _testSessionQuery = inject(TestSessionQuery);
-  private _testSessionStore = inject(TestSessionStore);
+  private _testSessionService = inject(TestSessionService);
   private _router = inject(Router);
 
   questions: ExamQuestion[] = [];
@@ -28,6 +26,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   labels: string[] = [];
   index = 0;
   question?: ExamQuestion;
+  questionCount = 0;
   endTime: Date = new Date();
 
   public remainingTime: TimeSpan = {};
@@ -38,9 +37,10 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   }
 
   ngOnInit() {
-    this.sessionData = this._testSessionQuery.getActive() as TestSession;
+    this.sessionData = this._testSessionService.getSessionData();
     this.index = this.sessionData.questionIndex ?? 0;
     this.question = this.sessionData.activeQuestion;
+    this.questionCount = this.sessionData.questionCount ?? 0;
     this.initAnswerForm();
     this.initEndTime();
     this.subscription = interval(1000)
@@ -59,10 +59,19 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       }));
 
       if (submitAnswerOutput != null) {
+        this._testSessionService.setSessionData({
+          examStep: ExamCurrentStep.SubmitAnswer,
+          activeQuestion: submitAnswerOutput.activeQuestion,
+          questionIndex: submitAnswerOutput.activeQuestionIndex ?? undefined
+        });
         this.question = submitAnswerOutput.activeQuestion;
+        this.index = submitAnswerOutput.activeQuestionIndex ?? this.index;
         if (this.question) {
           this.initAnswerForm();
           this.initEndTime();
+        }
+        else {
+          this.finishExam();
         }
       }
       else {
@@ -125,7 +134,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
 
   private async finishExam() {
     const finishOutput = await firstValueFrom(this.proctorService.finishExam());
-    this._testSessionStore.update(1, {
+    this._testSessionService.setSessionData({
       result: finishOutput,
       endTime: new Date(),
       examStep: ExamCurrentStep.FinishExam
