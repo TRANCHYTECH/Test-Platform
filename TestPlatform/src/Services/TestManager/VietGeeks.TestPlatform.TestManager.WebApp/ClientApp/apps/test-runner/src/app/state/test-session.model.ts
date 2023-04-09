@@ -15,6 +15,7 @@ export interface TestSession {
   respondentFields?: Array<RespondentField>,
   result?: FinishExamOutput | null,
   questionIndex?: number,
+  questionCount?: number,
   activeQuestion?: ExamQuestion
 }
 

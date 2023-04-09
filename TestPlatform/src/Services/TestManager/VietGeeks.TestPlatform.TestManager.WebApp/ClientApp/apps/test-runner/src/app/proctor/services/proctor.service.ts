@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of } from 'rxjs';
 import { ApiExamService } from '../../api/services';
-import { StartExamOutputViewModel, SubmitAnswerOutput } from '../../api/models';
+import { ErrorDetails, StartExamOutputViewModel, SubmitAnswerOutput } from '../../api/models';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,10 @@ export class ProctorService {
     return this._examService.verify({
       body: input
     }).pipe(catchError(error => {
-      console.log('error', error);
+      if (error.status == 400) {
+        return of(error.error as ErrorDetails);
+      }
+
       return of(null);
     }));
   }

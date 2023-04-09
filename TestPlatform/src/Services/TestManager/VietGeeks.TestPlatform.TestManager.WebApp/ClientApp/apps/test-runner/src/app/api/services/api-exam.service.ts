@@ -9,7 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { ExamStatus } from '../models/exam-status';
+import { ExamStatusWithStep } from '../models/exam-status-with-step';
 import { FinishExamOutput } from '../models/finish-exam-output';
 import { ProvideExamineeInfoOutput } from '../models/provide-examinee-info-output';
 import { ProvideExamineeInfoViewModel } from '../models/provide-examinee-info-view-model';
@@ -538,7 +538,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<ExamStatus>> {
+): Observable<StrictHttpResponse<ExamStatusWithStep>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.GetExamStatusPath, 'get');
     if (params) {
@@ -551,7 +551,7 @@ export class ApiExamService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ExamStatus>;
+        return r as StrictHttpResponse<ExamStatusWithStep>;
       })
     );
   }
@@ -566,10 +566,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<ExamStatus> {
+): Observable<ExamStatusWithStep> {
 
     return this.getExamStatus$Plain$Response(params,context).pipe(
-      map((r: StrictHttpResponse<ExamStatus>) => r.body as ExamStatus)
+      map((r: StrictHttpResponse<ExamStatusWithStep>) => r.body as ExamStatusWithStep)
     );
   }
 
@@ -583,7 +583,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<ExamStatus>> {
+): Observable<StrictHttpResponse<ExamStatusWithStep>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.GetExamStatusPath, 'get');
     if (params) {
@@ -596,7 +596,7 @@ export class ApiExamService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ExamStatus>;
+        return r as StrictHttpResponse<ExamStatusWithStep>;
       })
     );
   }
@@ -611,10 +611,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<ExamStatus> {
+): Observable<ExamStatusWithStep> {
 
     return this.getExamStatus$Response(params,context).pipe(
-      map((r: StrictHttpResponse<ExamStatus>) => r.body as ExamStatus)
+      map((r: StrictHttpResponse<ExamStatusWithStep>) => r.body as ExamStatusWithStep)
     );
   }
 

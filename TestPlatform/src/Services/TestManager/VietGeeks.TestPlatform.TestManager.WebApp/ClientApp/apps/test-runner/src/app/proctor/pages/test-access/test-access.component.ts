@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { ToastService } from '@viet-geeks/shared';
 import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
 import { TestSessionStore } from '../../../state/test-session.store';
+import { ErrorDetails, VerifyTestOutputViewModel } from '../../../api/models';
 
 @UntilDestroy()
 @Component({
@@ -53,17 +54,20 @@ export class TestAccessComponent implements OnInit {
     const accessCode = this.verifyTestForm.get('accessCode')?.value;
     this.enableLoading();
     const result = await firstValueFrom(this._proctorService.verifyTest({accessCode: accessCode}));
-    if (result == null) {
-      this._notifyService.error('Access code is not valid');
+    let message = this.tryGetErrorMessageFromResult(result);
+
+    if (message) {
+      this._notifyService.error(message);
     }
     else {
+      const verifyOutput = result as VerifyTestOutputViewModel;
       this._testSessionStore.set([{
         id: 1,
         accessCode: accessCode,
-        consentMessage: result.consentMessage,
-        instructionMessage: result.instructionMessage,
-        testDescription: result.testName,
-        examStep: result.step as number
+        consentMessage: verifyOutput.consentMessage,
+        instructionMessage: verifyOutput.instructionMessage,
+        testDescription: verifyOutput.testName,
+        examStep: verifyOutput.step as number
       }]);
       this._testSessionStore.setActive(1);
       this._router.navigate(['test','start']);
@@ -79,5 +83,17 @@ export class TestAccessComponent implements OnInit {
   private disableLoading() {
     this.isLoading = false;
     this.verifyTestForm.get('accessCode')?.enable();
+  }
+
+  private tryGetErrorMessageFromResult(result: VerifyTestOutputViewModel | ErrorDetails | null) {
+    let message = '';
+    if (result == null || (result as ErrorDetails).error) {
+      message = 'Access code is not valid';
+      if ((result as ErrorDetails).error) {
+        message = (result as ErrorDetails).error as string;
+      }
+    }
+
+    return message;
   }
 }
