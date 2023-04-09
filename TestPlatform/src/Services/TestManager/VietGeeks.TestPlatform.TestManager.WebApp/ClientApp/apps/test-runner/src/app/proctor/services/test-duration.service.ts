@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TimeSpan } from '../../api/models';
+import { TestDuration, TimeSpan } from '../../api/models';
 import { TestDurationMethod, TimeSettings } from '../../state/test-session.model';
 
 @Injectable({ providedIn: 'root' })
@@ -8,6 +8,20 @@ export class TestDurationService {
   private _hoursInADay = 24;
   private _minutesInAnHour = 60;
   private _secondsInAMinute = 60;
+
+  mapToTimeSettings(testDuration?: TestDuration): TimeSettings {
+    if (testDuration == null) {
+      return {};
+    }
+
+    const durationString = testDuration.duration?.toString();
+    const duration  = this.parse(durationString);
+
+    return {
+      duration: duration,
+      method: testDuration.method as number
+    };
+  }
 
   getDuration(startTime?: Date, endTime?: Date): TimeSpan {
     const timeDifference = this.getTimeDifference(startTime, endTime);

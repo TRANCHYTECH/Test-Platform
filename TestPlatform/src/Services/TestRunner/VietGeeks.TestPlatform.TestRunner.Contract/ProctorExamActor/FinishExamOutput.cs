@@ -2,10 +2,11 @@ using System.Collections.Generic;
 
 namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
-public class FinishExamOutput
+public class FinishExamOutput: IExamStepInfo
 {
     public decimal FinalMark { get; set; }
     public List<AggregatedGrading> Grading { get; set; } = default!;
+    public ExamStep Step { get; set; }
 }
 
 public class AggregatedGrading

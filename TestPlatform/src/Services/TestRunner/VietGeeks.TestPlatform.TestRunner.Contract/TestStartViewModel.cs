@@ -10,7 +10,7 @@ public class TestSession
 
     public string AccessCode { get; set; } = default!;
 
-    public PreStartSteps PreviousStep { get; set; }
+    public ExamStep PreviousStep { get; set; }
 
     public string ClientProof { get; set; } = default!;
 
@@ -29,11 +29,12 @@ public class VerifyTestInput
     public string? AccessCode { get; set; }
 }
 
-public class VerifyTestOutputViewModel
+public class VerifyTestOutputViewModel: IExamStepInfo
 {
     public string TestName { get; set; } = default!;
     public string ConsentMessage { get; set; } = default!;
     public string InstructionMessage { get; set; } = default!;
+    public ExamStep Step { get; set; }
 }
 
 public class VerifyTestOutput
@@ -63,6 +64,12 @@ public class SubmitAnswerViewModel
     public string[] AnswerIds { get; set; } = default!;
 }
 
+public class SubmitAnswerOutputViewModel: IExamStepInfo
+{
+    public ExamQuestion? ActiveQuestion { get; set; } = default!;
+    public ExamStep Step { get; set; }
+}
+
 public class ProvideExamineeInfoViewModel
 {
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
@@ -74,13 +81,9 @@ public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
     public string AccessCode { get; set; } = default!;
 }
 
-public enum PreStartSteps
+public class ProvideExamineeInfoOutput: IExamStepInfo
 {
-    VerifyTest = 1,
-    ProvideExamineeInfo = 2,
-    Start = 3,
-    SubmitAnswer = 4,
-    FinishExam = 5
+    public ExamStep Step { get; set; }
 }
 
 public class GenerateExamContentInput

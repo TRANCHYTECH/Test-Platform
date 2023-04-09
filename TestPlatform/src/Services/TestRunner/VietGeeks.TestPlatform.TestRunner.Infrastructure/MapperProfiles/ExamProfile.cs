@@ -9,5 +9,6 @@ public class ExamProfile : Profile
     public ExamProfile()
     {
         CreateMap<Core.AggregatedGrading, AggregatedGrading>();
+        CreateMap<StartExamOutput, StartExamOutputViewModel>();
     }
 }

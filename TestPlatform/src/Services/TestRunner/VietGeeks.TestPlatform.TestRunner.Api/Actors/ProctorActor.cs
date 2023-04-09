@@ -1,5 +1,4 @@
-﻿using Dapr.Actors;
-using Dapr.Actors.Runtime;
+﻿using Dapr.Actors.Runtime;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestRunner.Contract;
@@ -19,7 +18,12 @@ public class ProctorActor : Actor, IProctorActor
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
-        return await _proctorService.ProvideExamineeInfo(input);
+        var examId = await _proctorService.ProvideExamineeInfo(input);
+        ExamState examState = CreateExamState(examId);
+        examState.ExamineeInfo = input.ExamineeInfo;
+        await SaveExamState(examState);
+
+        return examId;
     }
 
     public async Task<StartExamOutput> StartExam(StartExamInput input)
@@ -30,32 +34,27 @@ public class ProctorActor : Actor, IProctorActor
         });
 
         var examState = await GetExamState();
-        if (examState == null)
-        {
-            examState = new ExamState
-            {
-                ExamId = input.ExamId,
-                Questions = examContent.Questions.ToDictionary(c => c.Id, d => d.Answers.Select(a => a.Id).ToArray()),
-                StartedAt = DateTime.UtcNow
-            };
+        examState.QuestionIds = examContent.Questions.Select(q => q.Id).ToArray();
+        examState.ActiveQuestionIndex = 0;
+        examState.StartedAt = DateTime.UtcNow;
 
-            await SaveExamState(examState);
-        }
+        await SaveExamState(examState);
 
         return new()
         {
             StartedAt = examState.StartedAt,
             Questions = examContent.Questions,
-            TestDuration = examContent.TestDuration
+            TestDuration = examContent.TestDuration,
+            ActiveQuestion = examContent.ActiveQuestion
         };
     }
 
-    public async Task SubmitAnswer(SubmitAnswerInput input)
+    public async Task<SubmitAnswerOutput> SubmitAnswer(SubmitAnswerInput input)
     {
         //todo: refactor the way to store questions in order to validate whether or not the answer is valid in configured timespan.
-        await ExamStateAction(examState =>
+        return await ExamStateAction(async examState =>
         {
-            if (!examState.Questions.ContainsKey(input.QuestionId))
+            if (!examState.QuestionIds.Contains(input.QuestionId))
             {
                 throw new TestPlatformException("NotFoundQuestion");
             }
@@ -66,6 +65,26 @@ public class ProctorActor : Actor, IProctorActor
             }
 
             examState.Answers[input.QuestionId] = input.AnswerIds;
+            var questionIndex = Array.IndexOf(examState.QuestionIds, input.QuestionId);
+            string? activeQuestionId = null;
+            ExamQuestion? activeQuestion = null;
+            if (questionIndex == examState.QuestionIds.Length - 1)
+            {
+                examState.ActiveQuestionIndex = null;
+            }
+            else
+            {
+                examState.ActiveQuestionIndex = questionIndex + 1;
+                activeQuestionId = examState.QuestionIds[examState.ActiveQuestionIndex.Value];
+                activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, activeQuestionId);
+            }
+            examState.ActiveQuestionId = activeQuestionId;
+
+            return new SubmitAnswerOutput()
+            {
+                ActiveQuestionId = activeQuestionId,
+                ActiveQuestion = activeQuestion
+            };
         });
     }
 
@@ -84,6 +103,22 @@ public class ProctorActor : Actor, IProctorActor
         });
 
         return result;
+    }
+
+    public async Task<ExamStatus> GetExamStatus()
+    {
+        var examState = await GetExamState();
+        ExamQuestion? activeQuestion = null;
+        if (examState.ActiveQuestionIndex.HasValue)
+        {
+            activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId);
+        }
+
+        return new ExamStatus()
+        {
+            ActiveQuestion = activeQuestion,
+            ExamineeInfo = examState.ExamineeInfo
+        };
     }
 
     private async Task<T> ExamStateAction<T>(Func<ExamState, Task<T>> action)
@@ -109,6 +144,14 @@ public class ProctorActor : Actor, IProctorActor
         return state.Value;
     }
 
+    private static ExamState CreateExamState(string examId)
+    {
+        return new ExamState
+        {
+            ExamId = examId
+        };
+    }
+
     private async Task SaveExamState(ExamState examState)
     {
         await StateManager.SetStateAsync(ExamStateName, examState);
@@ -120,7 +163,10 @@ public class ProctorActor : Actor, IProctorActor
 
         public string TestDefinitionId { get; set; } = default!;
 
-        public Dictionary<string, string[]> Questions { get; set; } = default!;
+        public string[] QuestionIds { get; set; } = default!;
+        public string? ActiveQuestionId { get; set; } = default!;
+        public int? ActiveQuestionIndex { get; set; } = default!;
+        public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 

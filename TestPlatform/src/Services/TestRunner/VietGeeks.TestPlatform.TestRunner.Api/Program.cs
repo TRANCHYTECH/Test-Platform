@@ -47,6 +47,11 @@ builder.Services.RegisterInfrastructureModule(new()
     Database = builder.Configuration.GetSection("TestRunnerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions()
 });
 
+builder.Services.ConfigureApplicationCookie((options) => {
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
 var app = builder.Build();
 
 app.UseCors("dev");

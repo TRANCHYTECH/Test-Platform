@@ -5,6 +5,7 @@ import { TestSessionService } from '../../services/test-session.service';
 import { RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke, ChartComponent } from 'ng-apexcharts';
+import { TestSessionQuery } from '../../../state/test-session.query';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -23,8 +24,8 @@ export type ChartOptions = {
 })
 export class TestFinishComponent {
 
-  private _testSessionService = inject(TestSessionService);
   private _testDurationService = inject(TestDurationService);
+  private _testSessionQuery = inject(TestSessionQuery);
   router = inject(Router);
   labels: string[] = [];
   sessionData: Partial<TestSession> = {};
@@ -122,13 +123,13 @@ export class TestFinishComponent {
 
 
   private setupSessionData() {
-    this.sessionData = this._testSessionService.getSessionData();
+    this.sessionData = this._testSessionQuery.getEntity(1) ?? {};
     this.respondent = this.sessionData.respondentFields ?? [];
     this.testResult = this.sessionData.result;
     this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0].passMark == true;
 
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
-    this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this._testSessionService.getQuestionsCount());
+    this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, 1);
   }
 
 }

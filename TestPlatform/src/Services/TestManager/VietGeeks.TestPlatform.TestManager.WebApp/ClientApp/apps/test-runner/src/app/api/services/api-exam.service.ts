@@ -9,9 +9,12 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { ExamStatusWithStep } from '../models/exam-status-with-step';
 import { FinishExamOutput } from '../models/finish-exam-output';
+import { ProvideExamineeInfoOutput } from '../models/provide-examinee-info-output';
 import { ProvideExamineeInfoViewModel } from '../models/provide-examinee-info-view-model';
-import { StartExamOutput } from '../models/start-exam-output';
+import { StartExamOutputViewModel } from '../models/start-exam-output-view-model';
+import { SubmitAnswerOutput } from '../models/submit-answer-output';
 import { SubmitAnswerViewModel } from '../models/submit-answer-view-model';
 import { VerifyTestInput } from '../models/verify-test-input';
 import { VerifyTestOutputViewModel } from '../models/verify-test-output-view-model';
@@ -135,6 +138,54 @@ export class ApiExamService extends BaseService {
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `provideExamineeInfo$Plain()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  provideExamineeInfo$Plain$Response(params?: {
+    body?: ProvideExamineeInfoViewModel
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ProvideExamineeInfoOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.ProvideExamineeInfoPath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/*+json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ProvideExamineeInfoOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `provideExamineeInfo$Plain$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  provideExamineeInfo$Plain(params?: {
+    body?: ProvideExamineeInfoViewModel
+  },
+  context?: HttpContext
+
+): Observable<ProvideExamineeInfoOutput> {
+
+    return this.provideExamineeInfo$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ProvideExamineeInfoOutput>) => r.body as ProvideExamineeInfoOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `provideExamineeInfo()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
@@ -144,7 +195,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<void>> {
+): Observable<StrictHttpResponse<ProvideExamineeInfoOutput>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.ProvideExamineeInfoPath, 'post');
     if (params) {
@@ -152,13 +203,13 @@ export class ApiExamService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
+      responseType: 'json',
+      accept: 'text/json',
       context: context
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<ProvideExamineeInfoOutput>;
       })
     );
   }
@@ -174,10 +225,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<void> {
+): Observable<ProvideExamineeInfoOutput> {
 
     return this.provideExamineeInfo$Response(params,context).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<ProvideExamineeInfoOutput>) => r.body as ProvideExamineeInfoOutput)
     );
   }
 
@@ -196,7 +247,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<StartExamOutput>> {
+): Observable<StrictHttpResponse<StartExamOutputViewModel>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.StartExamPath, 'post');
     if (params) {
@@ -209,7 +260,7 @@ export class ApiExamService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<StartExamOutput>;
+        return r as StrictHttpResponse<StartExamOutputViewModel>;
       })
     );
   }
@@ -224,10 +275,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StartExamOutput> {
+): Observable<StartExamOutputViewModel> {
 
     return this.startExam$Plain$Response(params,context).pipe(
-      map((r: StrictHttpResponse<StartExamOutput>) => r.body as StartExamOutput)
+      map((r: StrictHttpResponse<StartExamOutputViewModel>) => r.body as StartExamOutputViewModel)
     );
   }
 
@@ -241,7 +292,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<StartExamOutput>> {
+): Observable<StrictHttpResponse<StartExamOutputViewModel>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.StartExamPath, 'post');
     if (params) {
@@ -254,7 +305,7 @@ export class ApiExamService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<StartExamOutput>;
+        return r as StrictHttpResponse<StartExamOutputViewModel>;
       })
     );
   }
@@ -269,10 +320,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StartExamOutput> {
+): Observable<StartExamOutputViewModel> {
 
     return this.startExam$Response(params,context).pipe(
-      map((r: StrictHttpResponse<StartExamOutput>) => r.body as StartExamOutput)
+      map((r: StrictHttpResponse<StartExamOutputViewModel>) => r.body as StartExamOutputViewModel)
     );
   }
 
@@ -280,6 +331,54 @@ export class ApiExamService extends BaseService {
    * Path part for operation submitAnswer
    */
   static readonly SubmitAnswerPath = '/Exam/SubmitAnswer';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `submitAnswer$Plain()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  submitAnswer$Plain$Response(params?: {
+    body?: SubmitAnswerViewModel
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<SubmitAnswerOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.SubmitAnswerPath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/*+json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<SubmitAnswerOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `submitAnswer$Plain$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  submitAnswer$Plain(params?: {
+    body?: SubmitAnswerViewModel
+  },
+  context?: HttpContext
+
+): Observable<SubmitAnswerOutput> {
+
+    return this.submitAnswer$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<SubmitAnswerOutput>) => r.body as SubmitAnswerOutput)
+    );
+  }
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -292,7 +391,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<void>> {
+): Observable<StrictHttpResponse<SubmitAnswerOutput>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.SubmitAnswerPath, 'post');
     if (params) {
@@ -300,13 +399,13 @@ export class ApiExamService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
+      responseType: 'json',
+      accept: 'text/json',
       context: context
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<SubmitAnswerOutput>;
       })
     );
   }
@@ -322,10 +421,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<void> {
+): Observable<SubmitAnswerOutput> {
 
     return this.submitAnswer$Response(params,context).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<SubmitAnswerOutput>) => r.body as SubmitAnswerOutput)
     );
   }
 
@@ -421,6 +520,101 @@ export class ApiExamService extends BaseService {
 
     return this.finishExam$Response(params,context).pipe(
       map((r: StrictHttpResponse<FinishExamOutput>) => r.body as FinishExamOutput)
+    );
+  }
+
+  /**
+   * Path part for operation getExamStatus
+   */
+  static readonly GetExamStatusPath = '/Exam/Status';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getExamStatus$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getExamStatus$Plain$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ExamStatusWithStep>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.GetExamStatusPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ExamStatusWithStep>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getExamStatus$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getExamStatus$Plain(params?: {
+  },
+  context?: HttpContext
+
+): Observable<ExamStatusWithStep> {
+
+    return this.getExamStatus$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ExamStatusWithStep>) => r.body as ExamStatusWithStep)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getExamStatus()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getExamStatus$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ExamStatusWithStep>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.GetExamStatusPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ExamStatusWithStep>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getExamStatus$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getExamStatus(params?: {
+  },
+  context?: HttpContext
+
+): Observable<ExamStatusWithStep> {
+
+    return this.getExamStatus$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ExamStatusWithStep>) => r.body as ExamStatusWithStep)
     );
   }
 

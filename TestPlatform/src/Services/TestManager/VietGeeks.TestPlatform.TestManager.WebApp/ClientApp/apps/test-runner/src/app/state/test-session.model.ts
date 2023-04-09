@@ -1,8 +1,10 @@
-import { FinishExamOutput, TestDurationMethodType, TimeSpan } from "../api/models";
+import { FinishExamOutput, TestDurationMethodType, TimeSpan, ExamQuestion } from "../api/models";
 
 export type RespondentField = { id: string, fieldValue: string };
 
 export interface TestSession {
+  id?: number,
+  examStep?: ExamCurrentStep,
   accessCode?: null | string;
   testDescription?: null | string;
   consentMessage?: null | string;
@@ -12,7 +14,9 @@ export interface TestSession {
   timeSettings?: TimeSettings,
   respondentFields?: Array<RespondentField>,
   result?: FinishExamOutput | null,
-  questionIndex?: number
+  questionIndex?: number,
+  questionCount?: number,
+  activeQuestion?: ExamQuestion
 }
 
 export interface TimeSettings {
@@ -24,3 +28,11 @@ export enum TestDurationMethod {
   CompleteTestTime = TestDurationMethodType.$1,
   CompleteQuestionTime = TestDurationMethodType.$2
 }
+
+export enum ExamCurrentStep {
+    VerifyTest = 1,
+    ProvideExamineeInfo = 2,
+    Start = 3,
+    SubmitAnswer = 4,
+    FinishExam = 5
+};

@@ -10,6 +10,7 @@ using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 using System.Net;
 using Microsoft.AspNetCore.DataProtection;
+using AutoMapper;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
@@ -19,11 +20,13 @@ public class ExamController : ControllerBase
 {
     private readonly IProctorService _proctorService;
     private readonly ITimeLimitedDataProtector _dataProtector;
+    private readonly IMapper _mapper;
 
-    public ExamController(IProctorService proctorService, IDataProtectionProvider dataProtectionProvider)
+    public ExamController(IProctorService proctorService, IDataProtectionProvider dataProtectionProvider, IMapper mapper)
     {
         _proctorService = proctorService;
         _dataProtector = dataProtectionProvider.CreateProtector("TestSession").ToTimeLimitedDataProtector();
+        _mapper = mapper;
     }
 
     [HttpPost("PreStart/Verify")]
@@ -36,7 +39,7 @@ public class ExamController : ControllerBase
             ProctorExamId = verifyResult.ProctorExamId,
             TestRunId = verifyResult.TestRunId,
             AccessCode = verifyResult.AccessCode,
-            PreviousStep = PreStartSteps.VerifyTest,
+            PreviousStep = ExamStep.VerifyTest,
             ClientProof = "some data",
             LifeTime = TimeSpan.FromMinutes(5)
         });
@@ -45,14 +48,16 @@ public class ExamController : ControllerBase
         {
             TestName = verifyResult.TestName,
             ConsentMessage = verifyResult.ConsentMessage ?? "DefaultConsentMessage",
-            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage"
+            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage",
+            Step = ExamStep.VerifyTest
         });
     }
 
     [HttpPost("PreStart/ProvideExamineeInfo")]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ProvideExamineeInfoOutput))]
     public async Task<IActionResult> ProvideExamineeInfo(ProvideExamineeInfoViewModel data)
     {
-        var testSession = GetTestSession(PreStartSteps.ProvideExamineeInfo);
+        var testSession = GetTestSession(ExamStep.ProvideExamineeInfo);
         //todo: validate examinee info.
 
         var proctorExamActor = GetProctorActor(testSession);
@@ -66,20 +71,23 @@ public class ExamController : ControllerBase
         {
             ProctorExamId = testSession.ProctorExamId,
             ExamId = examId,
-            PreviousStep = PreStartSteps.ProvideExamineeInfo,
+            PreviousStep = ExamStep.ProvideExamineeInfo,
             ClientProof = testSession.ClientProof,
             //todo: discuss logic here.
             LifeTime = TimeSpan.FromMinutes(5)
         });
 
-        return Ok();
+        return Ok(new ProvideExamineeInfoOutput
+        {
+            Step = ExamStep.ProvideExamineeInfo
+        });
     }
 
     [HttpPost("Start")]
-    [ProducesResponseType(typeof(StartExamOutput), 200)]
+    [ProducesResponseType(typeof(StartExamOutputViewModel), 200)]
     public async Task<IActionResult> StartExam()
     {
-        var testSession = GetTestSession(PreStartSteps.Start);
+        var testSession = GetTestSession(ExamStep.Start);
         var proctorExamActor = GetProctorActor(testSession);
         var examContent = await proctorExamActor.StartExam(new()
         {
@@ -89,38 +97,62 @@ public class ExamController : ControllerBase
         SetTestSession(new()
         {
             ProctorExamId = testSession.ProctorExamId,
-            PreviousStep = PreStartSteps.Start,
+            PreviousStep = ExamStep.Start,
             ClientProof = testSession.ClientProof,
             //todo: discuss logic here. Logical total duration + estimated delay time 5 mins.
             LifeTime = examContent.TotalDuration.Add(TimeSpan.FromMinutes(5))
         });
 
-        return Ok(examContent);
+        var output = this._mapper.Map<StartExamOutputViewModel>(examContent);
+        output.Step = ExamStep.Start;
+
+        return Ok(output);
     }
 
     [HttpPost("SubmitAnswer")]
+    [ProducesResponseType(typeof(SubmitAnswerOutput), 200)]
     public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
-        var testSession = GetTestSession(PreStartSteps.SubmitAnswer);
+        var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        await proctorExamActor.SubmitAnswer(new()
+        var output = await proctorExamActor.SubmitAnswer(new()
         {
             QuestionId = data.QuestionId,
             AnswerIds = data.AnswerIds
         });
+        output.Step = ExamStep.SubmitAnswer;
 
-        return Ok();
+        return Ok(output);
     }
 
     [HttpPost("Finish")]
     [ProducesResponseType(typeof(FinishExamOutput), 200)]
     public async Task<IActionResult> FinishExam()
     {
-        var testSession = GetTestSession(PreStartSteps.FinishExam);
+        var testSession = GetTestSession(ExamStep.FinishExam);
         var proctorExamActor = GetProctorActor(testSession);
         var result = await proctorExamActor.FinishExam();
+        result.Step = ExamStep.FinishExam;
 
         return Ok(result);
+    }
+
+    [HttpGet("Status")]
+    [ProducesResponseType(typeof(ExamStatus), 200)]
+    public async Task<IActionResult> GetExamStatus()
+    {
+        // TODO: verify clientProof?
+        var testSession = GetTestSession();
+
+        if (testSession == null) {
+            return NotFound();
+        }
+
+        var proctorExamActor = GetProctorActor(testSession);
+        var examStatus = await proctorExamActor.GetExamStatus();
+        examStatus.PreviousStep = testSession.PreviousStep;
+
+        return Ok(examStatus);
     }
 
     private static IProctorActor GetProctorActor(TestSession testSession)
@@ -134,43 +166,58 @@ public class ExamController : ControllerBase
         Response.Headers.Add(nameof(TestSession), EncryptTestSession(testSession));
     }
 
-    private TestSession GetTestSession(PreStartSteps forStep)
+    private TestSession? GetTestSession(ExamStep forStep)
+    {
+        var session = GetTestSession();
+        ValidateStep(forStep, session);
+
+        return session;
+    }
+
+    private TestSession GetTestSession()
     {
         var header = Request.Headers[nameof(TestSession)];
         var session = DecryptTestSession(header.ToString());
 
+        return session;
+    }
+
+    private static void ValidateStep(ExamStep forStep, TestSession? session)
+    {
+        if (session == null) {
+            throw new TestPlatformException("NoSession");
+        }
+
         switch (forStep)
         {
-            case PreStartSteps.ProvideExamineeInfo:
+            case ExamStep.ProvideExamineeInfo:
                 {
-                    if (session.PreviousStep != PreStartSteps.VerifyTest)
+                    if (session.PreviousStep != ExamStep.VerifyTest)
                     {
                         throw new TestPlatformException("InvalidStep");
                     }
                     break;
                 }
 
-            case PreStartSteps.Start:
+            case ExamStep.Start:
                 {
-                    if (session.PreviousStep != PreStartSteps.ProvideExamineeInfo)
+                    if (session.PreviousStep != ExamStep.ProvideExamineeInfo)
                     {
                         throw new TestPlatformException("InvalidStep");
                     }
                     break;
                 }
 
-            case PreStartSteps.SubmitAnswer:
-            case PreStartSteps.FinishExam:
+            case ExamStep.SubmitAnswer:
+            case ExamStep.FinishExam:
                 {
-                    if (session.PreviousStep != PreStartSteps.Start)
+                    if (session.PreviousStep != ExamStep.Start)
                     {
                         throw new TestPlatformException("InvalidStep");
                     }
                     break;
                 }
         }
-
-        return session;
     }
 
     private string EncryptTestSession(TestSession session)

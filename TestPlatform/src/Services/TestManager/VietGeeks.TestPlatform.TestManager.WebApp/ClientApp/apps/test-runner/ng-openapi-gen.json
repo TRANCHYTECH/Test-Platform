@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
-  "input": "http://localhost:5087/swagger/v1/swagger.json",
+  "input": "http://localhost:6300/swagger/v1/swagger.json",
   "output": "src/app/api",
   "servicePrefix": "Api",
   "skipJsonSuffix": true,
