@@ -11,6 +11,7 @@ using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 using System.Net;
 using Microsoft.AspNetCore.DataProtection;
 using AutoMapper;
+using VietGeeks.TestPlatform.AspNetCore;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
@@ -31,6 +32,7 @@ public class ExamController : ControllerBase
 
     [HttpPost("PreStart/Verify")]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(VerifyTestOutputViewModel))]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ErrorDetails))]
     public async Task<IActionResult> Verify(VerifyTestInput input)
     {
         var verifyResult = await _proctorService.VerifyTest(input);
@@ -120,7 +122,6 @@ public class ExamController : ControllerBase
             QuestionId = data.QuestionId,
             AnswerIds = data.AnswerIds
         });
-        output.Step = ExamStep.SubmitAnswer;
 
         return Ok(output);
     }
@@ -138,7 +139,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpGet("Status")]
-    [ProducesResponseType(typeof(ExamStatus), 200)]
+    [ProducesResponseType(typeof(ExamStatusWithStep), 200)]
     public async Task<IActionResult> GetExamStatus()
     {
         // TODO: verify clientProof?
@@ -150,9 +151,11 @@ public class ExamController : ControllerBase
 
         var proctorExamActor = GetProctorActor(testSession);
         var examStatus = await proctorExamActor.GetExamStatus();
-        examStatus.PreviousStep = testSession.PreviousStep;
+        var result = _mapper.Map<ExamStatusWithStep>(examStatus);
 
-        return Ok(examStatus);
+        result.Step = testSession.PreviousStep;
+
+        return Ok(result);
     }
 
     private static IProctorActor GetProctorActor(TestSession testSession)

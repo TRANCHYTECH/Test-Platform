@@ -36,7 +36,9 @@ public class ProctorActor : Actor, IProctorActor
         var examState = await GetExamState();
         examState.QuestionIds = examContent.Questions.Select(q => q.Id).ToArray();
         examState.ActiveQuestionIndex = 0;
+        examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
         examState.StartedAt = DateTime.UtcNow;
+        examState.TestDuration = examContent.TestDuration;
 
         await SaveExamState(examState);
 
@@ -45,7 +47,9 @@ public class ProctorActor : Actor, IProctorActor
             StartedAt = examState.StartedAt,
             Questions = examContent.Questions,
             TestDuration = examContent.TestDuration,
-            ActiveQuestion = examContent.ActiveQuestion
+            ActiveQuestion = examContent.ActiveQuestion,
+            ActiveQuestionIndex = examState.ActiveQuestionIndex,
+            TotalQuestion = examState.QuestionIds.Length
         };
     }
 
@@ -83,6 +87,7 @@ public class ProctorActor : Actor, IProctorActor
             return new SubmitAnswerOutput()
             {
                 ActiveQuestionId = activeQuestionId,
+                ActiveQuestionIndex = examState.ActiveQuestionIndex,
                 ActiveQuestion = activeQuestion
             };
         });
@@ -117,7 +122,10 @@ public class ProctorActor : Actor, IProctorActor
         return new ExamStatus()
         {
             ActiveQuestion = activeQuestion,
-            ExamineeInfo = examState.ExamineeInfo
+            ActiveQuestionIndex = examState.ActiveQuestionIndex,
+            QuestionCount = examState.QuestionIds?.Length ?? 0,
+            ExamineeInfo = examState.ExamineeInfo,
+            TestDuration = examState.TestDuration
         };
     }
 
@@ -166,6 +174,7 @@ public class ProctorActor : Actor, IProctorActor
         public string[] QuestionIds { get; set; } = default!;
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
+        public TestDuration TestDuration { get; set; } = default!;
         public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
