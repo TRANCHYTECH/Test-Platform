@@ -29,12 +29,11 @@ public class VerifyTestInput
     public string? AccessCode { get; set; }
 }
 
-public class VerifyTestOutputViewModel: IExamStepInfo
+public class VerifyTestOutputViewModel
 {
     public string TestName { get; set; } = default!;
     public string ConsentMessage { get; set; } = default!;
     public string InstructionMessage { get; set; } = default!;
-    public ExamStep Step { get; set; }
 }
 
 public class VerifyTestOutput
