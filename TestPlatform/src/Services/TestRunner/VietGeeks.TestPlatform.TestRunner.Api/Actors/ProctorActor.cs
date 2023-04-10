@@ -38,7 +38,10 @@ public class ProctorActor : Actor, IProctorActor
         examState.ActiveQuestionIndex = 0;
         examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
         examState.StartedAt = DateTime.UtcNow;
-        examState.TestDuration = examContent.TestDuration;
+        examState.TestDuration = new TestDurationState {
+            Duration = examContent.TestDuration.Duration,
+            Method = (int)examContent.TestDuration.Method
+        };
 
         await SaveExamState(examState);
 
@@ -125,7 +128,10 @@ public class ProctorActor : Actor, IProctorActor
             ActiveQuestionIndex = examState.ActiveQuestionIndex,
             QuestionCount = examState.QuestionIds?.Length ?? 0,
             ExamineeInfo = examState.ExamineeInfo,
-            TestDuration = examState.TestDuration
+            TestDuration = new TestDuration {
+                Duration = examState.TestDuration.Duration,
+                Method = (TestDurationMethodType) examState.TestDuration.Method
+            }
         };
     }
 
@@ -174,7 +180,7 @@ public class ProctorActor : Actor, IProctorActor
         public string[] QuestionIds { get; set; } = default!;
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
-        public TestDuration TestDuration { get; set; } = default!;
+        public TestDurationState TestDuration { get; set; } = default!;
         public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
@@ -182,5 +188,12 @@ public class ProctorActor : Actor, IProctorActor
         public DateTime StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
+    }
+
+    private class TestDurationState
+    {
+        public int Method { get; set; }
+
+        public TimeSpan Duration { get; set; }
     }
 }

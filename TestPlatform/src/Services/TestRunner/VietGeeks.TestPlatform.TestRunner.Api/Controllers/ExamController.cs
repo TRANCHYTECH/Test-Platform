@@ -50,8 +50,7 @@ public class ExamController : ControllerBase
         {
             TestName = verifyResult.TestName,
             ConsentMessage = verifyResult.ConsentMessage ?? "DefaultConsentMessage",
-            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage",
-            Step = ExamStep.VerifyTest
+            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage"
         });
     }
 
@@ -79,10 +78,7 @@ public class ExamController : ControllerBase
             LifeTime = TimeSpan.FromMinutes(5)
         });
 
-        return Ok(new ProvideExamineeInfoOutput
-        {
-            Step = ExamStep.ProvideExamineeInfo
-        });
+        return Ok();
     }
 
     [HttpPost("Start")]
@@ -133,7 +129,13 @@ public class ExamController : ControllerBase
         var testSession = GetTestSession(ExamStep.FinishExam);
         var proctorExamActor = GetProctorActor(testSession);
         var result = await proctorExamActor.FinishExam();
-        result.Step = ExamStep.FinishExam;
+        SetTestSession(new()
+        {
+            ProctorExamId = testSession.ProctorExamId,
+            ExamId = testSession.ExamId,
+            PreviousStep = ExamStep.FinishExam,
+            ClientProof = testSession.ClientProof
+        });
 
         return Ok(result);
     }
