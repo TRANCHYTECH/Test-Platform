@@ -22,7 +22,7 @@ export class TestCategoriesService {
   get() {
     return this._testCategoriesQuery.selectHasCache().pipe(switchMap(hasCache => {
       const apiCall = this._http.get<TestCategory[]>(`${this.testManagerApiBaseUrl}/Management/TestCategory`).pipe(tap(entities => {
-      this._testCategoriesStore.set(entities);
+        this._testCategoriesStore.set(entities);
       }));
 
       return hasCache ? of([]) : apiCall;

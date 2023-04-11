@@ -70,10 +70,6 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     this.codeGenerationForm = this.fb.group({ count: ['', [Validators.min(1), Validators.max(50)]] });
   }
 
-  onInit(): void {
-    //
-  }
-
   async afterGetTest(): Promise<void> {
     // Init default form.
     this.testAccessForm = this.fb.group({

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
@@ -6,7 +6,7 @@ import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, T
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { createMask } from '@ngneat/input-mask';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { utcToZonedTime, format, zonedTimeToUtc } from 'date-fns-tz';
+import { UserProfileService } from '@viet-geeks/core';
 
 export const TestDurationMethod =
 {
@@ -27,10 +27,10 @@ export const TestActivationMethodType =
   styleUrls: ['./test-time-settings.component.scss'],
 })
 export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
+  userProfileService = inject(UserProfileService);
+
   TestActivationMethodTypeRef = TestActivationMethodType;
   timeSettingsForm!: FormGroup;
-  currentUserTimeZone = 'Asia/Ho_Chi_Minh';
-  currentUserTime = format(new Date(), 'd.MM.yyyy HH:mm', { timeZone: this.currentUserTimeZone });
 
   dhhmmssInputMask = createMask({
     mask: "9{1,2}.99:99:99",
@@ -235,10 +235,6 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     return this.timeSettingsForm.get(['answerQuestionConfig']) as FormGroup;
   }
 
-  onInit(): void {
-    //
-  }
-
   afterGetTest(): void {
     const timeSettings = this.test.timeSettings;
     this.timeSettingsForm = this.fb.group({
@@ -307,8 +303,8 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       case TestActivationMethodType.TimePeriod: {
         const method = <TimePeriodActivation>timeSettings.testActivationMethod;
         this.testActivationMethodCtrl.get([TestActivationMethodType.TimePeriod])?.setValue({
-          activeFromDate: this.convertUtcToLocalDateString(method.activeFromDate),
-          activeUntilDate: this.convertUtcToLocalDateString(method.activeUntilDate)
+          activeFromDate: this.userProfileService.convertUtcToLocalDateString(method.activeFromDate),
+          activeUntilDate: this.userProfileService.convertUtcToLocalDateString(method.activeUntilDate)
         });
         break;
       }
@@ -356,13 +352,9 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       const dates = form.controls[`${type}`].value;
       return {
         $type: type,
-        activeFromDate: zonedTimeToUtc(dates.activeFromDate, this.currentUserTimeZone),
-        activeUntilDate: zonedTimeToUtc(dates.activeUntilDate, this.currentUserTimeZone)
+        activeFromDate: this.userProfileService.zonedTimeToUtc(dates.activeFromDate),
+        activeUntilDate: this.userProfileService.zonedTimeToUtc(dates.activeUntilDate)
       };
     }
-  }
-
-  private convertUtcToLocalDateString(input: Date) {
-    return format(utcToZonedTime(input, this.currentUserTimeZone), 'yyyy-MM-dd HH:mm');
   }
 }

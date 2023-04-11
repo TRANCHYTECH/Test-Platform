@@ -23,4 +23,3 @@ export class AppSettingsService {
     return <T>this._appSettings$.value;
   } 
 }
- 

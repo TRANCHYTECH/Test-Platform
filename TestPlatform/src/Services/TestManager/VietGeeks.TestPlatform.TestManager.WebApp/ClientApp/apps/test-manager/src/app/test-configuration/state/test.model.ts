@@ -58,6 +58,8 @@ export interface TestActivationMethod {
 
 export interface ManualTestActivation extends TestActivationMethod {
   activeUntil: string;
+  // Readonly
+  activeUntilDate: Date;
 }
 
 export interface TimePeriodActivation extends TestActivationMethod {
@@ -187,6 +189,12 @@ export enum TestActivationMethodType {
   ManualTest = 1,
   TimePeriod = 2
 }
+
+//todo: rename it
+export const GeneratorTypes = {
+  Default: 1,
+  RandomFromCategories: 2
+};
 
 export function createTest(params: Partial<Test>) {
   return params as Test;

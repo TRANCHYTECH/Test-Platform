@@ -8,6 +8,8 @@ public class TestCategoryViewModel
 
     public string Name { get; set; } = default!;
 
+    public int DisplayOrder { get; set; }
+    
     public DateTime CreatedOn { get; set; }
 
     public DateTime ModifiedOn { get; set; }

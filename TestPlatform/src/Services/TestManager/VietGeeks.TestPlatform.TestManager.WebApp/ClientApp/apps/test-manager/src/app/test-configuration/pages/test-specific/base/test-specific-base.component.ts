@@ -96,7 +96,9 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
         });
     }
 
-    abstract onInit(): void;
+    onInit() {
+        // Place holder
+    }
 
     onDestroy() {
         // Default do nothing.
