@@ -59,7 +59,7 @@ export class TestStartComponent implements OnInit {
       respondentFields: (respondentIdentify.fields as { id: string, fieldValue: string }[]),
       activeQuestion: startExamOutput.activeQuestion,
       questionCount: startExamOutput.totalQuestion,
-      examStep: startExamOutput.step as number
+      examStep: ExamCurrentStep.Start
     });
 
     this.router.navigate(['test/question']);

@@ -6,6 +6,7 @@ import { TestDuration } from './test-duration';
 export interface ExamStatusWithStep {
   activeQuestion?: ExamQuestion;
   activeQuestionIndex?: null | number;
+  activeQuestionStartedAt?: null | string;
   examId?: null | string;
   examineeInfo?: null | {
 [key: string]: string;
