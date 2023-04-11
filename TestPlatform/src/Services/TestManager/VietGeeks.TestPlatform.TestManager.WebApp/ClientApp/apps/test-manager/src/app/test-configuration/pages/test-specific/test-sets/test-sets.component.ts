@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators, FormControl } from '@angular/forms';
 import { find, forEach } from 'lodash-es';
-import { TestSets } from '../../../state/test.model';
+import { GeneratorTypes, TestSets } from '../../../state/test.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TestSpecificBaseComponent } from '../base/test-specific-base.component';
 import { QuestionService } from '../../../state/questions/question.service';
@@ -10,11 +10,6 @@ import { firstValueFrom } from 'rxjs';
 import { QuestionCategory } from '../../../state/question-categories/question-categories.model';
 import { QuestionSummary } from '../../../state/questions/question.model';
 import { QuestionCategoriesQuery } from '../../../state/question-categories/question-categories.query';
-
-export const GeneratorTypes = {
-  Default: 1,
-  RandomFromCategories: 2
-};
 
 @UntilDestroy()
 @Component({
@@ -60,10 +55,6 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
 
   constructor() {
     super();
-  }
-
-  onInit() {
-    // 
   }
 
   async afterGetTest(): Promise<void> {

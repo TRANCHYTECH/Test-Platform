@@ -24,6 +24,7 @@ import { errorTailorImports } from '@ngneat/error-tailor';
 import { TestStatusPipe } from './pipes/test-status.pipe';
 import { TestStatusClassPipe } from "./pipes/test-status-class.pipe";
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { OverviewComponent } from './pages/test-specific/overview/overview.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     TestTimeSettingsComponent,
     TestSpecificLayoutComponent,
     TestStatusPipe,
-    TestStatusClassPipe
+    TestStatusClassPipe,
+    OverviewComponent
   ],
   imports: [
     CommonModule,

@@ -138,8 +138,9 @@ public class TestManagerService : ITestManagerService
     public async Task<List<TestCategoryViewModel>> GetTestCategories()
     {
         var entities = await _managerDbContext.Find<TestCategory>().ManyAsync(c => c is TestCategory);
-
-        return _mapper.Map<List<TestCategoryViewModel>>(entities);
+        entities.Add(TestCategory.Uncategorized());
+        
+        return _mapper.Map<List<TestCategoryViewModel>>(entities).OrderBy(c=>c.DisplayOrder).ToList();
     }
 
     public async Task<TestCategoryViewModel> CreateTestCategory(NewTestCategoryViewModel newTestCategory)

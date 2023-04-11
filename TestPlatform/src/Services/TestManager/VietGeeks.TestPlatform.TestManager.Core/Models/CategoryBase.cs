@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
@@ -8,4 +7,10 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 public abstract class CategoryBase : EntityBase
 {
     public string Name { get; set; } = default!;
+
+    public int DisplayOrder { get; set; }
+
+    public bool IsSystem { get; set; }
+
+    public static readonly string UncategorizedId = "000000000000000000000001";
 }

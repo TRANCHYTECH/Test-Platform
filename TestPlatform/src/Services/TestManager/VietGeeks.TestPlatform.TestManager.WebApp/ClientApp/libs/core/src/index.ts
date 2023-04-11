@@ -4,3 +4,4 @@ export * from './lib/services/event.service';
 export * from './lib/services/language.service';
 export * from './lib/intercepters/http-error-response.interceptor';
 export * from './lib/services/core-events.service';
+export * from './lib/services/user-profile.service';

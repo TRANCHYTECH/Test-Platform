@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { TestCategory } from '../../../state/test-category.model';
+import { TestCategory, TestCategoryUncategorizedId } from '../../../state/test-category.model';
 import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import { TestCategoriesService } from '../../../state/test-categories.service';
 import { TestCategoriesQuery } from '../../../state/test-categories.query';
@@ -28,7 +28,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     this.basicSettingForm = this.fb.group({
       id: null,
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
-      category: ['', [Validators.required]],
+      category: [TestCategoryUncategorizedId, [Validators.required]],
       description: ''
     });
   }
@@ -46,7 +46,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     this.maskReadyForUI();
   }
 
-  onInit() {
+  override onInit() {
     firstValueFrom(this._testCategoriesService.get());
     this.testCategories$ = this._testCategoriesQuery.selectAll();
   }

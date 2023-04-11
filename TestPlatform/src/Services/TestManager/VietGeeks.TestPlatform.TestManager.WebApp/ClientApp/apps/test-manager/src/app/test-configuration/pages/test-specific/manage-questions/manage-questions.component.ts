@@ -28,10 +28,6 @@ export class ManageQuestionsComponent extends TestSpecificBaseComponent {
     super();
   }
 
-  onInit(): void {
-    //
-  }
-
   async afterGetTest(): Promise<void> {
     firstValueFrom(this._questionCategoriesService.get());
     this.questions$ = this._questionsQuery.selectAll().pipe(map((questions) => (questions.map(q => ({ ...q, ['answerTypeName']: AnswerType[q.answerType] })))));

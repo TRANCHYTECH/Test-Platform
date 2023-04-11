@@ -47,6 +47,8 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
     public class ManualTestActivation : TestActivationMethod
     {
         public TimeSpan ActiveUntil { get; set; }
+
+        public DateTime ActiveUntilDate => DateTime.UtcNow.Add(ActiveUntil);
     }
 
 

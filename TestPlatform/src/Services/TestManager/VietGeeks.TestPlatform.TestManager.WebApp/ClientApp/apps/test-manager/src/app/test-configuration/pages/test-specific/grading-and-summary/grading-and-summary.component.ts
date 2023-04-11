@@ -111,10 +111,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     return elementAt === undefined ? 0 : (elementAt.value as GradeRangeCriteriaDetail).to;
   }
 
-  onInit(): void {
-    //
-  }
-
   async afterGetTest(): Promise<void> {
     const configs = await Promise.all([this._questionService.getSummary(this.testId)]);
     this.gradeFormConfigs.maxPoint = sumBy(configs[0], (c: QuestionSummary) => c.totalPoints);

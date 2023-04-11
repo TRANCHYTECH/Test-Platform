@@ -3,8 +3,8 @@ export interface TestCategory {
   name: string;
 }
 
-export function createTestCategory(params: Partial<TestCategory>) {
-  return {
+export const TestCategoryUncategorizedId = "000000000000000000000001";
 
-  } as TestCategory;
+export function createTestCategory(params: Partial<TestCategory>) {
+  return params as TestCategory;
 }

@@ -11,6 +11,20 @@ import { TestAccessComponent } from './pages/test-specific/test-access/test-acce
 import { TestSetsComponent } from './pages/test-specific/test-sets/test-sets.component';
 import { TestStartPageComponent } from './pages/test-specific/test-start-page/test-start-page.component';
 import { TestTimeSettingsComponent } from './pages/test-specific/test-time-settings/test-time-settings.component';
+import { OverviewComponent } from './pages/test-specific/overview/overview.component';
+
+export const TestConfigRoutes = {
+  BasicSettings: 'basic-settings',
+  ManageQuestions: 'manage-questions',
+  TestSets: 'test-sets',
+  GradingAndSummary: 'grading-and-summary',
+  TestAccess: 'test-access',
+  TimeSettings: 'time-settings'
+};
+
+const getTestSettingsPath = (route: string) => {
+  return `:id/${route}`;
+}
 
 const routes: Routes = [
   {
@@ -24,7 +38,15 @@ const routes: Routes = [
     component: TestSpecificLayoutComponent,
     children: [
       {
-        path: ':id/basic-settings',
+        path: ':id',
+        component: OverviewComponent,
+        title: 'Test Info',
+        resolve: {
+          isNewTest: isNewTest()
+        }
+      },
+      {
+        path: getTestSettingsPath(TestConfigRoutes.BasicSettings),
         component: BasicSettingsComponent,
         title: 'Basic Settings',
         resolve: {
@@ -32,7 +54,7 @@ const routes: Routes = [
         }
       },
       {
-        path: ':id/manage-questions',
+        path: getTestSettingsPath(TestConfigRoutes.ManageQuestions),
         component: ManageQuestionsComponent,
         title: 'Manage Questions',
         canActivate: [isExistingTest()]
@@ -45,13 +67,13 @@ const routes: Routes = [
         canDeactivate: [CanDeactivateGuard]
       },
       {
-        path: ':id/test-sets',
+        path: getTestSettingsPath(TestConfigRoutes.TestSets),
         component: TestSetsComponent,
         title: 'Test Sets',
         canActivate: [isExistingTest()]
       },
       {
-        path: ':id/test-access',
+        path: getTestSettingsPath(TestConfigRoutes.TestAccess),
         component: TestAccessComponent,
         title: 'Test Access',
         canActivate: [isExistingTest()]
@@ -63,13 +85,13 @@ const routes: Routes = [
         canActivate: [isExistingTest()]
       },
       {
-        path: ':id/grading-and-summary',
+        path: getTestSettingsPath(TestConfigRoutes.GradingAndSummary),
         component: GradingAndSummaryComponent,
         title: 'Grading & Summary',
         canActivate: [isExistingTest()]
       },
       {
-        path: ':id/time-settings',
+        path: getTestSettingsPath(TestConfigRoutes.TimeSettings),
         component: TestTimeSettingsComponent,
         title: 'Time Settings',
         canActivate: [isExistingTest()]

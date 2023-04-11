@@ -41,10 +41,6 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
     return this.testStartPageForm.controls['respondentIdentifyConfig'] as FormArray<FormGroup>;
   }
 
-  onInit(): void {
-    //
-  }
-
   afterGetTest(): void {
     const testStartSettings = this.test.testStartSettings;
     this.testStartPageForm = this.fb.group({
