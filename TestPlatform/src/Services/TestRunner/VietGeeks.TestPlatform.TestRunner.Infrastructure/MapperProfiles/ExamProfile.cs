@@ -10,5 +10,7 @@ public class ExamProfile : Profile
     {
         CreateMap<Core.AggregatedGrading, AggregatedGrading>();
         CreateMap<StartExamOutput, StartExamOutputViewModel>();
+        CreateMap<ExamStatus, ExamStatusWithStep>()
+        .ForMember(desc => desc.Step, ops => ops.Ignore());
     }
 }

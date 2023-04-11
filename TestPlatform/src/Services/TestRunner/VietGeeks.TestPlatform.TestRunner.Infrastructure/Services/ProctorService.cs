@@ -181,6 +181,7 @@ public class ProctorService : IProctorService
         };
     }
 
+   // TODO: Optimize query
     public async Task<ExamQuestion?> GetTestRunQuestion(string examId, string questionId)
     {
         var exam = await GetExam(examId);
