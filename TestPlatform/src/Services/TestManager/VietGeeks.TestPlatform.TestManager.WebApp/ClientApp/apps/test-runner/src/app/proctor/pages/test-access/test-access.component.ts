@@ -8,6 +8,8 @@ import { ToastService } from '@viet-geeks/shared';
 import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
 import { TestSessionStore } from '../../../state/test-session.store';
 import { ErrorDetails, VerifyTestOutputViewModel } from '../../../api/models';
+import { ExamCurrentStep } from '../../../state/test-session.model';
+import { TestSessionService } from '../../services/test-session.service';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +24,7 @@ export class TestAccessComponent implements OnInit {
   private _router = inject(Router);
   private _proctorService = inject(ProctorService);
   private _notifyService = inject(ToastService);
-  private _testSessionStore = inject(TestSessionStore);
+  private _testSessionService = inject(TestSessionService);
   private _fingerprintjsProAngularService = inject(FingerprintjsProAngularService);
 
   verifyTestForm: FormGroup;
@@ -54,22 +56,20 @@ export class TestAccessComponent implements OnInit {
     const accessCode = this.verifyTestForm.get('accessCode')?.value;
     this.enableLoading();
     const result = await firstValueFrom(this._proctorService.verifyTest({accessCode: accessCode}));
-    let message = this.tryGetErrorMessageFromResult(result);
+    const message = this.tryGetErrorMessageFromResult(result);
 
     if (message) {
       this._notifyService.error(message);
     }
     else {
       const verifyOutput = result as VerifyTestOutputViewModel;
-      this._testSessionStore.set([{
-        id: 1,
+      this._testSessionService.setSessionData({
         accessCode: accessCode,
         consentMessage: verifyOutput.consentMessage,
         instructionMessage: verifyOutput.instructionMessage,
         testDescription: verifyOutput.testName,
-        examStep: verifyOutput.step as number
-      }]);
-      this._testSessionStore.setActive(1);
+        examStep: ExamCurrentStep.VerifyTest
+      });
       this._router.navigate(['test','start']);
     }
     this.disableLoading();

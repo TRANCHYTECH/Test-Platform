@@ -16,7 +16,8 @@ export interface TestSession {
   result?: FinishExamOutput | null,
   questionIndex?: number,
   questionCount?: number,
-  activeQuestion?: ExamQuestion
+  activeQuestion?: ExamQuestion,
+  activeQuestionStartAt?: string | null
 }
 
 export interface TimeSettings {

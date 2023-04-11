@@ -8,6 +8,7 @@ import { ExamCurrentStep, TestDurationMethod, TestSession } from '../../../state
 import { ProctorService } from '../../services/proctor.service';
 import { TestDurationService } from '../../services/test-duration.service';
 import { TestSessionService } from '../../services/test-session.service';
+import { ToastService } from '@viet-geeks/shared';
 @Component({
   selector: 'viet-geeks-test-question',
   templateUrl: './test-question.component.html',
@@ -18,6 +19,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   proctorService = inject(ProctorService);
   private _testDurationService = inject(TestDurationService);
   private _testSessionService = inject(TestSessionService);
+  private _notifyService = inject(ToastService);
   private _router = inject(Router);
 
   questions: ExamQuestion[] = [];
@@ -62,6 +64,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
         this._testSessionService.setSessionData({
           examStep: ExamCurrentStep.SubmitAnswer,
           activeQuestion: submitAnswerOutput.activeQuestion,
+          activeQuestionStartAt: null,
           questionIndex: submitAnswerOutput.activeQuestionIndex ?? undefined
         });
         this.question = submitAnswerOutput.activeQuestion;
@@ -114,7 +117,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   private getTimeDifference() {
     const timeDifference = this._testDurationService.getTimeDifference(new Date(), this.endTime);
     if (timeDifference <= 0) {
-      this.handleEndTime();
+      this.handleTimeUp();
     }
 
     this.allocateTimeUnits(timeDifference);
@@ -124,7 +127,9 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this.remainingTime = this._testDurationService.getDurationFromTimeDifference(timeDifference);
   }
 
-  private async handleEndTime() {
+  private async handleTimeUp() {
+    await this._notifyService.warning('Time is up. The answer will be submitted automatically.');
+
     if (this.sessionData?.timeSettings?.method == TestDurationMethod.CompleteTestTime) {
       await this.finishExam();
     } else {
@@ -152,8 +157,15 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       this.endTime.setMinutes(startTime.getMinutes() + durationInMinutes);
     }
     else {
-      this.endTime = new Date();
-      this.endTime.setMinutes(this.endTime.getMinutes() + durationInMinutes);
+      let startTime;
+      if (this.sessionData.activeQuestionStartAt) {
+        startTime = new Date(this.sessionData.activeQuestionStartAt);
+      }
+      else {
+        startTime = new Date();
+      }
+
+      this.endTime.setMinutes(startTime.getMinutes() + durationInMinutes);
     }
   }
 }

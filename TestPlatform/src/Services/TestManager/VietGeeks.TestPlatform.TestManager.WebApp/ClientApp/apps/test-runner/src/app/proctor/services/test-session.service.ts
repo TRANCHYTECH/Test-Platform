@@ -48,6 +48,7 @@ export class TestSessionService {
     if (status) {
       this._testSessionStore.update((e: TestSession) => e.id == SESSION_ID, {
         activeQuestion: status?.activeQuestion,
+        activeQuestionStartAt: status?.activeQuestionStartedAt,
         questionIndex: status?.activeQuestionIndex ?? undefined,
         questionCount: status?.questionCount ?? undefined,
         respondentFields: this.mapExamineeInfo(status?.examineeInfo) ?? undefined,

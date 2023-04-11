@@ -126,7 +126,7 @@ export class TestFinishComponent {
     this.sessionData = this._testSessionQuery.getEntity(1) ?? {};
     this.respondent = this.sessionData.respondentFields ?? [];
     this.testResult = this.sessionData.result;
-    this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0].passMark == true;
+    this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0] && this.testResult?.grading[0].passMark == true;
 
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
     this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, 1);
