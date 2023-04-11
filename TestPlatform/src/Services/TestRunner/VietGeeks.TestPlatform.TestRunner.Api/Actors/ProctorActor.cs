@@ -38,6 +38,14 @@ public class ProctorActor : Actor, IProctorActor
         examState.ActiveQuestionIndex = 0;
         examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
         examState.StartedAt = DateTime.UtcNow;
+
+        if (!string.IsNullOrEmpty(examState.ActiveQuestionId)) {
+            examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming 
+            {
+                StartedAt = DateTime.UtcNow
+            };
+        }
+
         examState.TestDuration = new TestDurationState {
             Duration = examContent.TestDuration.Duration,
             Method = (int)examContent.TestDuration.Method
@@ -71,7 +79,13 @@ public class ProctorActor : Actor, IProctorActor
                 throw new TestPlatformException("AlreadyAnswered");
             }
 
+            if (!examState.QuestionTimes.ContainsKey(input.QuestionId))
+            {
+                throw new TestPlatformException("QuestionIsNotStarted");
+            }
+
             examState.Answers[input.QuestionId] = input.AnswerIds;
+            examState.QuestionTimes[input.QuestionId].SubmittedAt = DateTime.UtcNow;
             var questionIndex = Array.IndexOf(examState.QuestionIds, input.QuestionId);
             string? activeQuestionId = null;
             ExamQuestion? activeQuestion = null;
@@ -84,6 +98,10 @@ public class ProctorActor : Actor, IProctorActor
                 examState.ActiveQuestionIndex = questionIndex + 1;
                 activeQuestionId = examState.QuestionIds[examState.ActiveQuestionIndex.Value];
                 activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, activeQuestionId);
+                examState.QuestionTimes[activeQuestionId] = new QuestionTiming
+                {
+                    StartedAt = DateTime.UtcNow
+                };
             }
             examState.ActiveQuestionId = activeQuestionId;
 
@@ -117,15 +135,19 @@ public class ProctorActor : Actor, IProctorActor
     {
         var examState = await GetExamState();
         ExamQuestion? activeQuestion = null;
-        if (examState.ActiveQuestionIndex.HasValue)
+        DateTime? activeQuestionStartedAt = null;
+        if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
         {
+            
             activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId);
+            activeQuestionStartedAt = examState.QuestionTimes[examState.ActiveQuestionId]?.StartedAt;
         }
 
         return new ExamStatus()
         {
             ActiveQuestion = activeQuestion,
             ActiveQuestionIndex = examState.ActiveQuestionIndex,
+            ActiveQuestionStartedAt = activeQuestionStartedAt,
             QuestionCount = examState.QuestionIds?.Length ?? 0,
             ExamineeInfo = examState.ExamineeInfo,
             TestDuration = new TestDuration {
@@ -185,6 +207,8 @@ public class ProctorActor : Actor, IProctorActor
 
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 
+        public Dictionary<string, QuestionTiming> QuestionTimes {get;set;} = new Dictionary<string, QuestionTiming>();
+
         public DateTime StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
@@ -195,5 +219,11 @@ public class ProctorActor : Actor, IProctorActor
         public int Method { get; set; }
 
         public TimeSpan Duration { get; set; }
+    }
+
+    private class QuestionTiming 
+    {
+        public DateTime StartedAt {get;set;}
+        public DateTime? SubmittedAt {get;set;}
     }
 }

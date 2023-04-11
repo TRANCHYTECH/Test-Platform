@@ -134,7 +134,8 @@ public class ExamController : ControllerBase
             ProctorExamId = testSession.ProctorExamId,
             ExamId = testSession.ExamId,
             PreviousStep = ExamStep.FinishExam,
-            ClientProof = testSession.ClientProof
+            ClientProof = testSession.ClientProof,
+            LifeTime = TimeSpan.FromMinutes(5)
         });
 
         return Ok(result);

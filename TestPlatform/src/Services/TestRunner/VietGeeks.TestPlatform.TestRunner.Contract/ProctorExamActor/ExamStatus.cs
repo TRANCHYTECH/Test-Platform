@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
@@ -7,6 +8,7 @@ public class ExamStatus: IActiveQuestion
     public string ExamId { get; set; } = default!;
     public ExamQuestion? ActiveQuestion { get; set; }
     public int? ActiveQuestionIndex { get; set; }
+    public DateTime? ActiveQuestionStartedAt {get;set;}
     public int? QuestionCount { get; set; }
     public TestDuration TestDuration { get; set; } = default!;
     
