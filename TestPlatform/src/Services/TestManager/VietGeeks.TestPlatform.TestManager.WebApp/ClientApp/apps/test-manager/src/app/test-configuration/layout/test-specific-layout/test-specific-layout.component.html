@@ -30,7 +30,13 @@
                     <h5 class="panel-title">Test progress & results</h5>
                 </ng-template>
                 <ng-template ngbPanelContent>
-                    //todo
+                    <div class="list-group list-group-flush">
+                        <ng-container *ngFor="let menu of testResultMenus$ | async">
+                            <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
+                                [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
+                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
+                        </ng-container>
+                    </div>
                 </ng-template>
             </ngb-panel>
         </ngb-accordion>

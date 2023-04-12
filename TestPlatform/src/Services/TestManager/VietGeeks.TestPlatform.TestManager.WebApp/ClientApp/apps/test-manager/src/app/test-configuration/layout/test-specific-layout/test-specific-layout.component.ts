@@ -15,10 +15,11 @@ import { TestsService } from '../../state/tests.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
-  pageTitle? = 'LOADING TEST';
-  sectionTitle? = '';
-  breadcrumbs$ = new BehaviorSubject<{label?: string, active?: boolean}[]>([{label: 'Loading test'}]);
+  pageTitle?= 'LOADING TEST';
+  sectionTitle?= '';
+  breadcrumbs$ = new BehaviorSubject<{ label?: string, active?: boolean }[]>([{ label: 'Loading test' }]);
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
+  testResultMenus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testId!: string;
   testStatus = TestStatus.Draft;
   activateMethod: 'activate' | 'schedule' | '' = '';
@@ -35,9 +36,9 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
       this.testId = testSpecificPartRoute.params['id'];
       this.sectionTitle = testSpecificPartRoute.title;
       const isNewTest = this.testId === 'new';
-      if(isNewTest) {
+      if (isNewTest) {
         this.pageTitle = 'New Test';
-      } 
+      }
       this.menus$.next([
         {
           routerLink: [this.testId, 'basic-settings'],
@@ -80,6 +81,27 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
           text: 'Time Settings',
           icon: 'ri-time-line',
           disable: isNewTest
+        }
+      ]);
+
+      this.testResultMenus$.next([
+        {
+          routerLink: [this.testId, 'result', 'list'],
+          text: 'Test Results',
+          icon: 'ri-time-line',
+          disable: false
+        },
+        {
+          routerLink: [this.testId, 'result', 'statistics'],
+          text: 'Statistics',
+          icon: 'ri-time-line',
+          disable: false
+        },
+        {
+          routerLink: [this.testId, 'result', 'respondent-monitor'],
+          text: 'Respondent monitoring',
+          icon: 'ri-time-line',
+          disable: false
         }
       ]);
     });

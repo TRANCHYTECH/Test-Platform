@@ -95,6 +95,10 @@ const routes: Routes = [
         component: TestTimeSettingsComponent,
         title: 'Time Settings',
         canActivate: [isExistingTest()]
+      },
+      {
+        path: ':id/result',
+        loadChildren: () => import('../test-result/test-result.module').then(m => m.TestResultModule)
       }
     ]
   }

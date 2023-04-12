@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { TestConfigurationRoutingModule } from './test-configuration-routing.module';
 import { TestListComponent } from './pages/test-list/test-list.component';
-import { TestCategoriesComponent } from './pages/test-categories/test-categories.component';
 import { BasicSettingsComponent } from './pages/test-specific/basic-settings/basic-settings.component';
 import { ManageQuestionsComponent } from './pages/test-specific/manage-questions/manage-questions.component';
 import { EditQuestionComponent } from './pages/test-specific/edit-question/edit-question.component';
@@ -29,7 +28,6 @@ import { OverviewComponent } from './pages/test-specific/overview/overview.compo
 @NgModule({
   declarations: [
     TestListComponent,
-    TestCategoriesComponent,
     BasicSettingsComponent,
     ManageQuestionsComponent,
     EditQuestionComponent,
