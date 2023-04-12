@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ExamCurrentStep } from '../../../state/test-session.model';
+import { ExamCurrentStep, RespondentField } from '../../../state/test-session.model';
 import { TestRespondentField } from '../../../state/test.model';
 import { ProctorService } from '../../services/proctor.service';
 import { TestStartConfig } from './data';
@@ -42,10 +42,10 @@ export class TestStartComponent implements OnInit {
   }
 
   async startTest() {
-    const respondentIdentify = this.respondentIdentifyForm.value;
+    const respondentIdentify = this.respondentIdentifyForm.value as { fields: RespondentField[] } ;
     const sessionData = this._testSessionQuery.getEntity(1);
     if ((sessionData?.examStep ?? 1) < ExamCurrentStep.ProvideExamineeInfo) {
-      await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify));
+      await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify.fields));
       this._testSessionStore.update(1, {
         examStep: ExamCurrentStep.ProvideExamineeInfo
       });
@@ -56,7 +56,7 @@ export class TestStartComponent implements OnInit {
     this._testSessionStore.update(1, {
       startTime: new Date(startExamOutput.startedAt ?? ''),
       timeSettings: this._testDurationService.mapToTimeSettings(startExamOutput.testDuration),
-      respondentFields: (respondentIdentify.fields as { id: string, fieldValue: string }[]),
+      respondentFields: respondentIdentify.fields,
       activeQuestion: startExamOutput.activeQuestion,
       questionCount: startExamOutput.totalQuestion,
       examStep: ExamCurrentStep.Start
