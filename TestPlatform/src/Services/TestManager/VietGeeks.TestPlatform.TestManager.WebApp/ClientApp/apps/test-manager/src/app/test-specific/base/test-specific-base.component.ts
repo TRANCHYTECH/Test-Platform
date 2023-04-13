@@ -115,6 +115,10 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
         return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
     }
 
+    maskBusyForUI() {
+        this._readyForUI.next(false);
+    }
+
     maskReadyForUI() {
         this._readyForUI.next(true);
     }
@@ -129,6 +133,13 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
         // Refresh the page to bind latest info.
         this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
     };
+
+    async invokeLongAction(action: () => Promise<void>) {
+        this.maskBusyForUI();
+        await action();
+        this.maskReadyForUI();
+        this.changeRef.markForCheck();
+    }
 
     //todo(tau): how to generalize it?
     setupControlValidityTrigger(parent: FormGroup, sourcePath: string[], targetPaths: string[][]) {
