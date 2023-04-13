@@ -36,6 +36,6 @@ import { TestStatusPipe } from './pipes/test-status.pipe';
     EditorModule,
     TestStatusClassPipe,
     TestStatusPipe
-  ],
+  ]
 })
 export class SharedModule {}

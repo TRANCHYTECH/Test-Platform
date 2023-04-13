@@ -6,3 +6,5 @@ export * from './lib/services/text-editor-configs.service';
 export * from './lib/services/id.service';
 export * from './lib/guards/can-deactivate.guard';
 export * from './lib/services/api-error.handler';
+export * from './lib/pipes/test-status-class.pipe';
+export * from './lib/pipes/test-status.pipe';
