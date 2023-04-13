@@ -1,0 +1,15 @@
+<div class="btn-group" ngbDropdown #dropdown="ngbDropdown">
+    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false" ngbDropdownToggle>
+        {{selectionStatus}}
+    </button>
+    <div class="dropdown-menu dropdown-menu-xl p-3" ngbDropdownMenu>
+        <div class="form-check mb-3" *ngFor="let run of sortedTestRuns; index as i; count as c;">
+            <input class="form-check-input" type="checkbox" id="run-date-{{i}}" [(ngModel)]="uiSelected[run.id]">
+            <label class="form-check-label" for="run-date-{{i}}">
+                Date {{c - i}} (From {{run.startAt | date:'short'}} to {{run.endAt | date:'short'}})
+            </label>
+        </div>
+        <button class="btn btn-secondary" (click)="select()">Apply</button>
+    </div>
+</div>

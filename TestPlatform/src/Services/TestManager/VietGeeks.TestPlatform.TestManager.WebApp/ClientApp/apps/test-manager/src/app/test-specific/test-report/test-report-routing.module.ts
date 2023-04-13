@@ -7,7 +7,8 @@ import { StatisticsComponent } from './statistics/statistics.component';
 const routes: Routes = [
   {
     path: 'list',
-    component: ResultListComponent
+    component: ResultListComponent,
+    title: 'Results'
   },
   {
     path: 'respondent-monitor',
