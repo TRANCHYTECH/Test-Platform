@@ -1,0 +1,51 @@
+<viet-geeks-breadcrumbs [title]="pageTitle"></viet-geeks-breadcrumbs>
+<div class="row">
+    <div class="col-lg-auto col-xl-auto">
+       <h5 class="pb-2"><span class="badge {{(testStatus | testStatusClass:'bg')}} text-wrap">{{ testStatus | testStatus }}</span></h5>
+        <ngb-accordion class="accordion-flush test-definition-sidebar" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
+            <ngb-panel id="test-config" [cardClass]="'setting-parts'">
+                <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
+                    <h5 class="panel-title">Test Configuration</h5>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="list-group list-group-flush">
+                        <ng-container *ngFor="let menu of menus$ | async">
+                            <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
+                                [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
+                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
+                        </ng-container>
+                        <button *ngIf="testStatus  === 1" class="btn btn-primary w-sm" style="margin-top: 10px;"
+                            (click)="activateTest()">{{ "labels." + activateMethod | translate}}</button>
+                        <button *ngIf="testStatus  === 2 || testStatus  === 3" class="btn btn-primary w-sm"
+                            style="margin-top: 10px;" (click)="endTest()">{{ "labels." + endMethod |
+                            translate}}</button>
+
+                        <button *ngIf="testStatus === 4" class="btn btn-primary w-sm" style="margin-top: 10px;"
+                            (click)="restart()">{{ "labels.restart" | translate}}</button>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel id="test-restult" [cardClass]="'result-parts'">
+                <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
+                    <h5 class="panel-title">Test progress & results</h5>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="list-group list-group-flush">
+                        <ng-container *ngFor="let menu of testResultMenus$ | async">
+                            <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
+                                [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
+                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
+                        </ng-container>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+    <div class="col">
+        <ngx-spinner>
+            <p class="loading">Loading...</p>
+        </ngx-spinner>
+        <h5 class="pb-2">{{sectionTitle}}</h5>
+        <router-outlet></router-outlet>
+    </div>
+</div>

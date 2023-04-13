@@ -11,6 +11,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SubmitButtonComponent } from './components/submit-button.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { FormsModule } from '@angular/forms';
+import { TestStatusClassPipe } from './pipes/test-status-class.pipe';
+import { TestStatusPipe } from './pipes/test-status.pipe';
 
 @NgModule({
   imports: [
@@ -21,8 +23,9 @@ import { FormsModule } from '@angular/forms';
     NgbToastModule,
     EditorModule,
   ],
-  declarations: [BreadcrumbsComponent, SubmitButtonComponent],
+  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe],
   exports: [
+    CommonModule,
     HttpClientModule,
     TranslateModule,
     FeatherModule,
@@ -30,7 +33,9 @@ import { FormsModule } from '@angular/forms';
     SubmitButtonComponent,
     SweetAlert2Module,
     NgxSpinnerModule,
-    EditorModule
+    EditorModule,
+    TestStatusClassPipe,
+    TestStatusPipe
   ],
 })
 export class SharedModule {}
