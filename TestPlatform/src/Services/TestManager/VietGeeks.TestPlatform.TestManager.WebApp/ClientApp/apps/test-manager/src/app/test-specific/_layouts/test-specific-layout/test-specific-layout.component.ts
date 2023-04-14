@@ -7,6 +7,7 @@ import { TestActivationMethodType, TestStatus } from '../../_state/test.model';
 import { TestsQuery } from '../../_state/tests.query';
 import { TestsService } from '../../_state/tests.service';
 import { getTestId } from '../../_base/router-param-functions';
+import { Title } from '@angular/platform-browser';
 
 @UntilDestroy()
 @Component({
@@ -31,11 +32,10 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   private _notifyService = inject(ToastService);
   private _changeRef = inject(ChangeDetectorRef);
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, private title: Title) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
-      const testSpecificPartRoute = this.route.children[0].snapshot;
       this.testId = getTestId(route);
-      this.sectionTitle = testSpecificPartRoute.title;
+      this.sectionTitle = this.title.getTitle();
       const isNewTest = this.testId === 'new';
       if (isNewTest) {
         this.pageTitle = 'New Test';
@@ -112,6 +112,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
         this.pageTitle = test.basicSettings.name;
+        this.sectionTitle = this.title.getTitle();
         this.testStatus = test.status;
 
         if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {

@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { UserProfileService } from '@viet-geeks/core';
-import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { ExamSummary, TestRunSummary } from '../_state/exam-summary.model';
@@ -20,8 +19,6 @@ export class ResultListComponent extends TestSpecificBaseComponent implements On
 
   private _examSummaryService = inject(ExamSummaryService);
   private _userProfileService = inject(UserProfileService);
-  private _route = inject(ActivatedRoute);
-  private _changeRef = inject(ChangeDetectorRef);
 
   get currentUtcOffset() {
     return this._userProfileService.currentUtcOffset;
@@ -29,10 +26,17 @@ export class ResultListComponent extends TestSpecificBaseComponent implements On
 
   override async afterGetTest(): Promise<void> {
     this.testRuns = await firstValueFrom(this._examSummaryService.getTestRuns(this.testId));
-    this.examSummaries = await firstValueFrom(this._examSummaryService.get(this.testRuns.map(c => c.id)));
-    this._changeRef.markForCheck();
-
+    await this.loadExamSummaries(this.testRuns.map(c => c.id));
     this.maskReadyForUI();
+    this.changeRef.markForCheck();
+  }
+
+  private async loadExamSummaries(testRunIds: string[]) {
+    this.examSummaries = await firstValueFrom(this._examSummaryService.get(testRunIds));
+  }
+
+  async testRunsSelected(testRunIds: string[]) {
+    await this.invokeLongAction(() => this.loadExamSummaries(testRunIds));
   }
 
   override submit(): Promise<void> {
