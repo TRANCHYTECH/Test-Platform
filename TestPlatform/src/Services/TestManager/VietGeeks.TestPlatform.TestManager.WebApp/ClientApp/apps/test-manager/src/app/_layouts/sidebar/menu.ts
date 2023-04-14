@@ -11,6 +11,6 @@ export const MENU: MenuItem[] = [
     id: 131,
     label: 'MENUITEMS.account.text',
     icon: 'ri-account-box-line',
-    link: '/account'
+    link: '/account/general-information'
   }
 ];

@@ -14,7 +14,7 @@ import { firstValueFrom } from 'rxjs';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { LayoutsModule } from './layouts/layouts.module';
+import { LayoutsModule } from './_layouts/layouts.module';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FlatpickrModule } from 'angularx-flatpickr';

@@ -6,9 +6,9 @@ import { ToastService } from "@viet-geeks/shared";
 import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, filter, firstValueFrom } from "rxjs";
 import { SupportedEditorComponent } from "./supported-editor.component";
-import { createTest, Test, TestStatus } from "../state/test.model";
-import { TestsService } from "../state/tests.service";
-import { TestsQuery } from "../state/tests.query";
+import { createTest, Test, TestStatus } from "../_state/test.model";
+import { TestsService } from "../_state/tests.service";
+import { TestsQuery } from "../_state/tests.query";
 import { getTestId } from "./router-param-functions";
 
 @Component({

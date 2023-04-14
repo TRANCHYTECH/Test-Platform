@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { firstValueFrom, map, Observable } from 'rxjs';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { QuestionCategory } from '../../state/question-categories/question-categories.model';
-import { QuestionCategoriesQuery } from '../../state/question-categories/question-categories.query';
-import { QuestionCategoriesService } from '../../state/question-categories/question-categories.service';
-import { Question, AnswerType } from '../../state/questions/question.model';
-import { QuestionsQuery } from '../../state/questions/question.query';
-import { QuestionService } from '../../state/questions/question.service';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
+import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
+import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
+import { Question, AnswerType } from '../../_state/questions/question.model';
+import { QuestionsQuery } from '../../_state/questions/question.query';
+import { QuestionService } from '../../_state/questions/question.service';
 
 @UntilDestroy()
 @Component({

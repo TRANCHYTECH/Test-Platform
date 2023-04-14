@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { differenceWith } from 'lodash-es';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { RespondentIdentifyConfig } from '../../state/test.model';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { RespondentIdentifyConfig } from '../../_state/test.model';
 
 @UntilDestroy()
 @Component({

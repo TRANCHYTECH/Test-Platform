@@ -5,17 +5,17 @@ import { isNumber } from 'lodash-es';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService,CanComponentDeactivate, IdService } from '@viet-geeks/shared';
-import { SupportedEditorComponent } from '../../base/supported-editor.component';
+import { SupportedEditorComponent } from '../../_base/supported-editor.component';
 import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
-import { QuestionCategory } from '../../state/question-categories/question-categories.model';
-import { Answer, AnswerType, Question, ScoreSettings } from '../../state/questions/question.model';
+import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { QuestionCategoriesQuery } from '../../state/question-categories/question-categories.query';
-import { QuestionCategoriesService } from '../../state/question-categories/question-categories.service';
-import { QuestionsQuery } from '../../state/questions/question.query';
-import { QuestionService } from '../../state/questions/question.service';
-import { CreateCategoryComponent } from '../components/create-test-category/create-test-category.component';
-import { getTestId } from '../../base/router-param-functions';
+import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
+import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
+import { QuestionsQuery } from '../../_state/questions/question.query';
+import { QuestionService } from '../../_state/questions/question.service';
+import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
+import { getTestId } from '../../_base/router-param-functions';
 
 const AnswerTypes = [
   {

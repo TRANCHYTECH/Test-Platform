@@ -3,11 +3,11 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { firstValueFrom } from 'rxjs';
 
 import { Summary, SummaryBuilder } from './summary-builder';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { QuestionService } from '../../state/questions/question.service';
-import { TestCategoriesQuery } from '../../state/test-categories.query';
-import { TestCategoriesService } from '../../state/test-categories.service';
-import { TestStatus } from '../../state/test.model';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { QuestionService } from '../../_state/questions/question.service';
+import { TestCategoriesQuery } from '../../_state/test-categories.query';
+import { TestCategoriesService } from '../../_state/test-categories.service';
+import { TestStatus } from '../../_state/test.model';
 
 @UntilDestroy()
 @Component({

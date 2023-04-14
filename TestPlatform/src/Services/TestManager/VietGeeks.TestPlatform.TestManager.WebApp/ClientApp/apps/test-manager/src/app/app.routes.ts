@@ -12,5 +12,9 @@ export const appRoutes: Route[] = [
     {
         path: 'tests/:id',
         loadChildren: () => import('./test-specific/test-specific.module').then(m => m.TestSpecificModule)
+    },
+    {
+        path: 'account',
+        loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
     }
 ];

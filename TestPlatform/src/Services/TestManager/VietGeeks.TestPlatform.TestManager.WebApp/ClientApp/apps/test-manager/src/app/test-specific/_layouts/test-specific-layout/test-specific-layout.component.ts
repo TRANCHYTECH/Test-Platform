@@ -3,10 +3,10 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastService } from '@viet-geeks/shared';
 import { BehaviorSubject, filter } from 'rxjs';
-import { TestActivationMethodType, TestStatus } from '../../state/test.model';
-import { TestsQuery } from '../../state/tests.query';
-import { TestsService } from '../../state/tests.service';
-import { getTestId } from '../../base/router-param-functions';
+import { TestActivationMethodType, TestStatus } from '../../_state/test.model';
+import { TestsQuery } from '../../_state/tests.query';
+import { TestsService } from '../../_state/tests.service';
+import { getTestId } from '../../_base/router-param-functions';
 
 @UntilDestroy()
 @Component({

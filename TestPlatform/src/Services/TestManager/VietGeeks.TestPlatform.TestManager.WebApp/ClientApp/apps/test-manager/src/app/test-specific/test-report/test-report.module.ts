@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RespondentMonitoringComponent } from './respondent-monitoring/respondent-monitoring.component';
 import { ResultListComponent } from './result-list/result-list.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { TestReportRoutingModule } from './test-report-routing.module';
+import { SharedModule } from '@viet-geeks/shared';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,7 @@ import { TestReportRoutingModule } from './test-report-routing.module';
     StatisticsComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     TestReportRoutingModule
   ]
 })
