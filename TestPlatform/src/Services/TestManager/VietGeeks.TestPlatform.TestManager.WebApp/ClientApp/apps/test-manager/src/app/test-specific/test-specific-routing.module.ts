@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TestSpecificLayoutComponent } from './layout/test-specific-layout/test-specific-layout.component';
+import { TestSpecificLayoutComponent } from './_layouts/test-specific-layout/test-specific-layout.component';
 
 const routes: Routes = [
   {

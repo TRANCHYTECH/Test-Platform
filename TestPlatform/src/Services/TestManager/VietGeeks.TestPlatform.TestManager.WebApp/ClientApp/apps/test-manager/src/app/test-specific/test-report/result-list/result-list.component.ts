@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import { firstValueFrom } from 'rxjs';
 import { UserProfileService } from '@viet-geeks/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { ExamSummary, TestRunSummary } from '../state/exam-summary.model';
-import { ExamSummaryService } from '../state/exam-summary.service';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { ExamSummary, TestRunSummary } from '../_state/exam-summary.model';
+import { ExamSummaryService } from '../_state/exam-summary.service';
 
 @UntilDestroy()
 @Component({

@@ -2,11 +2,11 @@ import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { TestCategoriesQuery } from '../../../test-specific/state/test-categories.query';
-import { TestCategoriesService } from '../../../test-specific/state/test-categories.service';
-import { TestCategory } from '../../../test-specific/state/test-category.model';
-import { TestOverview } from '../../../test-specific/state/test.model';
-import { TestsService } from '../../../test-specific/state/tests.service';
+import { TestCategoriesQuery } from '../../../test-specific/_state/test-categories.query';
+import { TestCategoriesService } from '../../../test-specific/_state/test-categories.service';
+import { TestCategory } from '../../../test-specific/_state/test-category.model';
+import { TestOverview } from '../../../test-specific/_state/test.model';
+import { TestsService } from '../../../test-specific/_state/tests.service';
 
 @UntilDestroy()
 @Component({

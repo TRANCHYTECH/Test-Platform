@@ -3,13 +3,13 @@ import { FormArray, FormGroup, Validators, FormControl } from '@angular/forms';
 import { find, forEach } from 'lodash-es';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { firstValueFrom } from 'rxjs';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { QuestionCategory } from '../../state/question-categories/question-categories.model';
-import { QuestionCategoriesQuery } from '../../state/question-categories/question-categories.query';
-import { QuestionCategoriesService } from '../../state/question-categories/question-categories.service';
-import { QuestionSummary } from '../../state/questions/question.model';
-import { QuestionService } from '../../state/questions/question.service';
-import { GeneratorTypes, TestSets } from '../../state/test.model';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
+import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
+import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
+import { QuestionSummary } from '../../_state/questions/question.model';
+import { QuestionService } from '../../_state/questions/question.service';
+import { GeneratorTypes, TestSets } from '../../_state/test.model';
 @UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-sets',

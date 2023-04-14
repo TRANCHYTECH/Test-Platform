@@ -5,8 +5,8 @@ import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { createMask } from '@ngneat/input-mask';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { UserProfileService } from '@viet-geeks/core';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { CompleteTestDuration, CompleteQuestionDuration, ManualTestActivation, TimePeriodActivation, TestStatus, TimeSettings } from '../../state/test.model';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { CompleteTestDuration, CompleteQuestionDuration, ManualTestActivation, TimePeriodActivation, TestStatus, TimeSettings } from '../../_state/test.model';
 
 export const TestDurationMethod =
 {

@@ -3,11 +3,11 @@ import { FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TestSpecificBaseComponent } from '../../base/test-specific-base.component';
-import { TestCategory, TestCategoryUncategorizedId } from '../../state/test-category.model';
-import { TestCategoriesQuery } from '../../state/test-categories.query';
-import { TestCategoriesService } from '../../state/test-categories.service';
-import { CreateCategoryComponent } from '../components/create-test-category/create-test-category.component';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { TestCategory, TestCategoryUncategorizedId } from '../../_state/test-category.model';
+import { TestCategoriesQuery } from '../../_state/test-categories.query';
+import { TestCategoriesService } from '../../_state/test-categories.service';
+import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
 
 @UntilDestroy()
 @Component({

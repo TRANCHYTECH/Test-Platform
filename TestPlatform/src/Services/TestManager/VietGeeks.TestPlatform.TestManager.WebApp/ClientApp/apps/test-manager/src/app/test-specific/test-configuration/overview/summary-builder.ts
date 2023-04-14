@@ -4,10 +4,10 @@ import { AppSettingsService, UserProfileService } from "@viet-geeks/core";
 import { Router } from "@angular/router";
 import { AppSettings } from "apps/test-manager/src/app/app-setting.model";
 import { TranslateService } from "@ngx-translate/core";
-import { QuestionSummary } from "../../state/questions/question.model";
-import { TestCategory, TestCategoryUncategorizedId } from "../../state/test-category.model";
-import { Test, TimeSettings, CompleteTestDuration, CompleteQuestionDuration, TimePeriodActivation, TestAccess, TestAccessType, GradingSettings, PassMaskCriteria, GradeRangeCriteria, BasicSettings, TestActivationMethod, ManualTestActivation, TestSets, GeneratorTypes } from "../../state/test.model";
-import { GradingCriteriaConfigType, RangeUnit } from "../../state/ui/grading-summary-ui.model";
+import { QuestionSummary } from "../../_state/questions/question.model";
+import { TestCategory, TestCategoryUncategorizedId } from "../../_state/test-category.model";
+import { Test, TimeSettings, CompleteTestDuration, CompleteQuestionDuration, TimePeriodActivation, TestAccess, TestAccessType, GradingSettings, PassMaskCriteria, GradeRangeCriteria, BasicSettings, TestActivationMethod, ManualTestActivation, TestSets, GeneratorTypes } from "../../_state/test.model";
+import { GradingCriteriaConfigType, RangeUnit } from "../../_state/ui/grading-summary-ui.model";
 import { TestConfigRoutes } from "../test-configuration-routing.module";
 import { TestDurationMethod, TestActivationMethodType } from "../test-time-settings/test-time-settings.component";
 

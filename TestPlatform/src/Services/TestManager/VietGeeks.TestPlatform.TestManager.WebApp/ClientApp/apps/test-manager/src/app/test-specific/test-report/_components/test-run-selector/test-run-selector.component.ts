@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { TestRunSummary } from '../../state/exam-summary.model';
+import { TestRunSummary } from '../../_state/exam-summary.model';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { forIn, orderBy } from 'lodash-es';
 
