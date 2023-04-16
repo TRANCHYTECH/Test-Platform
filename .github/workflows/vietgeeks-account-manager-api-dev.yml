@@ -1,4 +1,4 @@
-name: Build and deploy .NET application to container app vietgeeks-account-manager-api
+name: Dev:Account-Manager-Api
 on:
   workflow_dispatch:
   push:
