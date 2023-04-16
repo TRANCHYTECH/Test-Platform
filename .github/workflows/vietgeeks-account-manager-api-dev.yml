@@ -11,7 +11,7 @@ env:
   CONTAINER_APP_NAME: vietgeeks-account-manager-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: az-vietgeeks
   CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
-  DOCKER_FILE_PATH: Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/Dockerfile
+  DOCKER_FILE_PATH: TestPlatform/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformaccountmanagerapi
 jobs:
   build:
