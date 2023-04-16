@@ -12,5 +12,6 @@ export class AppSettings implements IAppSettings {
 
     appTitle?: string;
     testManagerApiBaseUrl!: string;
+    accountManagerApiBaseUrl!:string;
     testRunnerBaseUrl!: string;
 }

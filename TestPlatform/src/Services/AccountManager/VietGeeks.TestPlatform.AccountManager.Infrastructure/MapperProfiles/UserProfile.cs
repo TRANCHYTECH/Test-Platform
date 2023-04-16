@@ -9,16 +9,12 @@ namespace VietGeeks.TestPlatform.AccountManager.Infrastructure.MapperProfiles
     {
         public UserProfile()
         {
-            CreateMap<User, UserViewModel>()
-                .ForMember(c => c.Language, opt => opt.MapFrom(s => s.RegionalSettings.Language))
-                .ForMember(c => c.TimeZone, opt => opt.MapFrom(s => s.RegionalSettings.TimeZone));
-
+            CreateMap<User, UserViewModel>();
             CreateMap<UserCreateViewModel, User>()
                 .ForMember(c => c.ID, opt => opt.MapFrom(s => s.UserId))
                 .ForMember(c => c.Email, opt => opt.MapFrom(s => s.Email));
-
+            CreateMap<RegionalSettings, RegionalSettingsViewModel>();
             CreateMap<RegionalSettingsViewModel, RegionalSettings>();
-
         }
     }
 }

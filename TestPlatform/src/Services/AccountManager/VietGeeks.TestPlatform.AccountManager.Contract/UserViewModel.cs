@@ -4,9 +4,9 @@ namespace VietGeeks.TestPlatform.AccountManager.Contract
 {
     public class UserViewModel
     {
-        public string Language { get; set; } = default!;
+        public string Email { get; set; } = default!;
 
-        public string TimeZone { get; set; } = default!;
+        public RegionalSettingsViewModel? RegionalSettings { get; set; }
     }
 
     public class UserCreateViewModel

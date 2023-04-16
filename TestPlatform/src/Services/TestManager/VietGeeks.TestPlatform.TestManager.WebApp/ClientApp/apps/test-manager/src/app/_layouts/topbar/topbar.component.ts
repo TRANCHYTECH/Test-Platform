@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Inject } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Inject, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 
@@ -10,6 +10,7 @@ import { CartModel } from './topbar.model';
 import { cartData } from './data';
 import { Router } from '@angular/router';
 import { EventService, LanguageService } from '@viet-geeks/core';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'viet-geeks-topbar',
@@ -17,6 +18,7 @@ import { EventService, LanguageService } from '@viet-geeks/core';
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements OnInit {
+  public authService = inject(AuthService);
 
   element: any;
   mode: string | undefined;
@@ -155,6 +157,7 @@ export class TopbarComponent implements OnInit {
    * Logout the user
    */
   logout() {
+    this.authService.logout({ returnTo: document.location.origin });
   }
 
   windowScroll() {

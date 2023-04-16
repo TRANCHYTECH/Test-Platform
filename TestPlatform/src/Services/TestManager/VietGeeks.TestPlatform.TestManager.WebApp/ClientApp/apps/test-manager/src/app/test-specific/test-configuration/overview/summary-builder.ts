@@ -2,7 +2,6 @@ import { keys, sumBy } from "lodash-es";
 import { Injectable, inject } from "@angular/core";
 import { AppSettingsService, UserProfileService } from "@viet-geeks/core";
 import { Router } from "@angular/router";
-import { AppSettings } from "apps/test-manager/src/app/app-setting.model";
 import { TranslateService } from "@ngx-translate/core";
 import { QuestionSummary } from "../../_state/questions/question.model";
 import { TestCategory, TestCategoryUncategorizedId } from "../../_state/test-category.model";
@@ -10,6 +9,7 @@ import { Test, TimeSettings, CompleteTestDuration, CompleteQuestionDuration, Tim
 import { GradingCriteriaConfigType, RangeUnit } from "../../_state/ui/grading-summary-ui.model";
 import { TestConfigRoutes } from "../test-configuration-routing.module";
 import { TestDurationMethod, TestActivationMethodType } from "../test-time-settings/test-time-settings.component";
+import { AppSettings } from "../../../app-setting.model";
 
 export type Summary = { desc: string, status: 'ok' | 'action', url?: string };
 
