@@ -43,3 +43,9 @@ export enum GradingCriteriaConfigType
     PassMask = 1,
     GradeRanges = 2
 }
+
+export enum RangeUnit
+{
+    Percent = 1,
+    Point = 2
+}

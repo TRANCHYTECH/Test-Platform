@@ -1,10 +1,9 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AggregatedGrading, FinishExamOutput, TimeSpan } from '../../../api/models';
-import { TestSessionService } from '../../services/test-session.service';
-import { GradingCriteriaConfigType, RespondentField, TestSession } from '../../../state/test-session.model';
+import { GradingCriteriaConfigType, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
-import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke, ChartComponent } from 'ng-apexcharts';
+import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke } from 'ng-apexcharts';
 import { TestSessionQuery } from '../../../state/test-session.query';
 
 export type ChartOptions = {
@@ -31,103 +30,125 @@ export class TestFinishComponent {
   sessionData: Partial<TestSession> = {};
   respondent: RespondentField[] = [];
   testResult?: FinishExamOutput | null;
-  isPass = false;
   maxTime: TimeSpan = {};
   totalTime: TimeSpan = {};
-  public chartOptions: ChartOptions;
-
+  public chartOptions?: ChartOptions;
   public passMarkGrading?: AggregatedGrading;
   public gradeRangesGrading?: AggregatedGrading;
 
   constructor() {
     this.setupSessionData();
-
     if (this.passMarkGrading) {
-    }
+      const color = this.passMarkGrading?.passMarkGrade?.isPass ? '#20E647' : '#ff7067';
+      const chartValues = this.calculateChartValues();
+      const unit = this.passMarkGrading?.passMarkGrade?.unit == RangeUnit.Percent ? 'Percent' : 'Point';
 
-    // todo: Map percentage from API
-    const percentage = Math.random() * 100;
-
-    const color = this.isPass ? '#20E647' : '#ff7067';
-
-    this.chartOptions = {
-      series: [percentage],
-      chart: {
-        height: 300,
-        type: "radialBar",
-      },
-      plotOptions: {
-        radialBar: {
-          startAngle: -135,
-          endAngle: 225,
-          hollow: {
-            margin: 0,
-            size: "70%",
-            background: "#fff",
-            image: undefined,
-            position: "front",
-            dropShadow: {
-              enabled: true,
-              top: 3,
-              left: 0,
-              blur: 4,
-              opacity: 0.24
-            }
-          },
-          track: {
-            background: "#fff",
-            strokeWidth: "67%",
-            margin: 0, // margin is in pixels
-            dropShadow: {
-              enabled: true,
-              top: -3,
-              left: 0,
-              blur: 4,
-              opacity: 0.35
-            }
-          },
-
-          dataLabels: {
-            show: true,
-            name: {
-              offsetY: -10,
-              show: true,
-              color: "#888",
-              fontSize: "17px"
+      this.chartOptions = {
+        series: [chartValues.percentage],
+        chart: {
+          height: 300,
+          type: "radialBar",
+        },
+        plotOptions: {
+          radialBar: {
+            startAngle: -135,
+            endAngle: 225,
+            hollow: {
+              margin: 0,
+              size: "70%",
+              background: "#fff",
+              image: undefined,
+              position: "front",
+              dropShadow: {
+                enabled: true,
+                top: 3,
+                left: 0,
+                blur: 4,
+                opacity: 0.24
+              }
             },
-            value: {
-              formatter: function(val) {
-                return parseInt(val.toString(), 10).toString();
+            track: {
+              background: "#fff",
+              strokeWidth: "67%",
+              margin: 0, // margin is in pixels
+              dropShadow: {
+                enabled: true,
+                top: -3,
+                left: 0,
+                blur: 4,
+                opacity: 0.35
+              }
+            },
+
+            dataLabels: {
+              show: true,
+              name: {
+                offsetY: -10,
+                show: true,
+                color: "#888",
+                fontSize: "17px"
               },
-              color: "#111",
-              fontSize: "36px",
-              show: true
+              value: {
+                formatter: function(val) {
+                  if (unit == 'Percent') {
+                    return parseInt(val.toString(), 10).toString();
+                  }
+
+                  return `${chartValues.finalPoints} / ${chartValues.totalPoints}`;
+                },
+                color: "#111",
+                fontSize: "36px",
+                show: true
+              }
             }
           }
-        }
-      },
-      fill: {
-        type: "basic",
-        gradient: {
-          shade: "dark",
-          type: "horizontal",
-          shadeIntensity: 0.5,
-          gradientToColors: ["#ff7067"],
-          inverseColors: false,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [0, 100]
-        }
-      },
-      stroke: {
-        lineCap: "round"
-      },
-      labels: ["Percent"],
-      colors: [color]
-    };
-
+        },
+        fill: {
+          type: "basic",
+          gradient: {
+            shade: "dark",
+            type: "horizontal",
+            shadeIntensity: 0.5,
+            gradientToColors: ["#ff7067"],
+            inverseColors: false,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 100]
+          }
+        },
+        stroke: {
+          lineCap: "round"
+        },
+        labels: [unit],
+        colors: [color]
+      };
+    }
   }
 
+
+  private calculateChartValues(): { finalPoints: number, totalPoints: number, percentage: number} {
+    const finalPoints = this.passMarkGrading?.passMarkGrade?.finalPoints ?? 0;
+    const totalPoints = this.passMarkGrading?.passMarkGrade?.totalPoints ?? 0;
+    const values = {
+      finalPoints,
+      totalPoints,
+      percentage: 0
+    };
+
+    if (this.passMarkGrading?.passMarkGrade?.unit == RangeUnit.Point) {
+      if (totalPoints == 0) {
+        return values;
+      }
+
+      values.percentage = Math.floor(finalPoints / totalPoints * 100);
+
+      return values;
+    }
+
+    values.percentage = finalPoints;
+
+    return values;
+  }
 
   private setupSessionData() {
     this.sessionData = this._testSessionQuery.getEntity(1) ?? {};

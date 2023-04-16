@@ -1,11 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
+import { PassMarkGrade } from './pass-mark-grade';
 export interface AggregatedGrading {
-  finalPoints?: null | number;
   grades?: null | {
 [key: string]: string;
 };
   gradingType?: number;
-  isPass?: null | boolean;
-  totalPoints?: null | number;
+  passMarkGrade?: PassMarkGrade;
 }
