@@ -47,6 +47,9 @@ export class TestSessionService {
 
     if (status) {
       this._testSessionStore.update((e: TestSession) => e.id == SESSION_ID, {
+        testDescription: status?.testName,
+        startTime: status.startedAt ? new Date(status.startedAt) : undefined,
+        endTime: status.finishededAt ? new Date(status.finishededAt) : undefined,
         activeQuestion: status?.activeQuestion,
         activeQuestionStartAt: status?.activeQuestionStartedAt,
         questionIndex: status?.activeQuestionIndex ?? undefined,
@@ -81,8 +84,9 @@ export class TestSessionService {
     this._questions = questions;
   }
 
-  public getQuestions = () => this._questions;
-  public getQuestionsCount = () => (this._questions ?? []).length;
+  public getQuestions = () => this._questions ?? [];
+
+  public getQuestionsCount = () => this.getQuestions().length;
 
   private getExamStatus() {
     return this._apiExamService.getExamStatus().pipe(catchError(() => of(null)))

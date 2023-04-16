@@ -129,7 +129,7 @@ export class TestFinishComponent {
     this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0] && this.testResult?.grading[0].passMark == true;
 
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
-    this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, 1);
+    this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this.sessionData.questionCount);
   }
 
 }

@@ -141,7 +141,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     const finishOutput = await firstValueFrom(this.proctorService.finishExam());
     this._testSessionService.setSessionData({
       result: finishOutput,
-      endTime: new Date(),
+      endTime: finishOutput?.finishedAt ? new Date(finishOutput?.finishedAt) : new Date(),
       examStep: ExamCurrentStep.FinishExam
     });
     this._router.navigate(['test/finish']);

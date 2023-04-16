@@ -11,7 +11,10 @@ export interface ExamStatusWithStep {
   examineeInfo?: null | {
 [key: string]: string;
 };
+  finishededAt?: null | string;
   questionCount?: null | number;
+  startedAt?: string;
   step?: ExamStep;
   testDuration?: TestDuration;
+  testName?: null | string;
 }
