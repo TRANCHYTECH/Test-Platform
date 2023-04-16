@@ -21,6 +21,7 @@ public class ProctorActor : Actor, IProctorActor
         var examId = await _proctorService.ProvideExamineeInfo(input);
         ExamState examState = CreateExamState(examId);
         examState.ExamineeInfo = input.ExamineeInfo;
+        examState.TestRunId = input.TestRunId;
         await SaveExamState(examState);
 
         return examId;
@@ -46,7 +47,8 @@ public class ProctorActor : Actor, IProctorActor
             };
         }
 
-        examState.TestDuration = new TestDurationState {
+        examState.TestDuration = new TestDurationState 
+        {
             Duration = examContent.TestDuration.Duration,
             Method = (int)examContent.TestDuration.Method
         };
@@ -136,21 +138,27 @@ public class ProctorActor : Actor, IProctorActor
         var examState = await GetExamState();
         ExamQuestion? activeQuestion = null;
         DateTime? activeQuestionStartedAt = null;
+
         if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
         {
-            
             activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId);
             activeQuestionStartedAt = examState.QuestionTimes[examState.ActiveQuestionId]?.StartedAt;
         }
 
+        var testRun = await this._proctorService.GetTestRun(examState.TestRunId);
+
         return new ExamStatus()
         {
+            TestName = testRun.TestDefinitionSnapshot?.BasicSettings?.Name ?? string.Empty,
+            StartedAt = examState.StartedAt,
+            FinishededAt = examState.FinishedAt,
             ActiveQuestion = activeQuestion,
             ActiveQuestionIndex = examState.ActiveQuestionIndex,
             ActiveQuestionStartedAt = activeQuestionStartedAt,
             QuestionCount = examState.QuestionIds?.Length ?? 0,
             ExamineeInfo = examState.ExamineeInfo,
-            TestDuration = new TestDuration {
+            TestDuration = new TestDuration 
+            {
                 Duration = examState.TestDuration.Duration,
                 Method = (TestDurationMethodType) examState.TestDuration.Method
             }
@@ -196,6 +204,8 @@ public class ProctorActor : Actor, IProctorActor
     private class ExamState
     {
         public string ExamId { get; set; } = default!;
+        public string TestRunId { get; set; } = default!;
+        public string TestName { get; set; } = default!;
 
         public string TestDefinitionId { get; set; } = default!;
 

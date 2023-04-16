@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
@@ -6,6 +7,7 @@ public class FinishExamOutput
 {
     public decimal FinalMark { get; set; }
     public List<AggregatedGrading> Grading { get; set; } = default!;
+    public DateTime FinishedAt { get; set; }
 }
 
 public class AggregatedGrading

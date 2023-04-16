@@ -129,6 +129,7 @@ public class ExamController : ControllerBase
         var testSession = GetTestSession(ExamStep.FinishExam);
         var proctorExamActor = GetProctorActor(testSession);
         var result = await proctorExamActor.FinishExam();
+        
         SetTestSession(new()
         {
             ProctorExamId = testSession.ProctorExamId,
