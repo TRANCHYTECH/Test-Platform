@@ -4,7 +4,8 @@ namespace VietGeeks.TestPlatform.TestManager.WebApp.Models
     public class AppConfigurationSettings
     {
         public string TestManagerApiBaseUrl { get; set; } = default!;
-
+        public string AccountManagerApiBaseUrl { get; set; } = default!;
+        public string TestRunnerBaseUrl { get; set; } = default!;
         public AuthOptions Auth { get; set; } = new AuthOptions();
     }
 
