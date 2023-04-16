@@ -165,7 +165,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
         startTime = new Date();
       }
 
-      this.endTime.setMinutes(startTime.getMinutes() + durationInMinutes);
+      this.endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
     }
   }
 }
