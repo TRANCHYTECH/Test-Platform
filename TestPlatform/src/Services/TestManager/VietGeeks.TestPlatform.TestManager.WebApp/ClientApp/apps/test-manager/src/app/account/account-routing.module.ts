@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AccountLayoutComponent } from './_layout/account-layout/account-layout.component';
+import { AccountLayoutComponent } from './_layouts/account-layout/account-layout.component';
 import { GeneralInformationComponent } from './general-information/general-information.component';
 import { RegionalSettingsComponent } from './regional-settings/regional-settings.component';
 
@@ -11,11 +11,13 @@ const routes: Routes = [
     children: [
       {
         path: 'general-information',
-        component: GeneralInformationComponent
+        component: GeneralInformationComponent,
+        title: 'General Information'
       },
       {
         path: 'regional-settings',
-        component: RegionalSettingsComponent
+        component: RegionalSettingsComponent,
+        title: 'Regional Settings'
       }
     ]
   }

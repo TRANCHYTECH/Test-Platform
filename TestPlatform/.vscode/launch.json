@@ -83,9 +83,30 @@
             "postDebugTask": "TestManager-api-svc-daprd-down" 
         },
         {
-            "name": ".NET Attach",
+            "name": "Account Manager Dapr",
             "type": "coreclr",
-            "request": "attach"
-        }
+            "request": "launch",
+            "preLaunchTask": "AccountManager-api-dapr-debug",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.AccountManager.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DAPR_HTTP_PORT": "3900",
+                "DAPR_GRPC_PORT": "39000",
+                "ASPNETCORE_URLS": "http://localhost:6500"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "postDebugTask": "proctormanager-api-svc-daprd-down" 
+        },
     ]
 }

@@ -84,6 +84,35 @@
             "appId": "TestManager-api",
             "label": "TestManager-api-svc-daprd-down",
             "type": "daprd-down"
+        },
+        //
+        {
+            "label": "build-AccountManager-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/VietGeeks.TestPlatform.AccountManager.Api.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "AccountManager-api",
+            "appPort": 6500,
+            "httpPort": 3900,
+            "grpcPort": 39000,
+            "appSsl": false,
+            "label": "AccountManager-api-dapr-debug",
+            "type": "dapr",
+            "dependsOn": "build-AccountManager-api",
+            "componentsPath": "./src/Services/AccountManager/dapr/components"
+        },
+        {
+            "appId": "AccountManager-api",
+            "label": "AccountManager-api-svc-daprd-down",
+            "type": "daprd-down"
         }
     ]
 }
