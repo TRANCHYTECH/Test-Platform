@@ -6,6 +6,8 @@ import { RegionalSettingsComponent } from './regional-settings/regional-settings
 import { AccountLayoutComponent } from './_layouts/account-layout/account-layout.component';
 import { SharedModule } from '@viet-geeks/shared';
 import { NgbAccordionModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,10 +17,13 @@ import { NgbAccordionModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     AccountLayoutComponent
   ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     AccountRoutingModule,
     NgbAccordionModule,
-    NgbNavModule
+    NgbNavModule,
+    NgSelectModule
   ]
 })
 export class AccountModule { }
