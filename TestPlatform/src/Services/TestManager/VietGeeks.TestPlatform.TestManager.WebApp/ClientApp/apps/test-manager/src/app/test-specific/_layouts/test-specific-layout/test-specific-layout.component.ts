@@ -1,12 +1,11 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ToastService } from '@viet-geeks/shared';
+import { getPageTitle, getTestId, ToastService } from '@viet-geeks/shared';
 import { BehaviorSubject, filter } from 'rxjs';
 import { TestActivationMethodType, TestStatus } from '../../_state/test.model';
 import { TestsQuery } from '../../_state/tests.query';
 import { TestsService } from '../../_state/tests.service';
-import { getTestId } from '../../_base/router-param-functions';
 import { Title } from '@angular/platform-browser';
 
 @UntilDestroy()
@@ -32,14 +31,16 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   private _notifyService = inject(ToastService);
   private _changeRef = inject(ChangeDetectorRef);
 
-  constructor(private router: Router, private route: ActivatedRoute, private title: Title) {
+  constructor(private router: Router, route: ActivatedRoute, private title: Title) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
       this.testId = getTestId(route);
-      this.sectionTitle = this.title.getTitle();
+      this.sectionTitle = getPageTitle(router);
+      
       const isNewTest = this.testId === 'new';
       if (isNewTest) {
         this.pageTitle = 'New Test';
       }
+
       this.menus$.next([
         {
           routerLink: ['config', 'basic-settings'],

@@ -1,4 +1,4 @@
-import { ActivatedRoute, ActivatedRouteSnapshot, Params } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, Params, Router } from "@angular/router";
 
 export const getTestId = (route: ActivatedRoute) => {
     return getParams(route)['id'];
@@ -16,4 +16,13 @@ export const getParams = (route: ActivatedRoute) => {
     }
 
     return params;
+}
+
+export const getPageTitle = (router: Router) => {
+    let route = router.routerState.root;
+    while (route.firstChild) {
+        route = route.firstChild;
+    }
+
+    return route.snapshot.title;
 }

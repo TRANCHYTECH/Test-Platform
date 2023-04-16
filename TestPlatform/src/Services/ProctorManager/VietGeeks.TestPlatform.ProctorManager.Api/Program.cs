@@ -1,10 +1,9 @@
-using Dapr;
-using VietGeeks.TestPlatform.ProctorManager.Api.Controllers;
+using VietGeeks.TestPlatform.ProctorManager.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.Configure<AppConfigurationSettings>(builder.Configuration.GetSection("AppConfigurationSettings"));
 builder.Services.AddControllers().AddDapr();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

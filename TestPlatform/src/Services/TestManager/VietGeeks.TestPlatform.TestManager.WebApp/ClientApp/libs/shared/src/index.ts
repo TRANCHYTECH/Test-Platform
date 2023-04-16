@@ -8,3 +8,4 @@ export * from './lib/guards/can-deactivate.guard';
 export * from './lib/services/api-error.handler';
 export * from './lib/pipes/test-status-class.pipe';
 export * from './lib/pipes/test-status.pipe';
+export * from './lib/functions/router-param-functions';

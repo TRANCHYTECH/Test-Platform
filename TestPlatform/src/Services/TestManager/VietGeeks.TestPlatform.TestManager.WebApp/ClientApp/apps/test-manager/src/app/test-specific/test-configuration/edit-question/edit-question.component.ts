@@ -15,7 +15,7 @@ import { QuestionCategoriesService } from '../../_state/question-categories/ques
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
 import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
-import { getTestId } from '../../_base/router-param-functions';
+import { getTestId } from '../../../../../../../libs/shared/src/lib/functions/router-param-functions';
 
 const AnswerTypes = [
   {

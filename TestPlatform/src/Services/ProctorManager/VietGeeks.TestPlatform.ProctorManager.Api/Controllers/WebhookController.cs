@@ -4,20 +4,18 @@ using Dapr;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.Integration.Contract;
-
+using VietGeeks.TestPlatform.Integration.Contracts;
 namespace VietGeeks.TestPlatform.ProctorManager.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class WebhookController : ControllerBase
 {
-    private const string MailNotifyBus = "access-code-email-notify-pubsub";
+    private const string WebhookBus = "webhook-pubsub";
 
-#if DEBUG
-    private const string NotifyQueue = "access-code-email-notification_local";
-#else
-    private const string NotifyQueue = "access-code-email-notification";
-#endif
+    private const string AccessCodeSendingStatusQueue = "access-code-email-notification";
+
+    private const string UserCreateRequestQueue = "user-create-request";
 
     private readonly ILogger<WebhookController> _logger;
 
@@ -26,15 +24,35 @@ public class WebhookController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("Mailjet")]
-    public async Task<IActionResult> Mailjet([FromServices] DaprClient client, [FromBody] MailjetEvent[] events)
+    [HttpPost("CreateUserRequest")]
+    public async Task<IActionResult> CreateUserRequest([FromServices] DaprClient client, [FromBody] UserCreateRequest request)
     {
-        await client.PublishEventAsync(MailNotifyBus, NotifyQueue, JsonSerializer.Serialize(events));
+        await client.PublishEventAsync(WebhookBus, UserCreateRequestQueue, JsonSerializer.Serialize(request));
 
         return Ok();
     }
 
-    [Topic(MailNotifyBus, NotifyQueue)]
+    [HttpPost("Mailjet")]
+    public async Task<IActionResult> Mailjet([FromServices] DaprClient client, [FromBody] MailjetEvent[] events)
+    {
+        await client.PublishEventAsync(WebhookBus, AccessCodeSendingStatusQueue, JsonSerializer.Serialize(events));
+
+        return Ok();
+    }
+
+    // [Topic(WebhookBus, UserCreateRequestQueue)]
+    // [HttpPost("ProcessUserCreateRequest")]
+    // public IActionResult ProcessUserCreateRequest([FromBody] string @event)
+    // {
+    //     var parsedEvent = JsonSerializer.Deserialize<UserCreateRequest>(@event) ?? throw new Exception("Wrong events");
+
+       
+    //     Console.WriteLine("processed event {0}", parsedEvent.UserId);
+
+    //     return Ok();
+    // }
+
+    [Topic(WebhookBus, AccessCodeSendingStatusQueue)]
     [HttpPost("ProcessMailjetEvents")]
     public async Task<IActionResult> ProcessMailjetEvents([FromServices] DaprClient client, [FromBody] string @event)
     {

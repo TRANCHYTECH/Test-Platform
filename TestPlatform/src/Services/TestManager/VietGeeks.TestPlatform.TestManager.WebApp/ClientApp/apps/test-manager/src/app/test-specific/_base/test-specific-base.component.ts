@@ -9,7 +9,7 @@ import { SupportedEditorComponent } from "./supported-editor.component";
 import { createTest, Test, TestStatus } from "../_state/test.model";
 import { TestsService } from "../_state/tests.service";
 import { TestsQuery } from "../_state/tests.query";
-import { getTestId } from "./router-param-functions";
+import { getTestId } from "../../../../../../libs/shared/src/lib/functions/router-param-functions";
 
 @Component({
     selector: 'viet-geeks-test-specific-base',

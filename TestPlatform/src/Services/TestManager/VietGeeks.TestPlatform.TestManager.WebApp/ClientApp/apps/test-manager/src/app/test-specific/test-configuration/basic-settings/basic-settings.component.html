@@ -4,11 +4,11 @@
             <div class="card">
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label" for="project-title-input">Test name</label>
+                        <label class="form-label">Test name</label>
                         <input formControlName="name" type="text" class="form-control" placeholder="Enter test name" [readOnly]="isReadonly">
                     </div>
                     <div class="mb-3">
-                        <label for="test-category-input" class="form-label">Catetory</label>
+                        <label class="form-label">Catetory</label>
                         <div class="input-group">
                             <select data-choices formControlName="category" class="form-select">
                                 <option [ngValue]="c.id" *ngFor="let c of testCategories$ | async">{{c.name}}</option>
