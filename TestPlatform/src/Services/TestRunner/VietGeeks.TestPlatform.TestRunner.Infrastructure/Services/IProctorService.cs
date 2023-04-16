@@ -12,5 +12,6 @@ public interface IProctorService
     Task<ExamContentOutput> GenerateExamContent(GenerateExamContentInput input);
 
     Task<FinishExamOutput> FinishExam(FinishExamInput input);
+    Task<TestRun> GetTestRun(string testRunId);
     Task<ExamQuestion?> GetTestRunQuestion(string examId, string questionId);
 }

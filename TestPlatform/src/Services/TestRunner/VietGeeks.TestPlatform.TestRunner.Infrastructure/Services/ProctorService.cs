@@ -177,7 +177,8 @@ public class ProctorService : IProctorService
         return new FinishExamOutput
         {
             FinalMark = exam.FinalMark,
-            Grading = _mapper.Map<List<AggregatedGrading>>(exam.Grading)
+            Grading = _mapper.Map<List<AggregatedGrading>>(exam.Grading),
+            FinishedAt = exam.FinishedAt
         };
     }
 
@@ -195,6 +196,10 @@ public class ProctorService : IProctorService
         var question = batches.SelectMany(c => c.Batch).SingleOrDefault(i => i.ID == questionId);
 
         return question?.ToViewModel();
+    }
+
+    public async Task<TestRun> GetTestRun(string testRunId) {
+        return await DB.Find<TestRun>().Match(tr => tr.ID == testRunId).ExecuteSingleAsync();
     }
 
     private async Task<Exam> GetExam(string testRunId, string accessCode)

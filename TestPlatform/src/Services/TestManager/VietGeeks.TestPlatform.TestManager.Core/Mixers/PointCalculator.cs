@@ -21,7 +21,19 @@ public static class PointCalculator
                     v = (finalMark / totalPoints) * 100;
                 }
 
-                result.Add(new() { GradingType = GradingCriteriaConfigType.PassMask,  PassMark = v >= passMaskCriteria.Value });
+                var aggregatedGrading = new AggregatedGrading()
+                {
+                    PassMarkGrade = new PassMarkGrade
+                    {
+                        FinalPoints = v,
+                        IsPass = v >= passMaskCriteria.Value,
+                        TotalPoints = totalPoints,
+                        Unit = passMaskCriteria.Unit
+                    },
+                    GradingType = GradingCriteriaConfigType.PassMask
+                };
+
+                result.Add(aggregatedGrading);
             }
             else if (setting.Value is GradeRangeCriteria gradeRangeCriteria)
             {
@@ -32,8 +44,13 @@ public static class PointCalculator
                 }
 
                 var matchedLevel = gradeRangeCriteria.Details.OrderBy(c => c.To).First(c => c.To >= v);
+                var aggregatedGrading = new AggregatedGrading()
+                {
+                    Grades = matchedLevel.Grades,
+                    GradingType = GradingCriteriaConfigType.GradeRanges,
+                };
 
-                result.Add(new() { GradingType = GradingCriteriaConfigType.GradeRanges, Grades = matchedLevel.Grades });
+                result.Add(aggregatedGrading);
             }
         }
 

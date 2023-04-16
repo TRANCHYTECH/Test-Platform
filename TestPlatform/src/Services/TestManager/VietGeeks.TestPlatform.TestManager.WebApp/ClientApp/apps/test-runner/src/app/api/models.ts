@@ -5,6 +5,7 @@ export { ExamQuestion } from './models/exam-question';
 export { ExamStatusWithStep } from './models/exam-status-with-step';
 export { ExamStep } from './models/exam-step';
 export { FinishExamOutput } from './models/finish-exam-output';
+export { PassMarkGrade } from './models/pass-mark-grade';
 export { ProvideExamineeInfoOutput } from './models/provide-examinee-info-output';
 export { ProvideExamineeInfoViewModel } from './models/provide-examinee-info-view-model';
 export { StartExamOutputViewModel } from './models/start-exam-output-view-model';
