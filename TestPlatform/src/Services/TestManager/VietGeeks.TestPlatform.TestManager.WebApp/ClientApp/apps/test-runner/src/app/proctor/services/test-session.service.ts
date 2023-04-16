@@ -56,7 +56,8 @@ export class TestSessionService {
         questionCount: status?.questionCount ?? undefined,
         respondentFields: this.mapExamineeInfo(status?.examineeInfo) ?? undefined,
         timeSettings: this._testDurationService.mapToTimeSettings(status.testDuration),
-        examStep: status?.step as number
+        examStep: status?.step as number,
+        grading: status?.grading
       });
     }
 

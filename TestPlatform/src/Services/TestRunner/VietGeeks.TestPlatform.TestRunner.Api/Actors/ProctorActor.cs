@@ -121,13 +121,16 @@ public class ProctorActor : Actor, IProctorActor
         var result = await ExamStateAction(async examState =>
         {
             examState.FinishedAt = DateTime.UtcNow;
-            return await _proctorService.FinishExam(new()
+            var output = await _proctorService.FinishExam(new()
             {
                 ExamId = examState.ExamId,
                 Answers = examState.Answers,
                 StartedAt = examState.StartedAt,
                 FinishededAt = examState.FinishedAt.GetValueOrDefault()
             });
+            examState.Grading = output.Grading;
+
+            return output;
         });
 
         return result;
@@ -161,7 +164,8 @@ public class ProctorActor : Actor, IProctorActor
             {
                 Duration = examState.TestDuration.Duration,
                 Method = (TestDurationMethodType) examState.TestDuration.Method
-            }
+            },
+            Grading = examState.Grading
         };
     }
 
@@ -218,6 +222,7 @@ public class ProctorActor : Actor, IProctorActor
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 
         public Dictionary<string, QuestionTiming> QuestionTimes {get;set;} = new Dictionary<string, QuestionTiming>();
+        public List<AggregatedGrading> Grading { get; set; } = default!;
 
         public DateTime StartedAt { get; set; }
 

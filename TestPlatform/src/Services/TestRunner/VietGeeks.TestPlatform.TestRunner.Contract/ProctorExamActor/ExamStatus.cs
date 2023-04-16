@@ -15,6 +15,7 @@ public class ExamStatus: IActiveQuestion
     public DateTime StartedAt { get; set; }
     public DateTime? FinishededAt { get; set; }
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
+    public List<AggregatedGrading> Grading { get; set; } = default!;
 }
 
 public class ExamStatusWithStep: ExamStatus, IExamStepInfo

@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinishExamOutput, TimeSpan } from '../../../api/models';
+import { AggregatedGrading, FinishExamOutput, TimeSpan } from '../../../api/models';
 import { TestSessionService } from '../../services/test-session.service';
-import { RespondentField, TestSession } from '../../../state/test-session.model';
+import { GradingCriteriaConfigType, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke, ChartComponent } from 'ng-apexcharts';
 import { TestSessionQuery } from '../../../state/test-session.query';
@@ -36,8 +36,15 @@ export class TestFinishComponent {
   totalTime: TimeSpan = {};
   public chartOptions: ChartOptions;
 
+  public passMarkGrading?: AggregatedGrading;
+  public gradeRangesGrading?: AggregatedGrading;
+
   constructor() {
     this.setupSessionData();
+
+    if (this.passMarkGrading) {
+    }
+
     // todo: Map percentage from API
     const percentage = Math.random() * 100;
 
@@ -125,8 +132,14 @@ export class TestFinishComponent {
   private setupSessionData() {
     this.sessionData = this._testSessionQuery.getEntity(1) ?? {};
     this.respondent = this.sessionData.respondentFields ?? [];
-    this.testResult = this.sessionData.result;
-    this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0] && this.testResult?.grading[0].passMark == true;
+    // this.testResult = this.sessionData.result;
+
+    const gradings = this.sessionData.grading;
+
+    // this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0] && this.testResult?.grading[0].passMark == true;
+
+    this.passMarkGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.PassMask)[0];
+    this.gradeRangesGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.GradeRanges)[0];
 
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
     this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this.sessionData.questionCount);

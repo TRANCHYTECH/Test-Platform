@@ -20,14 +20,14 @@
       </div>
     </div>
   </div>
-  <div class="row justify-content-center">
+  <div class="row justify-content-center" *ngIf="passMarkGrading">
     <div class="col-lg-6">
       <div class="card">
         <div class="card-body">
           <div class="row mb-3">
             <h4 class="text-uppercase">Result</h4>
             <div class="col-xl-6">
-              <div class="d-flex pass" *ngIf="isPass; else fail">
+              <div class="d-flex pass" *ngIf="passMarkGrading.isPass; else fail">
                 <i class="bx bxs-check-square fs-3"></i> <h5>Test passed</h5>
               </div>
               <ng-template #fail>

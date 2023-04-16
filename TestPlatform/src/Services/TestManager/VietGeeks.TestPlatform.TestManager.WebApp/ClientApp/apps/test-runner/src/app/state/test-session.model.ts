@@ -1,4 +1,4 @@
-import { FinishExamOutput, TestDurationMethodType, TimeSpan, ExamQuestion } from "../api/models";
+import { FinishExamOutput, TestDurationMethodType, TimeSpan, ExamQuestion, AggregatedGrading } from "../api/models";
 
 export type RespondentField = { id: string, fieldValue: string };
 
@@ -13,11 +13,11 @@ export interface TestSession {
   endTime?: Date;
   timeSettings?: TimeSettings,
   respondentFields?: Array<RespondentField>,
-  result?: FinishExamOutput | null,
   questionIndex?: number,
   questionCount?: number,
   activeQuestion?: ExamQuestion,
-  activeQuestionStartAt?: string | null
+  activeQuestionStartAt?: string | null,
+  grading?: null | Array<AggregatedGrading>;
 }
 
 export interface TimeSettings {
@@ -37,3 +37,9 @@ export enum ExamCurrentStep {
     SubmitAnswer = 4,
     FinishExam = 5
 };
+
+export enum GradingCriteriaConfigType
+{
+    PassMask = 1,
+    GradeRanges = 2
+}
