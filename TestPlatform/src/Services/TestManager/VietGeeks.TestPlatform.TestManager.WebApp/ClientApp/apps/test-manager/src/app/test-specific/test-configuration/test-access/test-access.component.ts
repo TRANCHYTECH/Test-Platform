@@ -4,9 +4,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, forIn, isNumber, range } from 'lodash-es';
 
 import { AppSettingsService } from '@viet-geeks/core';
-import { AppSettings } from 'apps/test-manager/src/app/app-setting.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { TestAccessType, TestInvitationStats, TestAccessTypeUI, TestStatus, TestAccess, GroupPasswordType, PublicLinkType, PrivateAccessCodeType } from '../../_state/test.model';
+import { AppSettings } from '../../../app-setting.model';
 
 //todo(tau): PLAN - Implement test set selection
 @UntilDestroy()

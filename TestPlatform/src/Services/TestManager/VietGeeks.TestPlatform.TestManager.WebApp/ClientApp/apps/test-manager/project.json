@@ -14,7 +14,15 @@
         "main": "apps/test-manager/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/test-manager/tsconfig.app.json",
-        "allowedCommonJsDependencies": ["bson-objectid", "inputmask", "sweetalert2", "date-fns/fp/_lib/convertToFP/index.js"],
+        "allowedCommonJsDependencies": [
+          "bson-objectid",
+          "inputmask",
+          "sweetalert2",
+          "date-fns/format/index.js",
+          "date-fns/_lib/getTimezoneOffsetInMilliseconds/index.js",
+          "date-fns/_lib/toInteger/index.js",
+          "date-fns/_lib/cloneObject/index.js"
+        ],
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/test-manager/src/favicon.ico",
