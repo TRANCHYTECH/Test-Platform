@@ -235,7 +235,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     return this.timeSettingsForm.get(['answerQuestionConfig']) as FormGroup;
   }
 
-  afterGetTest(): void {
+  postLoadEntity(): void {
     const timeSettings = this.test.timeSettings;
     this.timeSettingsForm = this.fb.group({
       testDurationMethod: this.fb.group({
@@ -316,8 +316,6 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     this.answerQuestionConfigCtrl.setValue({
       skipQuestion: timeSettings?.answerQuestionConfig?.skipQuestion ?? false
     });
-
-    this.maskReadyForUI();
   }
 
   get canSubmit(): boolean {

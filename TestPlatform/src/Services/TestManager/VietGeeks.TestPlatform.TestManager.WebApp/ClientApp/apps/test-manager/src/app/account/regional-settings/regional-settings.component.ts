@@ -11,13 +11,11 @@ import { FormGroup, Validators } from '@angular/forms';
 export class RegionalSettingsComponent extends UserBaseComponent {
   settingsForm!: FormGroup;
 
-  override AfterGetUserData() {
+  override postLoadEntity(): void {
     this.settingsForm = this.fb.group({
       language: [this.userProfile?.regionalSettings?.language, [Validators.required]],
       timeZone: [this.userProfile?.regionalSettings?.timeZone, [Validators.required]]
     });
-
-    this.maskReadyForUI();
   }
 
   async submit() {

@@ -9,11 +9,10 @@ import { UserBaseComponent } from '../_base/user-base.component';
   styleUrls: ['./general-information.component.scss']
 })
 export class GeneralInformationComponent extends UserBaseComponent {
-
-  override AfterGetUserData() {
-    this.maskReadyForUI();
+  override postLoadEntity(): void {
+    //
   }
-
+  
   override submit(): Promise<void> {
     throw new Error('Method not implemented.');
   }

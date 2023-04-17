@@ -3,8 +3,8 @@
     <div class="card">
       <div class="card-body">
         <div class="mb-3">
-            <editor formControlName="description" [apiKey]="editorApiKey"
-            (onInit)="handleEditorInit('editQuestion.description', $event)"
+            <editor formControlName="description" [apiKey]="textEditorConfigs.apiKey"
+            (onInit)="textEditorConfigs.handleEditorInit('editQuestion.description', $event)"
             (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorWithImage"
             #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>
         <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>

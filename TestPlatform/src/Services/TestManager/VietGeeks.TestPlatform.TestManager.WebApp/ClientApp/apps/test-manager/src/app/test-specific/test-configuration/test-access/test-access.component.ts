@@ -70,7 +70,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     this.codeGenerationForm = this.fb.group({ count: ['', [Validators.min(1), Validators.max(50)]] });
   }
 
-  async afterGetTest(): Promise<void> {
+  async postLoadEntity(): Promise<void> {
     // Init default form.
     this.testAccessForm = this.fb.group({
       accessType: this.test.testAccessSettings.accessType ?? TestAccessType.PublicLink,
@@ -79,9 +79,6 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       [TestAccessTypeUI.GroupPassword]: this.createGroupPasswordFormGroup(this.test.testAccessSettings),
       [TestAccessTypeUI.Training]: this.createTrainingFormGroup(this.test.testAccessSettings),
     });
-
-    // Set ready to use.
-    this.maskReadyForUI();
 
     //todo: move to func
     // Async get test invitation statistics.

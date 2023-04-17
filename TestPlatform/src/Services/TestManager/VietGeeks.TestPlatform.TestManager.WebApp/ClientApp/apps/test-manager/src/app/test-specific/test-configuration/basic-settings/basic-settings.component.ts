@@ -33,7 +33,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     });
   }
 
-  afterGetTest(): void {
+  postLoadEntity(): void {
     if (!this.isNewTest) {
       this.basicSettingForm.reset({
         id: this.test.id,
@@ -42,8 +42,6 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
         description: this.test.basicSettings.description
       });
     }
-
-    this.maskReadyForUI();
   }
 
   override onInit() {

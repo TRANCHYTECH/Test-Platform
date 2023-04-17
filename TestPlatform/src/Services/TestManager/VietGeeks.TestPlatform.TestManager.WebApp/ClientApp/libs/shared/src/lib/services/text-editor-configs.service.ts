@@ -1,6 +1,11 @@
-import { Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
+import { AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { EditorComponent } from '@tinymce/tinymce-angular';
+import { EventObj } from '@tinymce/tinymce-angular/editor/Events';
 import { UploadClient } from '@uploadcare/upload-client'
+import { AsyncSubject, Observable, map } from 'rxjs';
+
+type TinymceTextEditor = EventObj<null>["editor"];
 
 const EditorPlugins = {
   simple: ['lists', 'table', 'code', 'wordcount']
@@ -11,13 +16,17 @@ const Toolbars = {
   image: '| image'
 }
 
-export const EDITOR_API_KEY = new InjectionToken("tiny-editor-api-key");
+export const EDITOR_API_KEY = new InjectionToken<string>("tiny-editor-api-key");
 
 @Injectable({
   providedIn: 'root'
 })
 export class TextEditorConfigsService {
-  private readonly _client = new UploadClient({ publicKey: '8a991600a5b7c5405c5a' });
+  private _apiKey = inject(EDITOR_API_KEY);
+  private _client = new UploadClient({ publicKey: '8a991600a5b7c5405c5a' });
+  private _editorSubjects: { [key: string]: AsyncSubject<TinymceTextEditor> } = {};
+
+  apiKey = this._apiKey;
 
   simpleEditorConfig: EditorComponent['init'] = {
     menubar: false,
@@ -51,4 +60,34 @@ export class TextEditorConfigsService {
       });
     },
   }
+
+  handleEditorInit(controlUniqueName: string, e: EventObj<null>) {
+    if (this._editorSubjects[controlUniqueName] === undefined) {
+      return;
+    }
+
+    this._editorSubjects[controlUniqueName].next(e.editor);
+    this._editorSubjects[controlUniqueName].complete();
+  }
+
+  editorMaxLength = (controlUniqueName: string, max: number): AsyncValidatorFn => {
+    const editorSubject = new AsyncSubject<TinymceTextEditor>();
+    this._editorSubjects[controlUniqueName] = editorSubject;
+
+    return (): Observable<ValidationErrors | null> => {
+      return editorSubject.pipe(
+        map((editor) => {
+          const characterCount = editor.plugins['wordcount']['body'].getCharacterCount();
+          return characterCount <= max
+            ? null
+            : {
+              maxlength: {
+                requiredLength: max,
+                actualLength: characterCount
+              },
+            };
+        })
+      );
+    };
+  };
 }

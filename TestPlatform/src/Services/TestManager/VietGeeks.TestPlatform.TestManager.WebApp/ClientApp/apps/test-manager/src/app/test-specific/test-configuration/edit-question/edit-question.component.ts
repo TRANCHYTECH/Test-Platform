@@ -4,8 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { isNumber } from 'lodash-es';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ToastService,CanComponentDeactivate, IdService } from '@viet-geeks/shared';
-import { SupportedEditorComponent } from '../../_base/supported-editor.component';
+import { ToastService,CanComponentDeactivate, IdService, getTestId, TextEditorConfigsService } from '@viet-geeks/shared';
 import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
 import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
 import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
@@ -15,7 +14,6 @@ import { QuestionCategoriesService } from '../../_state/question-categories/ques
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
 import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
-import { getTestId } from '../../../../../../../libs/shared/src/lib/functions/router-param-functions';
 
 const AnswerTypes = [
   {
@@ -46,7 +44,7 @@ const AnswerTypes = [
   templateUrl: './edit-question.component.html',
   styleUrls: ['./edit-question.component.scss'],
 })
-export class EditQuestionComponent extends SupportedEditorComponent implements OnInit, CanComponentDeactivate {
+export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
   scoreSettingsForm: FormGroup;
@@ -55,7 +53,8 @@ export class EditQuestionComponent extends SupportedEditorComponent implements O
   route = inject(ActivatedRoute);
   router = inject(Router);
   notifyService = inject(ToastService);
-
+  textEditorConfigs = inject(TextEditorConfigsService);
+  
   questionId: string;
   testId: string;
   isMultipleChoiceAnswer: boolean;
@@ -73,7 +72,6 @@ export class EditQuestionComponent extends SupportedEditorComponent implements O
     private _questionQuery: QuestionsQuery,
     private _modalService: NgbModal
   ) {
-    super();
     this.questionId = '';
     this.testId = '';
     this.isMultipleChoiceAnswer = false;
