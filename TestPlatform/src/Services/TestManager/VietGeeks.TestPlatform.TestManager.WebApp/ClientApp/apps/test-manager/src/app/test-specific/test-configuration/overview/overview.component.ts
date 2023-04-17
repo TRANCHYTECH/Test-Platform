@@ -22,7 +22,7 @@ export class OverviewComponent extends TestSpecificBaseComponent {
   private _questionService = inject(QuestionService);
   private _summaryBuilder = inject(SummaryBuilder);
 
-  async afterGetTest(): Promise<void> {
+  async postLoadEntity(): Promise<void> {
     const fetches = await Promise.all([this._questionService.getSummary(this.testId), firstValueFrom(this._testCategoriesService.get())]);
     const questionSummary = fetches[0];
     const testCategories = this._testCategoriesQuery.getAll();
@@ -40,8 +40,6 @@ export class OverviewComponent extends TestSpecificBaseComponent {
       default:
         break;
     }
-
-    this.maskReadyForUI();
   }
 
   submit(): Promise<void> {

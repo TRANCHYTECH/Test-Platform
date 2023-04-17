@@ -8,6 +8,7 @@ import { QuestionCategoriesService } from '../../_state/question-categories/ques
 import { Question, AnswerType } from '../../_state/questions/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
+import { getTestId } from '@viet-geeks/shared';
 
 @UntilDestroy()
 @Component({
@@ -28,17 +29,16 @@ export class ManageQuestionsComponent extends TestSpecificBaseComponent {
     super();
   }
 
-  async afterGetTest(): Promise<void> {
+  async postLoadEntity(): Promise<void> {
     firstValueFrom(this._questionCategoriesService.get());
     this.questions$ = this._questionsQuery.selectAll().pipe(map((questions) => (questions.map(q => ({ ...q, ['answerTypeName']: AnswerType[q.answerType] })))));
-    this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
-      this.testId = p['id'];
+    this.route.params.pipe(untilDestroyed(this)).subscribe(async () => {
+      this.testId = getTestId(this.route);
       if (!this.isNewTest) {
         await firstValueFrom(this._questionsService.get(this.testId), { defaultValue: null });
       }
     });
     this.questionCategories = (await firstValueFrom(this._questionCategoriesQuery.selectAll())).reduce((result, item) => ({ ...result, [item.id]: item.name }), {});
-    this.maskReadyForUI();
   }
 
   submit(): Promise<void> {

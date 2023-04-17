@@ -24,10 +24,9 @@ export class ResultListComponent extends TestSpecificBaseComponent implements On
     return this._userProfileService.currentUtcOffset;
   }
 
-  override async afterGetTest(): Promise<void> {
+  override async postLoadEntity(): Promise<void> {
     this.testRuns = await firstValueFrom(this._examSummaryService.getTestRuns(this.testId));
     await this.loadExamSummaries(this.testRuns.map(c => c.id));
-    this.maskReadyForUI();
     this.changeRef.markForCheck();
   }
 

@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
-import { getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
-import { NgxSpinnerService } from "ngx-spinner";
-import { BehaviorSubject, filter, firstValueFrom } from "rxjs";
+import { EntitySpecificBaseComponent, getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
+import { firstValueFrom } from "rxjs";
 import { createTest, Test, TestStatus } from "../_state/test.model";
 import { TestsService } from "../_state/tests.service";
 import { TestsQuery } from "../_state/tests.query";
@@ -13,11 +12,10 @@ import { TestsQuery } from "../_state/tests.query";
     selector: 'viet-geeks-test-specific-base',
     template: ''
 })
-export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
+export abstract class TestSpecificBaseComponent extends EntitySpecificBaseComponent implements OnInit, OnDestroy {
     testId!: string;
     test: Test = createTest({});
 
-    router = inject(Router);
     route = inject(ActivatedRoute);
     fb = inject(FormBuilder);
     changeRef = inject(ChangeDetectorRef);
@@ -27,33 +25,8 @@ export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
     notifyService = inject(ToastService);
     textEditorConfigs = inject(TextEditorConfigsService);
 
-    get readyForUI$() {
-        return this._readyForUI.asObservable();
-    }
-
     get isNewTest() {
         return this.testId === 'new';
-    }
-
-    private _spinner = inject(NgxSpinnerService);
-
-    private _readyForUI = new BehaviorSubject(false);
-
-    ngOnInit(): void {
-        // Listen to process the first time.
-        this.route.params.pipe(untilDestroyed(this)).subscribe(() => {
-            this.processParams();
-        });
-
-        // Listen to reload the page.
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
-            console.log('reload page');
-            this.processParams();
-        });
-
-        this.configureLoadingIndicator();
-
-        this.onInit();
     }
 
     ngOnDestroy(): void {
@@ -61,9 +34,7 @@ export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
         this.onDestroy();
     }
 
-    private async processParams() {
-        this._readyForUI.next(false);
-
+    async loadEntity() {
         this.testId = getTestId(this.route);
         if (!this.isNewTest) {
             await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
@@ -76,62 +47,15 @@ export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
             this.test = testDef;
             this.testsService.setActive(testDef.id);
         }
-
-        this.afterGetTest();
-    }
-
-    private configureLoadingIndicator() {
-        this._readyForUI.pipe(untilDestroyed(this)).subscribe(v => {
-            if (v === false) {
-                this._spinner.show(undefined, {
-                    type: 'ball-fussion',
-                    size: 'medium',
-                    bdColor: 'rgba(100,149,237, .2)',
-                    color: 'white',
-                    fullScreen: false
-                });
-            } else {
-                this._spinner.hide();
-            }
-        });
-    }
-
-    onInit() {
-        // Place holder
     }
 
     onDestroy() {
         // Default do nothing.
     }
 
-    abstract afterGetTest(): void;
-
-    abstract submit(): Promise<void>;
-
-    abstract get canSubmit(): boolean;
-
     get isReadonly() {
         return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
     }
-
-    maskBusyForUI() {
-        this._readyForUI.next(false);
-    }
-
-    maskReadyForUI() {
-        this._readyForUI.next(true);
-    }
-
-    submitFunc = async () => {
-        if (!this.canSubmit) {
-            return;
-        }
-
-        await this.submit();
-
-        // Refresh the page to bind latest info.
-        this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
-    };
 
     async invokeLongAction(action: () => Promise<void>) {
         this.maskBusyForUI();

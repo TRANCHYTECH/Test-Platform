@@ -1,7 +1,7 @@
 
 export const environment = {
     production: false,
-    testManagerApiBaseUrl: "http://localhost:6200",
+    testManagerApiBaseUrl: "https://localhost:6200",
     accountManagerApiBaseUrl: "https://localhost:6500",
     testRunnerBaseUrl: "http://localhost:4300",
     auth: {

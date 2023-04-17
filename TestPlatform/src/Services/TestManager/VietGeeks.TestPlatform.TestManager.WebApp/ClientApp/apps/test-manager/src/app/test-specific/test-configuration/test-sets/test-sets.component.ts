@@ -56,7 +56,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
     super();
   }
 
-  async afterGetTest(): Promise<void> {
+  async postLoadEntity(): Promise<void> {
     const configs = await Promise.all([this._questionService.getSummary(this.testId), firstValueFrom(this._questionCategoriesService.get())]);
     this.questionSummaries = configs[0];
     this.questionCategories = this._questionCategoriesQuery.getAll();
@@ -68,8 +68,6 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
         configs: this.createGeneratorConfigsForm()
       })
     });
-
-    this.maskReadyForUI();
   }
 
   get canSubmit(): boolean {

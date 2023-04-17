@@ -41,7 +41,7 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
     return this.testStartPageForm.controls['respondentIdentifyConfig'] as FormArray<FormGroup>;
   }
 
-  afterGetTest(): void {
+  postLoadEntity(): void {
     const testStartSettings = this.test.testStartSettings;
     this.testStartPageForm = this.fb.group({
       instruction: [testStartSettings?.instruction],
@@ -52,8 +52,6 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
     testStartSettings?.respondentIdentifyConfig.forEach(c => {
       this.addField(c);
     });
-
-    this.maskReadyForUI();
   }
 
   addNewField() {

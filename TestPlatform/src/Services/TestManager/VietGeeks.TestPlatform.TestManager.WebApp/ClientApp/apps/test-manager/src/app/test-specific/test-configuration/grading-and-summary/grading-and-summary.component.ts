@@ -111,7 +111,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     return elementAt === undefined ? 0 : (elementAt.value as GradeRangeCriteriaDetail).to;
   }
 
-  async afterGetTest(): Promise<void> {
+  async postLoadEntity(): Promise<void> {
     const configs = await Promise.all([this._questionService.getSummary(this.testId)]);
     this.gradeFormConfigs.maxPoint = sumBy(configs[0], (c: QuestionSummary) => c.totalPoints);
     const gradingSettings = this.test.gradingSettings;
@@ -149,8 +149,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
           break;
       }
     });
-
-    this.maskReadyForUI();
     //todo: validate word count html instead of all html length.
     //todo(tau): check issue why have to click on ui one time, to make ui show errors and change form state?
     //todo(tau): reload/reset form after successfully updated.
