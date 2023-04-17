@@ -204,8 +204,8 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
 
     return this.fb.group({
       informViaEmail: informRespondentConfig?.informViaEmail ?? false,
-      passedMessage: [informRespondentConfig?.passedMessage, [Validators.maxLength(200)], [this.EditorMaxLengthValidator('informRespondentConfig.passedMessage', 1000)]],
-      failedMessage: [informRespondentConfig?.failedMessage, [Validators.maxLength(200)], [this.EditorMaxLengthValidator('informRespondentConfig.failedMessage', 1000)]],
+      passedMessage: [informRespondentConfig?.passedMessage, [Validators.maxLength(200)], [this.textEditorConfigs.editorMaxLength('informRespondentConfig.passedMessage', 1000)]],
+      failedMessage: [informRespondentConfig?.failedMessage, [Validators.maxLength(200)], [this.textEditorConfigs.editorMaxLength('informRespondentConfig.failedMessage', 1000)]],
       informFactors: this.createInformFactorsCtrl(disabled, informRespondentConfig?.informFactors)
     });
   }
@@ -239,7 +239,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     return this.fb.group({
       message: this.fb.control(testEndConfig.message, {
         validators: [Validators.required],
-        asyncValidators: [this.EditorMaxLengthValidator('testEndConfig.message', 1000)]
+        asyncValidators: [this.textEditorConfigs.editorMaxLength('testEndConfig.message', 1000)]
       }),
       redirectTo: testEndConfig.redirectTo,
       toAddress: [testEndConfig.toAddress, [RxwebValidators.compose({

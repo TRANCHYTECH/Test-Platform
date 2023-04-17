@@ -2,20 +2,18 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angula
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
-import { ToastService } from "@viet-geeks/shared";
+import { getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
 import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, filter, firstValueFrom } from "rxjs";
-import { SupportedEditorComponent } from "./supported-editor.component";
 import { createTest, Test, TestStatus } from "../_state/test.model";
 import { TestsService } from "../_state/tests.service";
 import { TestsQuery } from "../_state/tests.query";
-import { getTestId } from "../../../../../../libs/shared/src/lib/functions/router-param-functions";
 
 @Component({
     selector: 'viet-geeks-test-specific-base',
     template: ''
 })
-export abstract class TestSpecificBaseComponent extends SupportedEditorComponent implements OnInit, OnDestroy {
+export abstract class TestSpecificBaseComponent implements OnInit, OnDestroy {
     testId!: string;
     test: Test = createTest({});
 
@@ -27,6 +25,7 @@ export abstract class TestSpecificBaseComponent extends SupportedEditorComponent
     testsService = inject(TestsService);
     testsQuery = inject(TestsQuery);
     notifyService = inject(ToastService);
+    textEditorConfigs = inject(TextEditorConfigsService);
 
     get readyForUI$() {
         return this._readyForUI.asObservable();
