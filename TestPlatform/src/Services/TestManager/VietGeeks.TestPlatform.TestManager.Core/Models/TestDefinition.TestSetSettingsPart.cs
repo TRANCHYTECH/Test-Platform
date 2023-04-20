@@ -45,6 +45,7 @@ public class DefaultGenerator : TestSetGenerator
     }
 }
 
+//todo: move it to file logics.cs
 /// <summary>
 /// Generate randomly by each category.
 /// </summary>

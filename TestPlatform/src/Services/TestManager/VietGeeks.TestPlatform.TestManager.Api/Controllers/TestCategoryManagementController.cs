@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestManager.Contract;
-using VietGeeks.TestPlatform.TestManager.Infrastructure;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 
@@ -11,18 +11,18 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 public class TestCategoryManagementController : ControllerBase
 {
     private readonly ILogger<TestCategoryManagementController> _logger;
-    private readonly ITestManagerService _testManagerService;
+    private readonly ITestCategoryService _testCatalogService;
 
-    public TestCategoryManagementController(ILogger<TestCategoryManagementController> logger, ITestManagerService testManagerService)
+    public TestCategoryManagementController(ILogger<TestCategoryManagementController> logger, ITestCategoryService testManagerService)
     {
         _logger = logger;
-        _testManagerService = testManagerService;
+        _testCatalogService = testManagerService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var testCategories = await _testManagerService.GetTestCategories();
+        var testCategories = await _testCatalogService.GetTestCategories();
 
         return Ok(testCategories);
     }
@@ -30,8 +30,7 @@ public class TestCategoryManagementController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(NewTestCategoryViewModel viewModel)
     {
-        //todo(tau): add validator
-        var createdTestCategory = await _testManagerService.CreateTestCategory(viewModel);
+        var createdTestCategory = await _testCatalogService.CreateTestCategory(viewModel);
 
         return Ok(createdTestCategory);
     }

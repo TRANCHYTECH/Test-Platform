@@ -27,14 +27,8 @@ public class TestDefinitionManagementController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromServices] IValidator<NewTestDefinitionViewModel> newTestValidator, NewTestDefinitionViewModel viewModel)
+    public async Task<IActionResult> Create(NewTestDefinitionViewModel viewModel)
     {
-        var validationResult = newTestValidator.Validate(viewModel);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-
         var createdTest = await _testManagerService.CreateTestDefinition(viewModel);
 
         return Ok(createdTest);
@@ -57,12 +51,6 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, UpdateTestDefinitionViewModel viewModel)
     {
-        var validationResult = _updateTestValidator.Validate(viewModel);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-
         var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);

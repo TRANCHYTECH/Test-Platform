@@ -12,26 +12,36 @@ using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 using Dapr.Client;
 using VietGeeks.TestPlatform.Integration.Contract;
 using shortid;
+using FluentValidation;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 public class TestManagerService : ITestManagerService
 {
+    private readonly IValidator<TestDefinition> _testDefinitionValidator;
     private readonly DaprClient _daprClient;
     private readonly IMapper _mapper;
     private readonly TestManagerDbContext _managerDbContext;
     private readonly ServiceBusClient _bus;
     private readonly ILogger<TestManagerService> _logger;
-    private readonly IClock _time;
+    private readonly IClock _clock;
 
-    public TestManagerService(DaprClient daprClient, IMapper mapper, TestManagerDbContext managerDbContext, ServiceBusClient bus, ILogger<TestManagerService> logger, IClock time)
+    public TestManagerService(
+        IValidator<TestDefinition> testDefinitionValidator,
+        DaprClient daprClient,
+        IMapper mapper,
+        TestManagerDbContext managerDbContext,
+        ServiceBusClient bus,
+        ILogger<TestManagerService> logger,
+        IClock clock)
     {
+        _testDefinitionValidator = testDefinitionValidator;
         _daprClient = daprClient;
         _mapper = mapper;
         _managerDbContext = managerDbContext;
         _bus = bus;
         _logger = logger;
-        _time = time;
+        _clock = clock;
     }
 
     public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
@@ -44,6 +54,8 @@ public class TestManagerService : ITestManagerService
         testEntity.TestStartSettings = TestStartSettingsPart.Default();
         testEntity.GradingSettings = GradingSettingsPart.Default();
         testEntity.TimeSettings = TimeSettingsPart.Default();
+
+        await _testDefinitionValidator.TryValidate(testEntity);
 
         await _managerDbContext.SaveAsync(testEntity);
 
@@ -122,6 +134,8 @@ public class TestManagerService : ITestManagerService
             updatedProperties.Add(nameof(TestDefinition.TestStartSettings));
         }
 
+        await _testDefinitionValidator.TryValidate(entity, updatedProperties.ToArray());
+
         if (updatedProperties.Count > 0)
         {
             var updateResult = await _managerDbContext.SaveOnlyAsync(entity, updatedProperties);
@@ -135,29 +149,13 @@ public class TestManagerService : ITestManagerService
         return ((PrivateAccessCodeType)settings).Configs.Select(c => c.Code).ToArray();
     }
 
-    public async Task<List<TestCategoryViewModel>> GetTestCategories()
-    {
-        var entities = await _managerDbContext.Find<TestCategory>().ManyAsync(c => c is TestCategory);
-        entities.Add(TestCategory.Uncategorized());
-        
-        return _mapper.Map<List<TestCategoryViewModel>>(entities).OrderBy(c=>c.DisplayOrder).ToList();
-    }
-
-    public async Task<TestCategoryViewModel> CreateTestCategory(NewTestCategoryViewModel newTestCategory)
-    {
-        var testCategoryEntity = _mapper.Map<TestCategory>(newTestCategory);
-        await _managerDbContext.SaveAsync(testCategoryEntity);
-
-        return _mapper.Map<TestCategoryViewModel>(testCategoryEntity);
-    }
-
     public async Task<TestDefinitionViewModel> ActivateTestDefinition(string id)
     {
         var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
         var questions = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id);
 
         // Check if can activate test.
-        var testRunTime = entity.EnsureCanActivate(questions.Count, _time.UtcNow);
+        var testRunTime = entity.EnsureCanActivate(questions.Count, _clock.UtcNow);
 
         using (var ctx = _managerDbContext.Transaction())
         {
@@ -178,7 +176,7 @@ public class TestManagerService : ITestManagerService
             });
 
             // Set current activated test run.
-            var affectedFields = entity.Activate(testRun.ID, _time.UtcNow, testRunTime.Status);
+            var affectedFields = entity.Activate(testRun.ID, _clock.UtcNow, testRunTime.Status);
 
             await _managerDbContext.InsertAsync(testRun);
             await _managerDbContext.InsertAsync(testRunQuestionBatches);
