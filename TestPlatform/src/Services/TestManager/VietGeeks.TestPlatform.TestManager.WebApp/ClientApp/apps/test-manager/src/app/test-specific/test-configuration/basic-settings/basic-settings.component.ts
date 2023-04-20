@@ -27,7 +27,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     super();
     this.basicSettingForm = this.fb.group({
       id: null,
-      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
+      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
       category: [TestCategoryUncategorizedId, [Validators.required]],
       description: ''
     });

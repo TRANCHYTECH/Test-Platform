@@ -53,6 +53,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietGeeks.TestPlatform.Acco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietGeeks.TestPlatform.AccountManager.Contract", "Services\AccountManager\VietGeeks.TestPlatform.AccountManager.Contract\VietGeeks.TestPlatform.AccountManager.Contract.csproj", "{A8C51C59-EC93-4FF7-976F-29DA99E259EE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5DB116CD-B881-46FC-9C3F-49432003F399}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestManager", "TestManager", "{D11F4DB6-9F25-422F-843E-146CAE5EA8C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietGeeks.TestPlatform.TestManager.Infrastructure.UnitTest", "Tests\TestManager\VietGeeks.TestPlatform.TestManager.Infrastructure.UnitTest\VietGeeks.TestPlatform.TestManager.Infrastructure.UnitTest.csproj", "{3D93ABAF-C8D4-432A-87E6-36FC77007E75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +137,10 @@ Global
 		{A8C51C59-EC93-4FF7-976F-29DA99E259EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8C51C59-EC93-4FF7-976F-29DA99E259EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8C51C59-EC93-4FF7-976F-29DA99E259EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D93ABAF-C8D4-432A-87E6-36FC77007E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D93ABAF-C8D4-432A-87E6-36FC77007E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D93ABAF-C8D4-432A-87E6-36FC77007E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D93ABAF-C8D4-432A-87E6-36FC77007E75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,6 +168,8 @@ Global
 		{F8DB2E3F-7A2C-43CA-A8DC-95106CE2A334} = {FD4ABEE4-FE54-4938-A30A-4A7B7BEDD81C}
 		{E967954B-E862-43E4-9902-C56A29CB1208} = {FD4ABEE4-FE54-4938-A30A-4A7B7BEDD81C}
 		{A8C51C59-EC93-4FF7-976F-29DA99E259EE} = {FD4ABEE4-FE54-4938-A30A-4A7B7BEDD81C}
+		{D11F4DB6-9F25-422F-843E-146CAE5EA8C3} = {5DB116CD-B881-46FC-9C3F-49432003F399}
+		{3D93ABAF-C8D4-432A-87E6-36FC77007E75} = {D11F4DB6-9F25-422F-843E-146CAE5EA8C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11EC26A0-B2C1-4D0F-A042-ABDACADBEB33}
