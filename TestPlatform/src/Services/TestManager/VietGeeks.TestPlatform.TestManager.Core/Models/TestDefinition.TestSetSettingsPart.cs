@@ -8,7 +8,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
 public class TestSetSettingsPart
 {
-    public TestSetGeneratorType GeneratorType { get; set; }
+    public TestSetGeneratorType GeneratorType { get; set; } = TestSetGeneratorType.Default;
 
     public TestSetGenerator Generator { get; set; } = new DefaultGenerator();
 

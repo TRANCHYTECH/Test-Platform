@@ -82,4 +82,11 @@ public class QuestionManagerService : IQuestionManagerService
             TotalPoints = c.Sum(q => q.ScoreSettings.TotalPoints)
         });
     }
+
+    public async Task<int> GetTotalPoints(string testId, CancellationToken cancellationToken)
+    {
+        var summary = await GetQuestionSummary(testId, cancellationToken);
+
+        return summary.Sum(c => c.TotalPoints);
+    }
 }

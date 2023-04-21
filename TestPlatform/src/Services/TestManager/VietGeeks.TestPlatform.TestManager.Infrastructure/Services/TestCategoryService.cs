@@ -43,9 +43,5 @@ public class TestCategoryService : ITestCategoryService
     {
         return id == TestCategory.UncategorizedId || await _dbContext.Find<TestCategory>().MatchID(id).ExecuteAnyAsync();
     }
-
-    public async Task SeekSystemTestCategories() {
-        await _dbContext.SaveAsync(TestCategory.Uncategorized());
-    }
 }
 
