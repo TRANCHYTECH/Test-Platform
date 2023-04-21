@@ -9,4 +9,5 @@ public interface IQuestionManagerService
     Task<QuestionViewModel> UpdateQuestion(string id, QuestionViewModel questionViewModel, CancellationToken cancellationToken);
     Task<QuestionViewModel> CreateQuestion(string testId, NewQuestionViewModel questionViewModel, CancellationToken cancellationToken);
     Task<IEnumerable<QuestionSummaryViewModel>> GetQuestionSummary(string testId, CancellationToken cancellationToken);
+    Task<int> GetTotalPoints(string testId, CancellationToken cancellationToken);
 }

@@ -17,6 +17,7 @@ public class TestSetSettingsPartValidator : AbstractValidator<TestSetSettingsPar
 
     private static Func<TestSetSettingsPart, TestSetGenerator, bool> MatchGeneratorTypeCheck()
     {
+        //todo: fix logic here if type is random, but generator default???
         return (part, prop) => (part.GeneratorType == TestSetGeneratorType.Default && !(prop is DefaultGenerator)) ? false : true;
     }
 }
