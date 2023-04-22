@@ -2,11 +2,11 @@
 </ngx-spinner>
 
 <div class="row g-4 mb-3">
-    <div class="col-sm-auto">
-        <div>
-            <a routerLink="/tests/new/config/basic-settings" class="btn btn-soft-secondary"><i
-                    class="ri-add-line align-bottom me-1"></i>Add New</a>
-        </div>
+    <div class="col-sm-auto d-flex gap-2">
+        <a routerLink="/tests/new/config/basic-settings" class="btn btn-secondary"><i
+                class="ri-add-line align-bottom me-1"></i>Add New Test</a>
+        <a routerLink="/test-categories" class="btn btn-soft-secondary"><i
+                class="ri-list-settings-fill align-bottom me-1"></i>Manage Test Categories</a>
     </div>
     <div class="col-sm">
         <div class="d-flex justify-content-sm-end gap-2">
@@ -38,7 +38,8 @@
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex">
                         <div class="flex-grow-1 mb-4">
-                            <span class="ribbon {{(test.status | testStatusClass:'ribbon')}} round-shape">{{test.status | testStatus}}</span>
+                            <span class="ribbon {{(test.status | testStatusClass:'ribbon')}} round-shape">{{test.status
+                                | testStatus}}</span>
                         </div>
                         <div class="flex-shrink-0 d-flex">
                             <span class="fs-12 text-muted">{{test.createdOn | date:'dd/MM/yyyy'}}</span>
@@ -68,9 +69,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-            <!-- end card body -->
             <div class="card-footer bg-transparent border-top-dashed py-2">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
@@ -82,55 +81,18 @@
                     </div>
                     <div class="flex-shrink-0">
                         <span class="badge rounded-pill text-bg-light fs-12">{{showCategory(test.category)}}</span>
-
                     </div>
-
                 </div>
-
             </div>
-            <!-- end card footer -->
         </div>
-        <!-- end card -->
     </div>
-    <!-- end col -->
 </div>
-<!-- end row -->
 
 
 <div class="row g-0 text-center text-sm-start align-items-center mb-4">
     <div class="col-sm-6">
-        <div>
-            <p class="mb-sm-0 text-muted">Showing page <span class="fw-semibold">{{page}}</span></p>
-        </div>
-    </div>
-    <!-- end col -->
-    <div class="col-sm-6">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-            class="d-flex justify-content-end"
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" class="d-flex justify-content-end"
             [collectionSize]="tests.length"></ngb-pagination>
 
-        <!-- <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
-            <li class="page-item disabled">
-                <a href="javascript:void(0);" class="page-link">Previous</a>
-            </li>
-            <li class="page-item active">
-                <a href="javascript:void(0);" class="page-link">1</a>
-            </li>
-            <li class="page-item ">
-                <a href="javascript:void(0);" class="page-link">2</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">3</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">4</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">5</a>
-            </li>
-            <li class="page-item">
-                <a href="javascript:void(0);" class="page-link">Next</a>
-            </li>
-        </ul> -->
-    </div><!-- end col -->
-</div><!-- end row -->
+    </div>
+</div>

@@ -6,6 +6,10 @@ export const appRoutes: Route[] = [
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {
+        path: 'test-categories',
+        loadChildren: () => import('./test-categories/test-categories.module').then(m => m.TetsCategoriesModule)
+    },
+    {
         path: 'tests',
         loadChildren: () => import('./test-list/test-list.module').then(m => m.TestListModule)
     },

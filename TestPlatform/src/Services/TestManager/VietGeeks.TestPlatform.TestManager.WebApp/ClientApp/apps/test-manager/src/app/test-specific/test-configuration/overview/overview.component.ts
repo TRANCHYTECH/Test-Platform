@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { firstValueFrom } from 'rxjs';
 
 import { Summary, SummaryBuilder } from './summary-builder';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionService } from '../../_state/questions/question.service';
-import { TestCategoriesQuery } from '../../_state/test-categories.query';
-import { TestCategoriesService } from '../../_state/test-categories.service';
 import { TestStatus } from '../../_state/test.model';
+import { TestCategoryQuery } from '../../../_state/test-category.query';
+import { TestCategoryService } from '../../../_state/test-category.service';
 
 @UntilDestroy()
 @Component({
@@ -17,13 +16,13 @@ import { TestStatus } from '../../_state/test.model';
 })
 export class OverviewComponent extends TestSpecificBaseComponent {
   summaries: Summary[] = [];
-  private _testCategoriesService = inject(TestCategoriesService);
-  private _testCategoriesQuery = inject(TestCategoriesQuery);
+  private _testCategoriesService = inject(TestCategoryService);
+  private _testCategoriesQuery = inject(TestCategoryQuery);
   private _questionService = inject(QuestionService);
   private _summaryBuilder = inject(SummaryBuilder);
 
   async postLoadEntity(): Promise<void> {
-    const fetches = await Promise.all([this._questionService.getSummary(this.testId), firstValueFrom(this._testCategoriesService.get())]);
+    const fetches = await Promise.all([this._questionService.getSummary(this.testId), this._testCategoriesService.get()]);
     const questionSummary = fetches[0];
     const testCategories = this._testCategoriesQuery.getAll();
 

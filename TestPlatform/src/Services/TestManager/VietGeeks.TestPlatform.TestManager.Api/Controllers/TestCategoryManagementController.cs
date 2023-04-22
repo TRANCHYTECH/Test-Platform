@@ -34,5 +34,13 @@ public class TestCategoryManagementController : ControllerBase
 
         return Ok(createdTestCategory);
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromQuery] string[] ids)
+    {
+        await _testCatalogService.DeleteTestCategories(ids);
+
+        return Ok();
+    }
 }
 
