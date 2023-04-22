@@ -1,4 +1,5 @@
 using AutoMapper;
+using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 using Core = VietGeeks.TestPlatform.TestManager.Core.ReadonlyModels;
 
@@ -13,5 +14,7 @@ public class ExamProfile : Profile
         CreateMap<StartExamOutput, StartExamOutputViewModel>();
         CreateMap<ExamStatus, ExamStatusWithStep>()
         .ForMember(desc => desc.Step, ops => ops.Ignore());
+        CreateMap<TestEndConfig, TestEndConfigOutput>();
+        CreateMap<InformRespondentConfig, InformRespondentConfigOutput>();
     }
 }

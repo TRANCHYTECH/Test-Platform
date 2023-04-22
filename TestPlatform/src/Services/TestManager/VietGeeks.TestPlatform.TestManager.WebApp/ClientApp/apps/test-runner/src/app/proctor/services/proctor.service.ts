@@ -51,4 +51,12 @@ export class ProctorService {
       return of(null);
     }));
   }
+
+  getAfterTestConfig() {
+    return this._examService.getAfterTestConfigs()
+      .pipe(catchError(error => {
+        console.log('get after test config error', error);
+        return of(null);
+      }));
+  }
 }

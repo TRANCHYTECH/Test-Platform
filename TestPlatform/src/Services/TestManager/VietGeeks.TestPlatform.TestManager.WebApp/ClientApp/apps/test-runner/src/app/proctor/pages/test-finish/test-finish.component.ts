@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AggregatedGrading, FinishExamOutput, TimeSpan } from '../../../api/models';
 import { GradingCriteriaConfigType, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke } from 'ng-apexcharts';
-import { TestSessionQuery } from '../../../state/test-session.query';
+import { TestSessionService } from '../../services/test-session.service';
+import { firstValueFrom } from 'rxjs';
+import { ProctorService } from '../../services/proctor.service';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -21,10 +23,10 @@ export type ChartOptions = {
   templateUrl: './test-finish.component.html',
   styleUrls: ['./test-finish.component.scss']
 })
-export class TestFinishComponent {
-
+export class TestFinishComponent implements OnInit {
+  private _proctorService = inject(ProctorService);
   private _testDurationService = inject(TestDurationService);
-  private _testSessionQuery = inject(TestSessionQuery);
+  private _testSessionService = inject(TestSessionService);
   router = inject(Router);
   labels: string[] = [];
   sessionData: Partial<TestSession> = {};
@@ -35,9 +37,26 @@ export class TestFinishComponent {
   public chartOptions?: ChartOptions;
   public passMarkGrading?: AggregatedGrading;
   public gradeRangesGrading?: AggregatedGrading;
+  public gradeRangesValues?: string[];
+  public message?: string;
 
-  constructor() {
-    this.setupSessionData();
+  ngOnInit() {
+    this.doInit();
+  }
+
+  private async doInit() {
+    await this.setupData();
+    this.setupPassMarkGrading();
+    this.setupGradeRangesGrading();
+  }
+
+  private setupGradeRangesGrading() {
+    if (this.gradeRangesGrading && this.gradeRangesGrading?.grades) {
+      this.gradeRangesValues = Object.values(this.gradeRangesGrading.grades);
+    }
+  }
+
+  private setupPassMarkGrading() {
     if (this.passMarkGrading) {
       const color = this.passMarkGrading?.passMarkGrade?.isPass ? '#20E647' : '#ff7067';
       const chartValues = this.calculateChartValues();
@@ -70,7 +89,7 @@ export class TestFinishComponent {
             track: {
               background: "#fff",
               strokeWidth: "67%",
-              margin: 0, // margin is in pixels
+              margin: 0,
               dropShadow: {
                 enabled: true,
                 top: -3,
@@ -89,7 +108,7 @@ export class TestFinishComponent {
                 fontSize: "17px"
               },
               value: {
-                formatter: function(val) {
+                formatter: function (val) {
                   if (unit == 'Percent') {
                     return parseInt(val.toString(), 10).toString();
                   }
@@ -125,7 +144,6 @@ export class TestFinishComponent {
     }
   }
 
-
   private calculateChartValues(): { finalPoints: number, totalPoints: number, percentage: number} {
     const finalPoints = this.passMarkGrading?.passMarkGrade?.finalPoints ?? 0;
     const totalPoints = this.passMarkGrading?.passMarkGrade?.totalPoints ?? 0;
@@ -150,15 +168,19 @@ export class TestFinishComponent {
     return values;
   }
 
+  private async setupData() {
+    const config = await firstValueFrom(this._proctorService.getAfterTestConfig());
+    if (config) {
+      this.message = config.testEndConfig?.message ?? '';
+    }
+    this.setupSessionData();
+  }
+
   private setupSessionData() {
-    this.sessionData = this._testSessionQuery.getEntity(1) ?? {};
+    this.sessionData = this._testSessionService.getSessionData();
     this.respondent = this.sessionData.respondentFields ?? [];
-    // this.testResult = this.sessionData.result;
 
     const gradings = this.sessionData.grading;
-
-    // this.isPass = (!!this.testResult?.grading) && this.testResult?.grading[0] && this.testResult?.grading[0].passMark == true;
-
     this.passMarkGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.PassMask)[0];
     this.gradeRangesGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.GradeRanges)[0];
 

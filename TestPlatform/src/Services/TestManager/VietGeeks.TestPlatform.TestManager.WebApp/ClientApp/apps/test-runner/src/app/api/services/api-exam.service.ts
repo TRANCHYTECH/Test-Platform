@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { AfterTestConfigOutput } from '../models/after-test-config-output';
 import { ExamStatusWithStep } from '../models/exam-status-with-step';
 import { FinishExamOutput } from '../models/finish-exam-output';
 import { ProvideExamineeInfoOutput } from '../models/provide-examinee-info-output';
@@ -520,6 +521,101 @@ export class ApiExamService extends BaseService {
 
     return this.finishExam$Response(params,context).pipe(
       map((r: StrictHttpResponse<FinishExamOutput>) => r.body as FinishExamOutput)
+    );
+  }
+
+  /**
+   * Path part for operation getAfterTestConfigs
+   */
+  static readonly GetAfterTestConfigsPath = '/Exam/AfterTestConfig';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAfterTestConfigs$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAfterTestConfigs$Plain$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<AfterTestConfigOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.GetAfterTestConfigsPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<AfterTestConfigOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAfterTestConfigs$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAfterTestConfigs$Plain(params?: {
+  },
+  context?: HttpContext
+
+): Observable<AfterTestConfigOutput> {
+
+    return this.getAfterTestConfigs$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<AfterTestConfigOutput>) => r.body as AfterTestConfigOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAfterTestConfigs()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAfterTestConfigs$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<AfterTestConfigOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.GetAfterTestConfigsPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<AfterTestConfigOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAfterTestConfigs$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAfterTestConfigs(params?: {
+  },
+  context?: HttpContext
+
+): Observable<AfterTestConfigOutput> {
+
+    return this.getAfterTestConfigs$Response(params,context).pipe(
+      map((r: StrictHttpResponse<AfterTestConfigOutput>) => r.body as AfterTestConfigOutput)
     );
   }
 
