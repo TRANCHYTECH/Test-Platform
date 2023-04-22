@@ -7,7 +7,7 @@ import { TestCategoryService } from '@viet-geeks/test-manager/state';
 
 @Component({
   selector: 'viet-geeks-new-test-category',
-  standalone: true,
+  standalone: true, // Important to use it as standardalone, so could share between modules efficently.
   imports: [ReactiveFormsModule, SharedModule, errorTailorImports],
   templateUrl: './new-test-category.component.html',
   styleUrls: ['./new-test-category.component.scss']

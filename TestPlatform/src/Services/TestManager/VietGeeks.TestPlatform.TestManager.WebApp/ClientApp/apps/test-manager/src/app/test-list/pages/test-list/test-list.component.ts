@@ -39,7 +39,7 @@ export class TestListComponent implements OnInit, AfterViewInit{
   }
 
   showCategory(id: string) {
-    return this.testCategories.find(c => c.id === id)?.name || 'Uncategorized';
+    return this._testCategoryQuery.getEntityWithFallback(id)?.name;
   }
 
   private configureLoadingIndicator() {

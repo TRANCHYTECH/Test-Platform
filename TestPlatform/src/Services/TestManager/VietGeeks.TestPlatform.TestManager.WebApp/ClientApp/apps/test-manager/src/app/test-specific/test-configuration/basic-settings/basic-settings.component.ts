@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TestCategory, TestCategoryQuery, TestCategoryService, TestCategoryUncategorizedId } from '@viet-geeks/test-manager/state';
+import { TestCategory, TestCategoryQuery, TestCategoryService, TestCategoryUncategorizedId, UiIntegrationService } from '@viet-geeks/test-manager/state';
 import { Observable, lastValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
 
 @UntilDestroy()
 @Component({
@@ -20,7 +18,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
 
   private _testCategoryQuery = inject(TestCategoryQuery);
   private _testCategoryService = inject(TestCategoryService);
-  private _modalService = inject(NgbModal);
+  private _uiIntegrationService = inject(UiIntegrationService);
 
   constructor() {
     super();
@@ -71,10 +69,6 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
   }
 
   openAddTestCategoryModal() {
-    const modalRef = this._modalService.open(CreateCategoryComponent, { size: 'md', centered: true });
-    modalRef.result.then(async (formValue: Partial<TestCategory>) => {
-      await this._testCategoryService.add(formValue);
-      this.notifyService.success('Test Category created');
-    });
+    this._uiIntegrationService.openNewTestCategoryModal();
   }
 }
