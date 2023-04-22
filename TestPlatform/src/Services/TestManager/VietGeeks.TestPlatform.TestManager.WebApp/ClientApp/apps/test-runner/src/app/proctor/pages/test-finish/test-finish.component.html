@@ -13,7 +13,8 @@
           <div class="mb-3">
             <h5 class="text-uppercase">Respondent</h5>
             <div class="d-flex" *ngFor="let field of respondent">
-              <i class="bx bx-info-square fs-4 p-1"></i><span class="p-1">{{field.id}}: </span><span class="p-1 fw-bold">{{field.fieldValue}}</span>
+              <i class="bx bx-info-square fs-4 p-1"></i><span class="p-1">{{field.id}}: </span><span
+                class="p-1 fw-bold">{{field.fieldValue}}</span>
             </div>
           </div>
         </div>
@@ -21,30 +22,40 @@
       <div class="card">
         <div class="card-body">
           <div class="mb-3">
-            <h5 class="text-uppercase">Message</h5>
-            <div class="d-flex">
-              <span class="p-1" [innerHTML]="message"></span>
+            <h5 class="text-uppercase">Summary</h5>
+            <div>
+              <p [innerHTML]="afterTestConfig?.testEndConfig?.message"></p>
+              <ng-container *ngIf="showPassFailMessage">
+                <p *ngIf="passMarkGrading?.passMarkGrade?.isPass; else failMessage"
+                  [innerHTML]="afterTestConfig?.informRespondentConfig?.passedMessage"></p>
+                <ng-template #failMessage>
+                  <p [innerHTML]="afterTestConfig?.informRespondentConfig?.failedMessage"></p>
+                </ng-template>
+              </ng-container>
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row justify-content-center" *ngIf="passMarkGrading">
+  <div class="row justify-content-center">
     <div class="col-lg-6">
       <div class="card">
         <div class="card-body">
           <div class="row mb-3">
             <h4 class="text-uppercase">Result</h4>
-            <div class="col-xl-6">
+            <div class="col-xl-6" *ngIf="passMarkGrading">
               <div class="d-flex pass" *ngIf="passMarkGrading.passMarkGrade?.isPass; else fail">
-                <i class="bx bxs-check-square fs-3"></i> <h5>Test passed</h5>
+                <i class="bx bxs-check-square fs-3"></i>
+                <h5>Test passed</h5>
               </div>
               <ng-template #fail>
                 <div class="d-flex fail">
-                  <i class="bx bxs-x-square fs-3"></i><h5>Test failed</h5>
+                  <i class="bx bxs-x-square fs-3"></i>
+                  <h5>Test failed</h5>
                 </div>
-                </ng-template>
+              </ng-template>
             </div>
             <div class="col-xl-6" *ngIf="gradeRangesValues">
               <div class="d-flex">
@@ -56,15 +67,9 @@
             </div>
             <div class="col-xl-6">
               <div id="chart">
-                <apx-chart *ngIf="chartOptions"
-                  [series]="chartOptions.series"
-                  [chart]="chartOptions.chart"
-                  [plotOptions]="chartOptions.plotOptions"
-                  [labels]="chartOptions.labels"
-                  [stroke]="chartOptions.stroke"
-                  [fill]="chartOptions.fill"
-                  [colors]="chartOptions.colors"
-                ></apx-chart>
+                <apx-chart *ngIf="chartOptions" [series]="chartOptions.series" [chart]="chartOptions.chart"
+                  [plotOptions]="chartOptions.plotOptions" [labels]="chartOptions.labels" [stroke]="chartOptions.stroke"
+                  [fill]="chartOptions.fill" [colors]="chartOptions.colors"></apx-chart>
               </div>
             </div>
           </div>
@@ -80,7 +85,8 @@
               <h5>Total time</h5>
               <div class="row mb-3">
                 <div class="d-flex fs-3">
-                  <span class="fw-bold">{{totalTime | formatTimeSpan}}</span><span>/</span><span class="opacity-75">{{maxTime | formatTimeSpan}}</span>
+                  <span class="fw-bold">{{totalTime | formatTimeSpan}}</span><span>/</span><span
+                    class="opacity-75">{{maxTime | formatTimeSpan}}</span>
                 </div>
               </div>
               <h5>Start time</h5>

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AggregatedGrading, FinishExamOutput, TimeSpan } from '../../../api/models';
-import { GradingCriteriaConfigType, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
+import { AfterTestConfigOutput, AggregatedGrading, FinishExamOutput, TimeSpan } from '../../../api/models';
+import { GradingCriteriaConfigType, InformFactor, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke } from 'ng-apexcharts';
 import { TestSessionService } from '../../services/test-session.service';
@@ -38,7 +38,8 @@ export class TestFinishComponent implements OnInit {
   public passMarkGrading?: AggregatedGrading;
   public gradeRangesGrading?: AggregatedGrading;
   public gradeRangesValues?: string[];
-  public message?: string;
+  public afterTestConfig?: AfterTestConfigOutput | null;
+  public showPassFailMessage = false;
 
   ngOnInit() {
     this.doInit();
@@ -169,11 +170,12 @@ export class TestFinishComponent implements OnInit {
   }
 
   private async setupData() {
-    const config = await firstValueFrom(this._proctorService.getAfterTestConfig());
-    if (config) {
-      this.message = config.testEndConfig?.message ?? '';
-    }
     this.setupSessionData();
+    this.afterTestConfig = await firstValueFrom(this._proctorService.getAfterTestConfig());
+    const informFactors = this.afterTestConfig?.informRespondentConfig?.informFactors;
+    if (informFactors) {
+      this.showPassFailMessage = informFactors[InformFactor.PassOrFailMessage];
+    }
   }
 
   private setupSessionData() {
