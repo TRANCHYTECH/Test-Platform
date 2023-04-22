@@ -14,6 +14,7 @@ export abstract class EntitySpecificBaseComponent implements OnInit {
 
     protected _spinner = inject(NgxSpinnerService);
     protected _readyForUI = new BehaviorSubject(false);
+    protected _refreshAfterSubmit = true;
 
     get readyForUI$() {
         return this._readyForUI.asObservable();
@@ -58,7 +59,9 @@ export abstract class EntitySpecificBaseComponent implements OnInit {
         await this.submit();
 
         // Refresh the page to bind latest info.
-        this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
+        if (this._refreshAfterSubmit) {
+            this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
+        }
     };
 
     private configureLoadingIndicator() {
@@ -82,7 +85,7 @@ export abstract class EntitySpecificBaseComponent implements OnInit {
             this.maskBusyForUI();
 
             await this.loadEntity();
-            
+
             await Promise.resolve(this.postLoadEntity());
         } finally {
             this.maskReadyForUI();

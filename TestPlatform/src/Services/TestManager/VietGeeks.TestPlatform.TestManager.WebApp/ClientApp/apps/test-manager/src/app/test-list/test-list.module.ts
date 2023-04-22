@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { TestListRoutingModule } from './test-list-routing.module';
+import { TestListComponent } from './pages/test-list/test-list.component';
+import { SharedModule } from '@viet-geeks/shared';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [TestListComponent],
   imports: [
-    CommonModule,
+    SharedModule,
+    NgbPagination,
     TestListRoutingModule
   ]
 })
-export class TestListModule { }
+export class TestListModule {
+ }

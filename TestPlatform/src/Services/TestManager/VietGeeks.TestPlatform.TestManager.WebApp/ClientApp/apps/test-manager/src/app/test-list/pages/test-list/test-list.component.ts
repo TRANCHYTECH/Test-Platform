@@ -3,8 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TestCategory, TestCategoryQuery, TestCategoryService } from '@viet-geeks/test-manager/state';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject } from 'rxjs';
-import { TestOverview } from '../../../test-specific/_state/test.model';
-import { TestsService } from '../../../test-specific/_state/tests.service';
+import { TestOverview } from '../../_state/test-overview.model';
+import { TestOverviewService } from '../../_state/test-overview.service';
 
 @UntilDestroy()
 @Component({
@@ -20,12 +20,12 @@ export class TestListComponent implements OnInit, AfterViewInit{
 
   private _readyForUI = new BehaviorSubject(false);
   private _spinner = inject(NgxSpinnerService);
-  private _testsService = inject(TestsService);
+  private _testOverviewService = inject(TestOverviewService);
   private _testCategoryQuery = inject(TestCategoryQuery);
   private _testCategoryService = inject(TestCategoryService);
 
   ngOnInit() {
-    Promise.all([this._testsService.getOverviews(), this._testCategoryService.get()]).then((rs) => {
+    Promise.all([this._testOverviewService.get(), this._testCategoryService.get()]).then((rs) => {
       this.tests = rs[0];
       this.testCategories = this._testCategoryQuery.getAll();
       this._readyForUI.next(true);

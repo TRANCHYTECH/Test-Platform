@@ -4,8 +4,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Summary, SummaryBuilder } from './summary-builder';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionService } from '../../_state/questions/question.service';
-import { TestStatus } from '../../_state/test.model';
-import { TestCategoryQuery, TestCategoryService } from '@viet-geeks/test-manager/state';
+import { TestCategoryQuery, TestCategoryService, TestStatus } from '@viet-geeks/test-manager/state';
 
 @UntilDestroy()
 @Component({

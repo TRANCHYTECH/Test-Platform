@@ -4,9 +4,10 @@ import { ActivatedRoute } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { EntitySpecificBaseComponent, getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
 import { firstValueFrom } from "rxjs";
-import { createTest, Test, TestStatus } from "../_state/test.model";
+import { createTest, Test } from "../_state/test.model";
 import { TestsService } from "../_state/tests.service";
 import { TestsQuery } from "../_state/tests.query";
+import { TestStatus } from "@viet-geeks/test-manager/state";
 
 @Component({
     selector: 'viet-geeks-test-specific-base',
@@ -40,7 +41,7 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
             await firstValueFrom(this.testsService.getById(this.testId), { defaultValue: null });
             const testDef = this.testsQuery.getEntity(this.testId);
             if (testDef === undefined) {
-                await this.router.navigate(['tests']);
+                await this.router.navigate(['/test/list']);
                 return;
             }
 

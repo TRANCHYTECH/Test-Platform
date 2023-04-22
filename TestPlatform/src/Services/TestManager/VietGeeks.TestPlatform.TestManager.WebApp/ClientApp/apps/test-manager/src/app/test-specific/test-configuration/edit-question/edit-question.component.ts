@@ -227,11 +227,11 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
 
       if (this.questionId === 'new') {
         await lastValueFrom(this._questionService.add(this.testId, question));
-        this.router.navigate(['tests', this.testId, 'config', 'manage-questions']);
+        this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
         this.notifyService.success('Question created');
       } else {
           await this._questionService.update(this.testId, this.questionId, question);
-          this.router.navigate(['tests', this.testId, 'config', 'manage-questions']);
+          this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
           this.notifyService.success('Question updated');
       }
 

@@ -1,23 +1,20 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../app-setting.model';
 import { EMPTY, firstValueFrom, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import { PrivateAccessCodeType, Test, TestAccessType, TestInvitationStats, TestOverview } from './test.model';
+import { PrivateAccessCodeType, Test, TestAccessType, TestInvitationStats } from './test.model';
 import { TestsQuery } from './tests.query';
 import { TestsStore } from './tests.store';
 import { defKSUID32 } from '@thi.ng/ksuid';
 
 @Injectable({ providedIn: 'root' })
 export class TestsService {
-
-  constructor(private _testsStore: TestsStore, private _testsQuery: TestsQuery, private _http: HttpClient, private _appSettingService: AppSettingsService) {
-  }
-
-  getOverviews() {
-    return firstValueFrom(this._http.get<TestOverview[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`));
-  }
+  private _testsStore = inject(TestsStore);
+  private _testsQuery = inject(TestsQuery);
+  private _http = inject(HttpClient);
+  private _appSettingService = inject(AppSettingsService);
 
   getById(id: string) {
     if (this._testsQuery.hasEntity(id)) {
@@ -63,7 +60,7 @@ export class TestsService {
   }
 
   generateAccessCodes(id: string, quantity: number) {
-    return firstValueFrom(this._http.get<{accessCodes: string[]}>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/GenerateAccessCodes/${quantity}`).pipe(switchMap(rs => {
+    return firstValueFrom(this._http.get<{ accessCodes: string[] }>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/GenerateAccessCodes/${quantity}`).pipe(switchMap(rs => {
       return of(rs.accessCodes);
     })));
   }
