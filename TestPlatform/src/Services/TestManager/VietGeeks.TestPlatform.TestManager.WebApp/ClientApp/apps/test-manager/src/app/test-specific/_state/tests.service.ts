@@ -16,7 +16,7 @@ export class TestsService {
   }
 
   getOverviews() {
-    return this._http.get<TestOverview[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`);
+    return firstValueFrom(this._http.get<TestOverview[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition`));
   }
 
   getById(id: string) {

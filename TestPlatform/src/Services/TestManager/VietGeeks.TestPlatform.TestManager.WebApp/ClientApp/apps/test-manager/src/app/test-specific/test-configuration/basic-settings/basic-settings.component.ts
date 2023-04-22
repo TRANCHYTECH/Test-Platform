@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TestCategory, TestCategoryQuery, TestCategoryService, TestCategoryUncategorizedId } from '@viet-geeks/test-manager/state';
 import { Observable, lastValueFrom } from 'rxjs';
-import { TestCategory, TestCategoryUncategorizedId } from '../../../_state/test-category.model';
-import { TestCategoryQuery } from '../../../_state/test-category.query';
-import { TestCategoryService } from '../../../_state/test-category.service';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
 
@@ -20,10 +18,11 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
   basicSettingForm: FormGroup;
   testCategories$!: Observable<TestCategory[]>;
 
-  constructor(
-    private _testCategoryQuery: TestCategoryQuery,
-    private _testCategoryService: TestCategoryService,
-    private _modalService: NgbModal) {
+  private _testCategoryQuery = inject(TestCategoryQuery);
+  private _testCategoryService = inject(TestCategoryService);
+  private _modalService = inject(NgbModal);
+
+  constructor() {
     super();
     this.basicSettingForm = this.fb.group({
       id: null,

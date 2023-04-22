@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TestCategory, TestCategoryQuery, TestCategoryService, TestCategoryUncategorizedId } from '@viet-geeks/test-manager/state';
 import { Subject } from 'rxjs';
-import { TestCategory, TestCategoryUncategorizedId } from '../../_state/test-category.model';
-import { TestCategoryQuery } from '../../_state/test-category.query';
-import { TestCategoryService } from '../../_state/test-category.service';
 import { NewTestCategoryComponent } from '../new-test-category/new-test-category.component';
 
 @UntilDestroy()
@@ -41,5 +39,4 @@ export class TestCategoryListComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(rs => this.categories$.next(rs));
   }
-
 }
