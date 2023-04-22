@@ -1,4 +1,5 @@
 using FluentValidation;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
@@ -17,8 +18,18 @@ public class TestSetSettingsPartValidator : AbstractValidator<TestSetSettingsPar
 
     private static Func<TestSetSettingsPart, TestSetGenerator, bool> MatchGeneratorTypeCheck()
     {
-        //todo: fix logic here if type is random, but generator default???
-        return (part, prop) => (part.GeneratorType == TestSetGeneratorType.Default && !(prop is DefaultGenerator)) ? false : true;
+        return (part, prop) =>
+        {
+            switch (part.GeneratorType)
+            {
+                case TestSetGeneratorType.Default:
+                    return prop is DefaultGenerator;
+                case TestSetGeneratorType.RandomByCategories:
+                    return prop is RandomFromCategoriesGenerator;
+                default:
+                    return false;
+            }
+        };
     }
 }
 
