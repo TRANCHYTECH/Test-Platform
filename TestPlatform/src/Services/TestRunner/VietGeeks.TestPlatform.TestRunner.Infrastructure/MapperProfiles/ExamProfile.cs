@@ -9,8 +9,8 @@ public class ExamProfile : Profile
 {
     public ExamProfile()
     {
-        CreateMap<Core.AggregatedGrading, AggregatedGrading>();
-        CreateMap<Core.PassMarkGrade, PassMarkGrade>();
+        CreateMap<Core.AggregatedGrading, AggregatedGradingOuput>();
+        CreateMap<Core.PassMarkGrade, PassMarkGradeOutput>();
         CreateMap<StartExamOutput, StartExamOutputViewModel>();
         CreateMap<ExamStatus, ExamStatusWithStep>()
         .ForMember(desc => desc.Step, ops => ops.Ignore());

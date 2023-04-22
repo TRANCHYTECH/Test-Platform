@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { AggregatedGrading } from './aggregated-grading';
+import { AggregatedGradingOuput } from './aggregated-grading-ouput';
 import { ExamQuestion } from './exam-question';
 import { ExamStep } from './exam-step';
 import { TestDuration } from './test-duration';
@@ -13,7 +13,7 @@ export interface ExamStatusWithStep {
 [key: string]: string;
 };
   finishededAt?: null | string;
-  grading?: null | Array<AggregatedGrading>;
+  grading?: null | Array<AggregatedGradingOuput>;
   questionCount?: null | number;
   startedAt?: string;
   step?: ExamStep;

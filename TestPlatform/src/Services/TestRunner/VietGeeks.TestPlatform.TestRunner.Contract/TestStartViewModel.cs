@@ -31,6 +31,7 @@ public class VerifyTestInput
 
 public class VerifyTestOutputViewModel
 {
+    public string AccessCode { get; set; } = default!;
     public string TestName { get; set; } = default!;
     public string ConsentMessage { get; set; } = default!;
     public string InstructionMessage { get; set; } = default!;
@@ -49,7 +50,7 @@ public class VerifyTestOutput
     public string? ConsentMessage { get; set; }
 
     public DateTime StartAtUtc { get; set; }
-    
+
     public DateTime EndAtUtc { get; set; }
 
     public string ProctorExamId { get; set; } = default!;
@@ -63,7 +64,7 @@ public class SubmitAnswerViewModel
     public string[] AnswerIds { get; set; } = default!;
 }
 
-public class SubmitAnswerOutputViewModel: IExamStepInfo
+public class SubmitAnswerOutputViewModel : IExamStepInfo
 {
     public ExamQuestion? ActiveQuestion { get; set; } = default!;
     public ExamStep Step { get; set; }
@@ -80,7 +81,7 @@ public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
     public string AccessCode { get; set; } = default!;
 }
 
-public class ProvideExamineeInfoOutput: IExamStepInfo
+public class ProvideExamineeInfoOutput : IExamStepInfo
 {
     public ExamStep Step { get; set; }
 }

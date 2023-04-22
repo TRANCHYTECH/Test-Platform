@@ -174,10 +174,14 @@ public class ProctorService : IProctorService
         var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading) };
         await DB.SaveOnlyAsync(exam, changedProps);
 
+        if (testDefinition.GradingSettings?.InformRespondentConfig?.InformFactors[InformFactor.CorrectAnwsers.ToString()] == true) {
+
+        }
+
         return new FinishExamOutput
         {
             FinalMark = exam.FinalMark,
-            Grading = _mapper.Map<List<AggregatedGrading>>(exam.Grading),
+            Grading = _mapper.Map<List<AggregatedGradingOuput>>(exam.Grading),
             FinishedAt = exam.FinishedAt
         };
     }

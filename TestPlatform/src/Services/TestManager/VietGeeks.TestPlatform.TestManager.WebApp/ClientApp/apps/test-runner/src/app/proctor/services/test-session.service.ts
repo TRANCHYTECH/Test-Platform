@@ -67,12 +67,17 @@ export class TestSessionService {
     return true;
   }
 
-  public hasSessionData() {
-    return !!this._sessionData.accessCode;
-  }
-
   public setSessionData(sessionData: Partial<TestSession>) {
-    this._testSessionStore.update(SESSION_ID, sessionData);
+    if (!this._testSessionQuery.hasEntity()) {
+      this._testSessionStore.add({
+        id: SESSION_ID,
+        ...sessionData
+      });
+    }
+    else
+    {
+      this._testSessionStore.update(SESSION_ID, sessionData);
+    }
   }
 
   public getSessionData(): Partial<TestSession> {

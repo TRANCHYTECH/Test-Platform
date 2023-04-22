@@ -48,6 +48,7 @@ public class ExamController : ControllerBase
 
         return Ok(new VerifyTestOutputViewModel
         {
+            AccessCode = verifyResult.AccessCode,
             TestName = verifyResult.TestName,
             ConsentMessage = verifyResult.ConsentMessage ?? "DefaultConsentMessage",
             InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage"

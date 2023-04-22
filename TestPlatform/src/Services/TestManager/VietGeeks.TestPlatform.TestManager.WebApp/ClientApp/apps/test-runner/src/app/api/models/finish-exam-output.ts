@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-import { AggregatedGrading } from './aggregated-grading';
+import { AggregatedGradingOuput } from './aggregated-grading-ouput';
 export interface FinishExamOutput {
   finalMark?: number;
   finishedAt?: string;
-  grading?: null | Array<AggregatedGrading>;
+  grading?: null | Array<AggregatedGradingOuput>;
 }
