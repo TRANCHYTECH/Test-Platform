@@ -182,6 +182,21 @@ public class ProctorService : IProctorService
         };
     }
 
+    public async Task<AfterTestConfigOutput> GetAfterTestConfigAsync(string examId)
+    {
+        var exam = await EnsureExam(examId);
+        var testRun = await DB.Find<TestRun>().Match(exam.TestRunId).ExecuteSingleAsync();
+        var testDefinition = testRun.TestDefinitionSnapshot;
+        var testEndConfig = testDefinition.GradingSettings.TestEndConfig;
+        var informRespondentConfig = testDefinition.GradingSettings.InformRespondentConfig;
+
+        return new AfterTestConfigOutput 
+        {
+            TestEndConfig = _mapper.Map<TestEndConfigOutput>(testEndConfig),
+            InformRespondentConfig = _mapper.Map<InformRespondentConfigOutput>(informRespondentConfig)
+        };
+    }
+
    // TODO: Optimize query
     public async Task<ExamQuestion?> GetTestRunQuestion(string examId, string questionId)
     {

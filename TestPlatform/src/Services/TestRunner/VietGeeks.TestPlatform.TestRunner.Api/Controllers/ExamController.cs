@@ -95,6 +95,7 @@ public class ExamController : ControllerBase
         SetTestSession(new()
         {
             ProctorExamId = testSession.ProctorExamId,
+            ExamId = testSession.ExamId,
             PreviousStep = ExamStep.Start,
             ClientProof = testSession.ClientProof,
             //todo: discuss logic here. Logical total duration + estimated delay time 5 mins.
@@ -140,6 +141,21 @@ public class ExamController : ControllerBase
         });
 
         return Ok(result);
+    }
+
+    [HttpGet("AfterTestConfig")]
+    [ProducesResponseType(typeof(AfterTestConfigOutput), 200)]
+    public async Task<IActionResult> GetAfterTestConfigs()
+    {
+        var testSession = GetTestSession();
+
+        if (testSession == null) {
+            return NotFound();
+        }
+
+        var output = await _proctorService.GetAfterTestConfigAsync(testSession.ExamId);
+
+        return Ok(output);
     }
 
     [HttpGet("Status")]
