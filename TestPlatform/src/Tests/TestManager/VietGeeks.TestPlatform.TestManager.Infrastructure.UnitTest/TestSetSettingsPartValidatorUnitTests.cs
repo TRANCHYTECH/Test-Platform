@@ -22,7 +22,8 @@ public class TestSetSettingsPartValidatorUnitTests
     {
         var input = new TestSetSettingsPart
         {
-            Generator = default!
+            Generator = default!,
+            GeneratorType = 0
         };
         var result = await _validator.ValidateAsync(input);
 
