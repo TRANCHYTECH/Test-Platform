@@ -1,5 +1,5 @@
 export interface TestCategory {
-  id: number | string;
+  id: string;
   name: string;
 }
 
