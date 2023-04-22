@@ -15,7 +15,8 @@ public class GradingSettingsPart
     {
         GradingSettingsPart defaultSetting = new()
         {
-            TestEndConfig = new TestEndConfig{
+            TestEndConfig = new  TestEndConfig
+            {
                 Message = "Thank you for taking the test!"
             }
         };

@@ -222,7 +222,7 @@ public class ProctorActor : Actor, IProctorActor
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 
         public Dictionary<string, QuestionTiming> QuestionTimes {get;set;} = new Dictionary<string, QuestionTiming>();
-        public IEnumerable<AggregatedGrading> Grading { get; set; } = default!;
+        public IEnumerable<AggregatedGradingOuput> Grading { get; set; } = default!;
 
         public DateTime StartedAt { get; set; }
 

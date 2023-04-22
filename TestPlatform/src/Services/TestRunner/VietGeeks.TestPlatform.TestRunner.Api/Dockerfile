@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["NuGet.config", "."]
 COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/VietGeeks.TestPlatform.TestRunner.Api.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/"]
 COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Contract/VietGeeks.TestPlatform.TestRunner.Contract.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Contract/"]
-COPY ["Services/TestRunner/VietGeeks.TestPlaftorm.TestRunner.Infrastructure/VietGeeks.TestPlatform.TestRunner.Infrastructure.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Infrastructure/"]
+COPY ["Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Infrastructure/VietGeeks.TestPlatform.TestRunner.Infrastructure.csproj", "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Infrastructure/"]
 COPY ["Services/TestManager/VietGeeks.TestPlatform.TestManager.Core/VietGeeks.TestPlatform.TestManager.Core.csproj", "Services/TestManager/VietGeeks.TestPlatform.TestManager.Core/"]
 RUN dotnet restore "Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/VietGeeks.TestPlatform.TestRunner.Api.csproj"
 COPY . .

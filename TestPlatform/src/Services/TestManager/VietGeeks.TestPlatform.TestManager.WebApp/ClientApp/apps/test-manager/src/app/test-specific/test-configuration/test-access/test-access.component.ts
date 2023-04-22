@@ -60,7 +60,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     }
 
     //todo: encrypt id instead of real id.
-    this._publicTestAccessLink = `${this.appSettingsService.get<AppSettings>().testRunnerBaseUrl}/test/${this.testId}`;
+    this._publicTestAccessLink = `${this.appSettingsService.get<AppSettings>().testRunnerBaseUrl}/test/public/${this.testId}`;
     return this._publicTestAccessLink;
   }
 

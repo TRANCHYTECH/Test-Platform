@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface PassMarkGrade {
+export interface PassMarkGradeOutput {
   finalPoints?: null | number;
   isPass?: null | boolean;
   passValue?: null | number;
