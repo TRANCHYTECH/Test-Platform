@@ -7,7 +7,6 @@ import { InputMaskModule } from '@ngneat/input-mask';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import { TestListComponent } from '../../test-list/pages/test-list/test-list.component';
 import { BasicSettingsComponent } from './basic-settings/basic-settings.component';
 import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { GradingAndSummaryComponent } from './grading-and-summary/grading-and-summary.component';
@@ -20,7 +19,6 @@ import { TestTimeSettingsComponent } from './test-time-settings/test-time-settin
 
 @NgModule({
   declarations: [
-    TestListComponent,
     BasicSettingsComponent,
     ManageQuestionsComponent,
     EditQuestionComponent,

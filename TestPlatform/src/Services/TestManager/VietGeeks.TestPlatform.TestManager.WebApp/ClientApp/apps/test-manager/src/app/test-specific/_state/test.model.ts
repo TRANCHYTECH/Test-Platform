@@ -1,12 +1,4 @@
-
-export interface TestOverview {
-  id: string;
-  name: string;
-  description: string;
-  createdOn: string;
-  status: TestStatus;
-  category: string;
-}
+import { TestStatus } from "@viet-geeks/test-manager/state";
 
 export interface Test {
   id: string;
@@ -20,13 +12,6 @@ export interface Test {
   createdOn: Date;
   isEnabled: boolean;
   status: TestStatus;
-}
-
-export enum TestStatus {
-  Draft = 1,
-  Activated = 2,
-  Scheduled = 3,
-  Ended = 4
 }
 
 export interface TimeSettings {

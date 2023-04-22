@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TestCategory, TestCategoryQuery, TestCategoryService, TestCategoryUncategorizedId, UiIntegrationService } from '@viet-geeks/test-manager/state';
 import { Subject } from 'rxjs';
-import { TestCategory, TestCategoryUncategorizedId } from '../../_state/test-category.model';
-import { TestCategoryQuery } from '../../_state/test-category.query';
-import { TestCategoryService } from '../../_state/test-category.service';
-import { NewTestCategoryComponent } from '../new-test-category/new-test-category.component';
 
 @UntilDestroy()
 @Component({
@@ -18,8 +14,8 @@ export class TestCategoryListComponent implements OnInit {
   categories$ = new Subject<TestCategory[]>;
 
   private _testCategoryService = inject(TestCategoryService);
+  private _uiIntegrationService = inject(UiIntegrationService);
   private _testCategoryQuery = inject(TestCategoryQuery);
-  private _modalService = inject(NgbModal);
 
   ngOnInit(): void {
     this.loadData();
@@ -30,7 +26,7 @@ export class TestCategoryListComponent implements OnInit {
   }
 
   openNewTestCategoryModal() {
-    this._modalService.open(NewTestCategoryComponent, { size: 'md', centered: true });
+    this._uiIntegrationService.openNewTestCategoryModal();
   }
 
   private async loadData() {
@@ -41,5 +37,4 @@ export class TestCategoryListComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(rs => this.categories$.next(rs));
   }
-
 }

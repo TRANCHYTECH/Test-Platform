@@ -3,9 +3,9 @@
 
 <div class="row g-4 mb-3">
     <div class="col-sm-auto d-flex gap-2">
-        <a routerLink="/tests/new/config/basic-settings" class="btn btn-secondary"><i
+        <a routerLink="/test/new/config/basic-settings" class="btn btn-secondary"><i
                 class="ri-add-line align-bottom me-1"></i>Add New Test</a>
-        <a routerLink="/test-categories" class="btn btn-soft-secondary"><i
+        <a routerLink="/test/categories" class="btn btn-soft-secondary"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Manage Test Categories</a>
     </div>
     <div class="col-sm">
@@ -63,7 +63,7 @@
                     </div>
                     <div class="d-flex mb-2 mt-2">
                         <div class="flex-grow-1">
-                            <h5 class="mb-1 fs-15"><a [routerLink]="[test.id, 'config', 'overview']"
+                            <h5 class="mb-1 fs-15"><a [routerLink]="['/test', test.id, 'config', 'overview']"
                                     class="text-dark">{{test.name}}</a></h5>
                             <p class="text-muted text-truncate-two-lines mb-3">{{test.description}}</p>
                         </div>

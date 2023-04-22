@@ -1,13 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TestCategory, TestCategoryQuery, TestCategoryService, TestCategoryUncategorizedId, UiIntegrationService } from '@viet-geeks/test-manager/state';
 import { Observable, lastValueFrom } from 'rxjs';
-import { TestCategory, TestCategoryUncategorizedId } from '../../../_state/test-category.model';
-import { TestCategoryQuery } from '../../../_state/test-category.query';
-import { TestCategoryService } from '../../../_state/test-category.service';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
 
 @UntilDestroy()
 @Component({
@@ -20,10 +16,11 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
   basicSettingForm: FormGroup;
   testCategories$!: Observable<TestCategory[]>;
 
-  constructor(
-    private _testCategoryQuery: TestCategoryQuery,
-    private _testCategoryService: TestCategoryService,
-    private _modalService: NgbModal) {
+  private _testCategoryQuery = inject(TestCategoryQuery);
+  private _testCategoryService = inject(TestCategoryService);
+  private _uiIntegrationService = inject(UiIntegrationService);
+
+  constructor() {
     super();
     this.basicSettingForm = this.fb.group({
       id: null,
@@ -35,8 +32,12 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
 
   async postLoadEntity(): Promise<void> {
     await Promise.all([this._testCategoryService.get()]);
-    const testCatetory = this._testCategoryQuery.getEntityWithFallback(this.test.basicSettings.category);
-    if (!this.isNewTest) {
+    if (this.isNewTest) {
+      this._refreshAfterSubmit = false;
+    }
+    else {
+      this._refreshAfterSubmit = true;
+      const testCatetory = this._testCategoryQuery.getEntityWithFallback(this.test.basicSettings.category);
       this.basicSettingForm.reset({
         id: this.test.id,
         name: this.test.basicSettings.name,
@@ -59,7 +60,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     const basicSettings = { name: formValue.name, category: formValue.category, description: formValue.description };
     if (formValue.id === null) {
       const createdTest = await lastValueFrom(this.testsService.add({ basicSettings: basicSettings }));
-      this.router.navigate(['tests', createdTest.id, 'config', 'basic-settings']);
+      this.router.navigate(['test', createdTest.id, 'config', 'basic-settings']);
       this.notifyService.success('Test created');
     } else {
       await this.testsService.update(formValue.id, { basicSettings: basicSettings });
@@ -68,10 +69,6 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
   }
 
   openAddTestCategoryModal() {
-    const modalRef = this._modalService.open(CreateCategoryComponent, { size: 'md', centered: true });
-    modalRef.result.then(async (formValue: Partial<TestCategory>) => {
-      await this._testCategoryService.add(formValue);
-      this.notifyService.success('Test Category created');
-    });
+    this._uiIntegrationService.openNewTestCategoryModal();
   }
 }

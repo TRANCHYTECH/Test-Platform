@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { AppSettings } from '../app-setting.model';
 import { TestCategory } from './test-category.model';

@@ -5,7 +5,7 @@ export const MENU: MenuItem[] = [
     id: 2,
     label: 'MENUITEMS.DASHBOARD.LIST.tests',
     icon: 'ri-file-cloud-line',
-    link: '/tests'
+    link: '/test/list'
   },
   {
     id: 131,
