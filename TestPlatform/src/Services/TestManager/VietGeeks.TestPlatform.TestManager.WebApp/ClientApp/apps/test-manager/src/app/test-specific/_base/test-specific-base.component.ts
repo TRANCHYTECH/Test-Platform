@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { EntitySpecificBaseComponent, getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
+import { TestStatus } from "@viet-geeks/test-manager/state";
 import { firstValueFrom } from "rxjs";
 import { createTest, Test } from "../_state/test.model";
-import { TestsService } from "../_state/tests.service";
 import { TestsQuery } from "../_state/tests.query";
-import { TestStatus } from "@viet-geeks/test-manager/state";
+import { TestsService } from "../_state/tests.service";
 
 @Component({
     selector: 'viet-geeks-test-specific-base',
@@ -85,4 +85,18 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
             })
         });
     }
+
+    //todo: rename it
+    listenToToggleControlState<T>(instance: T, formGroup: FormGroup, sourcePath: string, targetPath: string) {
+        formGroup.controls[sourcePath].valueChanges.pipe(untilDestroyed(instance)).subscribe((v: boolean) => {
+          setTimeout(() => {
+            const method = this.getChangeControlStateMethod(v);
+            formGroup.controls[targetPath][method]();
+          }, 100);
+        });
+      }
+
+    getChangeControlStateMethod(v: boolean) {
+        return v ? 'enable' : 'disable';
+      }
 }

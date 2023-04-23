@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 public class TestDefinitionValidator : AbstractValidator<TestDefinition>
 {

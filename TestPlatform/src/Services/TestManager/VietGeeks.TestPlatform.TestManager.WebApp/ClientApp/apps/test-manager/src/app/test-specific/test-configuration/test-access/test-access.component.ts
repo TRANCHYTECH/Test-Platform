@@ -109,7 +109,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
 
-    if(details === undefined || details === null) {
+    if (details === undefined || details === null) {
       result.disable();
     }
 
@@ -123,7 +123,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
 
-    if(details === undefined || details === null) {
+    if (details === undefined || details === null) {
       result.disable();
     }
 
@@ -140,7 +140,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
 
-    if(details === undefined || details === null) {
+    if (details === undefined || details === null) {
       result.disable();
     }
 
@@ -151,7 +151,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
   onAccessTypeSelected(accessType: number) {
     this.accessTypeCtrl.setValue(accessType);
     forIn(TestAccessTypeUI, (t) => {
-      const action = t === accessType.toString() ? 'enable' : 'disable';
+      const action = this.getChangeControlStateMethod(t === accessType.toString());
       this.testAccessForm.controls[t][action]();
     });
     //todo: remove this action after refactoring model

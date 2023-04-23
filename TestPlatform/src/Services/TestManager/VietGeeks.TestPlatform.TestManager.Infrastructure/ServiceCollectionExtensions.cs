@@ -6,7 +6,7 @@ using MongoDB.Driver;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
