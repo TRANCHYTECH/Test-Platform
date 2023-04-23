@@ -1,5 +1,6 @@
 export { AfterTestConfigOutput } from './models/after-test-config-output';
 export { AggregatedGradingOuput } from './models/aggregated-grading-ouput';
+export { AnswerOutput } from './models/answer-output';
 export { ErrorDetails } from './models/error-details';
 export { ExamAnswer } from './models/exam-answer';
 export { ExamQuestion } from './models/exam-question';
@@ -10,6 +11,7 @@ export { InformRespondentConfigOutput } from './models/inform-respondent-config-
 export { PassMarkGradeOutput } from './models/pass-mark-grade-output';
 export { ProvideExamineeInfoOutput } from './models/provide-examinee-info-output';
 export { ProvideExamineeInfoViewModel } from './models/provide-examinee-info-view-model';
+export { QuestionOutput } from './models/question-output';
 export { StartExamOutputViewModel } from './models/start-exam-output-view-model';
 export { SubmitAnswerOutput } from './models/submit-answer-output';
 export { SubmitAnswerViewModel } from './models/submit-answer-view-model';

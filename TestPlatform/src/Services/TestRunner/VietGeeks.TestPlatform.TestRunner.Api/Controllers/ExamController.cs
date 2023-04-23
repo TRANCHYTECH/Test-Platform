@@ -148,13 +148,9 @@ public class ExamController : ControllerBase
     [ProducesResponseType(typeof(AfterTestConfigOutput), 200)]
     public async Task<IActionResult> GetAfterTestConfigs()
     {
-        var testSession = GetTestSession();
+        var testSession = GetTestSession(ExamStep.FinishExam);
 
-        if (testSession == null) {
-            return NotFound();
-        }
-
-        var output = await _proctorService.GetAfterTestConfigAsync(testSession.ExamId);
+        var output = await _proctorService.GetAfterTestConfigAsync(testSession?.ExamId);
 
         return Ok(output);
     }
@@ -233,7 +229,6 @@ public class ExamController : ControllerBase
                 }
 
             case ExamStep.SubmitAnswer:
-            case ExamStep.FinishExam:
                 {
                     if (session.PreviousStep != ExamStep.Start)
                     {

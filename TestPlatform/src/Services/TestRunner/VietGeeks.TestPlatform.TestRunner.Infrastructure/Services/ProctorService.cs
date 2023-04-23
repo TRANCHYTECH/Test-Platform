@@ -168,22 +168,25 @@ public class ProctorService : IProctorService
         exam.StartedAt = input.StartedAt;
         exam.FinishedAt = input.FinishededAt;
         exam.FinalMark = CalculateExamMark(selectedQuestions, input.Answers);
-
         exam.Grading = testDefinition.GradingSettings.CalculateGrading(exam.FinalMark, selectedQuestions.Sum(c => c.ScoreSettings.TotalPoints));
 
         var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading) };
         await DB.SaveOnlyAsync(exam, changedProps);
 
-        if (testDefinition.GradingSettings?.InformRespondentConfig?.InformFactors[InformFactor.CorrectAnwsers.ToString()] == true) {
-
-        }
-
-        return new FinishExamOutput
+        var output = new FinishExamOutput
         {
             FinalMark = exam.FinalMark,
             Grading = _mapper.Map<List<AggregatedGradingOuput>>(exam.Grading),
             FinishedAt = exam.FinishedAt
         };
+
+        if (ShowReturnDetailAnswers(testDefinition))
+        {
+            output.Questions = _mapper.Map<IEnumerable<QuestionOutput>>(selectedQuestions);
+            output.ExamAnswers = exam.Answers;
+        }
+
+        return output;
     }
 
     public async Task<AfterTestConfigOutput> GetAfterTestConfigAsync(string examId)
@@ -259,5 +262,12 @@ public class ProctorService : IProctorService
         }
 
         return finalMark;
+    }
+
+    private static bool ShowReturnDetailAnswers(TestDefinition testDefinition)
+    {
+      var key = ((int)InformFactor.CorrectAnwsers).ToString();
+      var informFactors = testDefinition.GradingSettings?.InformRespondentConfig?.InformFactors;
+        return informFactors != null && informFactors.TryGetValue(key, out var factor) && factor == true;
     }
 }
