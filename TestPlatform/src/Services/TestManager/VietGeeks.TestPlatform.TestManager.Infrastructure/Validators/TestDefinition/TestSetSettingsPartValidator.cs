@@ -2,7 +2,7 @@ using FluentValidation;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 public class TestSetSettingsPartValidator : AbstractValidator<TestSetSettingsPart>
 {

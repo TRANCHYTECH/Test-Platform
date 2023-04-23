@@ -2,7 +2,7 @@ using FluentValidation;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 // Use rule set for add,update, IRuleBuilderOptions
 public class TestBasicSettingsPartValidator : AbstractValidator<TestBasicSettingsPart>

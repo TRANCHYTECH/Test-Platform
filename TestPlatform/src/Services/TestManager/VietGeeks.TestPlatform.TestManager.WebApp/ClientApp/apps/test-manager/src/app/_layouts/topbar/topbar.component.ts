@@ -33,15 +33,15 @@ export class TopbarComponent implements OnInit {
   total = 0;
   cart_length: any = 0;
 
-  constructor(@Inject(DOCUMENT) private document: any, 
-  private eventService: EventService, 
-  public languageService: LanguageService,
-    public _cookiesService: CookieService, 
+  constructor(@Inject(DOCUMENT) private document: any,
+    private eventService: EventService,
+    public languageService: LanguageService,
+    public _cookiesService: CookieService,
     public translate: TranslateService,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.userData = {firstName: 'vietgeeks'};
+    this.userData = { firstName: 'vietgeeks' };
     this.element = document.documentElement;
 
     // Cookies wise Language set
@@ -157,7 +157,11 @@ export class TopbarComponent implements OnInit {
    * Logout the user
    */
   logout() {
-    this.authService.logout({ returnTo: document.location.origin });
+    this.authService.logout({
+      async openUrl(url) {
+        window.location.replace(url);
+      }
+    });
   }
 
   windowScroll() {
