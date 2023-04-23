@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProctorService } from '../../services/proctor.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FormBuilder } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, interval } from 'rxjs';
 import { ToastService } from '@viet-geeks/shared';
 import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
 import { ErrorDetails, VerifyTestOutputViewModel } from '../../../api/models';
@@ -28,6 +28,8 @@ export class PublicTestAccessComponent implements OnInit {
 
   isLoading = false;
   testId?: string;
+  dotCount = 1;
+  dots = '';
 
   ngOnInit(): void {
     this._fingerprintjsProAngularService.getVisitorData().then(c => {
@@ -37,6 +39,15 @@ export class PublicTestAccessComponent implements OnInit {
     this._route.params.pipe(untilDestroyed(this)).subscribe(async p => {
       this.verify(p['test-id']);
     });
+
+    interval(1000)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.updateDots());
+  }
+
+  private updateDots() {
+    this.dots = '.'.repeat(this.dotCount % 4).padEnd(4, ' ');
+    this.dotCount ++;
   }
 
   public async verify(testId: string) {
@@ -49,6 +60,7 @@ export class PublicTestAccessComponent implements OnInit {
 
     if (message) {
       this._notifyService.error(message);
+      this._router.navigate(['test','access']);
     }
     else {
       const verifyOutput = result as VerifyTestOutputViewModel;

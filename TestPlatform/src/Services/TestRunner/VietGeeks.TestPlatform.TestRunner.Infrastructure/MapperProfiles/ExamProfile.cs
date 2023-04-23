@@ -16,5 +16,8 @@ public class ExamProfile : Profile
         .ForMember(desc => desc.Step, ops => ops.Ignore());
         CreateMap<TestEndConfig, TestEndConfigOutput>();
         CreateMap<InformRespondentConfig, InformRespondentConfigOutput>();
+        CreateMap<QuestionDefinition, QuestionOutput>()
+        .ForMember(desc => desc.QuestionAnswers, op => op.MapFrom(src => src.Answers));
+        CreateMap<Answer, AnswerOutput>();
     }
 }
