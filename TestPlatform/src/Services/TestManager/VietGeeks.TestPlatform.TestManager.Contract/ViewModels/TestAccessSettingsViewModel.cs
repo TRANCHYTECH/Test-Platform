@@ -22,14 +22,6 @@ public class CreateOrUpdateTestAccessSettingsViewModel
     public HonestRespondentRuleViewModel? HonestRespondentRule { get; set; }
 }
 
-public enum TestAccessType
-{
-    PublicLink = 1,
-    PrivateAccessCode = 2,
-    GroupPassword = 3,
-    Training = 4
-}
-
 [JsonDerivedType(typeof(PublicLinkTypeViewModel), (int)TestAccessType.PublicLink)]
 [JsonDerivedType(typeof(PrivateAccessCodeTypeViewModel), (int)TestAccessType.PrivateAccessCode)]
 [JsonDerivedType(typeof(GroupPasswordTypeViewModel), (int)TestAccessType.GroupPassword)]
@@ -77,4 +69,12 @@ public class TrainingTypeViewModel : TestAccessConfigViewModel
 public class HonestRespondentRuleViewModel
 {
     public bool Enable { get; set; }
+}
+
+public enum TestAccessType
+{
+    PublicLink = 1,
+    PrivateAccessCode = 2,
+    GroupPassword = 3,
+    Training = 4
 }
