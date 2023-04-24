@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using FluentValidation.Validators;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 using Xunit.Sdk;
 
@@ -157,6 +158,17 @@ public class GradingSettingsPartValidatorUnitTests
     }
 
     [Theory]
+    [MemberData(nameof(GetTestData_InformRespondentConfig_Failure))]
+    public async Task GradingSettingsPart_InformRespondentConfig_Validate_Failure(GradingSettingsPart input)
+    {
+        var context = new ValidationContext<InformRespondentConfig>(input.InformRespondentConfig);
+        context.RootContextData["GradingSettingsPart.GradingCriterias"] = input.GradingCriterias;
+        var validator = new InformRespondentConfigValidator();
+        var result = await validator.TestValidateAsync(context);
+        Assert.False(result.IsValid);
+    }
+
+    [Theory]
     [MemberData(nameof(GetTestData_Success))]
     public async Task GradingSettingsPart_GradeRangeCriteria_Validate_Success(GradeRangeCriteria input)
     {
@@ -197,14 +209,14 @@ public class GradingSettingsPartValidatorUnitTests
             },
             GradingCriterias = new Dictionary<string, GradingCriteriaConfig>
             {
-                { "1", new PassMaskCriteria {
+                { GradingCriteriaConfigType.PassMask.Value(), new PassMaskCriteria {
                     Unit = RangeUnit.Percent,
                     Value = 50
                 }
                 },
-                { "2", new GradeRangeCriteria {
+                { GradingCriteriaConfigType.GradeRanges.Value(), new GradeRangeCriteria {
                     Unit = RangeUnit.Point,
-                    GradeType = GradeType.Grade,
+                    GradeType = GradeType.GradeAndDescriptive,
                     Details = new List<GradeRangeCriteriaDetail>
                     {
                         new GradeRangeCriteriaDetail
@@ -212,11 +224,21 @@ public class GradingSettingsPartValidatorUnitTests
                             To = TestDefinitionValidatorFixture.TestMock.TotalPoints,
                             Grades = new Dictionary<string, string>()
                             {
-                                { "1","grade" }
+                                { GradeType.Grade.Value() ,"grade A" },
+                                { GradeType.Descriptive.Value() ,"grade A desc" },
                             }
                         }
                     }
                 }
+                }
+            },
+            InformRespondentConfig = new InformRespondentConfig
+            {
+                InformFactors = new Dictionary<string, bool>
+                {
+                    { InformFactor.PassOrFailMessage.Value(), true },
+                    { InformFactor.Grade.Value(), true },
+                    { InformFactor.DescriptiveGrade.Value(), true }
                 }
             }
         };
@@ -489,6 +511,90 @@ public class GradingSettingsPartValidatorUnitTests
             new object[] { wrong1 },
             new object[] { wrong2 },
             new object[] { wrong3 }
+        };
+    }
+
+    public static IEnumerable<object[]> GetTestData_InformRespondentConfig_Failure()
+    {
+        // Invalid InformFactor.PassOrFailMessage: not allowed because there is no GradingCriterias.Passmask
+        var wrong1 = new GradingSettingsPart
+        {
+            InformRespondentConfig = new InformRespondentConfig
+            {
+                InformFactors = new Dictionary<string, bool>
+                {
+                    { InformFactor.PassOrFailMessage.Value(), true }
+                }
+            },
+            GradingCriterias = new Dictionary<string, GradingCriteriaConfig>
+            {
+                { GradingCriteriaConfigType.GradeRanges.Value(), new GradeRangeCriteria{ } }
+            }
+        };
+
+        // Grade factor, but not grade range criteria.
+        var wrong2 = new GradingSettingsPart
+        {
+            InformRespondentConfig = new InformRespondentConfig
+            {
+                InformFactors = new Dictionary<string, bool>
+                {
+                    { InformFactor.Grade.Value(), true }
+                }
+            }
+        };
+
+        // Grade factor, but grade range criteria/GradeRanges/unit value is Descriptive.
+        var wrong3 = new GradingSettingsPart
+        {
+            InformRespondentConfig = new InformRespondentConfig
+            {
+                InformFactors = new Dictionary<string, bool>
+                {
+                    { InformFactor.Grade.Value(), true }
+                }
+            },
+            GradingCriterias = new Dictionary<string, GradingCriteriaConfig>
+            {
+                { GradingCriteriaConfigType.GradeRanges.Value(), new GradeRangeCriteria{ GradeType = GradeType.Descriptive } }
+            }
+        };
+
+        // Descripive factor, but no suitable GradeRanges.
+        var wrong4 = new GradingSettingsPart
+        {
+            InformRespondentConfig = new InformRespondentConfig
+            {
+                InformFactors = new Dictionary<string, bool>
+                {
+                    { InformFactor.DescriptiveGrade.Value(), true }
+                }
+            }
+        };
+
+        // Descripive factor, but no suitable GradeRanges/GradeType.
+        var wrong5 = new GradingSettingsPart
+        {
+            InformRespondentConfig = new InformRespondentConfig
+            {
+                InformFactors = new Dictionary<string, bool>
+                {
+                    { InformFactor.DescriptiveGrade.Value(), true }
+                }
+            },
+            GradingCriterias = new Dictionary<string, GradingCriteriaConfig>
+            {
+                { GradingCriteriaConfigType.GradeRanges.Value(), new GradeRangeCriteria{ GradeType = GradeType.Grade } }
+            }
+        };
+
+        return new List<object[]>
+        {
+            new object[] { wrong1 },
+            new object[] { wrong2 },
+            new object[] { wrong3 },
+            new object[] { wrong4 },
+            new object[] { wrong5 }
         };
     }
 

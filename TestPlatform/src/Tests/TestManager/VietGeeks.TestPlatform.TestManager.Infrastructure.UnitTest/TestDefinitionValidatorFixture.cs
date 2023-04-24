@@ -36,7 +36,7 @@ public class TestDefinitionValidatorFixture : IDisposable
 
     public GradingSettingsPartValidator CreateGradingSettingsPartValidator()
     {
-        return new GradingSettingsPartValidator(new TestEndConfigValidator(), new PassMaskCriteriaValidator(), new GradeRangeCriteriaValidator(QuestionManagerServiceMock.Object));
+        return new GradingSettingsPartValidator(new TestEndConfigValidator(), new PassMaskCriteriaValidator(), new GradeRangeCriteriaValidator(QuestionManagerServiceMock.Object), new InformRespondentConfigValidator());
     }
 
     public TestDefinitionValidator CreateTestDefinitionValidator()
