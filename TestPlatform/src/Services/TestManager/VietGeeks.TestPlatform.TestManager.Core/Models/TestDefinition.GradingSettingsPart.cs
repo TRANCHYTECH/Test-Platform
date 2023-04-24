@@ -15,13 +15,14 @@ public class GradingSettingsPart
     {
         GradingSettingsPart defaultSetting = new()
         {
-            TestEndConfig = new  TestEndConfig
+            TestEndConfig = new TestEndConfig
             {
+                //todo: move to resource like lookup db.
                 Message = "Thank you for taking the test!"
             }
         };
 
-        defaultSetting.GradingCriterias.Add($"{(int)GradingCriteriaConfigType.PassMask}", new PassMaskCriteria
+        defaultSetting.GradingCriterias.Add(GradingCriteriaConfigType.PassMask.Value(), new PassMaskCriteria
         {
             Unit = RangeUnit.Percent,
             Value = 50
