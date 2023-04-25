@@ -12,7 +12,7 @@ import { TestOverviewService } from '../../_state/test-overview.service';
   templateUrl: './test-list.component.html',
   styleUrls: ['./test-list.component.scss']
 })
-export class TestListComponent implements OnInit, AfterViewInit{
+export class TestListComponent implements OnInit, AfterViewInit {
   tests: TestOverview[] = [];
   testCategories: TestCategory[] = [];
   page = 1;

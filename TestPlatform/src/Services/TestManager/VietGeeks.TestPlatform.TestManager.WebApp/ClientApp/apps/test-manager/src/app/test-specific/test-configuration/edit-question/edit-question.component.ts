@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isNumber } from 'lodash-es';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ToastService,CanComponentDeactivate, IdService, getTestId, TextEditorConfigsService } from '@viet-geeks/shared';
-import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
-import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
-import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService } from '@viet-geeks/shared';
+import { isNumber } from 'lodash-es';
+import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
+import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
 import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
@@ -78,7 +78,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
     this.isPartialScore = false;
     this.questionForm = this._fb.group({
       description: ['', [Validators.required]],
-      categoryId: ['', [Validators.required]],
+      categoryId: [QuestionCategoryGenericId, [Validators.required]],
       answerType: ['', [Validators.required]],
       answers: this._fb.array([])
     });

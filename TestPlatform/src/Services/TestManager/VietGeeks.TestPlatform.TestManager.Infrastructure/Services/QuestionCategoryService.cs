@@ -26,8 +26,9 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
         public async Task<IEnumerable<QuestionCategoryViewModel>> GetCategories(CancellationToken cancellationToken)
         {
             var entities = await _managerDbContext.Find<QuestionCategory>().ManyAsync(c => c is QuestionCategory);
+            entities.Add(QuestionCategory.Generic());
 
-            return _mapper.Map<IEnumerable<QuestionCategoryViewModel>>(entities);
+            return _mapper.Map<IEnumerable<QuestionCategoryViewModel>>(entities).OrderBy(c => c.DisplayOrder).ToList();;
         }
     }
 }

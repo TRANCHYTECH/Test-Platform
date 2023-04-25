@@ -13,6 +13,8 @@
 }
 
 .main-content {
+    height: 100vh;
+    overflow: hidden;
     transition: all .1s ease-out;
 
     @media (min-width: 768px) {
@@ -21,7 +23,12 @@
 }
 
 .page-content {
+    height: calc(100% - #{$header-height});
+    overflow: auto;
+    position: relative;
     padding: calc(#{$header-height} + #{$grid-gutter-width}) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
+    padding-top: 0;
+    margin-top: #{$header-height};
 }
 
 .navbar-menu {
@@ -509,7 +516,7 @@
 
     &[data-sidebar-size="sm"] {
         @media (min-width: 768px) {
-            min-height: 1400px;
+            min-height: 100vh;
 
             .main-content {
                 margin-left: $vertical-menu-width-sm;

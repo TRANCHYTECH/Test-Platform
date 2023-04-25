@@ -3,8 +3,8 @@ export interface QuestionCategory {
   name: string;
 }
 
-export function createQuestionCategory(params: Partial<QuestionCategory>) {
-  return {
+export const QuestionCategoryGenericId = "000000000000000000000001";
 
-  } as QuestionCategory;
+export function createQuestionCategory(params: Partial<QuestionCategory>) {
+  return params as QuestionCategory;
 }

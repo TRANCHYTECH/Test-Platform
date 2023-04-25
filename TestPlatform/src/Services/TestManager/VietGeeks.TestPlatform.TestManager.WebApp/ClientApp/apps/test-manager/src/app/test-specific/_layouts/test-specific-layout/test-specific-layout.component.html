@@ -5,14 +5,14 @@
         <ngb-accordion class="accordion-flush test-definition-sidebar" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
             <ngb-panel id="test-config" [cardClass]="'setting-parts'">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
-                    <h5 class="panel-title">Test Configuration</h5>
+                    <h5 class="panel-title mb-0">Test Configuration</h5>
                 </ng-template>
                 <ng-template ngbPanelContent>
                     <div class="list-group list-group-flush">
                         <ng-container *ngFor="let menu of menus$ | async">
                             <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
                                 [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
-                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
+                                <i [class]="menu.icon" class="align-middle me-2 fs-24"></i>{{menu.text}}</a>
                         </ng-container>
                         <button *ngIf="testStatus  === 1" class="btn btn-primary w-sm" style="margin-top: 10px;"
                             (click)="activateTest()">{{ "labels." + activateMethod | translate}}</button>
@@ -27,14 +27,14 @@
             </ngb-panel>
             <ngb-panel id="test-restult" [cardClass]="'result-parts'">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
-                    <h5 class="panel-title">Test progress & results</h5>
+                    <h5 class="panel-title mb-0">Test progress & results</h5>
                 </ng-template>
                 <ng-template ngbPanelContent>
                     <div class="list-group list-group-flush">
                         <ng-container *ngFor="let menu of testResultMenus$ | async">
                             <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
                                 [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
-                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
+                                <i [class]="menu.icon" class="align-middle me-2 fs-24"></i>{{menu.text}}</a>
                         </ng-container>
                     </div>
                 </ng-template>
@@ -42,9 +42,6 @@
         </ngb-accordion>
     </div>
     <div class="col">
-        <ngx-spinner>
-            <p class="loading">Loading...</p>
-        </ngx-spinner>
         <h5 class="pb-2">{{sectionTitle}}</h5>
         <router-outlet></router-outlet>
     </div>

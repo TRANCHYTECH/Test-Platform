@@ -6,7 +6,6 @@ import { Component, EventEmitter, Inject, OnInit, Output, inject } from '@angula
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 
-import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { EventService, LanguageService } from '@viet-geeks/core';
 import { cartData } from './data';
@@ -42,8 +41,7 @@ export class TopbarComponent implements OnInit {
     private eventService: EventService,
     public languageService: LanguageService,
     public _cookiesService: CookieService,
-    public translate: TranslateService,
-    private router: Router) { }
+    public translate: TranslateService) { }
 
   ngOnInit(): void {
     this.userData = { firstName: 'vietgeeks' };
@@ -148,11 +146,7 @@ export class TopbarComponent implements OnInit {
    * Logout the user
    */
   logout() {
-    this.authService.logout({
-      async openUrl(url) {
-        window.location.replace(url);
-      }
-    });
+    this.authService.logout({ logoutParams: { returnTo: document.location.origin } });
   }
 
   windowScroll() {
@@ -166,8 +160,8 @@ export class TopbarComponent implements OnInit {
 
   // Delete Item
   deleteItem(event: any, id: any) {
-    var price = event.target.closest('.dropdown-item').querySelector('.item_price').innerHTML;
-    var Total_price = this.total - price;
+    const price = event.target.closest('.dropdown-item').querySelector('.item_price').innerHTML;
+    const Total_price = this.total - price;
     this.total = Total_price;
     this.cart_length = this.cart_length - 1;
     this.total > 1 ? (document.getElementById("empty-cart") as HTMLElement).style.display = "none" : (document.getElementById("empty-cart") as HTMLElement).style.display = "block";
@@ -176,24 +170,24 @@ export class TopbarComponent implements OnInit {
 
   // Search Topbar
   Search() {
-    var searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
-    var dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
-    var input: any, filter: any, ul: any, li: any, a: any | undefined, i: any, txtValue: any;
+    const searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
+    const dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
+    let input: any, filter: any, ul: any, li: any, a: any | undefined, i: any, txtValue: any;
     input = document.getElementById("search-options") as HTMLAreaElement;
     filter = input.value.toUpperCase();
-    var inputLength = filter.length;
+    const inputLength = filter.length;
 
     if (inputLength > 0) {
       dropdown.classList.add("show");
       searchOptions.classList.remove("d-none");
-      var inputVal = input.value.toUpperCase();
-      var notifyItem = document.getElementsByClassName("notify-item");
+      const inputVal = input.value.toUpperCase();
+      const notifyItem = document.getElementsByClassName("notify-item");
 
       Array.from(notifyItem).forEach(function (element: any) {
-        var notifiTxt = ''
+        let notifiTxt = ''
         if (element.querySelector("h6")) {
-          var spantext = element.getElementsByTagName("span")[0].innerText.toLowerCase()
-          var name = element.querySelector("h6").innerText.toLowerCase()
+          const spantext = element.getElementsByTagName("span")[0].innerText.toLowerCase()
+          const name = element.querySelector("h6").innerText.toLowerCase()
           if (name.includes(inputVal)) {
             notifiTxt = name
           } else {
@@ -216,9 +210,9 @@ export class TopbarComponent implements OnInit {
    * Search Close Btn
    */
   closeBtn() {
-    var searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
-    var dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
-    var searchInputReponsive = document.getElementById("search-options") as HTMLInputElement;
+    const searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
+    const dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
+    const searchInputReponsive = document.getElementById("search-options") as HTMLInputElement;
     dropdown.classList.remove("show");
     searchOptions.classList.add("d-none");
     searchInputReponsive.value = "";

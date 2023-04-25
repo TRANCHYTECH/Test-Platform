@@ -18,6 +18,11 @@ const routes: Routes = [
         path: 'regional-settings',
         component: RegionalSettingsComponent,
         title: 'Regional Settings'
+      },
+      {
+        path: '**',
+        redirectTo: 'general-information',
+        pathMatch: 'full'
       }
     ]
   }
