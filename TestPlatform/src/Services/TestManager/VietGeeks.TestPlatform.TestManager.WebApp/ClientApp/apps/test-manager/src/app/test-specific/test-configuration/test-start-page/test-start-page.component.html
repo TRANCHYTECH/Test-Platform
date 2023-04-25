@@ -5,7 +5,7 @@
                 <h5 class="card-header border-bottom-0">INSTRUCTIONS FOR RESPONDENTS</h5>
                 <div class="card-body">
                     <label>Provide test instructions to be displayed to respondents on the test start page.</label>
-                    <editor formControlName="instruction" [apiKey]="textEditorConfigs.apiKey"
+                    <editor class="simple-editor" formControlName="instruction" [apiKey]="textEditorConfigs.apiKey"
                         (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
                         (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
                         #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>
@@ -66,7 +66,7 @@
                 <div class="card-body">
                     <label>If you require consent or acceptance before respondents can take the test, specify it
                         below.</label>
-                    <editor formControlName="consent" [apiKey]="textEditorConfigs.apiKey"
+                    <editor class="simple-editor" formControlName="consent" [apiKey]="textEditorConfigs.apiKey"
                         (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
                         (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
                         #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>

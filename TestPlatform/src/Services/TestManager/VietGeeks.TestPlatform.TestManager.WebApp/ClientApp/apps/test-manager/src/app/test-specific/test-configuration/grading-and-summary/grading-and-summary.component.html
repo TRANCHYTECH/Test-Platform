@@ -8,10 +8,12 @@
                         <label>Configure a message to be displayed to all respondents at the end of the test, regardless
                             of
                             its results.</label>
-                        <editor formControlName="message" [apiKey]="textEditorConfigs.apiKey"
+                        <editor class="simple-editor" formControlName="message" [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
                             (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
-                            #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>
+                            #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor">
+                        <p>loading...</p>
+                        </editor>
                         <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
                     </div>
                     <div class="form-check form-switch form-switch-lg mb-3">
@@ -184,7 +186,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have passed:</label>
-                        <editor formControlName="passedMessage" [apiKey]="textEditorConfigs.apiKey"
+                        <editor class="simple-editor" formControlName="passedMessage" [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('informRespondentConfig.passedMessage', $event)"
                             (onFocusOut)="passedMessageErrorTailor.showError()"
                             [init]="textEditorConfigs.simpleEditorConfig" #passedMessageErrorTailor="errorTailor"
@@ -193,7 +195,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have failed:</label>
-                        <editor formControlName="failedMessage" [apiKey]="textEditorConfigs.apiKey"
+                        <editor class="simple-editor" formControlName="failedMessage" [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('informRespondentConfig.failedMessage', $event)"
                             (onFocusOut)="failedMessageErrorTailor.showError()"
                             [init]="textEditorConfigs.simpleEditorConfig" #failedMessageErrorTailor="errorTailor"

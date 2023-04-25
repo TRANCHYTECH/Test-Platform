@@ -204,6 +204,10 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     });
   }
 
+  copiedTestUrl() {
+    this.notifyService.success('Copied test url');
+  }
+
   get canSubmit(): boolean {
     return this.testAccessForm.dirty && this.testAccessForm.valid;
   }

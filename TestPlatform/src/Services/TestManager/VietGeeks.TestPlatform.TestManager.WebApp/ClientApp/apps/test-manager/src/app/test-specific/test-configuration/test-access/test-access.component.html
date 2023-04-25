@@ -51,7 +51,7 @@
                             <a class="form-control" [href]="publicTestAccessLink"
                                 target="_blank">{{publicTestAccessLink}}</a>
                             <button type="button" class="btn btn-outline-secondary flex-shrink-0"
-                                [cdkCopyToClipboard]="publicTestAccessLink">Copy link</button>
+                                [cdkCopyToClipboard]="publicTestAccessLink" (cdkCopyToClipboardCopied)="copiedTestUrl()">Copy link</button>
                         </div>
                         <div class="hstack form-check form-switch form-switch-lg mb-3">
                             <input type="checkbox" role="switch" id="requireAccessCode" class="form-check-input"
