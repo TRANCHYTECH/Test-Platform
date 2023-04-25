@@ -15,10 +15,12 @@ public class GradingSettingsPart
     {
         GradingSettingsPart defaultSetting = new()
         {
-            TestEndConfig = new TestEndConfig
+            TestEndConfig = new()
             {
                 //todo: move to resource like lookup db.
                 Message = "Thank you for taking the test!"
+            },
+            InformRespondentConfig = new() {
             }
         };
 

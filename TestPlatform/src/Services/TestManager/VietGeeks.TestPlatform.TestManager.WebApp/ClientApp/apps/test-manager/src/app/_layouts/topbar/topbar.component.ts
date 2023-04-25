@@ -1,16 +1,16 @@
-import { Component, OnInit, EventEmitter, Output, Inject, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Component, EventEmitter, Inject, OnInit, Output, inject } from '@angular/core';
 
 
 // Language
-import { CookieService } from 'ngx-cookie-service';
 import { TranslateService } from '@ngx-translate/core';
+import { CookieService } from 'ngx-cookie-service';
 
-import { CartModel } from './topbar.model';
-import { cartData } from './data';
 import { Router } from '@angular/router';
-import { EventService, LanguageService } from '@viet-geeks/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { EventService, LanguageService } from '@viet-geeks/core';
+import { cartData } from './data';
+import { CartModel } from './topbar.model';
 
 @Component({
   selector: 'viet-geeks-topbar',
@@ -18,6 +18,11 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements OnInit {
+  listLang = [
+    { text: 'English', flag: 'assets/images/flags/us.svg', lang: 'en' },
+    { text: 'Tiếng việt', flag: 'assets/images/flags/vn.svg', lang: 'vn' }
+  ];
+
   public authService = inject(AuthService);
 
   element: any;
@@ -49,7 +54,7 @@ export class TopbarComponent implements OnInit {
     const val = this.listLang.filter(x => x.lang === this.cookieValue);
     this.countryName = val.map(element => element.text);
     if (val.length === 0) {
-      if (this.flagvalue === undefined) { this.valueset = 'assets/images/flags/us.svg'; }
+      if (this.flagvalue === undefined) { this.valueset = 'assets/images/flags/vn.svg'; }
     } else {
       this.flagvalue = val.map(element => element.flag);
     }
@@ -128,20 +133,6 @@ export class TopbarComponent implements OnInit {
         break;
     }
   }
-
-  /***
-   * Language Listing
-   */
-  listLang = [
-    { text: 'English', flag: 'assets/images/flags/us.svg', lang: 'en' },
-    { text: 'Española', flag: 'assets/images/flags/spain.svg', lang: 'es' },
-    { text: 'Deutsche', flag: 'assets/images/flags/germany.svg', lang: 'de' },
-    { text: 'Italiana', flag: 'assets/images/flags/italy.svg', lang: 'it' },
-    { text: 'русский', flag: 'assets/images/flags/russia.svg', lang: 'ru' },
-    { text: '中国人', flag: 'assets/images/flags/china.svg', lang: 'ch' },
-    { text: 'français', flag: 'assets/images/flags/french.svg', lang: 'fr' },
-    { text: 'Arabic', flag: 'assets/images/flags/ar.svg', lang: 'ar' },
-  ];
 
   /***
    * Language Value Set
