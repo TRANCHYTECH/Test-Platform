@@ -1,6 +1,5 @@
 using FluentValidation;
 using VietGeeks.TestPlatform.AspNetCore;
-using VietGeeks.TestPlatform.TestManager.Api.ValidationRules;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +22,6 @@ builder.Services.AddCors(options =>
                       });
 });
 
-builder.Services.AddValidatorsFromAssemblyContaining<NewTestValidator>();
 builder.Services.RegisterInfrastructureModule(new()
 {
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
