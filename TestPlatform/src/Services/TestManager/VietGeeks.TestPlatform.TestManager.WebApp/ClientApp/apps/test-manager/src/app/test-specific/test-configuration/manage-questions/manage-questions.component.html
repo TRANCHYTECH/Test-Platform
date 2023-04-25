@@ -26,13 +26,13 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xxl-12 project-card" *ngFor="let data of questions$ | async | slice: (page-1) * pageSize : page * pageSize" id="pl1_{{data.id}}">
+  <div class="col-xxl-12 project-card" *ngFor="let data of questions$ | async | slice: (page-1) * pageSize : page * pageSize; let i = index" id="pl1_{{data.id}}">
     <div class="card card-height-100">
       <div class="card-body">
         <div class="d-flex flex-column h-100">
           <div class="d-flex">
             <div class="flex-grow-1 mb-4">
-              <div class="text-muted">#{{data.questionNo}}</div>
+              <div class="text-muted">#{{i + 1}}</div>
             </div>
             <div class="flex-shrink-0">
               <div class="d-flex gap-1 align-items-center">

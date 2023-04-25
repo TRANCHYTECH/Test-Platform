@@ -1,4 +1,4 @@
-import { TestDurationMethodType, TimeSpan, ExamQuestion, AggregatedGradingOuput } from "../api/models";
+import { TestDurationMethodType, TimeSpan, ExamQuestion, AggregatedGradingOuput, QuestionOutput } from "../api/models";
 
 export type RespondentField = { id: string, fieldValue: string };
 
@@ -18,6 +18,8 @@ export interface TestSession {
   activeQuestion?: ExamQuestion,
   activeQuestionStartAt?: string | null,
   grading?: null | Array<AggregatedGradingOuput>;
+  questions?: QuestionOutput[] | null,
+  answers?: {[key: string]: Array<string>} | null;
 }
 
 export interface TimeSettings {

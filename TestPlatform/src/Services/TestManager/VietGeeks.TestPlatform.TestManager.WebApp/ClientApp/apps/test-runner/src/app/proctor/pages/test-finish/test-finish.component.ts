@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, TimeSpan } from '../../../api/models';
+import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, QuestionOutput, TimeSpan } from '../../../api/models';
 import { GradingCriteriaConfigType, InformFactor, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke } from 'ng-apexcharts';
@@ -27,19 +27,22 @@ export class TestFinishComponent implements OnInit {
   private _proctorService = inject(ProctorService);
   private _testDurationService = inject(TestDurationService);
   private _testSessionService = inject(TestSessionService);
-  router = inject(Router);
+
   labels: string[] = [];
   sessionData: Partial<TestSession> = {};
   respondent: RespondentField[] = [];
   testResult?: FinishExamOutput | null;
   maxTime: TimeSpan = {};
   totalTime: TimeSpan = {};
-  public chartOptions?: ChartOptions;
-  public passMarkGrading?: AggregatedGradingOuput;
-  public gradeRangesGrading?: AggregatedGradingOuput;
-  public gradeRangesValues?: string[];
-  public afterTestConfig?: AfterTestConfigOutput | null;
-  public showPassFailMessage = false;
+  chartOptions?: ChartOptions;
+  passMarkGrading?: AggregatedGradingOuput;
+  gradeRangesGrading?: AggregatedGradingOuput;
+  gradeRangesValues?: string[];
+  afterTestConfig?: AfterTestConfigOutput | null;
+  showPassFailMessage = false;
+  showCorrectAnswers = false;
+  questions: QuestionOutput[] = [];
+  answers: {[key: string]: Array<string>} = {};
 
   ngOnInit() {
     this.doInit();
@@ -181,6 +184,12 @@ export class TestFinishComponent implements OnInit {
     const informFactors = this.afterTestConfig?.informRespondentConfig?.informFactors;
     if (informFactors) {
       this.showPassFailMessage = informFactors[InformFactor.PassOrFailMessage];
+      this.showCorrectAnswers = informFactors[InformFactor.CorrectAnwsers];
+
+      if (this.showCorrectAnswers) {
+        this.questions = this.sessionData.questions ?? [];
+        this.answers = this.sessionData.answers ?? {};
+      }
     }
   }
 
