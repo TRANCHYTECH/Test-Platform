@@ -1,4 +1,3 @@
-using FluentValidation;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
