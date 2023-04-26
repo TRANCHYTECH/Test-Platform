@@ -8,6 +8,7 @@ public class FinishExamOutput
     public decimal FinalMark { get; set; }
     public List<AggregatedGradingOuput> Grading { get; set; } = default!;
     public DateTime FinishedAt { get; set; }
+    public TimeSpan TotalTime {get;set;}
     public IEnumerable<QuestionOutput> Questions { get; set; }
     public Dictionary<string, string[]> ExamAnswers { get; set; }
 }

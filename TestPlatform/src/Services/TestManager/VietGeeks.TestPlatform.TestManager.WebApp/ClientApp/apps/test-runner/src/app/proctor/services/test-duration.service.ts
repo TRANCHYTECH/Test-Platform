@@ -30,10 +30,10 @@ export class TestDurationService {
 
   getDurationFromTimeDifference(timeDifference: number): TimeSpan {
     const duration: TimeSpan = {};
-    duration.seconds = Math.floor((timeDifference) / (this._milliSecondsInASecond) % this._secondsInAMinute);
-    duration.minutes = Math.floor((timeDifference) / (this._milliSecondsInASecond * this._minutesInAnHour) % this._secondsInAMinute);
-    duration.hours = Math.floor((timeDifference) / (this._milliSecondsInASecond * this._minutesInAnHour * this._secondsInAMinute) % this._hoursInADay);
-    duration.days = Math.floor((timeDifference) / (this._milliSecondsInASecond * this._minutesInAnHour * this._secondsInAMinute * this._hoursInADay));
+    duration.seconds = Math.max(Math.floor((timeDifference) / (this._milliSecondsInASecond) % this._secondsInAMinute), 0);
+    duration.minutes = Math.max(Math.floor((timeDifference) / (this._milliSecondsInASecond * this._minutesInAnHour) % this._secondsInAMinute), 0);
+    duration.hours = Math.max(Math.floor((timeDifference) / (this._milliSecondsInASecond * this._minutesInAnHour * this._secondsInAMinute) % this._hoursInADay), 0);
+    duration.days = Math.max(Math.floor((timeDifference) / (this._milliSecondsInASecond * this._minutesInAnHour * this._secondsInAMinute * this._hoursInADay)), 0);
 
     return duration;
   }

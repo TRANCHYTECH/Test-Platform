@@ -142,7 +142,9 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this._testSessionService.setSessionData({
       endTime: finishOutput?.finishedAt ? new Date(finishOutput?.finishedAt) : new Date(),
       examStep: ExamCurrentStep.FinishExam,
-      grading: finishOutput?.grading
+      grading: finishOutput?.grading,
+      questions: finishOutput?.questions,
+      answers: finishOutput?.examAnswers
     });
     this._router.navigate(['test/finish']);
   }
