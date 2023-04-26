@@ -167,6 +167,7 @@ public class ProctorService : IProctorService
         exam.Answers = input.Answers;
         exam.StartedAt = input.StartedAt;
         exam.FinishedAt = input.FinishededAt;
+        exam.TotalTime = input.FinishededAt - input.StartedAt;
         exam.FinalMark = CalculateExamMark(selectedQuestions, input.Answers);
         exam.Grading = testDefinition.GradingSettings.CalculateGrading(exam.FinalMark, selectedQuestions.Sum(c => c.ScoreSettings.TotalPoints));
 
@@ -177,7 +178,8 @@ public class ProctorService : IProctorService
         {
             FinalMark = exam.FinalMark,
             Grading = _mapper.Map<List<AggregatedGradingOuput>>(exam.Grading),
-            FinishedAt = exam.FinishedAt
+            FinishedAt = exam.FinishedAt,
+            TotalTime = exam.TotalTime
         };
 
         if (ShowReturnDetailAnswers(testDefinition))
