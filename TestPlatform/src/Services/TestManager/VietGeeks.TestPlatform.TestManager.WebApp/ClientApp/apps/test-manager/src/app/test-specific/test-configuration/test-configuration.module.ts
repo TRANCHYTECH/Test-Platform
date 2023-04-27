@@ -6,11 +6,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
-import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { BasicSettingsComponent } from './basic-settings/basic-settings.component';
-import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { GradingAndSummaryComponent } from './grading-and-summary/grading-and-summary.component';
-import { ManageQuestionsComponent } from './manage-questions/manage-questions.component';
 import { OverviewComponent } from './overview/overview.component';
 import { TestAccessComponent } from './test-access/test-access.component';
 import { TestSetsComponent } from './test-sets/test-sets.component';
@@ -20,8 +18,6 @@ import { TestTimeSettingsComponent } from './test-time-settings/test-time-settin
 @NgModule({
   declarations: [
     BasicSettingsComponent,
-    ManageQuestionsComponent,
-    EditQuestionComponent,
     TestSetsComponent,
     TestAccessComponent,
     TestStartPageComponent,

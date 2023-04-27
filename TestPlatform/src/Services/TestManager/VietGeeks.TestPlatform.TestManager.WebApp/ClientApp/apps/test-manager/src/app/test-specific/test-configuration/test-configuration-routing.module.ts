@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
-import { CanDeactivateGuard } from '@viet-geeks/shared';
 import { BasicSettingsComponent } from './basic-settings/basic-settings.component';
-import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { GradingAndSummaryComponent } from './grading-and-summary/grading-and-summary.component';
-import { ManageQuestionsComponent } from './manage-questions/manage-questions.component';
 import { OverviewComponent } from './overview/overview.component';
 import { TestAccessComponent } from './test-access/test-access.component';
 import { TestSetsComponent } from './test-sets/test-sets.component';
@@ -42,19 +39,6 @@ const routes: Routes = [
     }
   },
   {
-    path: getTestSettingsPath(TestConfigRoutes.ManageQuestions),
-    component: ManageQuestionsComponent,
-    title: 'Manage Questions',
-    canActivate: [isExistingTest()]
-  },
-  {
-    path: 'manage-questions/:question-id',
-    component: EditQuestionComponent,
-    title: 'Edit Question',
-    canActivate: [isExistingTest()],
-    canDeactivate: [CanDeactivateGuard]
-  },
-  {
     path: getTestSettingsPath(TestConfigRoutes.TestSets),
     component: TestSetsComponent,
     title: 'Test Sets',
@@ -83,7 +67,12 @@ const routes: Routes = [
     component: TestTimeSettingsComponent,
     title: 'Time Settings',
     canActivate: [isExistingTest()]
-  }
+  },
+    {
+    path: getTestSettingsPath('question'),
+    title: 'Question Categories',
+    loadChildren: () => import('./questions/questions.module').then(m => m.QuestionsModule)
+  },
 ];
 
 @NgModule({

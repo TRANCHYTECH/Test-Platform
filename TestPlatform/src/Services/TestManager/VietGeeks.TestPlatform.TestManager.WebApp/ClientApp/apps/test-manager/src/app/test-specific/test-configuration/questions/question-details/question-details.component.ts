@@ -7,13 +7,13 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
 import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
-import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
-import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
-import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
-import { QuestionsQuery } from '../../_state/questions/question.query';
-import { QuestionService } from '../../_state/questions/question.service';
-import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
+import { QuestionCategory, QuestionCategoryGenericId } from '../../../_state/question-categories/question-categories.model';
+import { QuestionCategoriesQuery } from '../../../_state/question-categories/question-categories.query';
+import { QuestionCategoriesService } from '../../../_state/question-categories/question-categories.service';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../../_state/questions/question.model';
+import { QuestionsQuery } from '../../../_state/questions/question.query';
+import { QuestionService } from '../../../_state/questions/question.service';
+import { CreateCategoryComponent } from '../../_components/create-test-category/create-test-category.component';
 
 const AnswerTypes = [
   {
@@ -40,11 +40,11 @@ const AnswerTypes = [
 
 @UntilDestroy()
 @Component({
-  selector: 'viet-geeks-edit-question',
-  templateUrl: './edit-question.component.html',
-  styleUrls: ['./edit-question.component.scss'],
+  selector: 'viet-geeks-question-details',
+  templateUrl: './question-details.component.html',
+  styleUrls: ['./question-details.component.scss']
 })
-export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
+export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate {
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
   scoreSettingsForm: FormGroup;
@@ -227,11 +227,11 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
 
       if (this.questionId === 'new') {
         await lastValueFrom(this._questionService.add(this.testId, question));
-        this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
+        this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question created');
       } else {
         await this._questionService.update(this.testId, this.questionId, question);
-        this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
+        this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question updated');
       }
 

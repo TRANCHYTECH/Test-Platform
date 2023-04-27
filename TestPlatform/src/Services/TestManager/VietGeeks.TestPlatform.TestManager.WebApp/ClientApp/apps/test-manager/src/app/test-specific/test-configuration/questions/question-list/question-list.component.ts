@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { firstValueFrom, map, Observable } from 'rxjs';
-import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
-import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
-import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { Question, AnswerType } from '../../_state/questions/question.model';
-import { QuestionsQuery } from '../../_state/questions/question.query';
-import { QuestionService } from '../../_state/questions/question.service';
 import { getTestId } from '@viet-geeks/shared';
+import { Observable, firstValueFrom, map } from 'rxjs';
+import { TestSpecificBaseComponent } from '../../../_base/test-specific-base.component';
+import { QuestionCategory } from '../../../_state/question-categories/question-categories.model';
+import { QuestionCategoriesQuery } from '../../../_state/question-categories/question-categories.query';
+import { QuestionCategoriesService } from '../../../_state/question-categories/question-categories.service';
+import { AnswerType, Question } from '../../../_state/questions/question.model';
+import { QuestionsQuery } from '../../../_state/questions/question.query';
+import { QuestionService } from '../../../_state/questions/question.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'viet-geeks-manage-questions',
-  templateUrl: './manage-questions.component.html',
-  styleUrls: ['./manage-questions.component.scss']
+  selector: 'viet-geeks-question-list',
+  templateUrl: './question-list.component.html',
+  styleUrls: ['./question-list.component.scss']
 })
-export class ManageQuestionsComponent extends TestSpecificBaseComponent {
+export class QuestionListComponent extends TestSpecificBaseComponent {
   questions$!: Observable<Question[]>;
   questionCategories$!: Observable<QuestionCategory[]>;
   questionCategories: { [id: string]: string } = {};

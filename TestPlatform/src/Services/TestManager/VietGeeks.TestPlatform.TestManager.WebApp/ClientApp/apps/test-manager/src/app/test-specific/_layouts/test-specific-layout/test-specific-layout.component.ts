@@ -50,8 +50,8 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
           disable: false
         },
         {
-          routerLink: ['config', 'manage-questions'],
-          text: 'Manage Questions',
+          routerLink: ['config', 'question'],
+          text: 'Questions',
           icon: 'ri-equalizer-fill',
           disable: isNewTest
         },
