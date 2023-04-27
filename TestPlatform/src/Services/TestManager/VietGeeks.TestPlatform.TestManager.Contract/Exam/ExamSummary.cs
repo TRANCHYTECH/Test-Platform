@@ -17,5 +17,6 @@ public class ExamSummary
     public DateTime StartedAt { get; set; }
 
     public DateTime FinishedAt { get; set; }
-
+    
+    public string TotalTime { get; set; } = default!;
 }

@@ -11,7 +11,7 @@ public static class ManualMapper
         {
             Id = model.ID,
             Description = model.Description,
-            AnswerType = model.AnswerType,
+            AnswerType = (int)model.AnswerType,
             Answers = model.Answers.Select(c => new ExamAnswer
             {
                 Id = c.Id,

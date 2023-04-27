@@ -6,6 +6,7 @@ export interface ExamSummary {
     examineeInfo: { [key: string]: string; };
     startedAt: Date;
     finishedAt: Date;
+    totalTime: string;
 }
 
 export interface TestRunSummary {
