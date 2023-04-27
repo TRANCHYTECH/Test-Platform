@@ -58,3 +58,9 @@ public class TestDefinitionValidatorFixture : IDisposable
             new AnswerQuestionConfigValidator());
     }
 }
+
+[CollectionDefinition(TestDefinitionValidatorTestCollection.CollectionId)]
+public class TestDefinitionValidatorTestCollection : ICollectionFixture<TestDefinitionValidatorFixture>
+{
+    public const string CollectionId = "TestDefinitionValidatorTestCollection";
+}

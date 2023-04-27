@@ -54,7 +54,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   router = inject(Router);
   notifyService = inject(ToastService);
   textEditorConfigs = inject(TextEditorConfigsService);
-  
+
   questionId: string;
   testId: string;
   isMultipleChoiceAnswer: boolean;
@@ -85,23 +85,23 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
 
     const pointMandatoryCondition = () => (this.answerType == AnswerType.SingleChoice || this.answerType == AnswerType.MultipleChoice) && !this.isPartialScore;
     const partialPointMandatoryCondition =
-    () => {
-      return this.answerType === AnswerType.MultipleChoice && this.isPartialScore;
-    }
+      () => {
+        return this.answerType === AnswerType.MultipleChoice && this.isPartialScore;
+      }
 
     this.scoreSettingsForm = this._fb.group({
       correctPoint: [0, [RxwebValidators.compose({
-        validators: [Validators.required], conditionalExpression: pointMandatoryCondition
+        validators: [Validators.required, RxwebValidators.range({ minimumNumber: 0, maximumNumber: 1000 })], conditionalExpression: pointMandatoryCondition
       })]],
       incorrectPoint: [0, [RxwebValidators.compose({
-        validators: [Validators.required], conditionalExpression: pointMandatoryCondition
+        validators: [Validators.required, RxwebValidators.range({ minimumNumber: -999, maximumNumber: 0 })], conditionalExpression: pointMandatoryCondition
       })]],
       isPartialAnswersEnabled: false,
       bonusPoints: [0, [RxwebValidators.compose({
-        validators: [Validators.required], conditionalExpression: partialPointMandatoryCondition
+        validators: [Validators.required, RxwebValidators.range({ minimumNumber: 0, maximumNumber: 1000 })], conditionalExpression: partialPointMandatoryCondition
       })]],
       partialIncorrectPoint: [0, [RxwebValidators.compose({
-        validators: [Validators.required], conditionalExpression: partialPointMandatoryCondition
+        validators: [Validators.required, RxwebValidators.range({ minimumNumber: -999, maximumNumber: 0 })], conditionalExpression: partialPointMandatoryCondition
       })]],
       isDisplayMaximumScore: false,
       mustAnswerToContinue: false,
@@ -114,9 +114,9 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
     }
 
     return from(this.notifyService.confirm('You have unsave changed. Are you sure you want to leave?')
-    .then((result) => {
-      return result.isConfirmed;
-    }));
+      .then((result) => {
+        return result.isConfirmed;
+      }));
   }
 
   ngOnInit(): void {
@@ -126,7 +126,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
       this.testId = getTestId(this.route);
       this.questionId = p['question-id'];
       if (this.questionId !== 'new') {
-        const question =  this._questionQuery.getEntity(this.questionId);
+        const question = this._questionQuery.getEntity(this.questionId);
         this.questionForm.reset({
           description: question?.description,
           categoryId: question?.categoryId,
@@ -199,11 +199,11 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
 
   submitFunc = async () => {
     if (!this.canSubmit) {
-        return;
+      return;
     }
 
     await this.submit();
-};
+  };
 
   async submit() {
     try {
@@ -230,9 +230,9 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
         this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
         this.notifyService.success('Question created');
       } else {
-          await this._questionService.update(this.testId, this.questionId, question);
-          this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
-          this.notifyService.success('Question updated');
+        await this._questionService.update(this.testId, this.questionId, question);
+        this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
+        this.notifyService.success('Question updated');
       }
 
       this.isSubmitted = true;
@@ -266,8 +266,8 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   private registerControlEvents() {
     const answerTypeControl = this.questionForm.get('answerType') as FormControl;
     answerTypeControl.valueChanges.pipe(untilDestroyed(this)).subscribe(t => {
-        this.isMultipleChoiceAnswer = this.isMultipleChoice(t);
-        this.answerType = t;
+      this.isMultipleChoiceAnswer = this.isMultipleChoice(t);
+      this.answerType = t;
     });
 
     const isPartialAnswersEnabledControl = this.scoreSettingsForm.get('isPartialAnswersEnabled') as FormControl;
@@ -287,7 +287,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   private addAnswer(answer: Answer) {
     const formGroup = this._fb.group({
       id: answer.id,
-      answerDescription : [answer.answerDescription,[Validators.required]],
+      answerDescription: [answer.answerDescription, [Validators.required]],
       answerPoint: [answer.answerPoint, [RxwebValidators.compose({
         validators: [Validators.required], conditionalExpression: () => (this.answerType == AnswerType.MultipleChoice)
       })]],

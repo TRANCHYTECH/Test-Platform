@@ -1,23 +1,32 @@
-﻿using AutoMapper;
+﻿using System.Reflection;
+using AutoMapper;
+using FluentValidation;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 public class QuestionManagerService : IQuestionManagerService
 {
     private readonly IMapper _mapper;
+    private readonly IValidator<QuestionDefinition> _questionDefinitionValidator;
     private readonly TestManagerDbContext _managerDbContext;
     private readonly IQuestionPointCalculationService _questionPointCalculationService;
 
-    public QuestionManagerService(IMapper mapper, TestManagerDbContext managerDbContext, IQuestionPointCalculationService questionPointCalculationService)
+    public QuestionManagerService(
+        IMapper mapper,
+        IValidator<QuestionDefinition> questionDefinitionValidator,
+        TestManagerDbContext managerDbContext,
+        IQuestionPointCalculationService questionPointCalculationService)
     {
         _mapper = mapper;
+        _questionDefinitionValidator = questionDefinitionValidator;
         _managerDbContext = managerDbContext;
-        this._questionPointCalculationService = questionPointCalculationService;
+        _questionPointCalculationService = questionPointCalculationService;
     }
 
     public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, CancellationToken cancellationToken)
@@ -30,7 +39,7 @@ public class QuestionManagerService : IQuestionManagerService
     public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, int pageIndex, int pageSize, CancellationToken cancellationToken)
     {
         var entities = await _managerDbContext.Find<QuestionDefinition>()
-            .Skip(pageIndex*pageSize)
+            .Skip(pageIndex * pageSize)
             .Limit(pageSize)
             .Sort(q => q.QuestionNo, Order.Ascending)
             .ManyAsync(q => q.TestId == testId, cancellationToken);
@@ -40,7 +49,7 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<QuestionViewModel> GetQuestion(string id, CancellationToken cancellationToken)
     {
-        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync();
+        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
 
         return _mapper.Map<QuestionViewModel>(entity);
     }
@@ -50,6 +59,9 @@ public class QuestionManagerService : IQuestionManagerService
         _questionPointCalculationService.CalculateTotalPoints(questionViewModel);
         var entity = _mapper.Map<QuestionDefinition>(questionViewModel);
         entity.TestId = testId;
+
+        await _questionDefinitionValidator.TryValidate(entity);
+
         await _managerDbContext.SaveAsync(entity, cancellationToken);
 
         return _mapper.Map<QuestionViewModel>(entity);
@@ -57,14 +69,14 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<QuestionViewModel> UpdateQuestion(string id, QuestionViewModel questionViewModel, CancellationToken cancellationToken)
     {
-        var existingEntity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
-        if (existingEntity == null)
-            throw new EntityNotFoundException(id, nameof(QuestionDefinition));
+        var existingEntity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken) ?? throw new EntityNotFoundException(id, nameof(QuestionDefinition));
 
         _questionPointCalculationService.CalculateTotalPoints(questionViewModel);
         var updatedEntity = _mapper.Map<QuestionDefinition>(questionViewModel);
         updatedEntity.ID = id;
         updatedEntity.TestId = existingEntity.TestId;
+
+        await _questionDefinitionValidator.TryValidate(updatedEntity);
 
         await _managerDbContext.SaveAsync(updatedEntity, cancellationToken);
 

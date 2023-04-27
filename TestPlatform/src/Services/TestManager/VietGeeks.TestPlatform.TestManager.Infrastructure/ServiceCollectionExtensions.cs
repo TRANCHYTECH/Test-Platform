@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ITestCategoryService, TestCategoryService>();
         serviceCollection.AddScoped<ITestReportService, TestReportService>();
         serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
+        serviceCollection.AddScoped<IQuestionRelatedValidationService, QuestionRelatedValidationService>();
         serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
