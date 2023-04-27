@@ -9,7 +9,7 @@ using Xunit.Sdk;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.UnitTest;
 
-[Collection("TestDefinitionValidatorTestCollection")]
+[Collection(TestDefinitionValidatorTestCollection.CollectionId)]
 public class GradingSettingsPartValidatorUnitTests
 {
     private readonly TestDefinitionValidatorFixture _fixture;

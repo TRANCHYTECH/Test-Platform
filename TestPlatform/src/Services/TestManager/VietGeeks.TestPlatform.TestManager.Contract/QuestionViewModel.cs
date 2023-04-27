@@ -6,11 +6,11 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
     public class NewQuestionViewModel: IQuestionViewModel
     {
         public int QuestionNo { get; set; }
-        public string Description { get; set; }
-        public string CategoryId { get; set; }
+        public string Description { get; set; } = default!;
+        public string CategoryId { get; set; } = default!;
         public AnswerType AnswerType { get; set; }
-        public IEnumerable<AnswerViewModel> Answers { get; set; }
-        public ScoreSettingsViewModel ScoreSettings { get; set; }
+        public IEnumerable<AnswerViewModel> Answers { get; set; } = default!;
+        public ScoreSettingsViewModel ScoreSettings { get; set; } = default!;
         public bool IsMandatory { get; set; }
     }
 

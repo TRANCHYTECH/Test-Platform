@@ -60,14 +60,14 @@ public static class PointCalculator
     public static int CalculateMark(this QuestionDefinition question, string[]? answerIds)
     {
         // Single choice questions.
-        if (question.AnswerType == 1)
+        if (question.AnswerType == AnswerType.SingleChoice)
         {
             var isCorrect = answerIds != null && question.Answers.Any(c => c.Id == answerIds[0] && c.IsCorrect);
             return ((SingleChoiceScoreSettings)question.ScoreSettings).GetPoint(isCorrect);
         }
 
         // Multiple choices question.
-        if (question.AnswerType == 2)
+        if (question.AnswerType == AnswerType.MultipleChoice)
         {
             var correctedAnswers = question.Answers.Where(c => c.IsCorrect);
             var userCorrected = answerIds == null ? Array.Empty<Answer>() : correctedAnswers.Where(c => answerIds.Contains(c.Id));
@@ -77,7 +77,7 @@ public static class PointCalculator
         throw new Exception("NotSupportedAnswerType");
     }
 
-    public static int GetPoint(this SingleChoiceScoreSettings scoreSettings, bool isCorrect) => isCorrect ? scoreSettings.TotalPoints : scoreSettings.IncorrectPoint.GetValueOrDefault() * -1;
+    public static int GetPoint(this SingleChoiceScoreSettings scoreSettings, bool isCorrect) => isCorrect ? scoreSettings.TotalPoints : scoreSettings.IncorrectPoint;
 
     public static int GetPoint(this MultipleChoiceScoreSettings scoreSettings, IEnumerable<Answer> correctedAnswers, IEnumerable<Answer> userCorrected)
     {
