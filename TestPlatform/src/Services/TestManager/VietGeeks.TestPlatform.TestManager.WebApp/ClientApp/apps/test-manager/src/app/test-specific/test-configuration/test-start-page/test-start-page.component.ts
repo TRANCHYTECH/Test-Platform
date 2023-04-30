@@ -3,7 +3,7 @@ import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { differenceWith } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { RespondentIdentifyConfig } from '../../_state/test.model';
+import { RespondentIdentifyConfig } from '../../_state/tests/test.model';
 
 @UntilDestroy()
 @Component({

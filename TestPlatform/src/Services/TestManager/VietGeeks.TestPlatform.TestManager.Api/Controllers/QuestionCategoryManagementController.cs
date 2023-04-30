@@ -5,8 +5,9 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 
+//todo: take into account the test id because the test if already activated, question or categories, not allow to be changed.
 [ApiController]
-[Route("Management/QuestionCategory")]
+[Route("Management/TestDefinition/{testId}/QuestionCategory")]
 [Authorize]
 public class QuestionCategoryManagementController : ControllerBase
 {
@@ -20,20 +21,28 @@ public class QuestionCategoryManagementController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(string testId, CancellationToken cancellationToken)
     {
-        var testCategories = await _questionCategoryService.GetCategories(cancellationToken);
+        var categories = await _questionCategoryService.GetCategories(testId, cancellationToken);
 
-        return Ok(testCategories);
+        return Ok(categories);
     }
 
     [HttpPost]
     [ProducesResponseType(typeof(QuestionCategoryViewModel), 200)]
-    public async Task<IActionResult> Create(NewQuestionCategoryViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(string testId, NewQuestionCategoryViewModel viewModel, CancellationToken cancellationToken)
     {
-        var questionCategory = await _questionCategoryService.CreateQuestionCategory(viewModel, cancellationToken);
+        var createdCategory = await _questionCategoryService.CreateCategory(testId, viewModel, cancellationToken);
 
-        return Ok(questionCategory);
+        return Ok(createdCategory);
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromQuery] string[] ids)
+    {
+        await _questionCategoryService.DeleteCategories(ids);
+
+        return Ok();
     }
 }
 

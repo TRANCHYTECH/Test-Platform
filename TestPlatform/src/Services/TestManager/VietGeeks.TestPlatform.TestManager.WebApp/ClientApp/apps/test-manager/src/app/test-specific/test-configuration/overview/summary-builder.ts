@@ -22,7 +22,7 @@ import {
     TestSets,
     TimePeriodActivation,
     TimeSettings
-} from "../../_state/test.model";
+} from "../../_state/tests/test.model";
 import { GradingCriteriaConfigType, RangeUnit } from "../../_state/ui/grading-summary-ui.model";
 import { TestConfigRoutes } from "../test-configuration-routing.module";
 import { TestActivationMethodType, TestDurationMethod } from "../test-time-settings/test-time-settings.component";

@@ -7,13 +7,13 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
 import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
-import { QuestionCategory, QuestionCategoryGenericId } from '../../../_state/question-categories/question-categories.model';
-import { QuestionCategoriesQuery } from '../../../_state/question-categories/question-categories.query';
-import { QuestionCategoriesService } from '../../../_state/question-categories/question-categories.service';
-import { Answer, AnswerType, Question, ScoreSettings } from '../../../_state/questions/question.model';
-import { QuestionsQuery } from '../../../_state/questions/question.query';
-import { QuestionService } from '../../../_state/questions/question.service';
-import { CreateCategoryComponent } from '../../_components/create-test-category/create-test-category.component';
+import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
+import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
+import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
+import { QuestionsQuery } from '../../_state/questions/question.query';
+import { QuestionService } from '../../_state/questions/question.service';
+import { UiIntegrationService } from '../../../_state/ui-integration.service';
 
 const AnswerTypes = [
   {
@@ -54,7 +54,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
   router = inject(Router);
   notifyService = inject(ToastService);
   textEditorConfigs = inject(TextEditorConfigsService);
-
+  uiIntegrationService = inject(UiIntegrationService);
   questionId: string;
   testId: string;
   isMultipleChoiceAnswer: boolean;
@@ -120,11 +120,13 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
   }
 
   ngOnInit(): void {
-    firstValueFrom(this._questionCategoriesService.get());
-    this.questionCategories$ = this._questionCategoriesQuery.selectAll();
     this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
       this.testId = getTestId(this.route);
       this.questionId = p['question-id'];
+
+      firstValueFrom(this._questionCategoriesService.get(this.testId));
+      this.questionCategories$ = this._questionCategoriesQuery.selectAll();
+
       if (this.questionId !== 'new') {
         const question = this._questionQuery.getEntity(this.questionId);
         this.questionForm.reset({
@@ -162,12 +164,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
   }
 
   addCategory() {
-    const modalRef = this._modalService.open(CreateCategoryComponent, { size: 'md', centered: true });
-    modalRef.result.then(async (formValue: Partial<QuestionCategory>) => {
-      await firstValueFrom(this._questionCategoriesService.add(formValue));
-    }, reason => {
-      console.log(reason);
-    })
+    this.uiIntegrationService.openModal('NewQuestionCategory', { testId: this.testId });
   }
 
   addEmptyAnswer() {

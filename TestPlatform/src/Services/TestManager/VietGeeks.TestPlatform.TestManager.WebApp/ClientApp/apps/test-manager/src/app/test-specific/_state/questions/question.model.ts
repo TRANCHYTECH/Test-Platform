@@ -10,7 +10,6 @@ export interface Question {
   categoryName?: string;
   categoryColor?: string;
   answerType: number;
-  answerTypeName?: string;
   answers?: Answer[];
   scoreSettings: ScoreSettings;
   createdDate: string;

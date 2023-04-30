@@ -7,7 +7,7 @@ import { UserProfileService } from '@viet-geeks/core';
 import { TestStatus } from '@viet-geeks/test-manager/state';
 import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/test.model';
+import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/tests/test.model';
 
 export const TestDurationMethod =
 {

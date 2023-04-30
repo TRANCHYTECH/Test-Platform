@@ -71,8 +71,8 @@ const routes: Routes = [
     {
     path: getTestSettingsPath('question'),
     title: 'Question Categories',
-    loadChildren: () => import('./questions/questions.module').then(m => m.QuestionsModule)
-  },
+    loadChildren: () => import('../test-questions/questions.module').then(m => m.QuestionsModule)
+  }
 ];
 
 @NgModule({

@@ -6,12 +6,12 @@ import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AppSettings } from '../../../app-setting.model';
 import { Question, QuestionSummary } from './question.model';
-import { QuestionsStore } from './question.store';
+import { QuestionStore } from './question.store';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionService {
 
-  constructor(private _questionStore: QuestionsStore, private _http: HttpClient, private _appSettingService: AppSettingsService) {
+  constructor(private _questionStore: QuestionStore, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
   get(testId: string) {
@@ -32,8 +32,10 @@ export class QuestionService {
     })));
   }
 
-  remove(id: ID) {
-    this._questionStore.remove(id);
+  remove(testId: string, id: string) {
+    return firstValueFrom(this._http.delete(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question/${id}`).pipe(tap(() => {
+      this._questionStore.remove(id);
+    })));
   }
 
   getSummary(testId: string) {

@@ -3,9 +3,9 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getPageTitle, getTestId, ToastService } from '@viet-geeks/shared';
 import { BehaviorSubject, filter } from 'rxjs';
-import { TestActivationMethodType } from '../../_state/test.model';
-import { TestsQuery } from '../../_state/tests.query';
-import { TestsService } from '../../_state/tests.service';
+import { TestActivationMethodType } from '../../_state/tests/test.model';
+import { TestsQuery } from '../../_state/tests/tests.query';
+import { TestsService } from '../../_state/tests/tests.service';
 import { Title } from '@angular/platform-browser';
 import { TestStatus } from '@viet-geeks/test-manager/state';
 

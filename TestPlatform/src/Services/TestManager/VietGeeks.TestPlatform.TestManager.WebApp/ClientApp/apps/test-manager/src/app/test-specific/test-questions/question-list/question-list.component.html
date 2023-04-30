@@ -1,7 +1,7 @@
 <div class="row g-4 mb-3">
     <div class="col-sm-auto d-flex gap-2">
         <div *ngIf="!isReadonly">
-            <a routerLink="new" class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>Add New</a>
+            <a routerLink="../new" class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>Add New</a>
         </div>
         <a routerLink="../categories" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Categories</a>
@@ -29,7 +29,7 @@
 </div>
 <div class="row">
     <div class="col-xxl-12 project-card"
-        *ngFor="let data of questions$ | async | slice: (page-1) * pageSize : page * pageSize; let i = index"
+        *ngFor="let data of questions$ | async; let i = index"
         id="pl1_{{data.id}}">
         <div class="card card-height-100">
             <div class="card-body">
@@ -42,8 +42,8 @@
                             <div class="d-flex gap-1 align-items-center">
                                 <div>
                                     <span
-                                        class="ms-3 badge rounded-pill text-bg-primary">{{questionCategories[data.categoryId]}}</span>
-                                    <span class="ms-3"><label>Type</label> {{data.answerTypeName}}</span>
+                                        class="ms-3 badge rounded-pill text-bg-primary">{{displayCategory(data.categoryId)}}</span>
+                                    <span class="ms-3"><label>Type</label> {{AnswerType[data.answerType]}}</span>
                                     <span class="ms-3 vr"></span>
                                     <span class="ms-3"><label>Points</label> {{data.scoreSettings.totalPoints}}</span>
                                 </div>
@@ -52,12 +52,11 @@
                                         class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
                                         ngbDropdownToggle>
-                                        <!-- <i-feather name="more-horizontal" class="icon-sm"></i-feather> -->
+                                        <i-feather name="more-horizontal" class="icon-sm"></i-feather>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i
-                                                class="ri-file-copy-line align-bottom me-2 text-muted"></i>Duplicate</a>
-                                        <a class="dropdown-item" [routerLink]="[data.id, 'basic-settings']"><i
+                                        <a class="dropdown-item" [swal]="{ title: 'Confirmation', text: 'You want to delete this test category?', showCancelButton: true }"
+                                        (confirm)="removeQuestion(data.id)"><i
                                                 class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>
                                     </div>
                                 </div>
@@ -119,6 +118,6 @@
     <!-- end col -->
     <div class="col-sm-6">
         <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-            [collectionSize]="(questions$ | async)?.length ?? 0"></ngb-pagination>
+            [collectionSize]="0"></ngb-pagination>
     </div><!-- end col -->
 </div><!-- end row -->
