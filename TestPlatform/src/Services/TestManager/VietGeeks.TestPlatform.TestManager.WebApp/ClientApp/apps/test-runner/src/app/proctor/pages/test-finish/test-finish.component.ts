@@ -18,6 +18,14 @@ export type ChartOptions = {
   colors: any
 };
 
+type AnswerDictionary = {
+  [key: string]: boolean;
+};
+
+type QuestionToAnswerDictionary = {
+  [key: string]: AnswerDictionary;
+};
+
 @Component({
   selector: 'viet-geeks-test-finish',
   templateUrl: './test-finish.component.html',
@@ -43,6 +51,7 @@ export class TestFinishComponent implements OnInit {
   showCorrectAnswers = false;
   questions: QuestionOutput[] = [];
   answers: {[key: string]: Array<string>} = {};
+  answersDictionary: QuestionToAnswerDictionary = {};
 
   ngOnInit() {
     this.doInit();
@@ -189,6 +198,10 @@ export class TestFinishComponent implements OnInit {
       if (this.showCorrectAnswers) {
         this.questions = this.sessionData.questions ?? [];
         this.answers = this.sessionData.answers ?? {};
+        this.answersDictionary = Object.entries(this.answers).reduce((result, [questionId, answerIds]) => {
+          result[questionId] = answerIds.reduce((r, id) => ({...r, [id]: true}), {} as AnswerDictionary);
+          return result;
+        }, {} as QuestionToAnswerDictionary);
       }
     }
   }
