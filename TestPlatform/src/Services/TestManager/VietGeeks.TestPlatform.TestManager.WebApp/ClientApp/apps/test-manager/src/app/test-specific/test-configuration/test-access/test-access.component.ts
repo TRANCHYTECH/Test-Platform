@@ -5,7 +5,7 @@ import { assign, forIn, isNumber, range } from 'lodash-es';
 
 import { AppSettingsService } from '@viet-geeks/core';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { TestAccessType, TestInvitationStats, TestAccessTypeUI, TestAccess, GroupPasswordType, PublicLinkType, PrivateAccessCodeType } from '../../_state/test.model';
+import { TestAccessType, TestInvitationStats, TestAccessTypeUI, TestAccess, GroupPasswordType, PublicLinkType, PrivateAccessCodeType } from '../../_state/tests/test.model';
 import { AppSettings } from '../../../app-setting.model';
 import { TestStatus } from '@viet-geeks/test-manager/state';
 

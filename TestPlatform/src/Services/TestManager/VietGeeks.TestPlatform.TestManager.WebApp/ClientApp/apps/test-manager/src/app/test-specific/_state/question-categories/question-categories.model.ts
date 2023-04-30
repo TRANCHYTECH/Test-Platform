@@ -1,5 +1,5 @@
 export interface QuestionCategory {
-  id: number | string;
+  id: string;
   name: string;
 }
 

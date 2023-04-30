@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
-import { AppSettings } from '../../app-setting.model';
+import { AppSettings } from '../../../app-setting.model';
 import { EMPTY, firstValueFrom, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { PrivateAccessCodeType, Test, TestAccessType, TestInvitationStats } from './test.model';

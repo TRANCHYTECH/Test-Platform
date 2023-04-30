@@ -10,7 +10,5 @@ public abstract class CategoryBase : EntityBase
 
     public int DisplayOrder { get; set; }
 
-    public bool IsSystem { get; set; }
-
     public static readonly string UncategorizedId = "000000000000000000000001";
 }

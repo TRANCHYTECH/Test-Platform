@@ -13,7 +13,7 @@ import { QuestionCategoriesService } from '../../_state/question-categories/ques
 import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
-import { CreateCategoryComponent } from '../_components/create-test-category/create-test-category.component';
+import { UiIntegrationService } from '../../../_state/ui-integration.service';
 
 const AnswerTypes = [
   {
@@ -40,11 +40,11 @@ const AnswerTypes = [
 
 @UntilDestroy()
 @Component({
-  selector: 'viet-geeks-edit-question',
-  templateUrl: './edit-question.component.html',
-  styleUrls: ['./edit-question.component.scss'],
+  selector: 'viet-geeks-question-details',
+  templateUrl: './question-details.component.html',
+  styleUrls: ['./question-details.component.scss']
 })
-export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
+export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate {
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
   scoreSettingsForm: FormGroup;
@@ -54,7 +54,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   router = inject(Router);
   notifyService = inject(ToastService);
   textEditorConfigs = inject(TextEditorConfigsService);
-
+  uiIntegrationService = inject(UiIntegrationService);
   questionId: string;
   testId: string;
   isMultipleChoiceAnswer: boolean;
@@ -120,11 +120,13 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   }
 
   ngOnInit(): void {
-    firstValueFrom(this._questionCategoriesService.get());
-    this.questionCategories$ = this._questionCategoriesQuery.selectAll();
     this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
       this.testId = getTestId(this.route);
       this.questionId = p['question-id'];
+
+      firstValueFrom(this._questionCategoriesService.get(this.testId));
+      this.questionCategories$ = this._questionCategoriesQuery.selectAll();
+
       if (this.questionId !== 'new') {
         const question = this._questionQuery.getEntity(this.questionId);
         this.questionForm.reset({
@@ -162,12 +164,7 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
   }
 
   addCategory() {
-    const modalRef = this._modalService.open(CreateCategoryComponent, { size: 'md', centered: true });
-    modalRef.result.then(async (formValue: Partial<QuestionCategory>) => {
-      await firstValueFrom(this._questionCategoriesService.add(formValue));
-    }, reason => {
-      console.log(reason);
-    })
+    this.uiIntegrationService.openModal('NewQuestionCategory', { testId: this.testId });
   }
 
   addEmptyAnswer() {
@@ -227,11 +224,11 @@ export class EditQuestionComponent implements OnInit, CanComponentDeactivate {
 
       if (this.questionId === 'new') {
         await lastValueFrom(this._questionService.add(this.testId, question));
-        this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
+        this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question created');
       } else {
         await this._questionService.update(this.testId, this.questionId, question);
-        this.router.navigate(['/test', this.testId, 'config', 'manage-questions']);
+        this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question updated');
       }
 

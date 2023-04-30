@@ -26,7 +26,7 @@ export class TestCategoryListComponent implements OnInit {
   }
 
   openNewTestCategoryModal() {
-    this._uiIntegrationService.openNewTestCategoryModal();
+    this._uiIntegrationService.openModal('NewTestCategory', {});
   }
 
   private async loadData() {

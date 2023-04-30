@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { SharedModule } from '@viet-geeks/shared';
 import { TestCategoryListComponent } from './test-category-list/test-category-list.component';
 import { TetsCategoriesRoutingModule } from './test-categories-routing.module';
+import { UiIntegrationService } from '../_state';
+import { NewTestCategoryComponent } from './new-test-category/new-test-category.component';
 
 @NgModule({
   declarations: [
@@ -12,4 +14,10 @@ import { TetsCategoriesRoutingModule } from './test-categories-routing.module';
     TetsCategoriesRoutingModule
   ]
 })
-export class TetsCategoriesModule { }
+export class TetsCategoriesModule { 
+  uiService = inject(UiIntegrationService);
+
+  constructor() {
+    this.uiService.registerModal(NewTestCategoryComponent, 'NewTestCategory');
+  }
+}

@@ -5,9 +5,9 @@ import { untilDestroyed } from "@ngneat/until-destroy";
 import { EntitySpecificBaseComponent, getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
 import { TestStatus } from "@viet-geeks/test-manager/state";
 import { firstValueFrom } from "rxjs";
-import { createTest, Test } from "../_state/test.model";
-import { TestsQuery } from "../_state/tests.query";
-import { TestsService } from "../_state/tests.service";
+import { createTest, Test } from "../_state/tests/test.model";
+import { TestsQuery } from "../_state/tests/tests.query";
+import { TestsService } from "../_state/tests/tests.service";
 
 @Component({
     selector: 'viet-geeks-test-specific-base',

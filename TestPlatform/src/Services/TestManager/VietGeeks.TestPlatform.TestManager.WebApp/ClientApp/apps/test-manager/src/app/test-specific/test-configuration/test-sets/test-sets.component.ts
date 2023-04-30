@@ -9,7 +9,7 @@ import { QuestionCategoriesQuery } from '../../_state/question-categories/questi
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
 import { QuestionSummary } from '../../_state/questions/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
-import { GeneratorTypes, TestSets } from '../../_state/test.model';
+import { GeneratorTypes, TestSets } from '../../_state/tests/test.model';
 @UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-sets',
@@ -57,7 +57,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
   }
 
   async postLoadEntity(): Promise<void> {
-    const configs = await Promise.all([this._questionService.getSummary(this.testId), firstValueFrom(this._questionCategoriesService.get())]);
+    const configs = await Promise.all([this._questionService.getSummary(this.testId), firstValueFrom(this._questionCategoriesService.get(this.testId))]);
     this.questionSummaries = configs[0];
     this.questionCategories = this._questionCategoriesQuery.getAll();
 
