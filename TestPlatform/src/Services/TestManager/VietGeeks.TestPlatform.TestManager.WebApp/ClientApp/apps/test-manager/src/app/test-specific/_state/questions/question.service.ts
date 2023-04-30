@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ID } from '@datorama/akita';
 import { AppSettingsService } from '@viet-geeks/core';
 import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
