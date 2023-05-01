@@ -1,19 +1,18 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
 import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
+import { UiIntegrationService } from '../../../_state/ui-integration.service';
 import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
 import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
-import { UiIntegrationService } from '../../../_state/ui-integration.service';
 
 const AnswerTypes = [
   {
@@ -69,14 +68,14 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
     private _questionCategoriesQuery: QuestionCategoriesQuery,
     private _questionCategoriesService: QuestionCategoriesService,
     private _questionService: QuestionService,
-    private _questionQuery: QuestionsQuery,
-    private _modalService: NgbModal
+    private _questionQuery: QuestionsQuery
   ) {
     this.questionId = '';
     this.testId = '';
     this.isMultipleChoiceAnswer = false;
     this.isPartialScore = false;
     this.questionForm = this._fb.group({
+      questionNo: 10, //todo: last count + 1
       description: ['', [Validators.required]],
       categoryId: [QuestionCategoryGenericId, [Validators.required]],
       answerType: ['', [Validators.required]],
@@ -130,6 +129,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
       if (this.questionId !== 'new') {
         const question = this._questionQuery.getEntity(this.questionId);
         this.questionForm.reset({
+          questionNo: question?.questionNo,
           description: question?.description,
           categoryId: question?.categoryId,
           answerType: question?.answerType
@@ -213,7 +213,6 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
       const question: Question = {
         ...formValue,
         answerType: answerType,
-        questionNo: 1,//TODO
         scoreSettings: this.getScoreSettingsFormValue(answerType),
         id: this.questionId
       };

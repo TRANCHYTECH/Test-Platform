@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, firstValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
@@ -28,7 +28,9 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
 
   async postLoadEntity(): Promise<void> {
     await Promise.all([firstValueFrom(this._questionCategoriesService.get(this.testId)), firstValueFrom(this._questionsService.get(this.testId))]);
-    this.questions$.next(this._questionsQuery.getAll());
+    this._questionsQuery.selectAll().pipe(untilDestroyed(this)).subscribe(questions => {
+      this.questions$.next(questions);
+    });
   }
 
   displayCategory(id: string) {
@@ -37,6 +39,13 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
 
   removeQuestion(questionId: string) {
     this._questionsService.remove(this.testId, questionId);
+  }
+
+  goToQuestionDetails(questionId: string, e: Event) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fromQuestionActionMenu = e.composedPath().find((c: any) => (typeof c.className) === "string" && c.className.includes('question-action-menu'));
+    if(fromQuestionActionMenu === undefined)
+      this.router.navigate(['../', questionId], { relativeTo: this.route });
   }
 
   submit(): Promise<void> {

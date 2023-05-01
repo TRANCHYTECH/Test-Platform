@@ -30,8 +30,8 @@
 <div class="row">
     <div class="col-xxl-12 project-card"
         *ngFor="let data of questions$ | async; let i = index"
-        id="pl1_{{data.id}}">
-        <div class="card card-height-100">
+        id="pl1_{{data.id}}" >
+        <div class="card card-height-100" (click)="goToQuestionDetails(data.id, $event)" style="cursor: pointer;">
             <div class="card-body">
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex">
@@ -47,7 +47,7 @@
                                     <span class="ms-3 vr"></span>
                                     <span class="ms-3"><label>Points</label> {{data.scoreSettings.totalPoints}}</span>
                                 </div>
-                                <div class="dropdown" ngbDropdown>
+                                <div class="dropdown question-action-menu" ngbDropdown>
                                     <button
                                         class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"

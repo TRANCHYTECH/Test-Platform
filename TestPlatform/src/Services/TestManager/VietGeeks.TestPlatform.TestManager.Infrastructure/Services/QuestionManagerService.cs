@@ -101,4 +101,12 @@ public class QuestionManagerService : IQuestionManagerService
 
         return summary.Sum(c => c.TotalPoints);
     }
+
+    public async Task DeleteQuestion(string id, CancellationToken cancellationToken)
+    {
+        //todo: verify condition if test is ended or activated, so not allow to modify/delete
+        var result = await _managerDbContext.DeleteAsync<QuestionDefinition>(id);
+        if (result.DeletedCount == 0)
+            throw new TestPlatformException("Not found question");
+    }
 }

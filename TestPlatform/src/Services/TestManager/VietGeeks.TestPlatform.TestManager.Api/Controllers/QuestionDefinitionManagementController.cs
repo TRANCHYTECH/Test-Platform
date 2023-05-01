@@ -65,6 +65,14 @@ public class QuestionDefinitionManagementController : ControllerBase
         return Ok(updatedQuestion);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+    {
+        await _questionManagerService.DeleteQuestion(id, cancellationToken);
+
+        return Ok();
+    }
+
     [HttpGet("Summary")]
     [ProducesResponseType(typeof(IEnumerable<QuestionSummaryViewModel>), StatusCodes.Status200OK)]
     public Task<IEnumerable<QuestionSummaryViewModel>> GetQuestionSummary(string testId, CancellationToken cancellationToken)
