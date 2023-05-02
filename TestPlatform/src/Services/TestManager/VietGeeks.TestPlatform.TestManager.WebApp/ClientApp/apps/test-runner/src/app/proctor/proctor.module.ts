@@ -10,10 +10,11 @@ import { TestStartComponent } from './pages/test-start/test-start.component';
 import { TestFinishComponent } from './pages/test-finish/test-finish.component';
 import { FormatLocalDateTimePipe } from './pipes/format-local-datetime.pipe';
 import { FormatTimespanPipe } from './pipes/format-timespan.pipe';
+import { TestFinishAnswersComponent } from './pages/test-finish/test-finish-answers/test-finish-answers.component';
 
 
 @NgModule({
-  declarations: [TestStartComponent, TestAccessComponent, TestQuestionComponent, TestFinishComponent, FormatLocalDateTimePipe, FormatTimespanPipe],
+  declarations: [TestStartComponent, TestAccessComponent, TestQuestionComponent, TestFinishComponent, FormatLocalDateTimePipe, FormatTimespanPipe, TestFinishAnswersComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, ProctorRoutingModule, NgApexchartsModule],
   providers: [],
 })

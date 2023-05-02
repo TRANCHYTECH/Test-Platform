@@ -144,7 +144,8 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       examStep: ExamCurrentStep.FinishExam,
       grading: finishOutput?.grading,
       questions: finishOutput?.questions,
-      answers: finishOutput?.examAnswers
+      answers: finishOutput?.examAnswers,
+      questionScores: finishOutput?.questionScores
     });
     this._router.navigate(['test/finish']);
   }

@@ -17,7 +17,8 @@ public class ExamProfile : Profile
         CreateMap<TestEndConfig, TestEndConfigOutput>();
         CreateMap<InformRespondentConfig, InformRespondentConfigOutput>();
         CreateMap<QuestionDefinition, QuestionOutput>()
-        .ForMember(desc => desc.QuestionAnswers, op => op.MapFrom(src => src.Answers));
+        .ForMember(desc => desc.QuestionAnswers, op => op.MapFrom(src => src.Answers))
+        .ForMember(desc => desc.TotalPoints, op => op.MapFrom(src => src.ScoreSettings != null ? src.ScoreSettings.TotalPoints : 0));
         CreateMap<Answer, AnswerOutput>();
     }
 }

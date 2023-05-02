@@ -17,6 +17,7 @@ public class Exam : EntityBase
     public string[] Questions { get; set; } = default!;
 
     public Dictionary<string, string[]> Answers { get; set; } = default!;
+    public Dictionary<string, int> QuestionScores { get; set; } = default!;
 
     public string? CurrentQuestionId { get; set; }
 

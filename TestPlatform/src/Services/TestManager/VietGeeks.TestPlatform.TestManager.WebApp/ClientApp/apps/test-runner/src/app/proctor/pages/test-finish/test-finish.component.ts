@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, QuestionOutput, TimeSpan } from '../../../api/models';
+import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, TimeSpan } from '../../../api/models';
 import { GradingCriteriaConfigType, InformFactor, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke } from 'ng-apexcharts';
@@ -16,14 +15,6 @@ export type ChartOptions = {
   fill: ApexFill;
   stroke: ApexStroke;
   colors: any
-};
-
-type AnswerDictionary = {
-  [key: string]: boolean;
-};
-
-type QuestionToAnswerDictionary = {
-  [key: string]: AnswerDictionary;
 };
 
 @Component({
@@ -49,9 +40,6 @@ export class TestFinishComponent implements OnInit {
   afterTestConfig?: AfterTestConfigOutput | null;
   showPassFailMessage = false;
   showCorrectAnswers = false;
-  questions: QuestionOutput[] = [];
-  answers: {[key: string]: Array<string>} = {};
-  answersDictionary: QuestionToAnswerDictionary = {};
 
   ngOnInit() {
     this.doInit();
@@ -194,15 +182,6 @@ export class TestFinishComponent implements OnInit {
     if (informFactors) {
       this.showPassFailMessage = informFactors[InformFactor.PassOrFailMessage];
       this.showCorrectAnswers = informFactors[InformFactor.CorrectAnwsers];
-
-      if (this.showCorrectAnswers) {
-        this.questions = this.sessionData.questions ?? [];
-        this.answers = this.sessionData.answers ?? {};
-        this.answersDictionary = Object.entries(this.answers).reduce((result, [questionId, answerIds]) => {
-          result[questionId] = answerIds.reduce((r, id) => ({...r, [id]: true}), {} as AnswerDictionary);
-          return result;
-        }, {} as QuestionToAnswerDictionary);
-      }
     }
   }
 
@@ -213,7 +192,6 @@ export class TestFinishComponent implements OnInit {
     const gradings = this.sessionData.grading;
     this.passMarkGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.PassMask)[0];
     this.gradeRangesGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.GradeRanges)[0];
-
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
     this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this.sessionData.questionCount);
   }

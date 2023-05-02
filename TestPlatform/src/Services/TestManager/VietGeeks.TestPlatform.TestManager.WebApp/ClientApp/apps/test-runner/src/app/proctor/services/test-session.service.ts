@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { ExamQuestion } from '../../api/models';
 import { ExamCurrentStep as ExamStepValue, TestSession } from '../../state/test-session.model';
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { TestSessionQuery } from '../../state/test-session.query';
@@ -14,10 +13,6 @@ export const SESSION_ID = 1;
 @Injectable({ providedIn: 'root' })
 export class TestSessionService {
   private _apiExamService = inject(ApiExamService);
-  private _sessionData: Partial<TestSession> = {
-    questionIndex: 0
-  };
-  private _questions: ExamQuestion[] = [];
   private _testSessionQuery = inject(TestSessionQuery);
   private _testSessionStore = inject(TestSessionStore);
   private _testDurationService = inject(TestDurationService);
@@ -85,14 +80,6 @@ export class TestSessionService {
       id: SESSION_ID
     };
   }
-
-  public setQuestions(questions: ExamQuestion[]) {
-    this._questions = questions;
-  }
-
-  public getQuestions = () => this._questions ?? [];
-
-  public getQuestionsCount = () => this.getQuestions().length;
 
   private getExamStatus() {
     return this._apiExamService.getExamStatus().pipe(catchError(() => of(null)))
