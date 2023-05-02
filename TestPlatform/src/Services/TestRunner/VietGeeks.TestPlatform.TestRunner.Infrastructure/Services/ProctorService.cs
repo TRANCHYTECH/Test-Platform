@@ -168,7 +168,8 @@ public class ProctorService : IProctorService
         exam.StartedAt = input.StartedAt;
         exam.FinishedAt = input.FinishededAt;
         exam.TotalTime = input.FinishededAt - input.StartedAt;
-        exam.FinalMark = CalculateExamMark(selectedQuestions, input.Answers);
+        exam.QuestionScores = CalculateQuestionScores(selectedQuestions, input.Answers);
+        exam.FinalMark = CalculateExamMark(exam.QuestionScores);
         exam.Grading = testDefinition.GradingSettings.CalculateGrading(exam.FinalMark, selectedQuestions.Sum(c => c.ScoreSettings.TotalPoints));
 
         var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading), nameof(Exam.TotalTime) };
@@ -186,6 +187,7 @@ public class ProctorService : IProctorService
         {
             output.Questions = _mapper.Map<IEnumerable<QuestionOutput>>(selectedQuestions);
             output.ExamAnswers = exam.Answers;
+            output.QuestionScores = exam.QuestionScores;
         }
 
         return output;
@@ -253,17 +255,19 @@ public class ProctorService : IProctorService
         return await DB.Find<TestDefinition>().MatchID(testDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
     }
 
-    private static int CalculateExamMark(List<QuestionDefinition> questions, Dictionary<string, string[]> answers)
-    {
-        int finalMark = 0;
-        foreach (var question in questions)
-        {
-            string[]? answer;
-            answers.TryGetValue(question.ID, out answer);
-            finalMark += question.CalculateMark(answer);
-        }
+    private static Dictionary<string, int> CalculateQuestionScores(List<QuestionDefinition> questions, Dictionary<string, string[]> answers) {
+        return questions.ToDictionary(q => q.ID, q => {
+            if (answers.TryGetValue(q.ID, out var answer)) {
+                return q.CalculateMark(answer);
+            }
 
-        return finalMark;
+            return 0;
+        });
+    }
+
+    private static int CalculateExamMark(Dictionary<string, int> questionPoints)
+    {
+        return questionPoints.Values.Sum();
     }
 
     private static bool ShowReturnDetailAnswers(TestDefinition testDefinition)

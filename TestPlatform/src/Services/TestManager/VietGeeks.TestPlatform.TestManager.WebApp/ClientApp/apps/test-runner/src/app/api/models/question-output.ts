@@ -8,4 +8,5 @@ export interface QuestionOutput {
   id?: null | string;
   questionAnswers?: null | Array<AnswerOutput>;
   questionNo?: number;
+  totalPoints?: number;
 }

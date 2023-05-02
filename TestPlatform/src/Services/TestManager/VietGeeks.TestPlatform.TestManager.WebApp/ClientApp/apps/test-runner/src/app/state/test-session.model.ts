@@ -19,7 +19,8 @@ export interface TestSession {
   activeQuestionStartAt?: string | null,
   grading?: null | Array<AggregatedGradingOuput>;
   questions?: QuestionOutput[] | null,
-  answers?: {[key: string]: Array<string>} | null;
+  answers?: Dictionary<Array<string>> | null;
+  questionScores?: Dictionary<number> | null;
 }
 
 export interface TimeSettings {
@@ -60,4 +61,8 @@ export enum InformFactor
     DescriptiveGrade = 4,
     CorrectAnwsers = 5,
     PassOrFailMessage = 6
+}
+
+export type Dictionary<T> = {
+  [key: string]: T
 }

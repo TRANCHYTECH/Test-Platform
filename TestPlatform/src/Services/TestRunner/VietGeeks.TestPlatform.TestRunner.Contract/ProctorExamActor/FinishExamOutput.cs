@@ -11,6 +11,8 @@ public class FinishExamOutput
     public TimeSpan TotalTime {get;set;}
     public IEnumerable<QuestionOutput> Questions { get; set; }
     public Dictionary<string, string[]> ExamAnswers { get; set; }
+    
+    public Dictionary<string, int> QuestionScores { get; set; } = default!;
 }
 
 public class AggregatedGradingOuput
@@ -37,6 +39,7 @@ public class QuestionOutput
     public string CategoryId { get; set; }
     public int AnswerType { get; set; }
     public AnswerOutput[] QuestionAnswers { get; set; }
+    public int TotalPoints { get; set; } 
 }
 
 public class AnswerOutput
