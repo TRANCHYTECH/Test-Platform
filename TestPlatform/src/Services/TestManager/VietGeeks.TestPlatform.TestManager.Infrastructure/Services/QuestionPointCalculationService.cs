@@ -1,27 +1,28 @@
-﻿using VietGeeks.TestPlatform.TestManager.Contract;
+﻿using VietGeeks.TestPlatform.TestManager.Core.Models;
+using AnswerType = VietGeeks.TestPlatform.TestManager.Core.Models.AnswerType;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 {
     internal class QuestionPointCalculationService : IQuestionPointCalculationService
     {
-        public void CalculateTotalPoints(IQuestionViewModel questionViewModel)
+        public int CalculateTotalPoints(QuestionDefinition question)
         {
-            if (questionViewModel.ScoreSettings == null)
+            if (question.ScoreSettings == null)
             {
-                return;
+                return 0;
             }
 
-            questionViewModel.ScoreSettings.TotalPoints = CalculateTotalPointsByAnswerType(questionViewModel);
+            return CalculateTotalPointsByAnswerType(question);
         }
 
-        private int CalculateTotalPointsByAnswerType(IQuestionViewModel questionViewModel)
+        private int CalculateTotalPointsByAnswerType(QuestionDefinition questionViewModel)
         {
             switch (questionViewModel.AnswerType)
             {
                 case AnswerType.SingleChoice:
-                    return CalculateSingleChoiceTotalPoints((SingleChoiceScoreSettingsViewModel)questionViewModel.ScoreSettings);
+                    return CalculateSingleChoiceTotalPoints((SingleChoiceScoreSettings)questionViewModel.ScoreSettings);
                 case AnswerType.MultipleChoice:
-                    return CalculateMultipleChoiceTotalPoints(questionViewModel.Answers, (MultipleChoiceScoreSettingsViewModel)questionViewModel.ScoreSettings);
+                    return CalculateMultipleChoiceTotalPoints(questionViewModel.Answers, (MultipleChoiceScoreSettings)questionViewModel.ScoreSettings);
                 case AnswerType.TrueFalse:
                 case AnswerType.ShortAnswer:
                 default:
@@ -29,12 +30,12 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             }
         }
 
-        private int CalculateSingleChoiceTotalPoints(SingleChoiceScoreSettingsViewModel scoreSettings)
+        private int CalculateSingleChoiceTotalPoints(SingleChoiceScoreSettings scoreSettings)
         {
-            return scoreSettings.CorrectPoint ?? 0;
+            return scoreSettings.CorrectPoint;
         }
 
-        private int CalculateMultipleChoiceTotalPoints(IEnumerable<AnswerViewModel> answers, MultipleChoiceScoreSettingsViewModel scoreSettings)
+        private int CalculateMultipleChoiceTotalPoints(IEnumerable<Answer> answers, MultipleChoiceScoreSettings scoreSettings)
         {
             if (scoreSettings.IsPartialAnswersEnabled == true)
             {
@@ -52,7 +53,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             }
             else
             {
-                return scoreSettings.CorrectPoint ?? 0;
+                return scoreSettings.CorrectPoint;
             }
         }
     }

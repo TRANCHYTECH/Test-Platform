@@ -7,6 +7,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
     public class QuestionDefinition : EntityBase
     {
         public string TestId { get; set; } = default!;
+        [Ignore]
         public int QuestionNo { get; set; }
         public string Description { get; set; } = default!;
         public string CategoryId { get; set; } = default!;
@@ -14,6 +15,7 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models
         public Answer[] Answers { get; set; } = default!;
         public ScoreSettings ScoreSettings { get; set; } = default!;
         public bool IsMandatory { get; set; }
+        public string Order { get; set; } = default!;
     }
 
     [BsonKnownTypes(typeof(SingleChoiceScoreSettings), typeof(MultipleChoiceScoreSettings))]

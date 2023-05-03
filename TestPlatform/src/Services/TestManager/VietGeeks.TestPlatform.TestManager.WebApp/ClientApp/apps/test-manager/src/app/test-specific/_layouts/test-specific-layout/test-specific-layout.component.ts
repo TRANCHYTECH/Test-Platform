@@ -1,13 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getPageTitle, getTestId, ToastService } from '@viet-geeks/shared';
-import { BehaviorSubject, filter } from 'rxjs';
+import { getTestId, ToastService, UISupportedService } from '@viet-geeks/shared';
+import { TestStatus } from '@viet-geeks/test-manager/state';
+import { BehaviorSubject, filter, Observable } from 'rxjs';
 import { TestActivationMethodType } from '../../_state/tests/test.model';
 import { TestsQuery } from '../../_state/tests/tests.query';
 import { TestsService } from '../../_state/tests/tests.service';
-import { Title } from '@angular/platform-browser';
-import { TestStatus } from '@viet-geeks/test-manager/state';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +17,7 @@ import { TestStatus } from '@viet-geeks/test-manager/state';
 })
 export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   pageTitle?= 'LOADING TEST';
-  sectionTitle?= '';
+  sectionTitle$!: Observable<string>;
   breadcrumbs$ = new BehaviorSubject<{ label?: string, active?: boolean }[]>([{ label: 'Loading test' }]);
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testResultMenus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
@@ -31,12 +30,14 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   private _testsQuery = inject(TestsQuery);
   private _notifyService = inject(ToastService);
   private _changeRef = inject(ChangeDetectorRef);
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
+  private _uiSupportedService = inject(UISupportedService);
 
-  constructor(private router: Router, route: ActivatedRoute, private title: Title) {
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
-      this.testId = getTestId(route);
-      this.sectionTitle = getPageTitle(router);
-      
+  constructor() {
+    this._router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
+      this.testId = getTestId(this._route);
+
       const isNewTest = this.testId === 'new';
       if (isNewTest) {
         this.pageTitle = 'New Test';
@@ -114,7 +115,6 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
     this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
         this.pageTitle = test.basicSettings.name;
-        this.sectionTitle = this.title.getTitle();
         this.testStatus = test.status;
 
         if (test.timeSettings?.testActivationMethod.$type === TestActivationMethodType.ManualTest) {
@@ -132,6 +132,8 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
         this._changeRef.markForCheck();
       }
     });
+
+    this.sectionTitle$ =  this._uiSupportedService.sectionTitle;
   }
 
   ngAfterViewInit(): void {
@@ -151,6 +153,6 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   async restart() {
     await this._testsService.restart(this.testId);
     this._notifyService.success('Test restarted successfully');
-    this.router.navigate([this.router.url], { onSameUrlNavigation: 'reload' });
+    this._router.navigate([this._router.url], { onSameUrlNavigation: 'reload' });
   }
 }

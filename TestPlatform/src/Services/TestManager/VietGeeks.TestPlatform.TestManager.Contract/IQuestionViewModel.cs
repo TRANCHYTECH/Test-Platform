@@ -8,7 +8,6 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
         AnswerType AnswerType { get; set; }
         string CategoryId { get; set; }
         string Description { get; set; }
-        int QuestionNo { get; set; }
         ScoreSettingsViewModel ScoreSettings { get; set; }
     }
 }

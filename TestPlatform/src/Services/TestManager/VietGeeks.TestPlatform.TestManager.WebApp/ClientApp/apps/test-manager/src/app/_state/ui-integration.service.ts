@@ -3,6 +3,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NewTestCategoryComponent } from "../test-categories/new-test-category/new-test-category.component";
 import { forIn } from "lodash-es";
 
+//todo: could combine this service with shared/services/UISupportedService. Become one.
 @Injectable({ providedIn: 'root' })
 export class UiIntegrationService {
     private _modal = inject(NgbModal);
