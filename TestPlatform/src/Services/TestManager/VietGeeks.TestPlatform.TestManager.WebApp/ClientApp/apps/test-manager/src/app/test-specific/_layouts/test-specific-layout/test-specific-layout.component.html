@@ -1,8 +1,10 @@
 <viet-geeks-breadcrumbs [title]="pageTitle"></viet-geeks-breadcrumbs>
 <div class="row">
     <div class="col-lg-auto col-xl-auto">
-       <h5 class="pb-2"><span class="badge {{(testStatus | testStatusClass:'bg')}} text-wrap">{{ testStatus | testStatus }}</span></h5>
-        <ngb-accordion class="accordion-flush test-definition-sidebar" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
+        <h5 class="pb-2"><span class="badge {{(testStatus | testStatusClass:'bg')}} text-wrap">{{ testStatus |
+                testStatus }}</span></h5>
+        <ngb-accordion class="accordion-flush test-definition-sidebar" #acc="ngbAccordion" activeIds="test-config"
+            [closeOthers]="true">
             <ngb-panel id="test-config" [cardClass]="'setting-parts'">
                 <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
                     <h5 class="panel-title mb-0">Test Configuration</h5>
@@ -42,7 +44,7 @@
         </ngb-accordion>
     </div>
     <div class="col">
-        <h5 class="pb-2">{{sectionTitle}}</h5>
+        <h5 class="pb-2">{{sectionTitle$ | async}}</h5>
         <router-outlet></router-outlet>
     </div>
 </div>

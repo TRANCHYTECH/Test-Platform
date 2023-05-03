@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService } from '@viet-geeks/shared';
+import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService, UISupportedService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
 import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
 import { UiIntegrationService } from '../../../_state/ui-integration.service';
@@ -11,7 +11,6 @@ import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/questi
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
 import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
-import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
 
 const AnswerTypes = [
@@ -41,7 +40,8 @@ const AnswerTypes = [
 @Component({
   selector: 'viet-geeks-question-details',
   templateUrl: './question-details.component.html',
-  styleUrls: ['./question-details.component.scss']
+  styleUrls: ['./question-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate {
   questionCategories$!: Observable<QuestionCategory[]>;
@@ -54,28 +54,24 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
   notifyService = inject(ToastService);
   textEditorConfigs = inject(TextEditorConfigsService);
   uiIntegrationService = inject(UiIntegrationService);
-  questionId: string;
-  testId: string;
-  isMultipleChoiceAnswer: boolean;
+  questionId = '';
+  testId = '';
+  isMultipleChoiceAnswer = false;
   answerType?: AnswerType;
-  isPartialScore: boolean;
+  isPartialScore = false;
   singleChoiceIndex?: number;
   private isSubmitted = false;
+  private _fb = inject(FormBuilder);
+  private _idService = inject(IdService);
+  private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
+  private _questionCategoriesService = inject(QuestionCategoriesService);
+  private _questionService = inject(QuestionService);
+  private _changeRef = inject(ChangeDetectorRef);
+  private _uiSupportedService = inject(UISupportedService);
 
-  constructor(
-    private _fb: FormBuilder,
-    private _idService: IdService,
-    private _questionCategoriesQuery: QuestionCategoriesQuery,
-    private _questionCategoriesService: QuestionCategoriesService,
-    private _questionService: QuestionService,
-    private _questionQuery: QuestionsQuery
-  ) {
-    this.questionId = '';
-    this.testId = '';
-    this.isMultipleChoiceAnswer = false;
-    this.isPartialScore = false;
+  constructor() {
     this.questionForm = this._fb.group({
-      questionNo: 10, //todo: last count + 1
+      questionNo: 1, //todo: last count + 1
       description: ['', [Validators.required]],
       categoryId: [QuestionCategoryGenericId, [Validators.required]],
       answerType: ['', [Validators.required]],
@@ -107,6 +103,8 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
       isMandatory: false
     });
   }
+
+  //todo: move it to Guard CanDeativate
   canDeactivate() {
     if (!this.canSubmit || this.isSubmitted) {
       return of(true);
@@ -126,8 +124,12 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
       firstValueFrom(this._questionCategoriesService.get(this.testId));
       this.questionCategories$ = this._questionCategoriesQuery.selectAll();
 
-      if (this.questionId !== 'new') {
-        const question = this._questionQuery.getEntity(this.questionId);
+      if (this.questionId === 'new') {
+        this._uiSupportedService.setSectionTitle('New Question');
+      }
+      else {
+        const question = await firstValueFrom(this._questionService.getQuestion(this.testId, this.questionId));
+        this._uiSupportedService.setSectionTitle(`Question ${question.questionNo}`);
         this.questionForm.reset({
           questionNo: question?.questionNo,
           description: question?.description,
@@ -158,6 +160,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
         this.isMultipleChoiceAnswer = this.isMultipleChoice(question?.answerType);
         this.answerType = question?.answerType;
         this.isPartialScore = question?.scoreSettings?.isPartialAnswersEnabled ?? false;
+        this._changeRef.markForCheck();
       }
     });
     this.registerControlEvents();

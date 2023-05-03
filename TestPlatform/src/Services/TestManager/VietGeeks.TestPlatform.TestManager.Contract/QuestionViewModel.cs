@@ -3,9 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace VietGeeks.TestPlatform.TestManager.Contract
 {
-    public class NewQuestionViewModel : IQuestionViewModel
+    public class CreateOrUpdateQuestionViewModel : IQuestionViewModel
     {
-        public int QuestionNo { get; set; }
         public string Description { get; set; } = default!;
         public string CategoryId { get; set; } = default!;
         public AnswerType AnswerType { get; set; }
@@ -18,6 +17,7 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
     {
         public string Id { get; set; } = default!;
         public int QuestionNo { get; set; }
+        public string Order { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string CategoryId { get; set; } = default!;
         public string? CategoryName { get; set; }

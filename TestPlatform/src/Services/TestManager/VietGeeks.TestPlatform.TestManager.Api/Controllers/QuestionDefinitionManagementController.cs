@@ -20,7 +20,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(QuestionViewModel), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<QuestionViewModel>> Create(string testId, [FromBody] NewQuestionViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<ActionResult<QuestionViewModel>> Create(string testId, [FromBody] CreateOrUpdateQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
         var question = await _questionManagerService.CreateQuestion(testId, viewModel, cancellationToken);
 
@@ -58,7 +58,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(QuestionViewModel), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(string id, QuestionViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(string id, CreateOrUpdateQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
         var updatedQuestion = await _questionManagerService.UpdateQuestion(id, viewModel, cancellationToken);
 

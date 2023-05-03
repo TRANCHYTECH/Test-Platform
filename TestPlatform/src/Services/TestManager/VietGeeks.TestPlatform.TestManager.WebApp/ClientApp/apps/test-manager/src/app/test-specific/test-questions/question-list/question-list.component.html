@@ -6,46 +6,25 @@
         <a routerLink="../categories" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Categories</a>
     </div>
-    <div class="col-sm">
-        <div class="d-flex justify-content-sm-end gap-2">
-            <!-- <div class="search-box ms-2">
-          <input type="text" class="form-control" placeholder="Search...">
-          <i class="ri-search-line search-icon"></i>
-        </div>
-  
-        <div class="w-md">
-          <select class="form-control" data-choices data-choices-search-false>
-            <option value="All">All</option>
-            <option value="Today">Today</option>
-            <option value="Yesterday" selected>Yesterday</option>
-            <option value="Last 7 Days">Last 7 Days</option>
-            <option value="Last 30 Days">Last 30 Days</option>
-            <option value="This Month">This Month</option>
-            <option value="Last Year">Last Year</option>
-          </select>
-        </div> -->
-        </div>
-    </div>
 </div>
 <div class="row">
-    <div class="col-xxl-12 project-card"
-        *ngFor="let data of questions$ | async; let i = index"
-        id="pl1_{{data.id}}" >
-        <div class="card card-height-100" (click)="goToQuestionDetails(data.id, $event)" style="cursor: pointer;">
+    <div class="col-xxl-12 project-card" *ngFor="let question of questions$ | async" id="pl1_{{question.id}}">
+        <div class="card card-height-100" (click)="goToQuestionDetails(question.id, $event)" style="cursor: pointer;">
             <div class="card-body">
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex">
                         <div class="flex-grow-1 mb-4">
-                            <div class="text-muted">#{{i + 1}}</div>
+                            <div class="text-muted">Question {{question.questionNo}}</div>
                         </div>
                         <div class="flex-shrink-0">
                             <div class="d-flex gap-1 align-items-center">
                                 <div>
                                     <span
-                                        class="ms-3 badge rounded-pill text-bg-primary">{{displayCategory(data.categoryId)}}</span>
-                                    <span class="ms-3"><label>Type</label> {{AnswerType[data.answerType]}}</span>
+                                        class="ms-3 badge rounded-pill text-bg-primary">{{displayCategory(question.categoryId)}}</span>
+                                    <span class="ms-3"><label>Type</label> {{AnswerType[question.answerType]}}</span>
                                     <span class="ms-3 vr"></span>
-                                    <span class="ms-3"><label>Points</label> {{data.scoreSettings.totalPoints}}</span>
+                                    <span class="ms-3"><label>Points</label>
+                                        {{question.scoreSettings.totalPoints}}</span>
                                 </div>
                                 <div class="dropdown question-action-menu" ngbDropdown>
                                     <button
@@ -55,8 +34,9 @@
                                         <i-feather name="more-horizontal" class="icon-sm"></i-feather>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                                        <a class="dropdown-item" [swal]="{ title: 'Confirmation', text: 'You want to delete this test category?', showCancelButton: true }"
-                                        (confirm)="removeQuestion(data.id)"><i
+                                        <a class="dropdown-item"
+                                            [swal]="{ title: 'Confirmation', text: 'You want to delete this test category?', showCancelButton: true }"
+                                            (confirm)="removeQuestion(question.id)"><i
                                                 class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>
                                     </div>
                                 </div>
@@ -65,13 +45,13 @@
                     </div>
                     <div class="d-flex mb-2">
                         <div class="flex-shrink-0 me-3">
-                            <h5 class="mb-1 fs-15"><a [routerLink]="['../',data.id]" class="text-dark"
-                                    [innerHTML]="data.description"></a></h5>
+                            <h5 class="mb-1 fs-15"><a [routerLink]="['../',question.id]" class="text-dark"
+                                    [innerHTML]="question.description"></a></h5>
                         </div>
                     </div>
-                    <div class="d-flex mb-2" *ngIf="data.answerType === 1">
+                    <div class="d-flex mb-2" *ngIf="question.answerType === AnswerType.SingleChoice">
                         <div class="flex-grow-1">
-                            <div *ngFor="let answer of data.answers" [ngClass]="{'bg-light': answer.isCorrect}">
+                            <div *ngFor="let answer of question.answers" [ngClass]="{'bg-light': answer.isCorrect}">
                                 <div class="form-check form-radio-outline form-radio-secondary mb-3">
                                     <input class="form-check-input" type="radio" name="formradiocolor10"
                                         id="answer_{{answer.id}}" [attr.checked]="answer.isCorrect">
@@ -82,9 +62,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex mb-2" *ngIf="data.answerType === 2">
+                    <div class="d-flex mb-2" *ngIf="question.answerType === AnswerType.MultipleChoice">
                         <div class="flex-grow-1">
-                            <div *ngFor="let answer of data.answers" [ngClass]="{'bg-light': answer.isCorrect}">
+                            <div *ngFor="let answer of question.answers" [ngClass]="{'bg-light': answer.isCorrect}">
                                 <!-- Custom Outline Checkboxes -->
                                 <div class="form-check form-check-outline form-check-primary mb-3">
                                     <input class="form-check-input" type="checkbox" id="answer_{{answer.id}}"
@@ -117,7 +97,6 @@
     </div>
     <!-- end col -->
     <div class="col-sm-6">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize"
-            [collectionSize]="0"></ngb-pagination>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="0"></ngb-pagination>
     </div><!-- end col -->
 </div><!-- end row -->
