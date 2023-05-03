@@ -258,7 +258,7 @@ public class ProctorService : IProctorService
     private static Dictionary<string, int> CalculateQuestionScores(List<QuestionDefinition> questions, Dictionary<string, string[]> answers) {
         return questions.ToDictionary(q => q.ID, q => {
             if (answers.TryGetValue(q.ID, out var answer)) {
-                return q.CalculateMark(answer);
+                return q.CalculateScores(answer);
             }
 
             return 0;
