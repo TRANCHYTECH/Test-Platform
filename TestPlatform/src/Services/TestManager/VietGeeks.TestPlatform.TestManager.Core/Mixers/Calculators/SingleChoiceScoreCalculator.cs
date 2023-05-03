@@ -12,6 +12,6 @@ public class SingleChoiceScoreCalculator : IScoreCalculator
         }
 
         var isCorrect = answerIds != null && question.Answers.Any(c => c.Id == answerIds[0] && c.IsCorrect);
-        return isCorrect ? scoreSettings.TotalPoints : scoreSettings.IncorrectPoint.GetValueOrDefault() * -1;
+        return isCorrect ? scoreSettings.TotalPoints : scoreSettings.IncorrectPoint * -1;
     }
 }
