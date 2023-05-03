@@ -17,6 +17,7 @@ public class TestReportService : ITestReportService
     {
         _managerDbContext = managerDbContext;
     }
+    
     public async Task<List<ExamSummary>> GetExamSummaries(string[] testRunIds)
     {
         // Verify that test runs belongs to user.
@@ -29,14 +30,19 @@ public class TestReportService : ITestReportService
         var examEntities = await _managerDbContext.Find<Exam>().IgnoreGlobalFilters().Match(c => testRunIds.Contains(c.TestRunId)).ExecuteAsync();
 
         //todo: Capitalize examinee info
-        return examEntities.Select(exam => new ExamSummary
+        const string format = @"hh\:mm\:ss";
+        return examEntities.Select(exam =>
         {
-            Id = exam.ID,
-            FirstName = GetExamInfoField(exam, "firstName"),
-            LastName = GetExamInfoField(exam, "lastName"),
-            FinalMark = exam.FinalMark,
-            StartedAt = exam.StartedAt,
-            FinishedAt = exam.FinishedAt
+            return new ExamSummary
+            {
+                Id = exam.ID,
+                FirstName = GetExamInfoField(exam, "firstName"),
+                LastName = GetExamInfoField(exam, "lastName"),
+                FinalMark = exam.FinalMark,
+                StartedAt = exam.StartedAt,
+                FinishedAt = exam.FinishedAt,
+                TotalTime = exam.TotalTime.ToString(format)
+            };
         }).ToList();
     }
 

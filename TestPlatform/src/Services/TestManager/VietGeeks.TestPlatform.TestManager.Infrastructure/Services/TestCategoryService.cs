@@ -10,6 +10,7 @@ public interface ITestCategoryService
     Task<TestCategoryViewModel> CreateTestCategory(NewTestCategoryViewModel newTestCategory);
     Task<List<TestCategoryViewModel>> GetTestCategories();
     Task<bool> CheckTestCategoryExistence(string id);
+    Task DeleteTestCategories(string[] ids);
 }
 
 public class TestCategoryService : ITestCategoryService
@@ -42,6 +43,11 @@ public class TestCategoryService : ITestCategoryService
     public async Task<bool> CheckTestCategoryExistence(string id)
     {
         return id == TestCategory.UncategorizedId || await _dbContext.Find<TestCategory>().MatchID(id).ExecuteAnyAsync();
+    }
+
+    public async Task DeleteTestCategories(string[] ids)
+    {
+        await _dbContext.DeleteAsync<TestCategory>(ids);
     }
 }
 

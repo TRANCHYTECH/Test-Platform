@@ -5,6 +5,8 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 [Collection("Category")]
 public class TestCategory : CategoryBase
 {
+    public bool IsSystem { get; set; }
+
     public static TestCategory Uncategorized()
     {
         return new()

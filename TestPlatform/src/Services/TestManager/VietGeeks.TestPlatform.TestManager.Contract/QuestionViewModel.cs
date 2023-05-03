@@ -3,28 +3,28 @@ using System.Text.Json.Serialization;
 
 namespace VietGeeks.TestPlatform.TestManager.Contract
 {
-    public class NewQuestionViewModel: IQuestionViewModel
+    public class CreateOrUpdateQuestionViewModel : IQuestionViewModel
     {
-        public int QuestionNo { get; set; }
-        public string Description { get; set; }
-        public string CategoryId { get; set; }
+        public string Description { get; set; } = default!;
+        public string CategoryId { get; set; } = default!;
         public AnswerType AnswerType { get; set; }
-        public IEnumerable<AnswerViewModel> Answers { get; set; }
-        public ScoreSettingsViewModel ScoreSettings { get; set; }
+        public IEnumerable<AnswerViewModel> Answers { get; set; } = default!;
+        public ScoreSettingsViewModel ScoreSettings { get; set; } = default!;
         public bool IsMandatory { get; set; }
     }
 
     public class QuestionViewModel : IQuestionViewModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = default!;
         public int QuestionNo { get; set; }
-        public string Description { get; set; }
-        public string CategoryId { get; set; }
+        public string Order { get; set; } = default!;
+        public string Description { get; set; } = default!;
+        public string CategoryId { get; set; } = default!;
         public string? CategoryName { get; set; }
         public string? CategoryColor { get; set; }
         public AnswerType AnswerType { get; set; }
-        public IEnumerable<AnswerViewModel> Answers { get; set; }
-        public ScoreSettingsViewModel ScoreSettings { get; set; }
+        public IEnumerable<AnswerViewModel> Answers { get; set; } = default!;
+        public ScoreSettingsViewModel ScoreSettings { get; set; } = default!;
     }
 
     [JsonDerivedType(typeof(SingleChoiceScoreSettingsViewModel), (int)AnswerType.SingleChoice)]
@@ -54,8 +54,8 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
 
     public class AnswerViewModel
     {
-        public string Id { get; set; }
-        public string AnswerDescription { get; set; }
+        public string Id { get; set; } = default!;
+        public string AnswerDescription { get; set; } = default!;
         public int AnswerPoint { get; set; }
         public bool IsCorrect { get; set; }
     }

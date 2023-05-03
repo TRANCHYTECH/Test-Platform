@@ -5,8 +5,9 @@ import { assign, forIn, isNumber, range } from 'lodash-es';
 
 import { AppSettingsService } from '@viet-geeks/core';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { TestAccessType, TestInvitationStats, TestAccessTypeUI, TestStatus, TestAccess, GroupPasswordType, PublicLinkType, PrivateAccessCodeType } from '../../_state/test.model';
+import { TestAccessType, TestInvitationStats, TestAccessTypeUI, TestAccess, GroupPasswordType, PublicLinkType, PrivateAccessCodeType } from '../../_state/tests/test.model';
 import { AppSettings } from '../../../app-setting.model';
+import { TestStatus } from '@viet-geeks/test-manager/state';
 
 //todo(tau): PLAN - Implement test set selection
 @UntilDestroy()
@@ -108,7 +109,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
 
-    if(details === undefined || details === null) {
+    if (details === undefined || details === null) {
       result.disable();
     }
 
@@ -122,7 +123,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
 
-    if(details === undefined || details === null) {
+    if (details === undefined || details === null) {
       result.disable();
     }
 
@@ -139,7 +140,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
       attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
     });
 
-    if(details === undefined || details === null) {
+    if (details === undefined || details === null) {
       result.disable();
     }
 
@@ -150,7 +151,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
   onAccessTypeSelected(accessType: number) {
     this.accessTypeCtrl.setValue(accessType);
     forIn(TestAccessTypeUI, (t) => {
-      const action = t === accessType.toString() ? 'enable' : 'disable';
+      const action = this.getChangeControlStateMethod(t === accessType.toString());
       this.testAccessForm.controls[t][action]();
     });
     //todo: remove this action after refactoring model
@@ -201,6 +202,10 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     this.privateAccessCodeConfigsCtrl.controls.forEach(groupCtrl => {
       groupCtrl.controls['sendCode'].patchValue(true);
     });
+  }
+
+  copiedTestUrl() {
+    this.notifyService.success('Copied test url');
   }
 
   get canSubmit(): boolean {

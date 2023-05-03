@@ -2,16 +2,15 @@
 @import "./node_modules/bootstrap/scss/variables";
 @import 'assets/scss/config/corporate/_variables.scss';
 
-.short-editor {
-    .ck-editor__editable {
-        min-height: 100px !important;
-    }
+.simple-editor {
+    min-height: 300px;
+    display: block;
 }
 
 .ngx-spinner-overlay {
     border: 1px solid #e9ebec;
     border-radius: 3px;
-    margin: 0 12px;
+    margin: 0;
 }
 
 .form-control {

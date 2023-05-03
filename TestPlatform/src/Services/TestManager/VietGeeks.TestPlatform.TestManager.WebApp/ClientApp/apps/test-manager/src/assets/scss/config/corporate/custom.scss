@@ -5,3 +5,10 @@ Website: https://themesbrand.com/
 Contact: support@themesbrand.com
 File: Custom Css File
 */
+
+@import 'variables';
+
+viet-geeks-test-list, viet-geeks-test-category-list {
+    display: block;
+    padding-top: #{$grid-gutter-width};
+}

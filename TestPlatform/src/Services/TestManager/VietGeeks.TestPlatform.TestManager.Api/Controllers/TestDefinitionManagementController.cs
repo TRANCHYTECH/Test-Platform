@@ -1,4 +1,3 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestManager.Contract;
@@ -13,16 +12,12 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 public class TestDefinitionManagementController : ControllerBase
 {
     private readonly ILogger<TestDefinitionManagementController> _logger;
-    private readonly IValidator<UpdateTestDefinitionViewModel> _updateTestValidator;
     private readonly ITestManagerService _testManagerService;
 
     public TestDefinitionManagementController(ILogger<TestDefinitionManagementController> logger,
-        IValidator<NewTestDefinitionViewModel> newTestValidator,
-        IValidator<UpdateTestDefinitionViewModel> updateTestValidator,
         ITestManagerService testManagerService)
     {
         _logger = logger;
-        _updateTestValidator = updateTestValidator;
         _testManagerService = testManagerService;
     }
 

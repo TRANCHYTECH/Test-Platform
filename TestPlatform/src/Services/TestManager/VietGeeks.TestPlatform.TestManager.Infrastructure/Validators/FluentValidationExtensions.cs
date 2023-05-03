@@ -2,6 +2,7 @@ using FluentValidation.Results;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
 namespace FluentValidation;
+
 //todo: move to shared place
 public static class FluentValidationExtensions
 {
@@ -25,5 +26,11 @@ public static class FluentValidationExtensions
             var ex = new ValidationException(result.Errors);
             throw new TestPlatformException(ex.Message, ex);
         }
+    }
+
+
+    public static void AddFailureWithErrorCode<T>(this ValidationContext<T> context, string errorCode)
+    {
+        context.AddFailure(new ValidationFailure { PropertyName = context.PropertyName, ErrorCode = errorCode });
     }
 }

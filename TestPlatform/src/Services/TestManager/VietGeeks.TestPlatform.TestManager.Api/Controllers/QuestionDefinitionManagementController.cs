@@ -1,4 +1,3 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestManager.Contract;
@@ -21,14 +20,8 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(QuestionViewModel), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<QuestionViewModel>> Create([FromServices] IValidator<NewQuestionViewModel> newQuestionValidator, string testId, [FromBody] NewQuestionViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<ActionResult<QuestionViewModel>> Create(string testId, [FromBody] CreateOrUpdateQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
-        var validationResult = newQuestionValidator.Validate(viewModel);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-
         var question = await _questionManagerService.CreateQuestion(testId, viewModel, cancellationToken);
 
         return question;
@@ -65,17 +58,19 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(QuestionViewModel), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update([FromServices] IValidator<QuestionViewModel> questionValidator, string id, QuestionViewModel viewModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(string id, CreateOrUpdateQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
-        var validationResult = questionValidator.Validate(viewModel);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-
         var updatedQuestion = await _questionManagerService.UpdateQuestion(id, viewModel, cancellationToken);
 
         return Ok(updatedQuestion);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+    {
+        await _questionManagerService.DeleteQuestion(id, cancellationToken);
+
+        return Ok();
     }
 
     [HttpGet("Summary")]

@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
-
 public class CreateOrUpdateGradingSettings
 {
     public TestEndConfig TestEndConfig { get; set; } = default!;
@@ -41,16 +40,6 @@ public class InformRespondentConfig
     public string? FailedMessage { get; set; }
 
     public Dictionary<string, bool> InformFactors { get; set; } = new Dictionary<string, bool>();
-}
-
-public enum InformFactor
-{
-    PercentageScore = 1,
-    PointsScore = 2,
-    Grade = 3,
-    DescriptiveGrade = 4,
-    CorrectAnwsers = 5,
-    PassOrFailMessage = 6
 }
 
 [JsonDerivedType(typeof(PassMaskCriteria), (int)GradingCriteriaConfigType.PassMask)]
@@ -101,3 +90,12 @@ public enum GradeType
     GradeAndDescriptive = 3
 }
 
+public enum InformFactor
+{
+    PercentageScore = 1,
+    PointsScore = 2,
+    Grade = 3,
+    DescriptiveGrade = 4,
+    CorrectAnwsers = 5,
+    PassOrFailMessage = 6
+}

@@ -1,15 +1,31 @@
-import { keys, sumBy } from "lodash-es";
 import { Injectable, inject } from "@angular/core";
-import { AppSettingsService, UserProfileService } from "@viet-geeks/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
+import { AppSettingsService, UserProfileService } from "@viet-geeks/core";
+import { TestCategory, TestCategoryUncategorizedId } from "@viet-geeks/test-manager/state";
+import { keys, sumBy } from "lodash-es";
+import { AppSettings } from "../../../app-setting.model";
 import { QuestionSummary } from "../../_state/questions/question.model";
-import { TestCategory, TestCategoryUncategorizedId } from "../../_state/test-category.model";
-import { Test, TimeSettings, CompleteTestDuration, CompleteQuestionDuration, TimePeriodActivation, TestAccess, TestAccessType, GradingSettings, PassMaskCriteria, GradeRangeCriteria, BasicSettings, TestActivationMethod, ManualTestActivation, TestSets, GeneratorTypes } from "../../_state/test.model";
+import {
+    BasicSettings,
+    CompleteQuestionDuration,
+    CompleteTestDuration,
+    GeneratorTypes,
+    GradeRangeCriteria,
+    GradingSettings,
+    ManualTestActivation,
+    PassMaskCriteria,
+    Test,
+    TestAccess,
+    TestAccessType,
+    TestActivationMethod,
+    TestSets,
+    TimePeriodActivation,
+    TimeSettings
+} from "../../_state/tests/test.model";
 import { GradingCriteriaConfigType, RangeUnit } from "../../_state/ui/grading-summary-ui.model";
 import { TestConfigRoutes } from "../test-configuration-routing.module";
-import { TestDurationMethod, TestActivationMethodType } from "../test-time-settings/test-time-settings.component";
-import { AppSettings } from "../../../app-setting.model";
+import { TestActivationMethodType, TestDurationMethod } from "../test-time-settings/test-time-settings.component";
 
 export type Summary = { desc: string, status: 'ok' | 'action', url?: string };
 

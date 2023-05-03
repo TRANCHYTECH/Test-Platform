@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.TestHelper;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.UnitTest;
 
-[Collection("TestDefinitionValidatorTestCollection")]
+[Collection(TestDefinitionValidatorTestCollection.CollectionId)]
 public class TestDefinitionValidatorUnitTests
 {
     private readonly TestDefinitionValidatorFixture _fixture;

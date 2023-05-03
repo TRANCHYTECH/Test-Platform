@@ -6,7 +6,7 @@ export type QuestionsState = EntityState<Question>
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'Questions' })
-export class QuestionsStore extends EntityStore<QuestionsState> {
+export class QuestionStore extends EntityStore<QuestionsState> {
 
   constructor() {
     super();

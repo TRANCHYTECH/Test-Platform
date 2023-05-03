@@ -24,5 +24,5 @@ export const getPageTitle = (router: Router) => {
         route = route.firstChild;
     }
 
-    return route.snapshot.title;
+    return route.snapshot.title ?? '';
 }

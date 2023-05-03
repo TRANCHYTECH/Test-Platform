@@ -7,7 +7,7 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionSummary } from '../../_state/questions/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
-import { GradeRangeCriteriaDetail, GradingSettings, GradeRangeCriteria, PassMaskCriteria, TestEndConfig } from '../../_state/test.model';
+import { GradeRangeCriteriaDetail, GradingSettings, GradeRangeCriteria, PassMaskCriteria, TestEndConfig } from '../../_state/tests/test.model';
 import { GradingCriteriaConfigTypeUI, GradeTypeUI, InformFactorUI, RangeUnit, GradeType, GradingCriteriaConfigType, InformFactorCriteriaUI, RangeDetailsUI, InformFactor } from '../../_state/ui/grading-summary-ui.model';
 
 @UntilDestroy()
@@ -82,7 +82,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   }
 
   get gradeRangeUnit() {
-     return this.gradeRangesCtrl.controls['unit'].value;
+    return this.gradeRangesCtrl.controls['unit'].value;
   }
 
   get selectedGradeRangeUnit() {
@@ -124,6 +124,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     // Triggers. 
     this.setupControlValidityTrigger(this.testEndConfigCtrl, ['redirectTo'], [['toAddress']]);
     this.setupControlValidityTrigger(this.passMaskGradeCtrl, ['unit'], [['value']]);
+    this.listenToToggleControlState(this, this.testEndConfigCtrl, 'redirectTo', 'toAddress');
 
     // Trigger running validators of range [From, To].
     this.gradeRangesCtrl.controls['unit'].valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
@@ -150,8 +151,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
       }
     });
     //todo: validate word count html instead of all html length.
-    //todo(tau): check issue why have to click on ui one time, to make ui show errors and change form state?
-    //todo(tau): reload/reset form after successfully updated.
   }
 
   rangeChanged(atIndex: number) {
@@ -240,14 +239,14 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
         asyncValidators: [this.textEditorConfigs.editorMaxLength('testEndConfig.message', 1000)]
       }),
       redirectTo: testEndConfig.redirectTo,
-      toAddress: [testEndConfig.toAddress, [RxwebValidators.compose({
+      toAddress: this.fb.control({ value: testEndConfig.toAddress, disabled: !testEndConfig.redirectTo }, [RxwebValidators.compose({
         validators: [
           Validators.required,
           Validators.maxLength(1000),
           RxwebValidators.url()
         ],
         conditionalExpression: (cfg: TestEndConfig) => cfg.redirectTo === true
-      })]]
+      })])
     });
   }
 
@@ -270,16 +269,16 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   }
 
   private updateInformFactorFormByPassMask(isEnabled: boolean) {
-    this.updateInformFactorFormByGradeType_(isEnabled, GradingCriteriaConfigTypeUI.PassMask);
+    this.updateInformFactorFormBy(isEnabled, GradingCriteriaConfigTypeUI.PassMask);
   }
 
   //todo: rename it
   private updateInformFactorFormByGradeType(isEnabled: boolean, gradeType?: number) {
     const selectedGrade = gradeType ?? this.getGradingCriteriaCtrl(GradingCriteriaConfigTypeUI.GradeRanges).get('gradeType')?.getRawValue();
-    this.updateInformFactorFormByGradeType_(isEnabled, GradingCriteriaConfigTypeUI.GradeRanges, selectedGrade);
+    this.updateInformFactorFormBy(isEnabled, GradingCriteriaConfigTypeUI.GradeRanges, selectedGrade);
   }
 
-  private updateInformFactorFormByGradeType_(isEnabled: boolean, gradeType: string, subGradeType: string = '0') {
+  private updateInformFactorFormBy(isEnabled: boolean, gradeType: string, subGradeType: string = '0') {
     const ctrls = this.informRespondentConfigCtrl.get('informFactors') as FormGroup;
     const affectedInformFactors = InformFactorCriteriaUI[subGradeType === '0' ? gradeType : `${gradeType}_${subGradeType}`];
     if (isEnabled) {
@@ -418,7 +417,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
   toggleGradeCriteria(event: { id: string, originEvent?: Event, enabled?: boolean }) {
     const enabled = event.enabled ?? (event.originEvent?.target as HTMLInputElement).checked;
     const criteriaId = parseInt(event.id);
-    const action = enabled ? 'enable' : 'disable';
+    const action = this.getChangeControlStateMethod(enabled);
     // Note: it's important to set emitEvent = false
     this.getGradingCriteriaCtrl(event.id)[action]({ emitEvent: false });
     // In case grade range details form control is enabled, we should restore status of individual controls.

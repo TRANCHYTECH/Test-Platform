@@ -59,6 +59,11 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         public DateTime ActiveUntilDate { get; set; }
     }
 
+    public class AnswerQuestionConfig
+    {
+        public bool SkipQuestion { get; set; }
+    }
+
     public enum TestDurationMethodType
     {
         CompleteTestTime = 1,
@@ -70,11 +75,5 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         ManualTest = 1,
         TimePeriod = 2
     }
-
-    public class AnswerQuestionConfig
-    {
-        public bool SkipQuestion { get; set; }
-    }
-
 }
 

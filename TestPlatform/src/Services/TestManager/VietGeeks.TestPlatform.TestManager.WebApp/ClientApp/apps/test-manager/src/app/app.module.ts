@@ -1,28 +1,27 @@
+import { HTTP_INTERCEPTORS, HttpBackend, HttpClient } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
-import { appRoutes } from './app.routes';
 import { AuthClientConfig, AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
-import { HttpBackend, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppSettingsService, CoreModule, HttpErrorResponseInterceptor } from '@viet-geeks/core';
-import { SharedModule, EDITOR_API_KEY, ApiErrorHandler } from '@viet-geeks/shared';
-import { AppSettings } from './app-setting.model';
-import { environment } from '../environments/environment';
-import { firstValueFrom } from 'rxjs';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { LayoutsModule } from './_layouts/layouts.module';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { provideErrorTailorConfig } from '@ngneat/error-tailor';
+import { InputMaskModule } from '@ngneat/input-mask';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { FlatpickrModule } from 'angularx-flatpickr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { InputMaskModule } from '@ngneat/input-mask';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { AppSettingsService, CoreModule, HttpErrorResponseInterceptor } from '@viet-geeks/core';
+import { ApiErrorHandler, EDITOR_API_KEY, SharedModule } from '@viet-geeks/shared';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../environments/environment';
+import { LayoutsModule } from './_layouts/layouts.module';
+import { AppSettings } from './app-setting.model';
+import { AppComponent } from './app.component';
+import { appRoutes } from './app.routes';
 
 const appInitializerFn = (httpBackend: HttpBackend, authClientConfig: AuthClientConfig, appSettingsService: AppSettingsService) => {
   return () => {
@@ -43,8 +42,11 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
   authClientConfig.set({
     domain: appSettings.auth.domain,
     clientId: appSettings.auth.clientId,
-    audience: appSettings.auth.audience,
-    scope: appSettings.auth.scope,
+    authorizationParams: {
+      redirect_uri: window.location.origin,
+      audience: appSettings.auth.audience,
+      scope: appSettings.auth.scope
+    },
     httpInterceptor: {
       allowedList: appSettings.auth.intercepters
     }
@@ -60,8 +62,9 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
     BrowserModule,
     BrowserAnimationsModule,
     LayoutsModule,
-    RouterModule.forRoot(appRoutes),
-    NgbModule,
+    RouterModule.forRoot(appRoutes, {
+
+    }),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
     TranslateModule.forRoot({
@@ -125,9 +128,9 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
       }
     }),
     // { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' },
-    { 
-      provide: ErrorHandler, 
-      useClass: ApiErrorHandler 
+    {
+      provide: ErrorHandler,
+      useClass: ApiErrorHandler
     },
   ],
   bootstrap: [AppComponent],

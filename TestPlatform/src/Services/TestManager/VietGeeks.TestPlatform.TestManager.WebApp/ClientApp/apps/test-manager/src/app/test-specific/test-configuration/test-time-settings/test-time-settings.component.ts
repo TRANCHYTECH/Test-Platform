@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { createMask } from '@ngneat/input-mask';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { UserProfileService } from '@viet-geeks/core';
+import { TestStatus } from '@viet-geeks/test-manager/state';
+import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { CompleteTestDuration, CompleteQuestionDuration, ManualTestActivation, TimePeriodActivation, TestStatus, TimeSettings } from '../../_state/test.model';
+import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/tests/test.model';
 
 export const TestDurationMethod =
 {

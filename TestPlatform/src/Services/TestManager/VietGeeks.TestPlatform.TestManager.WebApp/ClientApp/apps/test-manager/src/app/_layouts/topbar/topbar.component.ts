@@ -1,16 +1,15 @@
-import { Component, OnInit, EventEmitter, Output, Inject, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Component, EventEmitter, Inject, OnInit, Output, inject } from '@angular/core';
 
 
 // Language
-import { CookieService } from 'ngx-cookie-service';
 import { TranslateService } from '@ngx-translate/core';
+import { CookieService } from 'ngx-cookie-service';
 
-import { CartModel } from './topbar.model';
-import { cartData } from './data';
-import { Router } from '@angular/router';
-import { EventService, LanguageService } from '@viet-geeks/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { EventService, LanguageService } from '@viet-geeks/core';
+import { cartData } from './data';
+import { CartModel } from './topbar.model';
 
 @Component({
   selector: 'viet-geeks-topbar',
@@ -18,6 +17,11 @@ import { AuthService } from '@auth0/auth0-angular';
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements OnInit {
+  listLang = [
+    { text: 'English', flag: 'assets/images/flags/us.svg', lang: 'en' },
+    { text: 'Tiếng việt', flag: 'assets/images/flags/vn.svg', lang: 'vn' }
+  ];
+
   public authService = inject(AuthService);
 
   element: any;
@@ -33,15 +37,14 @@ export class TopbarComponent implements OnInit {
   total = 0;
   cart_length: any = 0;
 
-  constructor(@Inject(DOCUMENT) private document: any, 
-  private eventService: EventService, 
-  public languageService: LanguageService,
-    public _cookiesService: CookieService, 
-    public translate: TranslateService,
-    private router: Router) { }
+  constructor(@Inject(DOCUMENT) private document: any,
+    private eventService: EventService,
+    public languageService: LanguageService,
+    public _cookiesService: CookieService,
+    public translate: TranslateService) { }
 
   ngOnInit(): void {
-    this.userData = {firstName: 'vietgeeks'};
+    this.userData = { firstName: 'vietgeeks' };
     this.element = document.documentElement;
 
     // Cookies wise Language set
@@ -49,7 +52,7 @@ export class TopbarComponent implements OnInit {
     const val = this.listLang.filter(x => x.lang === this.cookieValue);
     this.countryName = val.map(element => element.text);
     if (val.length === 0) {
-      if (this.flagvalue === undefined) { this.valueset = 'assets/images/flags/us.svg'; }
+      if (this.flagvalue === undefined) { this.valueset = 'assets/images/flags/vn.svg'; }
     } else {
       this.flagvalue = val.map(element => element.flag);
     }
@@ -130,20 +133,6 @@ export class TopbarComponent implements OnInit {
   }
 
   /***
-   * Language Listing
-   */
-  listLang = [
-    { text: 'English', flag: 'assets/images/flags/us.svg', lang: 'en' },
-    { text: 'Española', flag: 'assets/images/flags/spain.svg', lang: 'es' },
-    { text: 'Deutsche', flag: 'assets/images/flags/germany.svg', lang: 'de' },
-    { text: 'Italiana', flag: 'assets/images/flags/italy.svg', lang: 'it' },
-    { text: 'русский', flag: 'assets/images/flags/russia.svg', lang: 'ru' },
-    { text: '中国人', flag: 'assets/images/flags/china.svg', lang: 'ch' },
-    { text: 'français', flag: 'assets/images/flags/french.svg', lang: 'fr' },
-    { text: 'Arabic', flag: 'assets/images/flags/ar.svg', lang: 'ar' },
-  ];
-
-  /***
    * Language Value Set
    */
   setLanguage(text: string, lang: string, flag: string) {
@@ -157,7 +146,7 @@ export class TopbarComponent implements OnInit {
    * Logout the user
    */
   logout() {
-    this.authService.logout({ returnTo: document.location.origin });
+    this.authService.logout({ logoutParams: { returnTo: document.location.origin } });
   }
 
   windowScroll() {
@@ -171,8 +160,8 @@ export class TopbarComponent implements OnInit {
 
   // Delete Item
   deleteItem(event: any, id: any) {
-    var price = event.target.closest('.dropdown-item').querySelector('.item_price').innerHTML;
-    var Total_price = this.total - price;
+    const price = event.target.closest('.dropdown-item').querySelector('.item_price').innerHTML;
+    const Total_price = this.total - price;
     this.total = Total_price;
     this.cart_length = this.cart_length - 1;
     this.total > 1 ? (document.getElementById("empty-cart") as HTMLElement).style.display = "none" : (document.getElementById("empty-cart") as HTMLElement).style.display = "block";
@@ -181,24 +170,24 @@ export class TopbarComponent implements OnInit {
 
   // Search Topbar
   Search() {
-    var searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
-    var dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
-    var input: any, filter: any, ul: any, li: any, a: any | undefined, i: any, txtValue: any;
+    const searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
+    const dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
+    let input: any, filter: any, ul: any, li: any, a: any | undefined, i: any, txtValue: any;
     input = document.getElementById("search-options") as HTMLAreaElement;
     filter = input.value.toUpperCase();
-    var inputLength = filter.length;
+    const inputLength = filter.length;
 
     if (inputLength > 0) {
       dropdown.classList.add("show");
       searchOptions.classList.remove("d-none");
-      var inputVal = input.value.toUpperCase();
-      var notifyItem = document.getElementsByClassName("notify-item");
+      const inputVal = input.value.toUpperCase();
+      const notifyItem = document.getElementsByClassName("notify-item");
 
       Array.from(notifyItem).forEach(function (element: any) {
-        var notifiTxt = ''
+        let notifiTxt = ''
         if (element.querySelector("h6")) {
-          var spantext = element.getElementsByTagName("span")[0].innerText.toLowerCase()
-          var name = element.querySelector("h6").innerText.toLowerCase()
+          const spantext = element.getElementsByTagName("span")[0].innerText.toLowerCase()
+          const name = element.querySelector("h6").innerText.toLowerCase()
           if (name.includes(inputVal)) {
             notifiTxt = name
           } else {
@@ -221,9 +210,9 @@ export class TopbarComponent implements OnInit {
    * Search Close Btn
    */
   closeBtn() {
-    var searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
-    var dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
-    var searchInputReponsive = document.getElementById("search-options") as HTMLInputElement;
+    const searchOptions = document.getElementById("search-close-options") as HTMLAreaElement;
+    const dropdown = document.getElementById("search-dropdown") as HTMLAreaElement;
+    const searchInputReponsive = document.getElementById("search-options") as HTMLInputElement;
     dropdown.classList.remove("show");
     searchOptions.classList.add("d-none");
     searchInputReponsive.value = "";

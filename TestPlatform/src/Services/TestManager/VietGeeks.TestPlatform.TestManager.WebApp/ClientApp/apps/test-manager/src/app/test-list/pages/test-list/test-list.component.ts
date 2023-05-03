@@ -1,12 +1,10 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TestCategory, TestCategoryQuery, TestCategoryService } from '@viet-geeks/test-manager/state';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { TestCategoriesQuery } from '../../../test-specific/_state/test-categories.query';
-import { TestCategoriesService } from '../../../test-specific/_state/test-categories.service';
-import { TestCategory } from '../../../test-specific/_state/test-category.model';
-import { TestOverview } from '../../../test-specific/_state/test.model';
-import { TestsService } from '../../../test-specific/_state/tests.service';
+import { BehaviorSubject } from 'rxjs';
+import { TestOverview } from '../../_state/test-overview.model';
+import { TestOverviewService } from '../../_state/test-overview.service';
 
 @UntilDestroy()
 @Component({
@@ -14,7 +12,7 @@ import { TestsService } from '../../../test-specific/_state/tests.service';
   templateUrl: './test-list.component.html',
   styleUrls: ['./test-list.component.scss']
 })
-export class TestListComponent implements OnInit, AfterViewInit{
+export class TestListComponent implements OnInit, AfterViewInit {
   tests: TestOverview[] = [];
   testCategories: TestCategory[] = [];
   page = 1;
@@ -22,15 +20,14 @@ export class TestListComponent implements OnInit, AfterViewInit{
 
   private _readyForUI = new BehaviorSubject(false);
   private _spinner = inject(NgxSpinnerService);
-
-  constructor(private _testsService: TestsService, private _testCategoriesQuery: TestCategoriesQuery,
-    private _testCategoriesService: TestCategoriesService) {
-  }
+  private _testOverviewService = inject(TestOverviewService);
+  private _testCategoryQuery = inject(TestCategoryQuery);
+  private _testCategoryService = inject(TestCategoryService);
 
   ngOnInit() {
-    Promise.all([firstValueFrom(this._testsService.getOverviews()), firstValueFrom(this._testCategoriesService.get())]).then((rs) => {
+    Promise.all([this._testOverviewService.get(), this._testCategoryService.get()]).then((rs) => {
       this.tests = rs[0];
-      this.testCategories = this._testCategoriesQuery.getAll();
+      this.testCategories = this._testCategoryQuery.getAll();
       this._readyForUI.next(true);
     });
 
@@ -42,7 +39,7 @@ export class TestListComponent implements OnInit, AfterViewInit{
   }
 
   showCategory(id: string) {
-    return this.testCategories.find(c => c.id === id)?.name || 'Unknown';
+    return this._testCategoryQuery.getEntityWithFallback(id)?.name;
   }
 
   private configureLoadingIndicator() {

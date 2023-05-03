@@ -6,7 +6,7 @@ using MongoDB.Driver;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ITestCategoryService, TestCategoryService>();
         serviceCollection.AddScoped<ITestReportService, TestReportService>();
         serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
+        serviceCollection.AddScoped<IQuestionRelatedValidationService, QuestionRelatedValidationService>();
         serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();

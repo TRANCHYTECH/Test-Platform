@@ -8,7 +8,7 @@ public class QuestionProfile : Profile
 {
     public QuestionProfile()
     {
-        CreateMap<NewQuestionViewModel, QuestionDefinition>();
+        CreateMap<CreateOrUpdateQuestionViewModel, QuestionDefinition>();
         CreateMap<QuestionViewModel, QuestionDefinition>().ReverseMap();
         CreateMap<QuestionCategoryViewModel, QuestionCategory>().ReverseMap();
         CreateMap<NewQuestionCategoryViewModel, QuestionCategory>();
