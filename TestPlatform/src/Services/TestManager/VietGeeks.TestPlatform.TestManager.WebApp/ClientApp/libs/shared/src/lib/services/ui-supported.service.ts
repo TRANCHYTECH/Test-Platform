@@ -1,8 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { getPageTitle } from "@viet-geeks/shared";
 import { BehaviorSubject, filter } from "rxjs";
+import { getPageTitle } from "../functions/router-param-functions";
 
 @UntilDestroy()
 @Injectable({ providedIn: 'root' })
