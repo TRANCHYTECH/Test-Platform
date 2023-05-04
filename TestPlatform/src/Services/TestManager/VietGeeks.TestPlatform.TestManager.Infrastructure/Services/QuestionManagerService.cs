@@ -49,7 +49,7 @@ public class QuestionManagerService : IQuestionManagerService
             .PageNumber(pageNumber)
             .ExecuteAsync(cancellationToken);
 
-        var processedEntities = AssignQuestionNumbers(entities.Results.ToList());
+        var processedEntities = AssignQuestionNumbers(entities.Results.ToList(), pageNumber, pageSize);
 
         return new PagedSearchResult<QuestionViewModel>
         {
@@ -121,6 +121,17 @@ public class QuestionManagerService : IQuestionManagerService
         var result = await _managerDbContext.DeleteAsync<QuestionDefinition>(id);
         if (result.DeletedCount == 0)
             throw new TestPlatformException("Not found question");
+    }
+
+    private List<QuestionDefinition> AssignQuestionNumbers(List<QuestionDefinition> questions, int pageNumber, int pageSize)
+    {
+        var startedNumber = (pageNumber - 1) * pageSize + 1;
+        for (int i = 0; i < questions.Count; i++)
+        {
+            questions[i].QuestionNo = startedNumber + i;
+        }
+
+        return questions;
     }
 
     private List<QuestionDefinition> AssignQuestionNumbers(List<QuestionDefinition> questions)

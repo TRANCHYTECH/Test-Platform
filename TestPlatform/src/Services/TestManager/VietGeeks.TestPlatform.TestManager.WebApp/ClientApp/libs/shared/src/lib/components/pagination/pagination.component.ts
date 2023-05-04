@@ -24,6 +24,10 @@ export class PaginationComponent implements OnInit {
     this.pageChange(1);
   }
 
+  refresh() {
+    this.pageChange(1);
+  }
+
   pageChange(page: number) {
     this.config.page = page;
     firstValueFrom(this.pagedSearchFn(page, this.config.pageSize).pipe(this.updatePaginationConfig())).then(() => this._changeRef.markForCheck());

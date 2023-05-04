@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, firstValueFrom, tap } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
@@ -7,6 +7,7 @@ import { QuestionCategoriesService } from '../../_state/question-categories/ques
 import { AnswerType, Question } from '../../_state/questions/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
+import { PaginationComponent } from '@viet-geeks/shared';
 
 @UntilDestroy()
 @Component({
@@ -16,6 +17,9 @@ import { QuestionService } from '../../_state/questions/question.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionListComponent extends TestSpecificBaseComponent {
+  @ViewChild('pagination', {static: true})
+  paginationComp!: PaginationComponent;
+
   AnswerType = AnswerType;
   questions$ = new Subject<Question[]>();
 
@@ -48,7 +52,7 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
   }
 
   removeQuestion(questionId: string) {
-    this._questionsService.remove(this.testId, questionId);
+    this._questionsService.remove(this.testId, questionId).then(() => this.paginationComp.refresh());
   }
 
   goToQuestionDetails(questionId: string, e: Event) {
