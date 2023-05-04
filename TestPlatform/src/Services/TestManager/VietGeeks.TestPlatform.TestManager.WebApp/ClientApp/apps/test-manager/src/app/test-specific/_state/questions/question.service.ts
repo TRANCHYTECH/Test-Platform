@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
+import { PagedSearchRequest, PagedSearchResponse } from '@viet-geeks/shared';
 import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AppSettings } from '../../../app-setting.model';
@@ -9,14 +10,16 @@ import { QuestionStore } from './question.store';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionService {
-
   constructor(private _questionStore: QuestionStore, private _http: HttpClient, private _appSettingService: AppSettingsService) {
   }
 
-  get(testId: string) {
-    return this._http.get<Question[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question`).pipe(tap(rs => {
-      this._questionStore.set(rs);
-    }));
+  get(testId: string, pagedSearchParams: PagedSearchRequest) {
+    return this._http.get<PagedSearchResponse<Question>>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question`, {
+      params: {
+        pageNumber: pagedSearchParams.page,
+        pageSize: pagedSearchParams.pageSize
+      }
+    }).pipe(tap(rs => this._questionStore.set(rs.results)));
   }
 
   getQuestion(testId: string, questionId: string) {
@@ -51,3 +54,4 @@ export class QuestionService {
     return this._appSettingService.get<AppSettings>().testManagerApiBaseUrl;
   }
 }
+

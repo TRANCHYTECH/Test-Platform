@@ -35,20 +35,27 @@ public class QuestionManagerService : IQuestionManagerService
     {
         var entities = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(q => q.TestId == testId, cancellationToken);
 
-        AssignQuestionNumbers(entities);
+        entities = AssignQuestionNumbers(entities);
 
         return _mapper.Map<List<QuestionViewModel>>(entities);
     }
 
-    public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, int pageIndex, int pageSize, CancellationToken cancellationToken)
+    public async Task<PagedSearchResult<QuestionViewModel>> GetQuestions(string testId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.Find<QuestionDefinition>()
-            .Skip(pageIndex * pageSize)
-            .Limit(pageSize)
+        var entities = await _managerDbContext.PagedSearch<QuestionDefinition>()
+            .Match(q => q.TestId == testId)
             .Sort(q => q.Order, Order.Ascending)
-            .ManyAsync(q => q.TestId == testId, cancellationToken);
+            .PageSize(pageSize)
+            .PageNumber(pageNumber)
+            .ExecuteAsync(cancellationToken);
 
-        return _mapper.Map<List<QuestionViewModel>>(entities);
+        var processedEntities = AssignQuestionNumbers(entities.Results.ToList());
+        
+        return  new PagedSearchResult<QuestionViewModel> {
+            Results = _mapper.Map<List<QuestionViewModel>>(processedEntities),
+            TotalCount = entities.TotalCount,
+            PageCount = entities.PageCount
+        };
     }
 
     public async Task<QuestionViewModel> GetQuestion(string id, CancellationToken cancellationToken)
@@ -115,13 +122,15 @@ public class QuestionManagerService : IQuestionManagerService
             throw new TestPlatformException("Not found question");
     }
 
-    private void AssignQuestionNumbers(List<QuestionDefinition> questions)
+    private List<QuestionDefinition> AssignQuestionNumbers(List<QuestionDefinition> questions)
     {
-        questions = questions.OrderBy(c => c.Order).ToList();
+        var sortedQuestions = questions.OrderBy(c => c.Order).ToList();
         for (int i = 0; i < questions.Count; i++)
         {
-            questions[i].QuestionNo = i + 1;
+            sortedQuestions[i].QuestionNo = i + 1;
         }
+
+        return sortedQuestions;
     }
 
     //todo: Improve performance by using cache tech?

@@ -28,11 +28,10 @@ public class QuestionDefinitionManagementController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<QuestionViewModel>), StatusCodes.Status201Created)]
-    //TODO: paging
-    public Task<IEnumerable<QuestionViewModel>> Get(string testId, int? pageIndex, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(PagedSearchResult<QuestionViewModel>), StatusCodes.Status200OK)]
+    public async Task<PagedSearchResult<QuestionViewModel>> Get(string testId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
-        return _questionManagerService.GetQuestions(testId, cancellationToken);
+        return await _questionManagerService.GetQuestions(testId, pageNumber ?? 1, pageSize ?? 3, cancellationToken);
     }
 
     [HttpGet("{id}")]
