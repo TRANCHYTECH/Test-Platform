@@ -13,7 +13,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { FormsModule } from '@angular/forms';
 import { TestStatusClassPipe } from './pipes/test-status-class.pipe';
 import { TestStatusPipe } from './pipes/test-status.pipe';
-import PaginationComponent from './components/pagination/pagination.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 @NgModule({
   imports: [
