@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FeatherModule } from 'angular-feather';
 import { allIcons } from 'angular-feather/icons';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
-import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -13,6 +13,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { FormsModule } from '@angular/forms';
 import { TestStatusClassPipe } from './pipes/test-status-class.pipe';
 import { TestStatusPipe } from './pipes/test-status.pipe';
+import PaginationComponent from './components/pagination/pagination.component';
 
 @NgModule({
   imports: [
@@ -21,9 +22,10 @@ import { TestStatusPipe } from './pipes/test-status.pipe';
     HttpClientModule,
     FeatherModule.pick(allIcons),
     NgbToastModule,
+    NgbPaginationModule,
     EditorModule,
   ],
-  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe],
+  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe, PaginationComponent],
   exports: [
     CommonModule,
     HttpClientModule,
@@ -31,6 +33,7 @@ import { TestStatusPipe } from './pipes/test-status.pipe';
     FeatherModule,
     BreadcrumbsComponent,
     SubmitButtonComponent,
+    PaginationComponent,
     SweetAlert2Module,
     NgxSpinnerModule,
     EditorModule,

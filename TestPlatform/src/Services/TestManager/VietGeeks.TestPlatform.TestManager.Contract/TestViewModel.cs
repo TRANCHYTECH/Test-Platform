@@ -123,4 +123,3 @@ public enum TestDefinitionStatus
     Finished = 3,
     Deleted = 10
 }
-
