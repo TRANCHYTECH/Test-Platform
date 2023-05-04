@@ -4,16 +4,16 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Logics;
 
 public static class ScoreCalculatorFactory
 {
-    public static IScoreCalculator GetCalculator(this QuestionDefinition questionDefinition)
+    public static IScoreCalculator GetCalculator(AnswerType answerType)
     {
-        switch ((AnswerType)questionDefinition.AnswerType)
+        switch (answerType)
         {
             case AnswerType.SingleChoice:
                 return new SingleChoiceScoreCalculator();
             case AnswerType.MultipleChoice:
                 return new MultipleChoicesScoreCalculator();
             default:
-                throw new System.Exception($"Answer type {questionDefinition.AnswerType} is not supported");
+                throw new System.Exception($"Answer type {answerType} is not supported");
         }
     }
 }

@@ -6,7 +6,7 @@ public static class ScoreCalculations
 {
     public static int CalculateScores(this QuestionDefinition question, string[]? answerIds)
     {
-        var calculator = ScoreCalculatorFactory.GetCalculator(question);
+        var calculator = ScoreCalculatorFactory.GetCalculator((AnswerType)question.AnswerType);
 
         return calculator.Calculate(question, answerIds);
     }

@@ -13,6 +13,6 @@ public interface IProctorService
 
     Task<FinishExamOutput> FinishExam(FinishExamInput input);
     Task<TestRun> GetTestRun(string testRunId);
-    Task<ExamQuestion?> GetTestRunQuestion(string examId, string questionId);
+    Task<QuestionDefinition?> GetTestRunQuestion(string examId, string questionId);
     Task<AfterTestConfigOutput> GetAfterTestConfigAsync(string examId);
 }

@@ -1,6 +1,8 @@
 ﻿using Dapr.Actors.Runtime;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
+using VietGeeks.TestPlatform.TestManager.Core.Logics;
+using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
@@ -38,6 +40,7 @@ public class ProctorActor : Actor, IProctorActor
         examState.QuestionIds = examContent.Questions.Select(q => q.Id).ToArray();
         examState.ActiveQuestionIndex = 0;
         examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
+        examState.ActiveQuestion = examContent.ActiveQuestion; 
         examState.StartedAt = DateTime.UtcNow;
 
         if (!string.IsNullOrEmpty(examState.ActiveQuestionId)) {
@@ -66,6 +69,7 @@ public class ProctorActor : Actor, IProctorActor
         };
     }
 
+    // TODO: refactor
     public async Task<SubmitAnswerOutput> SubmitAnswer(SubmitAnswerInput input)
     {
         //todo: refactor the way to store questions in order to validate whether or not the answer is valid in configured timespan.
@@ -86,11 +90,16 @@ public class ProctorActor : Actor, IProctorActor
                 throw new TestPlatformException("QuestionIsNotStarted");
             }
 
+            if (examState.ActiveQuestion?.ScoreSettings?.MustAnswerToContinue == true && (input.AnswerIds == null || !input.AnswerIds.Any()))
+            {
+                throw new TestPlatformException("MustAnswerToContinue");
+            }
+
             examState.Answers[input.QuestionId] = input.AnswerIds;
             examState.QuestionTimes[input.QuestionId].SubmittedAt = DateTime.UtcNow;
             var questionIndex = Array.IndexOf(examState.QuestionIds, input.QuestionId);
             string? activeQuestionId = null;
-            ExamQuestion? activeQuestion = null;
+            QuestionDefinition? activeQuestion = null;
             if (questionIndex == examState.QuestionIds.Length - 1)
             {
                 examState.ActiveQuestionIndex = null;
@@ -107,11 +116,21 @@ public class ProctorActor : Actor, IProctorActor
             }
             examState.ActiveQuestionId = activeQuestionId;
 
+            // if (activeQuestion?.ScoreSettings?.IsMandatory == true) 
+            // {
+            //     var score = activeQuestion?.CalculateScores(input.AnswerIds);
+            //     if (score < activeQuestion?.ScoreSettings.TotalPoints) {
+            //         await FinishExam();
+
+            //         return new SubmitAnswerOutput();
+            //     }
+            // }
+
             return new SubmitAnswerOutput()
             {
                 ActiveQuestionId = activeQuestionId,
                 ActiveQuestionIndex = examState.ActiveQuestionIndex,
-                ActiveQuestion = activeQuestion
+                ActiveQuestion = activeQuestion?.ToViewModel()
             };
         });
     }
@@ -144,7 +163,7 @@ public class ProctorActor : Actor, IProctorActor
 
         if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
         {
-            activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId);
+            activeQuestion = (await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId))?.ToViewModel();
             activeQuestionStartedAt = examState.QuestionTimes[examState.ActiveQuestionId]?.StartedAt;
         }
 
@@ -216,6 +235,7 @@ public class ProctorActor : Actor, IProctorActor
         public string[] QuestionIds { get; set; } = default!;
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
+        public ExamQuestion? ActiveQuestion {get;set;}
         public TestDurationState TestDuration { get; set; } = default!;
         public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 

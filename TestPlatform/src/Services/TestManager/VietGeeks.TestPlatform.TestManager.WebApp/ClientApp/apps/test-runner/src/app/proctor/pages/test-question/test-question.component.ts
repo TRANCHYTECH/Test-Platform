@@ -30,8 +30,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   question?: ExamQuestion;
   questionCount = 0;
   endTime: Date = new Date();
-
-  public remainingTime: TimeSpan = {};
+  remainingTime: TimeSpan = {};
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
@@ -81,6 +80,10 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
         this.finishExam();
       }
     }
+  }
+
+  get submitEnabled() {
+    return !this.question?.scoreSettings?.mustAnswerToContinue || this.answerForm.dirty;
   }
 
   private getAnswerIds(): string[] {

@@ -4,6 +4,7 @@ export { AnswerOutput } from './models/answer-output';
 export { ErrorDetails } from './models/error-details';
 export { ExamAnswer } from './models/exam-answer';
 export { ExamQuestion } from './models/exam-question';
+export { ExamQuestionScoreSettings } from './models/exam-question-score-settings';
 export { ExamStatusWithStep } from './models/exam-status-with-step';
 export { ExamStep } from './models/exam-step';
 export { FinishExamOutput } from './models/finish-exam-output';
