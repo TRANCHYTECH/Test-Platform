@@ -7,7 +7,7 @@ import { Observable, firstValueFrom, tap } from 'rxjs';
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss']
 })
-export default class PaginationComponent implements OnInit {
+export class PaginationComponent implements OnInit {
   @Input()
   label!: string;
 
