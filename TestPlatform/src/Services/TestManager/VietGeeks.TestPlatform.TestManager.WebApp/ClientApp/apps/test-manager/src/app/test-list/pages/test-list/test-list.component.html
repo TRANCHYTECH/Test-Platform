@@ -28,8 +28,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xxl-6 col-sm-6 project-card"
-        *ngFor="let test of tests | slice: (page-1) * pageSize : page * pageSize" id="pl1_{{test.id}}">
+    <div class="col-xxl-6 col-sm-6 project-card" *ngFor="let test of tests">
         <div class="card card-animate ribbon-box border shadow-none card-height-100">
             <div class="card-body">
                 <div class="d-flex flex-column h-100">
@@ -84,12 +83,6 @@
         </div>
     </div>
 </div>
-
-
-<div class="row g-0 text-center text-sm-start align-items-center mb-4">
-    <div class="col-sm-6">
-        <ngb-pagination [(page)]="page" [pageSize]="pageSize" class="d-flex justify-content-end"
-            [collectionSize]="tests.length"></ngb-pagination>
-
-    </div>
+<div class="row">
+    <viet-geeks-pagination [config]="paginationConfig" [label]="'Tests per page'" [pagedSearchFn]="pagedSearchFn"></viet-geeks-pagination>
 </div>

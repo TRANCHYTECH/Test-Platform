@@ -59,9 +59,9 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
     }
 
     async invokeLongAction(action: () => Promise<void>) {
-        this.maskBusyForUI();
+        this.maskBusyForMainFlow();
         await action();
-        this.maskReadyForUI();
+        this.maskReadyForMainFlow();
         this.changeRef.markForCheck();
     }
 

@@ -31,7 +31,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [ProducesResponseType(typeof(PagedSearchResult<QuestionViewModel>), StatusCodes.Status200OK)]
     public async Task<PagedSearchResult<QuestionViewModel>> Get(string testId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
-        return await _questionManagerService.GetQuestions(testId, pageNumber ?? 1, pageSize ?? 3, cancellationToken);
+        return await _questionManagerService.GetQuestions(testId, pageNumber ?? 1, pageSize ?? 10, cancellationToken);
     }
 
     [HttpGet("{id}")]

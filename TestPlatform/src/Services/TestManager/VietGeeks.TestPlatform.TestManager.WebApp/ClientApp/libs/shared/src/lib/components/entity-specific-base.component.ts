@@ -1,24 +1,17 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { NgxSpinnerService } from "ngx-spinner";
-import { BehaviorSubject, filter } from "rxjs";
+import { filter } from "rxjs";
+import { PrimaryBaseComponent } from "./primary-base.component";
 
 @UntilDestroy()
 @Component({
     selector: 'viet-geeks-entity-specific-base',
     template: ''
 })
-export abstract class EntitySpecificBaseComponent implements OnInit {
+export abstract class EntitySpecificBaseComponent extends PrimaryBaseComponent implements OnInit {
     router = inject(Router);
-
-    protected _spinner = inject(NgxSpinnerService);
-    protected _readyForUI = new BehaviorSubject(false);
     protected _refreshAfterSubmit = true;
-
-    get readyForUI$() {
-        return this._readyForUI.asObservable();
-    }
 
     abstract loadEntity(): Promise<void>;
     abstract postLoadEntity(): Promise<void> | void;
@@ -26,6 +19,9 @@ export abstract class EntitySpecificBaseComponent implements OnInit {
     abstract get canSubmit(): boolean;
 
     ngOnInit(): void {
+        // Currently this kind of component only uses one flag for main data flow. So pypass second one.
+        this.maskReadyForSupplylow();
+
         this.processLoadingDataFlow();
 
         // Listen to reload the page.
@@ -43,14 +39,6 @@ export abstract class EntitySpecificBaseComponent implements OnInit {
         // Place holder
     }
 
-    maskBusyForUI() {
-        this._readyForUI.next(false);
-    }
-
-    maskReadyForUI() {
-        this._readyForUI.next(true);
-    }
-
     submitFunc = async () => {
         if (!this.canSubmit) {
             return;
@@ -64,31 +52,15 @@ export abstract class EntitySpecificBaseComponent implements OnInit {
         }
     };
 
-    private configureLoadingIndicator() {
-        this._readyForUI.pipe(untilDestroyed(this)).subscribe(v => {
-            if (v === false) {
-                this._spinner.show(undefined, {
-                    type: 'ball-fussion',
-                    size: 'medium',
-                    bdColor: 'rgba(100,149,237, .2)',
-                    color: 'white',
-                    fullScreen: false
-                });
-            } else {
-                this._spinner.hide();
-            }
-        });
-    }
-
     private async processLoadingDataFlow() {
         try {
-            this.maskBusyForUI();
+            this.maskBusyForMainFlow();
 
             await this.loadEntity();
 
             await Promise.resolve(this.postLoadEntity());
         } finally {
-            this.maskReadyForUI();
+            this.maskReadyForMainFlow();
         }
     }
 }

@@ -4,7 +4,7 @@ using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 public interface ITestManagerService
 {
-    Task<List<TestDefinitionOverview>> GetTestDefinitionOverviews();
+    Task<PagedSearchResult<TestDefinitionOverview>> GetTestDefinitionOverviews(int pageNumber, int pageSize, CancellationToken cancellationToken);
     Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest);
     Task<TestDefinitionViewModel> GetTestDefinition(string id);
     Task<TestDefinitionViewModel> ActivateTestDefinition(string id);

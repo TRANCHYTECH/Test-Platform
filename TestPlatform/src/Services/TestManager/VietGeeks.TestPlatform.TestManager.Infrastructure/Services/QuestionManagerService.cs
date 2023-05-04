@@ -50,8 +50,9 @@ public class QuestionManagerService : IQuestionManagerService
             .ExecuteAsync(cancellationToken);
 
         var processedEntities = AssignQuestionNumbers(entities.Results.ToList());
-        
-        return  new PagedSearchResult<QuestionViewModel> {
+
+        return new PagedSearchResult<QuestionViewModel>
+        {
             Results = _mapper.Map<List<QuestionViewModel>>(processedEntities),
             TotalCount = entities.TotalCount,
             PageCount = entities.PageCount

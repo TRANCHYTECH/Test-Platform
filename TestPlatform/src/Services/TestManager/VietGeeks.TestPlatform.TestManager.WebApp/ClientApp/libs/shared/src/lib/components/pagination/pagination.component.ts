@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { PagedSearchResponse, PaginationConfig, defaultPaginationConfig } from '../../models/pagination-config';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import { Observable, firstValueFrom, tap } from 'rxjs';
+import { PagedSearchResponse, PaginationConfig, defaultPaginationConfig } from '../../models/pagination-config';
 
 @Component({
   selector: 'viet-geeks-pagination',
   templateUrl: './pagination.component.html',
-  styleUrls: ['./pagination.component.scss']
+  styleUrls: ['./pagination.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaginationComponent implements OnInit {
   @Input()
@@ -17,6 +18,7 @@ export class PaginationComponent implements OnInit {
   @Input()
   pagedSearchFn!: (page: number, pageSize: number) => Observable<PagedSearchResponse<object>>;
 
+  private _changeRef = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.pageChange(1);
@@ -24,7 +26,7 @@ export class PaginationComponent implements OnInit {
 
   pageChange(page: number) {
     this.config.page = page;
-    firstValueFrom(this.pagedSearchFn(page, this.config.pageSize).pipe(this.updatePaginationConfig()));
+    firstValueFrom(this.pagedSearchFn(page, this.config.pageSize).pipe(this.updatePaginationConfig())).then(() => this._changeRef.markForCheck());
   }
 
   private updatePaginationConfig<T>() {

@@ -13,7 +13,7 @@ export function defaultPaginationConfig(): PaginationConfig {
     pageSize: 5,
     totalCount: 0,
     pageCount: 0,
-    pageSizes: [2, 5, 10, 20, 50, 100]
+    pageSizes: [2, 5, 10, 20, 30, 50, 100]
   }
 }
 
@@ -24,6 +24,6 @@ export type PagedSearchResponse<T> = {
 }
 
 export type PagedSearchRequest = {
-  page: number;
+  pageNumber: number;
   pageSize: number;
 }
