@@ -30,9 +30,10 @@ public class TestDefinitionManagementController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
-        List<TestDefinitionOverview> testDefinitions = await _testManagerService.GetTestDefinitionOverviews();
+        //todo: move paging search stuff to shared, also prevent max is 100
+        var testDefinitions = await _testManagerService.GetTestDefinitionOverviews(pageNumber ?? 1, pageSize ?? 12, cancellationToken);
 
         return Ok(testDefinitions);
     }

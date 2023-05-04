@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject, firstValueFrom } from 'rxjs';
+import { Subject, firstValueFrom, tap } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
@@ -24,13 +24,23 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
   private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
   private _questionCategoriesService = inject(QuestionCategoriesService);
 
-  pagedSearchFn = (page: number, pageSize: number) => this._questionsService.get(this.testId, { page, pageSize });
+  pagedSearchFn = (page: number, pageSize: number) => {
+    this.maskBusyForMainFlow();
+
+    return this._questionsService.get(this.testId, { pageNumber: page, pageSize })
+      .pipe(tap(() => this.maskReadyForMainFlow()));
+  }
 
   async postLoadEntity(): Promise<void> {
+    this.maskBusyForSupplyFlow();
+
     await Promise.all([firstValueFrom(this._questionCategoriesService.get(this.testId))]);
+
     this._questionsQuery.selectAll().pipe(untilDestroyed(this)).subscribe(questions => {
       this.questions$.next(questions);
     });
+
+    this.maskReadyForSupplylow();
   }
 
   displayCategory(id: string) {

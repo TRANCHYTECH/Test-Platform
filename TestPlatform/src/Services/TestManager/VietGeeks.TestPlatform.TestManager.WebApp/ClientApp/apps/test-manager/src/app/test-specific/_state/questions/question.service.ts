@@ -15,10 +15,7 @@ export class QuestionService {
 
   get(testId: string, pagedSearchParams: PagedSearchRequest) {
     return this._http.get<PagedSearchResponse<Question>>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question`, {
-      params: {
-        pageNumber: pagedSearchParams.page,
-        pageSize: pagedSearchParams.pageSize
-      }
+      params: Object.assign({}, pagedSearchParams)
     }).pipe(tap(rs => this._questionStore.set(rs.results)));
   }
 

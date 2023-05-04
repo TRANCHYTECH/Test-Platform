@@ -13,6 +13,7 @@ using Dapr.Client;
 using VietGeeks.TestPlatform.Integration.Contract;
 using shortid;
 using FluentValidation;
+using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -69,13 +70,21 @@ public class TestManagerService : ITestManagerService
         return _mapper.Map<TestDefinitionViewModel>(entity);
     }
 
-    public async Task<List<TestDefinitionOverview>> GetTestDefinitionOverviews()
+    public async Task<PagedSearchResult<TestDefinitionOverview>> GetTestDefinitionOverviews(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.Find<TestDefinition>()
+        var entities = await _managerDbContext.PagedSearch<TestDefinition>()
+            .Sort(c => c.CreatedOn, Order.Descending)
+            .PageSize(pageSize)
+            .PageNumber(pageNumber)
             .ProjectExcluding(c => new { c.TestAccessSettings, c.GradingSettings, c.TestSetSettings, c.TestStartSettings })
-            .ExecuteAsync();
+            .ExecuteAsync(cancellationToken);
 
-        return _mapper.Map<List<TestDefinitionOverview>>(entities);
+        return new PagedSearchResult<TestDefinitionOverview>
+        {
+            Results = _mapper.Map<List<TestDefinitionOverview>>(entities.Results),
+            TotalCount = entities.TotalCount,
+            PageCount = entities.PageCount
+        };
     }
 
     public async Task<TestDefinitionViewModel> UpdateTestDefinition(string id, UpdateTestDefinitionViewModel viewModel)
