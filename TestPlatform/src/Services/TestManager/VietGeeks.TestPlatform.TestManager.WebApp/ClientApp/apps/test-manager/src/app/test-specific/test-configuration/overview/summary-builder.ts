@@ -1,5 +1,4 @@
 import { Injectable, inject } from "@angular/core";
-import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AppSettingsService, UserProfileService } from "@viet-geeks/core";
 import { TestCategory, TestCategoryUncategorizedId } from "@viet-geeks/test-manager/state";
@@ -31,7 +30,6 @@ export type Summary = { desc: string, status: 'ok' | 'action', url?: string };
 
 @Injectable({ providedIn: 'root' })
 export class SummaryBuilder {
-    private _router = inject(Router);
     private _translate = inject(TranslateService);
     private _appSettingsService = inject(AppSettingsService);
     private _userProfileService = inject(UserProfileService);
@@ -174,7 +172,7 @@ export class SummaryBuilder {
     }
 
     private getConfigRouteLink(path: string) {
-        return `${this._router.url}/${path}`;
+        return `../${path}`;
     }
 
     private getTestTimeUtc(config: TestActivationMethod): { startAt?: Date, endAt: Date } {

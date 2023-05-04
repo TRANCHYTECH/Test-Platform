@@ -10,7 +10,7 @@ import { TestTimeSettingsComponent } from './test-time-settings/test-time-settin
 
 export const TestConfigRoutes = {
   BasicSettings: 'basic-settings',
-  ManageQuestions: 'manage-questions',
+  ManageQuestions: 'question',
   TestSets: 'test-sets',
   GradingAndSummary: 'grading-and-summary',
   TestAccess: 'test-access',
