@@ -60,6 +60,10 @@
             <div class="input-group">
               <button class="btn btn-primary" type="submit" [disabled]="!submitEnabled" (click)="submit()">Submit answer</button>
             </div>
+            <ng-template #navigationButtons>
+              <button class="btn btn-primary" type="submit" (click)="goToPreviousQuestion()">Previous</button>
+              <button class="btn btn-primary" type="submit" [disabled]="!submitEnabled" (click)="goToNextQuestion()">Next</button>
+            </ng-template>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+export { ActivateQuestionOutput } from './models/activate-question-output';
 export { AfterTestConfigOutput } from './models/after-test-config-output';
 export { AggregatedGradingOuput } from './models/aggregated-grading-ouput';
 export { AnswerOutput } from './models/answer-output';

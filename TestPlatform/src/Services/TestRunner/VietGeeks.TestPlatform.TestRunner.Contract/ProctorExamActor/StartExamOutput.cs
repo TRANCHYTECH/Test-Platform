@@ -14,6 +14,7 @@ public class StartExamOutput: IActiveQuestion
     public int TotalQuestion { get;set; } = default!;
 
     public DateTime StartedAt { get; set; }
+    public bool CanSkipQuestion {get; set;}
 
     [JsonIgnore]
     public TimeSpan TotalDuration => TestDuration.Method == TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : Questions.Length * TestDuration.Duration;

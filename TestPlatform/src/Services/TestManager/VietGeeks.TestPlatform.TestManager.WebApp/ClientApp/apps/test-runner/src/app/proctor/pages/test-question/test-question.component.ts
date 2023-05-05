@@ -31,6 +31,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   questionCount = 0;
   endTime: Date = new Date();
   remainingTime: TimeSpan = {};
+  canSkipQuestion = false;
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
@@ -42,6 +43,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this.index = this.sessionData.questionIndex ?? 0;
     this.question = this.sessionData.activeQuestion;
     this.questionCount = this.sessionData.questionCount ?? 0;
+    this.canSkipQuestion = this.sessionData.canSkipQuestion ?? false;
     this.initAnswerForm();
     this.initEndTime();
     this.subscription = interval(1000)

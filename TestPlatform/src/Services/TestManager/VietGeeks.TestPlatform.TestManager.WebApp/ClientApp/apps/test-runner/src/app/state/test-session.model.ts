@@ -21,6 +21,7 @@ export interface TestSession {
   questions?: QuestionOutput[] | null,
   answers?: Dictionary<Array<string>> | null;
   questionScores?: Dictionary<number> | null;
+  canSkipQuestion?: boolean;
 }
 
 export interface TimeSettings {
