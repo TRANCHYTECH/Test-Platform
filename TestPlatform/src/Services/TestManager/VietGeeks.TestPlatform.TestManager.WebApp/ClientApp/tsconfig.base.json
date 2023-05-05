@@ -17,7 +17,9 @@
     "paths": {
       "@viet-geeks/core": ["libs/core/src/index.ts"],
       "@viet-geeks/shared": ["libs/shared/src/index.ts"],
-      "@viet-geeks/test-manager/state": ["apps/test-manager/src/app/_state/index.ts"]
+      "@viet-geeks/test-manager/state": [
+        "apps/test-manager/src/app/_state/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
