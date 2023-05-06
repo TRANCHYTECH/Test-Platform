@@ -55,11 +55,15 @@
               </div>
             </div>
           </ng-container>
-
+          <div class="mb-3 fw-semibold text-primary" *ngIf="question?.scoreSettings?.isDisplayMaximumScore">Maximum point(s): {{question?.scoreSettings?.totalPoints}}</div>
           <div class="mb-3">
             <div class="input-group">
-              <button class="btn btn-primary" type="submit" (click)="submit()">Submit answer</button>
+              <button class="btn btn-primary" type="submit" [disabled]="!submitEnabled" (click)="submit()">Submit answer</button>
             </div>
+            <ng-template #navigationButtons>
+              <button class="btn btn-primary" type="submit" (click)="goToPreviousQuestion()">Previous</button>
+              <button class="btn btn-primary" type="submit" [disabled]="!submitEnabled" (click)="goToNextQuestion()">Next</button>
+            </ng-template>
           </div>
         </div>
       </div>

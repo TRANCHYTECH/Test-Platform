@@ -7,7 +7,7 @@ public static class ManualMapper
 {
     public static ExamQuestion ToViewModel(this QuestionDefinition model)
     {
-        return new ExamQuestion
+        var question = new ExamQuestion
         {
             Id = model.ID,
             Description = model.Description,
@@ -18,6 +18,22 @@ public static class ManualMapper
                 Description = c.AnswerDescription,
             }).ToArray()
         };
+
+        if (model.ScoreSettings != null) 
+        {
+            var scoreSettings = model.ScoreSettings;
+            question.ScoreSettings = new ExamQuestionScoreSettings {
+                IsDisplayMaximumScore = scoreSettings.IsDisplayMaximumScore,
+                MustCorrect = scoreSettings.IsMandatory,
+                MustAnswerToContinue = scoreSettings.MustAnswerToContinue
+            };
+
+            if (scoreSettings.IsDisplayMaximumScore) {
+                question.ScoreSettings.TotalPoints = scoreSettings.TotalPoints;
+            }
+        }
+
+        return question;
     }
 
     public static TestDuration ToViewModel(this TestDurationMethod model)

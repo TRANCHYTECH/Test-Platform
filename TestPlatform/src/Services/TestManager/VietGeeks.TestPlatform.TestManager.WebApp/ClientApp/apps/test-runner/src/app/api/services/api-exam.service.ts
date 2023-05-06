@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { ActivateQuestionOutput } from '../models/activate-question-output';
 import { AfterTestConfigOutput } from '../models/after-test-config-output';
 import { ExamStatusWithStep } from '../models/exam-status-with-step';
 import { FinishExamOutput } from '../models/finish-exam-output';
@@ -426,6 +427,297 @@ export class ApiExamService extends BaseService {
 
     return this.submitAnswer$Response(params,context).pipe(
       map((r: StrictHttpResponse<SubmitAnswerOutput>) => r.body as SubmitAnswerOutput)
+    );
+  }
+
+  /**
+   * Path part for operation previousQuestion
+   */
+  static readonly PreviousQuestionPath = '/Exam/PreviousQuestion';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `previousQuestion$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  previousQuestion$Plain$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ActivateQuestionOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.PreviousQuestionPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ActivateQuestionOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `previousQuestion$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  previousQuestion$Plain(params?: {
+  },
+  context?: HttpContext
+
+): Observable<ActivateQuestionOutput> {
+
+    return this.previousQuestion$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ActivateQuestionOutput>) => r.body as ActivateQuestionOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `previousQuestion()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  previousQuestion$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ActivateQuestionOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.PreviousQuestionPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ActivateQuestionOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `previousQuestion$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  previousQuestion(params?: {
+  },
+  context?: HttpContext
+
+): Observable<ActivateQuestionOutput> {
+
+    return this.previousQuestion$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ActivateQuestionOutput>) => r.body as ActivateQuestionOutput)
+    );
+  }
+
+  /**
+   * Path part for operation nextQuestion
+   */
+  static readonly NextQuestionPath = '/Exam/NextQuestion';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `nextQuestion$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  nextQuestion$Plain$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ActivateQuestionOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.NextQuestionPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ActivateQuestionOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `nextQuestion$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  nextQuestion$Plain(params?: {
+  },
+  context?: HttpContext
+
+): Observable<ActivateQuestionOutput> {
+
+    return this.nextQuestion$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ActivateQuestionOutput>) => r.body as ActivateQuestionOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `nextQuestion()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  nextQuestion$Response(params?: {
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ActivateQuestionOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.NextQuestionPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ActivateQuestionOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `nextQuestion$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  nextQuestion(params?: {
+  },
+  context?: HttpContext
+
+): Observable<ActivateQuestionOutput> {
+
+    return this.nextQuestion$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ActivateQuestionOutput>) => r.body as ActivateQuestionOutput)
+    );
+  }
+
+  /**
+   * Path part for operation goToQuestion
+   */
+  static readonly GoToQuestionPath = '/Exam/GoToQuestion';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `goToQuestion$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  goToQuestion$Plain$Response(params?: {
+    questionIndex?: number;
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ActivateQuestionOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.GoToQuestionPath, 'post');
+    if (params) {
+      rb.query('questionIndex', params.questionIndex, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ActivateQuestionOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `goToQuestion$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  goToQuestion$Plain(params?: {
+    questionIndex?: number;
+  },
+  context?: HttpContext
+
+): Observable<ActivateQuestionOutput> {
+
+    return this.goToQuestion$Plain$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ActivateQuestionOutput>) => r.body as ActivateQuestionOutput)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `goToQuestion()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  goToQuestion$Response(params?: {
+    questionIndex?: number;
+  },
+  context?: HttpContext
+
+): Observable<StrictHttpResponse<ActivateQuestionOutput>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiExamService.GoToQuestionPath, 'post');
+    if (params) {
+      rb.query('questionIndex', params.questionIndex, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json',
+      context: context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ActivateQuestionOutput>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `goToQuestion$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  goToQuestion(params?: {
+    questionIndex?: number;
+  },
+  context?: HttpContext
+
+): Observable<ActivateQuestionOutput> {
+
+    return this.goToQuestion$Response(params,context).pipe(
+      map((r: StrictHttpResponse<ActivateQuestionOutput>) => r.body as ActivateQuestionOutput)
     );
   }
 

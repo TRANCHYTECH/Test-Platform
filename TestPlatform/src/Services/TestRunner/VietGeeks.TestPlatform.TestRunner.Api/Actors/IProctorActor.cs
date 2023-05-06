@@ -10,8 +10,10 @@ public interface IProctorActor : IActor
 
     Task<StartExamOutput> StartExam(StartExamInput input);
 
-    Task<SubmitAnswerOutput> SubmitAnswer(SubmitAnswerInput input);
+    Task SubmitAnswer(SubmitAnswerInput input);
 
     Task<FinishExamOutput> FinishExam();
     Task<ExamStatus> GetExamStatus();
+    Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input);
+    Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex);
 }

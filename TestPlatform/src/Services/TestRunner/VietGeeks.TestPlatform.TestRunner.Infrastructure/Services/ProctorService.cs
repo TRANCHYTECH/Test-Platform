@@ -209,7 +209,7 @@ public class ProctorService : IProctorService
     }
 
    // TODO: Optimize query
-    public async Task<ExamQuestion?> GetTestRunQuestion(string examId, string questionId)
+    public async Task<QuestionDefinition?> GetTestRunQuestion(string examId, string questionId)
     {
         var exam = await GetExam(examId);
 
@@ -221,13 +221,13 @@ public class ProctorService : IProctorService
         var batches = await DB.Find<TestRunQuestion>().ManyAsync(c => c.TestRunId == exam.TestRunId && c.Batch.Any(i => i.ID == questionId));
         var question = batches.SelectMany(c => c.Batch).SingleOrDefault(i => i.ID == questionId);
 
-        return question?.ToViewModel();
+        return question;
     }
 
     public async Task<TestRun> GetTestRun(string testRunId) {
         return await DB.Find<TestRun>().Match(tr => tr.ID == testRunId).ExecuteSingleAsync();
     }
-
+    
     private async Task<Exam> GetExam(string testRunId, string accessCode)
     {
         return await DB.Find<Exam>().Match(c => c.TestRunId == testRunId && c.AccessCode == accessCode).ExecuteSingleAsync();

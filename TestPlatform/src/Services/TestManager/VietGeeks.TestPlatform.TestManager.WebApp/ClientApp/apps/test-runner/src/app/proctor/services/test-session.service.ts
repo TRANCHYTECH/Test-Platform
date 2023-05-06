@@ -52,7 +52,8 @@ export class TestSessionService {
         respondentFields: this.mapExamineeInfo(status?.examineeInfo) ?? undefined,
         timeSettings: this._testDurationService.mapToTimeSettings(status.testDuration),
         examStep: status?.step as number,
-        grading: status?.grading
+        grading: status?.grading,
+        canSkipQuestion: status.canSkipQuestion
       });
     }
 

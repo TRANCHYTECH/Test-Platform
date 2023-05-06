@@ -2,7 +2,6 @@ using Dapr.Actors.Client;
 using Dapr.Actors;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.TestRunner.Contract;
-using System.Text;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using System.Text.Json;
@@ -115,11 +114,50 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        var output = await proctorExamActor.SubmitAnswer(new()
+        await proctorExamActor.SubmitAnswer(new()
         {
             QuestionId = data.QuestionId,
             AnswerIds = data.AnswerIds
         });
+
+        return Ok();
+    }
+
+    [HttpPost("PreviousQuestion")]
+    [ProducesResponseType(typeof(ActivateQuestionOutput), 200)]
+    public async Task<IActionResult> PreviousQuestion()
+    {
+        var testSession = GetTestSession(ExamStep.SubmitAnswer);
+        var proctorExamActor = GetProctorActor(testSession);
+        var output = await proctorExamActor.ActivateNextQuestion(new()
+        {
+            Direction = ActivateDirection.Previous
+        });
+
+        return Ok(output);
+    }
+
+    [HttpPost("NextQuestion")]
+    [ProducesResponseType(typeof(ActivateQuestionOutput), 200)]
+    public async Task<IActionResult> NextQuestion()
+    {
+        var testSession = GetTestSession(ExamStep.SubmitAnswer);
+        var proctorExamActor = GetProctorActor(testSession);
+        var output = await proctorExamActor.ActivateNextQuestion(new()
+        {
+            Direction = ActivateDirection.Next
+        });
+
+        return Ok(output);
+    }
+
+    [HttpPost("GoToQuestion")]
+    [ProducesResponseType(typeof(ActivateQuestionOutput), 200)]
+    public async Task<IActionResult> GoToQuestion(int questionIndex)
+    {
+        var testSession = GetTestSession(ExamStep.SubmitAnswer);
+        var proctorExamActor = GetProctorActor(testSession);
+        var output = await proctorExamActor.ActivateQuestion(questionIndex);
 
         return Ok(output);
     }
