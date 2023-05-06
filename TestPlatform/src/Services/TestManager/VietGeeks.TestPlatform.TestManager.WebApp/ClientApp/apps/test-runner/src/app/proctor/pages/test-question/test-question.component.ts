@@ -84,6 +84,14 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     }
   }
 
+  goToPreviousQuestion() {
+
+  }
+
+  goToNextQuestion() {
+
+  }
+
   get submitEnabled() {
     return !this.question?.scoreSettings?.mustAnswerToContinue || this.answerForm.dirty;
   }
