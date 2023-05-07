@@ -15,6 +15,7 @@ import { TestStatusClassPipe } from './pipes/test-status-class.pipe';
 import { TestStatusPipe } from './pipes/test-status.pipe';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { StripTagsPipe } from './pipes/strip-tags.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
   imports: [
@@ -26,7 +27,7 @@ import { StripTagsPipe } from './pipes/strip-tags.pipe';
     NgbPaginationModule,
     EditorModule,
   ],
-  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe, PaginationComponent, StripTagsPipe],
+  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe, PaginationComponent, StripTagsPipe, TruncatePipe],
   exports: [
     CommonModule,
     HttpClientModule,
@@ -40,7 +41,8 @@ import { StripTagsPipe } from './pipes/strip-tags.pipe';
     EditorModule,
     TestStatusClassPipe,
     TestStatusPipe,
-    StripTagsPipe
+    StripTagsPipe,
+    TruncatePipe
   ]
 })
 export class SharedModule {}

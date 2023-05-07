@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject, firstValueFrom, tap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, tap } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
@@ -21,7 +21,7 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
   paginationComp!: PaginationComponent;
 
   AnswerType = AnswerType;
-  questions$ = new Subject<Question[]>();
+  questions$ = new BehaviorSubject<Question[]>([]);
 
   private _questionsQuery = inject(QuestionsQuery);
   private _questionsService = inject(QuestionService);
