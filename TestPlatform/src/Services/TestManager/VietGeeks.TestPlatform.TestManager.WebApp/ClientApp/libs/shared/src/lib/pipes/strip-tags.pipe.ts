@@ -6,7 +6,7 @@ import { stripHtml } from 'string-strip-html';
 })
 export class StripTagsPipe implements PipeTransform {
 
-  transform(value: string): unknown {
+  transform(value: string): string {
     if (value === undefined || value === '') {
       return '';
     }

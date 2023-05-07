@@ -1,11 +1,13 @@
-<div class="d-flex align-items-center gap-2">
-    <label>{{ label }}</label>
-    <div>
-        <select class="form-select page-sizes-select" name="page-sizes" [(ngModel)]="config.pageSize"
-            (change)="this.pageChange(1)">
-            <option *ngFor="let size of config.pageSizes" [ngValue]="size">{{size}}</option>
-        </select>
+<ng-container *ngIf="config.totalCount > 0">
+    <div class="d-flex align-items-center gap-2">
+        <label>{{ label }}</label>
+        <div>
+            <select class="form-select page-sizes-select" name="page-sizes" [(ngModel)]="config.pageSize"
+                (change)="this.pageChange(1)">
+                <option *ngFor="let size of config.pageSizes" [ngValue]="size">{{size}}</option>
+            </select>
+        </div>
     </div>
-</div>
-<ngb-pagination [collectionSize]="config.totalCount" [page]="config.page" [pageSize]="config.pageSize"
-    (pageChange)="pageChange($event)"></ngb-pagination>
+    <ngb-pagination [collectionSize]="config.totalCount" [page]="config.page" [pageSize]="config.pageSize"
+        (pageChange)="pageChange($event)"></ngb-pagination>
+</ng-container>

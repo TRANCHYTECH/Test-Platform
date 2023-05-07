@@ -103,6 +103,7 @@
     "tslib": "^2.3.0",
     "zone.js": "0.13.0",
     "nx-cloud": "16.0.5",
-    "string-strip-html": "^13.2.3"
+    "string-strip-html": "^13.2.3",
+    "string-truncator": "^2.0.11"
   }
 }
