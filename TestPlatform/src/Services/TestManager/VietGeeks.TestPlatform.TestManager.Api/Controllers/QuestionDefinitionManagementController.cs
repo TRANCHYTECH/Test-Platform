@@ -34,6 +34,21 @@ public class QuestionDefinitionManagementController : ControllerBase
         return await _questionManagerService.GetQuestions(testId, pageNumber ?? 1, pageSize ?? 10, cancellationToken);
     }
 
+    [HttpGet("Order")]
+    public async Task<IActionResult> QuestionOrders(string testId, CancellationToken cancellation)
+    {
+        var questions = await _questionManagerService.GetQuestions(testId, cancellation);
+        return Ok(questions);
+    }
+
+    [HttpPut("Order")]
+    public async Task<IActionResult> UpdateQuestionOrders(string testId, [FromBody]UpdateQuestionOrderViewModel[] viewModel,  CancellationToken cancellation)
+    {
+        //todo: impl
+        await _questionManagerService.UpdateQuestionOrders(testId, viewModel, cancellation);
+        return Ok();
+    }
+
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(QuestionViewModel), StatusCodes.Status201Created)]
     public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)

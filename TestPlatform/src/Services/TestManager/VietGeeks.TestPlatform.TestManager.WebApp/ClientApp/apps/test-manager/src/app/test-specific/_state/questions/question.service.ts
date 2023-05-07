@@ -19,6 +19,14 @@ export class QuestionService {
     }).pipe(tap(rs => this._questionStore.set(rs.results)));
   }
 
+  getOrders(testId: string) {
+    return this._http.get<Question[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question/Order`);
+  }
+
+  updateOrders(testId: string, orders: any[]) {
+    return this._http.put<Question[]>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question/Order`, orders);
+  }
+
   getQuestion(testId: string, questionId: string) {
     return this._http.get<Question>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${testId}/Question/${questionId}`).pipe(tap(rs => {
       this._questionStore.upsert(questionId, rs);

@@ -59,4 +59,17 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
         public int AnswerPoint { get; set; }
         public bool IsCorrect { get; set; }
     }
+
+    public class QuestionOrderViewViewModel
+    {
+        public string Id { get; set; } = default!;
+        public string Question { get; set; } = default!;
+        public string Order { get; set; } = default!;
+    }
+
+    public class UpdateQuestionOrderViewModel
+    {
+        public string Id { get; set; } = default!;
+        public string Order { get; set; } = default!;
+    }
 }

@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using FluentValidation;
+using LexoAlgorithm;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
@@ -73,7 +75,7 @@ public class QuestionManagerService : IQuestionManagerService
     {
         var entity = _mapper.Map<QuestionDefinition>(questionViewModel);
         entity.TestId = testId;
-        entity.Order = _clock.UtcNow.ToString("yyyyMMddHHmmssfff");
+        entity.Order = GenerateOrderSequence();
         entity.ScoreSettings.TotalPoints = _questionPointCalculationService.CalculateTotalPoints(entity);
 
         await _questionDefinitionValidator.TryValidate(entity);
@@ -81,6 +83,15 @@ public class QuestionManagerService : IQuestionManagerService
         await _managerDbContext.SaveAsync(entity, cancellationToken);
 
         return _mapper.Map<QuestionViewModel>(entity);
+    }
+
+    private string GenerateOrderSequence()
+    {
+        var @decimal = _clock.UtcNow.Subtract(new DateTime(2022, 1, 30)).TotalMilliseconds.ToString(NumberFormatInfo.InvariantInfo);
+        @decimal = @decimal.Replace(".", "a").Insert(6, ":");
+        var rank = LexoRank.Parse($"0|{@decimal}");
+
+        return rank.Format();
     }
 
     public async Task<QuestionViewModel> UpdateQuestion(string id, CreateOrUpdateQuestionViewModel questionViewModel, CancellationToken cancellationToken)
@@ -120,7 +131,27 @@ public class QuestionManagerService : IQuestionManagerService
         //todo: verify condition if test is ended or activated, so not allow to modify/delete
         var result = await _managerDbContext.DeleteAsync<QuestionDefinition>(id);
         if (result.DeletedCount == 0)
+        {
             throw new TestPlatformException("Not found question");
+        }
+    }
+
+    public async Task UpdateQuestionOrders(string testId, UpdateQuestionOrderViewModel[] viewModel, CancellationToken cancellation)
+    {
+        //todo: verify condition if test is ended or activated, so not allow to update.
+        var bulkUpdate = _managerDbContext.Update<QuestionDefinition>();
+        foreach (var questionOrder in viewModel)
+        {
+            bulkUpdate.MatchID(questionOrder.Id)
+            .Modify(c => c.Order, questionOrder.Order)
+            .AddToQueue();
+        }
+
+        var updateResult = await bulkUpdate.ExecuteAsync();
+        if(!updateResult.IsAcknowledged || updateResult.ModifiedCount != viewModel.Count()) {
+            //todo: refine this exception.
+            throw new Exception("Could not update");
+        }
     }
 
     private List<QuestionDefinition> AssignQuestionNumbers(List<QuestionDefinition> questions, int pageNumber, int pageSize)
