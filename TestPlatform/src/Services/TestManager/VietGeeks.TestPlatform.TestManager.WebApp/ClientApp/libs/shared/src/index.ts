@@ -10,6 +10,8 @@ export * from './lib/guards/can-deactivate.guard';
 export * from './lib/services/api-error.handler';
 export * from './lib/pipes/test-status-class.pipe';
 export * from './lib/pipes/test-status.pipe';
+export * from './lib/pipes/strip-tags.pipe';
+export * from './lib/pipes/truncate.pipe';
 export * from './lib/functions/router-param-functions';
 export * from './lib/components/entity-specific-base.component';
 export * from './lib/services/ui-supported.service';
