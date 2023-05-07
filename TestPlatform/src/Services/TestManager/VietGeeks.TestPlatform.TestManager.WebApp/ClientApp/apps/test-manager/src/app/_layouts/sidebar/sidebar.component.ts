@@ -52,14 +52,14 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleSubItem(event: any) {
-    let isCurrentMenuId = event.target.closest('a.nav-link');
-    let isMenu = isCurrentMenuId.nextElementSibling as any;
-    let dropDowns = Array.from(document.querySelectorAll('.sub-menu'));
+    const isCurrentMenuId = event.target.closest('a.nav-link');
+    const isMenu = isCurrentMenuId.nextElementSibling as any;
+    const dropDowns = Array.from(document.querySelectorAll('.sub-menu'));
     dropDowns.forEach((node: any) => {
       node.classList.remove('show');
     });
 
-    let subDropDowns = Array.from(document.querySelectorAll('.menu-dropdown .nav-link'));
+    const subDropDowns = Array.from(document.querySelectorAll('.menu-dropdown .nav-link'));
     subDropDowns.forEach((submenu: any) => {
       submenu.setAttribute('aria-expanded',"false");
     });
@@ -71,14 +71,14 @@ export class SidebarComponent implements OnInit {
   };
 
   toggleExtraSubItem(event: any) {
-    let isCurrentMenuId = event.target.closest('a.nav-link');
-    let isMenu = isCurrentMenuId.nextElementSibling as any;
-    let dropDowns = Array.from(document.querySelectorAll('.extra-sub-menu'));
+    const isCurrentMenuId = event.target.closest('a.nav-link');
+    const isMenu = isCurrentMenuId.nextElementSibling as any;
+    const dropDowns = Array.from(document.querySelectorAll('.extra-sub-menu'));
     dropDowns.forEach((node: any) => {
       node.classList.remove('show');
     });
 
-    let subDropDowns = Array.from(document.querySelectorAll('.menu-dropdown .nav-link'));
+    const subDropDowns = Array.from(document.querySelectorAll('.menu-dropdown .nav-link'));
     subDropDowns.forEach((submenu: any) => {
       submenu.setAttribute('aria-expanded',"false");
     });
@@ -91,15 +91,15 @@ export class SidebarComponent implements OnInit {
 
   // Click wise Parent active class add
   toggleParentItem(event: any) {
-    let isCurrentMenuId = event.target.closest('a.nav-link');
-    let dropDowns = Array.from(document.querySelectorAll('#navbar-nav .show'));
+    const isCurrentMenuId = event.target.closest('a.nav-link');
+    const dropDowns = Array.from(document.querySelectorAll('#navbar-nav .show'));
     dropDowns.forEach((node: any) => {
       node.classList.remove('show');
     });
     const ul = document.getElementById("navbar-nav");
     if (ul) {
       const iconItems = Array.from(ul.getElementsByTagName("a"));
-      let activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
+      const activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
       activeIconItems.forEach((item: any) => {
         item.setAttribute('aria-expanded', "false")
         item.classList.remove("active");
@@ -112,13 +112,13 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleItem(event: any) {
-    let isCurrentMenuId = event.target.closest('a.nav-link');
-    let isMenu = isCurrentMenuId.nextElementSibling as any;
+    const isCurrentMenuId = event.target.closest('a.nav-link');
+    const isMenu = isCurrentMenuId.nextElementSibling as any;
     if (isMenu.classList.contains("show")) {
       isMenu.classList.remove("show");
       isCurrentMenuId.setAttribute("aria-expanded", "false");
     } else {
-      let dropDowns = Array.from(document.querySelectorAll('#navbar-nav .show'));
+      const dropDowns = Array.from(document.querySelectorAll('#navbar-nav .show'));
       dropDowns.forEach((node: any) => {
         node.classList.remove('show');
       });
@@ -126,7 +126,7 @@ export class SidebarComponent implements OnInit {
       const ul = document.getElementById("navbar-nav");
       if (ul) {
         const iconItems = Array.from(ul.getElementsByTagName("a"));
-        let activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
+        const activeIconItems = iconItems.filter((x: any) => x.classList.contains("active"));
         activeIconItems.forEach((item: any) => {
           item.setAttribute('aria-expanded', "false")
           item.classList.remove("active");
@@ -142,7 +142,7 @@ export class SidebarComponent implements OnInit {
   // remove active items of two-column-menu
   activateParentDropdown(item:any) {
     item.classList.add("active");
-    let parentCollapseDiv = item.closest(".collapse.menu-dropdown");
+    const parentCollapseDiv = item.closest(".collapse.menu-dropdown");
 
     if (parentCollapseDiv) {
         // to set aria expand true remaining
@@ -177,10 +177,10 @@ export class SidebarComponent implements OnInit {
     const ul = document.getElementById("navbar-nav");
     if (ul) {
       const items = Array.from(ul.querySelectorAll("a.nav-link"));
-      let activeItems = items.filter((x: any) => x.classList.contains("active"));
+      const activeItems = items.filter((x: any) => x.classList.contains("active"));
       this.removeActivation(activeItems);
 
-      let matchingMenuItem = items.find((x: any) => {
+      const matchingMenuItem = items.find((x: any) => {
         return x.pathname === pathName;
       });
       if (matchingMenuItem) {
@@ -201,7 +201,7 @@ export class SidebarComponent implements OnInit {
    * Toggle the menu bar when having mobile screen
    */
   toggleMobileMenu(event: any) {
-    var sidebarsize = document.documentElement.getAttribute("data-sidebar-size");
+    const sidebarsize = document.documentElement.getAttribute("data-sidebar-size");
     if (sidebarsize == 'sm-hover-active') {
       document.documentElement.setAttribute("data-sidebar-size", 'sm-hover')
     } else {

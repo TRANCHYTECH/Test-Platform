@@ -1,16 +1,17 @@
 <div class="row g-4 mb-3">
     <div class="col-sm-auto d-flex gap-2">
         <div *ngIf="!isReadonly">
-            <a routerLink="../new" class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>Add New</a>
+            <a routerLink="../new" class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>Add
+                New</a>
         </div>
         <a routerLink="../categories" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Categories</a>
         <a routerLink="../order" class="btn btn-soft-secondary"><i
-                class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Orders</a>
+                class="ri-list-settings-fill align-bottom me-1"></i>Change Question Order</a>
     </div>
 </div>
 <div class="row">
-    <div class="col-xxl-12 project-card" *ngFor="let question of questions$ | async" id="pl1_{{question.id}}">
+    <div class="col-xxl-12" *ngFor="let question of questions$ | async" id="pl1_{{question.id}}">
         <div class="card card-height-100" (click)="goToQuestionDetails(question.id, $event)" style="cursor: pointer;">
             <div class="card-body">
                 <div class="d-flex flex-column h-100">
@@ -23,7 +24,8 @@
                                 <div>
                                     <span
                                         class="ms-3 badge rounded-pill text-bg-primary">{{displayCategory(question.categoryId)}}</span>
-                                    <span class="ms-3"><label>Type</label> {{AnswerType[question.answerType]}}</span>
+                                    <span class="ms-3"><label>Type</label>
+                                        {{AnswerType[question.answerType]}}</span>
                                     <span class="ms-3 vr"></span>
                                     <span class="ms-3"><label>Points</label>
                                         {{question.scoreSettings.totalPoints}}</span>
@@ -82,11 +84,8 @@
 
             </div>
         </div>
-        <!-- end card -->
     </div>
-    <!-- end col -->
 </div>
-<!-- end row -->
 
 
 <div class="row">

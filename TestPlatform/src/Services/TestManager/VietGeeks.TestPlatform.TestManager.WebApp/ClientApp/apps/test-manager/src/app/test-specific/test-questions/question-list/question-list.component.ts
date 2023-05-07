@@ -44,7 +44,7 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
       this.questions$.next(questions);
     });
 
-    this.maskReadyForSupplylow();
+    this.maskReadyForSupplyFlow();
   }
 
   displayCategory(id: string) {

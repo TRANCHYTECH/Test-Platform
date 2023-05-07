@@ -4,7 +4,7 @@ import { createMask } from '@ngneat/input-mask';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { UserProfileService } from '@viet-geeks/core';
-import { TestStatus } from '@viet-geeks/test-manager/state';
+import { TestStatus } from '../../../_state/test-support.model';
 import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/tests/test.model';

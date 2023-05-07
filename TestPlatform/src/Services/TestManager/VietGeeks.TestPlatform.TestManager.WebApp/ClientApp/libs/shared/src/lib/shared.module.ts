@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { TestStatusClassPipe } from './pipes/test-status-class.pipe';
 import { TestStatusPipe } from './pipes/test-status.pipe';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { StripTagsPipe } from './pipes/strip-tags.pipe';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     NgbPaginationModule,
     EditorModule,
   ],
-  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe, PaginationComponent],
+  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe, PaginationComponent, StripTagsPipe],
   exports: [
     CommonModule,
     HttpClientModule,
@@ -38,7 +39,8 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     NgxSpinnerModule,
     EditorModule,
     TestStatusClassPipe,
-    TestStatusPipe
+    TestStatusPipe,
+    StripTagsPipe
   ]
 })
 export class SharedModule {}
