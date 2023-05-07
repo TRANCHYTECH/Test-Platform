@@ -9,12 +9,15 @@ import { QuestionDetailsComponent } from './question-details/question-details.co
 import { QuestionListComponent } from './question-list/question-list.component';
 import { QuestionsRoutingModule } from './questions-routing.module';
 import { NewQuestionCategoryComponent } from './new-question-category/new-question-category.component';
+import { QuestionOrdersComponent } from './question-orders/question-orders.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
     QuestionCategoryListComponent,
     QuestionDetailsComponent,
-    QuestionListComponent
+    QuestionListComponent,
+    QuestionOrdersComponent
   ],
   imports: [
     SharedModule,
@@ -22,7 +25,8 @@ import { NewQuestionCategoryComponent } from './new-question-category/new-questi
     ReactiveFormsModule,
     NgbPaginationModule,
     errorTailorImports,
-    QuestionsRoutingModule
+    QuestionsRoutingModule,
+    DragDropModule
   ]
 })
 export class QuestionsModule {

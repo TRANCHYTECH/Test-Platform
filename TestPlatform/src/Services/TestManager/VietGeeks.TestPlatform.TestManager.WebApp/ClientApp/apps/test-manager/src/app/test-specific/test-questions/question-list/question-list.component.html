@@ -5,6 +5,8 @@
         </div>
         <a routerLink="../categories" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Categories</a>
+        <a routerLink="../order" class="btn btn-soft-secondary"><i
+                class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Orders</a>
     </div>
 </div>
 <div class="row">
@@ -88,5 +90,6 @@
 
 
 <div class="row">
-    <viet-geeks-pagination #pagination [label]="'Questions per page'" [pagedSearchFn]="pagedSearchFn"></viet-geeks-pagination>
+    <viet-geeks-pagination #pagination [label]="'Questions per page'"
+        [pagedSearchFn]="pagedSearchFn"></viet-geeks-pagination>
 </div>

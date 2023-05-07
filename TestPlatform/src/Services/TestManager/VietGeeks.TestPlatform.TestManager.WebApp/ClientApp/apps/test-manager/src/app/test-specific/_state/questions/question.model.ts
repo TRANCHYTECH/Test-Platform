@@ -14,6 +14,7 @@ export interface Question {
   scoreSettings: ScoreSettings;
   createdDate: string;
   lastModifiedDate: string;
+  order: string;
 }
 
 export interface ScoreSettings {
