@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'order',
-    title: 'Question Orders',
+    title: 'Change Order',
     component: QuestionOrdersComponent
   },
   {

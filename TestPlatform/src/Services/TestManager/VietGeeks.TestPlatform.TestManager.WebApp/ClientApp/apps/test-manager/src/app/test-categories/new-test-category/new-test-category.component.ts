@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { SharedModule, ToastService } from '@viet-geeks/shared';
-import { TestCategoryService } from '@viet-geeks/test-manager/state';
+import { TestCategoryService } from '../../_state/test-category.service';
 
 @Component({
   selector: 'viet-geeks-new-test-category',

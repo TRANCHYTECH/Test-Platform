@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { untilDestroyed } from "@ngneat/until-destroy";
 import { EntitySpecificBaseComponent, getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
-import { TestStatus } from "@viet-geeks/test-manager/state";
+import { TestStatus } from '../../_state/test-support.model';
 import { firstValueFrom } from "rxjs";
 import { createTest, Test } from "../_state/tests/test.model";
 import { TestsQuery } from "../_state/tests/tests.query";

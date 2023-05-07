@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, i
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getTestId, ToastService, UISupportedService } from '@viet-geeks/shared';
-import { TestStatus } from '@viet-geeks/test-manager/state';
+import { TestStatus } from '../../../_state/test-support.model';
 import { BehaviorSubject, filter, Observable } from 'rxjs';
 import { TestActivationMethodType } from '../../_state/tests/test.model';
 import { TestsQuery } from '../../_state/tests/tests.query';

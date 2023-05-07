@@ -162,7 +162,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     this.gradeForm.markAsDirty();
   }
 
-  private forceRunValidatorsOfGrandeRangeDetailsFormCtrls(fromIndex: number = 0) {
+  private forceRunValidatorsOfGrandeRangeDetailsFormCtrls(fromIndex = 0) {
     setTimeout(() => {
       this.gradeRangesDetailsCtrl.controls.forEach((ctrl, idx) => {
         if (idx >= fromIndex) {
@@ -278,7 +278,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     this.updateInformFactorFormBy(isEnabled, GradingCriteriaConfigTypeUI.GradeRanges, selectedGrade);
   }
 
-  private updateInformFactorFormBy(isEnabled: boolean, gradeType: string, subGradeType: string = '0') {
+  private updateInformFactorFormBy(isEnabled: boolean, gradeType: string, subGradeType = '0') {
     const ctrls = this.informRespondentConfigCtrl.get('informFactors') as FormGroup;
     const affectedInformFactors = InformFactorCriteriaUI[subGradeType === '0' ? gradeType : `${gradeType}_${subGradeType}`];
     if (isEnabled) {

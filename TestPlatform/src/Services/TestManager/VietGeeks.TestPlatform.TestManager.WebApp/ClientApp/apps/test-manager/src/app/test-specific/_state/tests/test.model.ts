@@ -1,4 +1,4 @@
-import { TestStatus } from "@viet-geeks/test-manager/state";
+import { TestStatus } from '../../../_state/test-support.model';
 
 export interface Test {
   id: string;

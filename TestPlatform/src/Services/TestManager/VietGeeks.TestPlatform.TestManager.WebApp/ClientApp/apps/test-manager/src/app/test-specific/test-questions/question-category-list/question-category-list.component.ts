@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { UiIntegrationService } from '@viet-geeks/test-manager/state';
+import { UiIntegrationService } from '../../../_state/ui-integration.service';
 import { Subject, firstValueFrom } from 'rxjs';
 import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';

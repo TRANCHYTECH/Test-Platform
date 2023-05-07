@@ -30,7 +30,7 @@ export abstract class PrimaryBaseComponent {
         this._readyForUI[1].next(false);
     }
 
-    protected maskReadyForSupplylow() {
+    protected maskReadyForSupplyFlow() {
         this._readyForUI[1].next(true);
     }
 
