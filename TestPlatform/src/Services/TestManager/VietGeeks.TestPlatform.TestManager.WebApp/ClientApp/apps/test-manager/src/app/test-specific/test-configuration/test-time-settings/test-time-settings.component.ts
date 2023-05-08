@@ -8,6 +8,7 @@ import { TestStatus } from '../../../_state/test-support.model';
 import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/tests/test.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const TestDurationMethod =
 {
@@ -211,19 +212,6 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     return null;
   };
 
-  private isCompleteCheck() {
-    return (buffer: string[]) => {
-      if (buffer.indexOf('_') > -1)
-        return false;
-
-      const timeParts = buffer.join('').split(':');
-      const part1 = parseInt(timeParts[0]);
-      const part2 = parseInt(timeParts[1]);
-
-      return (!isNaN(part1) && !isNaN(part2)) && (part1 !== 0 || part2 !== 0);
-    };
-  }
-
   get testDurationMethodCtrl() {
     return this.timeSettingsForm.get(['testDurationMethod']) as FormGroup;
   }
@@ -259,6 +247,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
         })
       }),
       answerQuestionConfig: this.fb.group({
+        _placeholder: [''],
         skipQuestion: [false, [Validators.required]]
       })
     });
@@ -267,6 +256,11 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     this.setupControlValidityTrigger(this.testActivationMethodCtrl, [TestActivationMethodType.TimePeriod.toString(), 'activeFromDate'], [[TestActivationMethodType.TimePeriod.toString(), 'activeUntilDate']]);
     this.listenTypeChange(this.testDurationMethodCtrl, this, values(TestDurationMethod));
     this.listenTypeChange(this.testActivationMethodCtrl, this, values(TestActivationMethodType));
+    // Disable skip question option if the duration method is complete question.
+    this.testDurationMethodCtrl.controls['type'].valueChanges.pipe().subscribe((c: number) => {
+      const action = this.getChangeControlStateMethod(c === TestDurationMethod.CompleteTestTime);
+      this.answerQuestionConfigCtrl.controls['skipQuestion'][action]();
+    });
 
     // Fullfill existing test duration.
     this.testDurationMethodCtrl.patchValue({
@@ -314,7 +308,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     }
 
     // Fullfill answer question config
-    this.answerQuestionConfigCtrl.setValue({
+    this.answerQuestionConfigCtrl.patchValue({
       skipQuestion: timeSettings?.answerQuestionConfig?.skipQuestion ?? false
     });
   }
@@ -324,13 +318,10 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
   }
 
   async submit() {
-    const testDuration = this.timeSettingsForm.controls['testDurationMethod'] as FormGroup;
-    const testActivationMethod = this.timeSettingsForm.controls['testActivationMethod'] as FormGroup;
-
     const model: TimeSettings = {
-      testDurationMethod: this.getDurationTime(testDuration),
-      testActivationMethod: this.getActivationTime(testActivationMethod),
-      answerQuestionConfig: this.timeSettingsForm.controls['answerQuestionConfig'].value
+      testDurationMethod: this.getDurationTime(this.testDurationMethodCtrl),
+      testActivationMethod: this.getActivationTime(this.testActivationMethodCtrl),
+      answerQuestionConfig: this.answerQuestionConfigCtrl.value
     };
 
     await this.testsService.update(this.testId, { timeSettings: model });
@@ -355,5 +346,18 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
         activeUntilDate: this.userProfileService.zonedTimeToUtc(dates.activeUntilDate)
       };
     }
+  }
+
+  private isCompleteCheck() {
+    return (buffer: string[]) => {
+      if (buffer.indexOf('_') > -1)
+        return false;
+
+      const timeParts = buffer.join('').split(':');
+      const part1 = parseInt(timeParts[0]);
+      const part2 = parseInt(timeParts[1]);
+
+      return (!isNaN(part1) && !isNaN(part2)) && (part1 !== 0 || part2 !== 0);
+    };
   }
 }

@@ -1,4 +1,5 @@
 using FluentValidation;
+using FluentValidation.Results;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
@@ -26,6 +27,13 @@ public class TimeSettingsPartValidator : AbstractValidator<TimeSettingsPart>
         });
 
         RuleFor(c => c.AnswerQuestionConfig).NotNull().SetValidator(validator5);
+    }
+
+    protected override bool PreValidate(ValidationContext<TimeSettingsPart> context, ValidationResult result)
+    {
+        context.RootContextData["TimeSettingsPart.TestDurationMethod"] = context.InstanceToValidate.TestDurationMethod;
+
+        return true;
     }
 }
 
@@ -70,7 +78,15 @@ public class AnswerQuestionConfigValidator : AbstractValidator<AnswerQuestionCon
 {
     public AnswerQuestionConfigValidator()
     {
-        RuleFor(c => c.SkipQuestion).NotNull();
+        RuleFor(c => c.SkipQuestion).Must((prop, field, ctx) =>
+        {
+            var testDurationMethod = ctx.RootContextData["TimeSettingsPart.TestDurationMethod"] as TestDurationMethod;
+            if(testDurationMethod is CompleteQuestionDuration && field == true) {
+                return false;
+            }
+
+            return true;
+        }).WithErrorCode("ERR.TESTDEF.TIME.001"); // When test duration method is CompleteQuestionDuration, not allow to skip question.
     }
 }
 

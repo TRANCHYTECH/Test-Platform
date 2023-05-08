@@ -15,6 +15,28 @@ public class TimeSettingsPartValidatorUnitTests
         _validator = fixture.CreateTimeSettingsPartValidator();
     }
 
+    [Fact]
+    public async Task TimeSettingsPart_AnswerQuestionConfig_Validate_Failure()
+    {
+        var testedPart = TimeSettingsPart.Default();
+        testedPart.AnswerQuestionConfig.SkipQuestion = false;
+
+        var result = await _validator.ValidateAsync(testedPart);
+
+        Assert.False(result.IsValid);
+        Assert.Equal(1, result.Errors.Count(c => c.PropertyName == "AnswerQuestionConfig.SkipQuestion"));
+    }
+
+    [Theory]
+    [MemberData(nameof(GetTestData_AnswerQuestionConfig_Success))]
+
+    public async Task TimeSettingsPart_AnswerQuestionConfig_Validate_Success(TimeSettingsPart testedPart)
+    {
+        var result = await _validator.ValidateAsync(testedPart);
+
+        Assert.True(result.IsValid);
+    }
+
     [Theory]
     [MemberData(nameof(GetTestData_TestDurationMethod_Failure))]
     public async Task TimeSettingsPart_TestDurationMethod_Validate_Failure(TestDurationMethod input)
@@ -28,13 +50,12 @@ public class TimeSettingsPartValidatorUnitTests
         Assert.Equal(1, result.Errors.Count(c => c.PropertyName == "TestDurationMethod.Duration"));
     }
 
-
     [Theory]
     [MemberData(nameof(GetTestData_TestActivationMethod_Failure))]
     public async Task TimeSettingsPart_TestActivationMethod_Validate_Failure(TestActivationMethod input)
     {
         var testedPart = TimeSettingsPart.Default();
-        testedPart.TestActivationMethod= input;
+        testedPart.TestActivationMethod = input;
 
         var result = await _validator.ValidateAsync(testedPart);
 
@@ -107,7 +128,7 @@ public class TimeSettingsPartValidatorUnitTests
         {
             Duration = TimeSpan.Parse("00:00:00")
         };
-         
+
         var wrong2 = new CompleteQuestionDuration
         {
             Duration = TimeSpan.Parse("01:00:00")
@@ -130,6 +151,21 @@ public class TimeSettingsPartValidatorUnitTests
             new object[] { wrong2 },
             new object[] { wrong3 },
             new object[] { wrong4 }
+        };
+    }
+
+    public static IEnumerable<object[]> GetTestData_AnswerQuestionConfig_Success()
+    {
+        var right1 = TimeSettingsPart.Default();
+        right1.AnswerQuestionConfig.SkipQuestion = false;
+
+        var right2 = TimeSettingsPart.Default();
+        right2.TestDurationMethod = new CompleteTestDuration { Duration = TimeSpan.FromHours(12) };
+        right1.AnswerQuestionConfig.SkipQuestion = false;
+
+        return new List<object[]> {
+            new object[] { right1 },
+            new object[] { right2 }
         };
     }
 
