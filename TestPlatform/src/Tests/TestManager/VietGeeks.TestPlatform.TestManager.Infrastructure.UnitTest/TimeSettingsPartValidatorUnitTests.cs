@@ -19,7 +19,7 @@ public class TimeSettingsPartValidatorUnitTests
     public async Task TimeSettingsPart_AnswerQuestionConfig_Validate_Failure()
     {
         var testedPart = TimeSettingsPart.Default();
-        testedPart.AnswerQuestionConfig.SkipQuestion = false;
+        testedPart.AnswerQuestionConfig.SkipQuestion = true;
 
         var result = await _validator.ValidateAsync(testedPart);
 
