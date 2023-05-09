@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of } from 'rxjs';
 import { ApiExamService } from '../../api/services';
-import { ErrorDetails, FinishExamOutput, StartExamOutputViewModel, SubmitAnswerOutput } from '../../api/models';
+import { ActivateQuestionOutput, ErrorDetails, FinishExamOutput, StartExamOutputViewModel } from '../../api/models';
 import { RespondentField } from '../../state/test-session.model';
 @Injectable({
   providedIn: 'root'
@@ -38,10 +38,10 @@ export class ProctorService {
     return this._examService.startExam();
   }
 
-  submitAnswer(answer: { questionId: string, answerIds: string[] }): Observable<SubmitAnswerOutput | null> {
-    return this._examService.submitAnswer({ body: answer }).pipe(catchError(error => {
-      console.log('submit answer error', error);
-      return of(null);
+  submitAnswer(answer: { questionId: string, answerIds: string[] }): Observable<void> {
+    return this._examService.submitAnswer({ body: answer }).pipe(catchError((error) => {
+      console.log("submit answer error: ", error);
+      return of();
     }));
   }
 
@@ -58,5 +58,28 @@ export class ProctorService {
         console.log('get after test config error', error);
         return of(null);
       }));
+  }
+
+  activeNextQuestion(): Observable<ActivateQuestionOutput | null> {
+    return this._examService.nextQuestion().pipe(catchError(error => {
+      console.log('activate question error', error);
+      return of(null);
+    }));
+  }
+
+  activePreviousQuestion(): Observable<ActivateQuestionOutput | null> {
+    return this._examService.previousQuestion().pipe(catchError(error => {
+      console.log('activate question error', error);
+      return of(null);
+    }));
+  }
+
+  activeQuestion(questionIndex: number): Observable<ActivateQuestionOutput | null> {
+    return this._examService.goToQuestion({
+      questionIndex
+    }).pipe(catchError(error => {
+      console.log('activate question error', error);
+      return of(null);
+    }));
   }
 }

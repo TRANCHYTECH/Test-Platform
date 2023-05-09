@@ -26,7 +26,7 @@ export class TestFinishAnswersComponent implements OnInit {
 
   ngOnInit(): void {
     this.questions = this.sessionData.questions ?? [];
-    this.answers = this.sessionData.answers ?? {};
+    this.answers = this.sessionData.allAnswers ?? {};
     this.answersDictionary = this.mapAnswersToDictionary();
     this.questionScores = this.sessionData.questionScores ?? {};
   }

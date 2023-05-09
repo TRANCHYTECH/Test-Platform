@@ -109,7 +109,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("SubmitAnswer")]
-    [ProducesResponseType(typeof(SubmitAnswerOutput), 200)]
+    [ProducesResponseType((int)StatusCodes.Status200OK)]
     public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);

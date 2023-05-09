@@ -7,8 +7,7 @@ import { TestRespondentField } from '../../../state/test.model';
 import { ProctorService } from '../../services/proctor.service';
 import { TestStartConfig } from './data';
 import { TestDurationService } from '../../services/test-duration.service';
-import { TestSessionQuery } from '../../../state/test-session.query';
-import { TestSessionStore } from '../../../state/test-session.store';
+import { TestSessionService } from '../../services/test-session.service';
 
 @Component({
   selector: 'viet-geeks-test-start',
@@ -19,8 +18,8 @@ export class TestStartComponent implements OnInit {
 
   private _proctorService = inject(ProctorService);
   private _testDurationService = inject(TestDurationService);
-  private _testSessionQuery = inject(TestSessionQuery);
-  private _testSessionStore = inject(TestSessionStore);
+  private _testSessionServive = inject(TestSessionService);
+
   router = inject(Router);
   config = TestStartConfig;
   respondentIdentifyForm: FormGroup;
@@ -43,22 +42,23 @@ export class TestStartComponent implements OnInit {
 
   async startTest() {
     const respondentIdentify = this.respondentIdentifyForm.value as { fields: RespondentField[] } ;
-    const sessionData = this._testSessionQuery.getEntity(1);
+    const sessionData = this._testSessionServive.getSessionData();
     if ((sessionData?.examStep ?? 1) < ExamCurrentStep.ProvideExamineeInfo) {
       await firstValueFrom(this._proctorService.provideExamineeInfo(respondentIdentify.fields));
-      this._testSessionStore.update(1, {
+      this._testSessionServive.setSessionData({
         examStep: ExamCurrentStep.ProvideExamineeInfo
       });
     }
 
     const startExamOutput = await firstValueFrom(this._proctorService.startExam());
 
-    this._testSessionStore.update(1, {
+    this._testSessionServive.setSessionData({
       startTime: new Date(startExamOutput.startedAt ?? ''),
       timeSettings: this._testDurationService.mapToTimeSettings(startExamOutput.testDuration),
       respondentFields: respondentIdentify.fields,
       activeQuestion: startExamOutput.activeQuestion,
       questionCount: startExamOutput.totalQuestion,
+      canSkipQuestion: startExamOutput.canSkipQuestion,
       examStep: ExamCurrentStep.Start
     });
 
@@ -80,11 +80,9 @@ export class TestStartComponent implements OnInit {
   }
 
   private setupSessionData() {
-    const sessionData = this._testSessionQuery.getEntity(1) ?? {};
+    const sessionData = this._testSessionServive.getSessionData();
     this.config.instruction = sessionData.instructionMessage ?? '';
     this.config.name = sessionData.testDescription ?? '';
     this.config.consentMessage = sessionData.consentMessage ?? '';
   }
-
-
 }

@@ -1,4 +1,5 @@
 ﻿using Dapr.Actors.Runtime;
+using Microsoft.Extensions.Caching.Memory;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
@@ -9,12 +10,15 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
 
 public class ProctorActor : Actor, IProctorActor
 {
-    private const string ExamStateName = "Exam";
+    private const string EXAM_STATE_NAME = "Exam";
+    private const string TEST_QUESTIONS_CACHE_KEY = "Exam_TestQuestions";
     private readonly IProctorService _proctorService;
+    private readonly IMemoryCache _memoryCache;
 
-    public ProctorActor(ActorHost host, IProctorService proctorService) : base(host)
+    public ProctorActor(ActorHost host, IProctorService proctorService, IMemoryCache memoryCache) : base(host)
     {
         _proctorService = proctorService;
+        _memoryCache = memoryCache;
     }
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
@@ -81,7 +85,7 @@ public class ProctorActor : Actor, IProctorActor
                 throw new TestPlatformException("NotFoundQuestion");
             }
 
-            if (examState.Answers.ContainsKey(input.QuestionId))
+            if (!examState.CanSkipQuestion && examState.Answers.ContainsKey(input.QuestionId))
             {
                 throw new TestPlatformException("AlreadyAnswered");
             }
@@ -105,7 +109,7 @@ public class ProctorActor : Actor, IProctorActor
     {
         return await ExamStateAction(async examState =>
         {
-            var questionIndex = Array.IndexOf(examState.QuestionIds, input.CurrentQuestionId ?? examState.ActiveQuestionId);
+            var questionIndex = Array.IndexOf(examState.QuestionIds, examState.ActiveQuestionId);
             var offset = input.Direction == ActivateDirection.Previous ? -1 : 1;
             var nextQuestionIndex = questionIndex + offset;
             
@@ -117,7 +121,7 @@ public class ProctorActor : Actor, IProctorActor
     {
         return await ExamStateAction(async examState =>
         {
-            var output = new ActivateQuestionOutput();
+            string[]? answers = null;
 
             if (nextQuestionIndex < 0 || nextQuestionIndex >= examState.QuestionIds.Length)
             {
@@ -127,7 +131,7 @@ public class ProctorActor : Actor, IProctorActor
             {
                 examState.ActiveQuestionIndex = nextQuestionIndex;
                 examState.ActiveQuestionId = examState.QuestionIds[examState.ActiveQuestionIndex.Value];
-                var activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId);
+                var activeQuestion = await GetActiveQuestionAsync(examState);
                 examState.ActiveQuestion = activeQuestion?.ToViewModel();
                 if (!examState.QuestionTimes.ContainsKey(examState.ActiveQuestionId)) 
                 {
@@ -136,25 +140,18 @@ public class ProctorActor : Actor, IProctorActor
                         StartedAt = DateTime.UtcNow
                     };
                 }
-            }
-
-            output.CanGoToNextQuestion = nextQuestionIndex < examState.QuestionIds.Length - 1;
-
-            if (examState.CanSkipQuestion) 
-            {
-                output.CanGoToPreviousQuestion = nextQuestionIndex > 0;
-                output.CanFinish = true;
-            }
-            else 
-            {
-                output.CanFinish = output.CanGoToNextQuestion;
+                if (examState.CanSkipQuestion && examState.Answers.TryGetValue(examState.ActiveQuestionId, out var previousAnswers)) {
+                    answers = previousAnswers;
+                }
             }
 
             return new ActivateQuestionOutput()
             {
                 ActiveQuestionId = examState.ActiveQuestionId,
                 ActiveQuestionIndex = examState.ActiveQuestionIndex,
-                ActiveQuestion = examState.ActiveQuestion
+                ActiveQuestion = examState.ActiveQuestion,
+                AnswerIds = answers,
+                CanFinish = examState.CanSkipQuestion && examState.Answers.Count == examState.QuestionIds?.Length
             };
         });
     }
@@ -187,7 +184,7 @@ public class ProctorActor : Actor, IProctorActor
 
         if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
         {
-            activeQuestion = (await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId))?.ToViewModel();
+            activeQuestion = (await GetActiveQuestionAsync(examState))?.ToViewModel();
             activeQuestionStartedAt = examState.QuestionTimes[examState.ActiveQuestionId]?.StartedAt;
         }
 
@@ -209,8 +206,20 @@ public class ProctorActor : Actor, IProctorActor
                 Duration = examState.TestDuration.Duration,
                 Method = (TestDurationMethodType) examState.TestDuration.Method
             },
-            Grading = examState.Grading
+            Grading = examState.Grading,
+            CanFinish = examState.CanSkipQuestion && examState.Answers.Count == examState.QuestionIds?.Length
         };
+    }
+
+    private async Task<QuestionDefinition?> GetActiveQuestionAsync(ExamState examState)
+    {
+        var testRunQuestions = await _memoryCache.GetOrCreateAsync(TEST_QUESTIONS_CACHE_KEY,
+        (entry) => {
+            entry.SlidingExpiration = TimeSpan.FromHours(1);
+            return _proctorService.GetTestRunQuestionsByExamId(examState.ExamId);
+        });
+
+        return testRunQuestions?.SingleOrDefault(q => q.ID == examState.ActiveQuestionId);
     }
 
     private async Task<T> ExamStateAction<T>(Func<ExamState, Task<T>> action)
@@ -231,7 +240,7 @@ public class ProctorActor : Actor, IProctorActor
 
     private async Task<ExamState> GetExamState()
     {
-        var state = await StateManager.TryGetStateAsync<ExamState>(ExamStateName);
+        var state = await StateManager.TryGetStateAsync<ExamState>(EXAM_STATE_NAME);
 
         return state.Value;
     }
@@ -246,7 +255,7 @@ public class ProctorActor : Actor, IProctorActor
 
     private async Task SaveExamState(ExamState examState)
     {
-        await StateManager.SetStateAsync(ExamStateName, examState);
+        await StateManager.SetStateAsync(EXAM_STATE_NAME, examState);
     }
 
     private class ExamState
