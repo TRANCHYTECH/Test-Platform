@@ -8,6 +8,7 @@ export interface ExamStatusWithStep {
   activeQuestion?: ExamQuestion;
   activeQuestionIndex?: null | number;
   activeQuestionStartedAt?: null | string;
+  canFinish?: boolean;
   canSkipQuestion?: boolean;
   examId?: null | string;
   examineeInfo?: null | {

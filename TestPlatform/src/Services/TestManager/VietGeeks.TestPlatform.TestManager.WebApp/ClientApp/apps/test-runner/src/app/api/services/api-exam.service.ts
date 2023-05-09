@@ -16,7 +16,6 @@ import { FinishExamOutput } from '../models/finish-exam-output';
 import { ProvideExamineeInfoOutput } from '../models/provide-examinee-info-output';
 import { ProvideExamineeInfoViewModel } from '../models/provide-examinee-info-view-model';
 import { StartExamOutputViewModel } from '../models/start-exam-output-view-model';
-import { SubmitAnswerOutput } from '../models/submit-answer-output';
 import { SubmitAnswerViewModel } from '../models/submit-answer-view-model';
 import { VerifyTestInput } from '../models/verify-test-input';
 import { VerifyTestOutputViewModel } from '../models/verify-test-output-view-model';
@@ -336,54 +335,6 @@ export class ApiExamService extends BaseService {
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `submitAnswer$Plain()` instead.
-   *
-   * This method sends `application/*+json` and handles request body of type `application/*+json`.
-   */
-  submitAnswer$Plain$Response(params?: {
-    body?: SubmitAnswerViewModel
-  },
-  context?: HttpContext
-
-): Observable<StrictHttpResponse<SubmitAnswerOutput>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ApiExamService.SubmitAnswerPath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: 'text/plain',
-      context: context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SubmitAnswerOutput>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `submitAnswer$Plain$Response()` instead.
-   *
-   * This method sends `application/*+json` and handles request body of type `application/*+json`.
-   */
-  submitAnswer$Plain(params?: {
-    body?: SubmitAnswerViewModel
-  },
-  context?: HttpContext
-
-): Observable<SubmitAnswerOutput> {
-
-    return this.submitAnswer$Plain$Response(params,context).pipe(
-      map((r: StrictHttpResponse<SubmitAnswerOutput>) => r.body as SubmitAnswerOutput)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `submitAnswer()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
@@ -393,7 +344,7 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<StrictHttpResponse<SubmitAnswerOutput>> {
+): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiExamService.SubmitAnswerPath, 'post');
     if (params) {
@@ -401,13 +352,13 @@ export class ApiExamService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'text/json',
+      responseType: 'text',
+      accept: '*/*',
       context: context
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<SubmitAnswerOutput>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
@@ -423,10 +374,10 @@ export class ApiExamService extends BaseService {
   },
   context?: HttpContext
 
-): Observable<SubmitAnswerOutput> {
+): Observable<void> {
 
     return this.submitAnswer$Response(params,context).pipe(
-      map((r: StrictHttpResponse<SubmitAnswerOutput>) => r.body as SubmitAnswerOutput)
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 

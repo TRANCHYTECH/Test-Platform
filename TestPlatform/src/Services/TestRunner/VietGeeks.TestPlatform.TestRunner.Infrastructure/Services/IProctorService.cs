@@ -14,5 +14,6 @@ public interface IProctorService
     Task<FinishExamOutput> FinishExam(FinishExamInput input);
     Task<TestRun> GetTestRun(string testRunId);
     Task<QuestionDefinition?> GetTestRunQuestion(string examId, string questionId);
+    Task<IEnumerable<QuestionDefinition>> GetTestRunQuestionsByExamId(string examId);
     Task<AfterTestConfigOutput> GetAfterTestConfigAsync(string examId);
 }

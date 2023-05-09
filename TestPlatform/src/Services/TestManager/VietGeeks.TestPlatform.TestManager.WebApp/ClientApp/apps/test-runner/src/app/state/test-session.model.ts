@@ -17,11 +17,14 @@ export interface TestSession {
   questionCount?: number,
   activeQuestion?: ExamQuestion,
   activeQuestionStartAt?: string | null,
+  activeQuestionAnswers?: string[] | null,
   grading?: null | Array<AggregatedGradingOuput>;
   questions?: QuestionOutput[] | null,
-  answers?: Dictionary<Array<string>> | null;
+  allAnswers?: Dictionary<Array<string>> | null;
   questionScores?: Dictionary<number> | null;
   canSkipQuestion?: boolean;
+  canGoNext?: boolean;
+  canGoBack?: boolean;
 }
 
 export interface TimeSettings {

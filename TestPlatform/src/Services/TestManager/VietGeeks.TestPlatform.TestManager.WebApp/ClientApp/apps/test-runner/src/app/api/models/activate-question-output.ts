@@ -5,7 +5,6 @@ export interface ActivateQuestionOutput {
   activeQuestion?: ExamQuestion;
   activeQuestionId?: null | string;
   activeQuestionIndex?: null | number;
+  answerIds?: null | Array<string>;
   canFinish?: boolean;
-  canGoToNextQuestion?: boolean;
-  canGoToPreviousQuestion?: boolean;
 }
