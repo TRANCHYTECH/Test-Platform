@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { UserProfileService } from '@viet-geeks/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { ExamSummary, TestRunSummary } from '../_state/exam-summary.model';
-import { ExamSummaryService } from '../_state/exam-summary.service';
+import { ExamSummary } from '../_state/exam-summary.model';
+import { TestReportBaseComponent } from '../_components/test-report-base.component';
 
 @UntilDestroy()
 @Component({
@@ -13,19 +11,18 @@ import { ExamSummaryService } from '../_state/exam-summary.service';
   styleUrls: ['./result-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ResultListComponent extends TestSpecificBaseComponent implements OnInit {
+export class ResultListComponent extends TestReportBaseComponent {
   examSummaries: ExamSummary[] = [];
-  testRuns: TestRunSummary[] = [];
-
-  private _examSummaryService = inject(ExamSummaryService);
-  private _userProfileService = inject(UserProfileService);
 
   get currentUtcOffset() {
     return this._userProfileService.currentUtcOffset;
   }
 
   override async postLoadEntity(): Promise<void> {
-    this.testRuns = await firstValueFrom(this._examSummaryService.getTestRuns(this.testId));
+    // Load test runs
+    await super.postLoadEntity();
+
+    // Load exam summaries of all test runs by default.
     await this.loadExamSummaries(this.testRuns.map(c => c.id));
     this.changeRef.markForCheck();
   }
@@ -36,13 +33,5 @@ export class ResultListComponent extends TestSpecificBaseComponent implements On
 
   async testRunsSelected(testRunIds: string[]) {
     await this.invokeLongAction(() => this.loadExamSummaries(testRunIds));
-  }
-
-  override submit(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
-  override get canSubmit(): boolean {
-    throw new Error('Method not implemented.');
   }
 }

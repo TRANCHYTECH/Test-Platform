@@ -10,22 +10,33 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
     {
         private readonly ITestReportService _testReportService;
 
-        public TestReportController(ITestReportService testReportService) {
+        public TestReportController(ITestReportService testReportService)
+        {
             _testReportService = testReportService;
         }
 
         [HttpGet("{testId}/TestRuns")]
-        public async Task<IActionResult> GetTestRuns(string testId) {
-            var summaries = await _testReportService.GetTestRunSummaries(testId);
+        public async Task<IActionResult> GetTestRuns(string testId)
+        {
+            var testRuns = await _testReportService.GetTestRunSummaries(testId);
+
+            return Ok(testRuns);
+        }
+
+        [HttpGet("Exams")]
+        public async Task<IActionResult> ListExams([FromQuery] string[] testRunIds)
+        {
+            var summaries = await _testReportService.GetExamSummaries(testRunIds);
 
             return Ok(summaries);
         }
 
-        [HttpGet("Exams")]
-        public async Task<IActionResult> ListExams([FromQuery]string[] testRunIds) {
-            var summaries = await _testReportService.GetExamSummaries(testRunIds);
+        [HttpGet("Respondents")]
+        public async Task<IActionResult> ListRespondents([FromQuery] string[] testRunIds)
+        {
+            var respondents = await _testReportService.GetRespondents(testRunIds);
 
-            return Ok(summaries);
+            return Ok(respondents);
         }
     }
 }

@@ -20,3 +20,7 @@ public class ExamSummary
     
     public string TotalTime { get; set; } = default!;
 }
+
+public class ExamReview {
+    
+}

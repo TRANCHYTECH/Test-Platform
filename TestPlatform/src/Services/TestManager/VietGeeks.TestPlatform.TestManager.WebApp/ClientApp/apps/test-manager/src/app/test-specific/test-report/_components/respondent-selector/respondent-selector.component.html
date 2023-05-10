@@ -1,0 +1,14 @@
+<div class="btn-group" ngbDropdown #dropdown="ngbDropdown">
+    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false" ngbDropdownToggle>
+        <span>Respondent</span><b>{{selectedRespondent?.firstName}}</b>
+    </button>
+    <div class="dropdown-menu dropdown-menu-xl p-3" ngbDropdownMenu>
+        <input type="text" class="form-control" placeholder="30 Respondents">
+        <div class="list">
+            <div class="form-check mb-3" *ngFor="let item of respondents;" (click)="selectRespondent(item)">
+                {{item.firstName}}
+            </div>
+        </div>
+    </div>
+</div>
