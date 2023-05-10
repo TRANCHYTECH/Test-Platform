@@ -172,7 +172,7 @@ public class ProctorService : IProctorService
         exam.FinalMark = CalculateExamMark(exam.QuestionScores);
         exam.Grading = testDefinition.GradingSettings.CalculateGrading(exam.FinalMark, selectedQuestions.Sum(c => c.ScoreSettings.TotalPoints));
 
-        var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading), nameof(Exam.TotalTime) };
+        var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading), nameof(Exam.TotalTime), nameof(Exam.QuestionScores) };
         await DB.SaveOnlyAsync(exam, changedProps);
 
         var output = new FinishExamOutput

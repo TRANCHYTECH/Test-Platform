@@ -14,3 +14,9 @@ export interface TestRunSummary {
     startAt: Date;
     endAt: Date;
 }
+
+export interface Respondent {
+    examId: string;
+    firstName: string;
+    lastName: string;
+}

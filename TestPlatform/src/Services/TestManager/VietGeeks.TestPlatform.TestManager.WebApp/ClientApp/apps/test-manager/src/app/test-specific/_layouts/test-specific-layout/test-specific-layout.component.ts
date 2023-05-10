@@ -46,7 +46,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
       this.menus$.next([
         {
           routerLink: ['config', 'basic-settings'],
-          text: 'Basic Settings',
+          text: 'Basic settings',
           icon: 'ri-settings-2-line',
           disable: false
         },
@@ -58,19 +58,19 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
         },
         {
           routerLink: ['config', 'test-sets'],
-          text: 'Test Sets',
+          text: 'Test sets',
           icon: 'ri-tools-line',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'test-access'],
-          text: 'Test Access',
+          text: 'Test access',
           icon: 'ri-shield-keyhole-line',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'test-start-page'],
-          text: 'Test Start Page',
+          text: 'Test start page',
           icon: 'ri-eye-line',
           disable: isNewTest
         },
@@ -82,7 +82,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
         },
         {
           routerLink: ['config', 'time-settings'],
-          text: 'Time Settings',
+          text: 'Time settings',
           icon: 'ri-time-line',
           disable: isNewTest
         }
@@ -91,20 +91,26 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
       this.testResultMenus$.next([
         {
           routerLink: ['report', 'list'],
-          text: 'Test Results',
-          icon: 'ri-time-line',
+          text: 'Test results',
+          icon: 'ri-list-check',
           disable: false
         },
+        // {
+        //   routerLink: ['report', 'statistics'],
+        //   text: 'Statistics',
+        //   icon: 'ri-time-line',
+        //   disable: false
+        // },
+        // {
+        //   routerLink: ['report', 'respondent-monitor'],
+        //   text: 'Respondent monitoring',
+        //   icon: 'ri-time-line',
+        //   disable: false
+        // },
         {
-          routerLink: ['report', 'statistics'],
-          text: 'Statistics',
-          icon: 'ri-time-line',
-          disable: false
-        },
-        {
-          routerLink: ['report', 'respondent-monitor'],
-          text: 'Respondent monitoring',
-          icon: 'ri-time-line',
+          routerLink: ['report', 'test-sheet-review'],
+          text: 'Test sheets review',
+          icon: 'ri-file-list-3-line',
           disable: false
         }
       ]);

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RespondentMonitoringComponent } from './respondent-monitoring/respondent-monitoring.component';
 import { ResultListComponent } from './result-list/result-list.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import { TestSheetReviewComponent } from './test-sheet-review/test-sheet-review.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,11 @@ const routes: Routes = [
   {
     path: 'statistics',
     component: StatisticsComponent
+  },
+  {
+    path: 'test-sheet-review',
+    // title: 'Test sheets review',
+    component: TestSheetReviewComponent
   }
 ];
 
