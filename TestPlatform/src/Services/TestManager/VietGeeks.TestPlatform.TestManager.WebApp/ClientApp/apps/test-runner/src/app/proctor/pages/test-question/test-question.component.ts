@@ -42,12 +42,12 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   }
 
   get canGoNext() {
-    return this.index < this.questionCount - 1;
-  } 
+    return this.index <= this.questionCount - 1;
+  }
 
   get canGoBack() {
     return this.index > 0;
-  } 
+  }
 
   ngOnInit() {
     this.sessionData = this._testSessionService.getSessionData();
@@ -100,7 +100,10 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   }
 
   private handleActivatedQuestion(activateQuestionOutput: ActivateQuestionOutput | null) {
-    if (activateQuestionOutput != null) {
+    if (!activateQuestionOutput?.activationResult) {
+      this.finishExam();
+    }
+    else {
       this._testSessionService.setSessionData({
         examStep: ExamCurrentStep.SubmitAnswer,
         activeQuestion: activateQuestionOutput.activeQuestion,
@@ -118,12 +121,9 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
         this.initAnswerForm();
         this.initEndTime();
       }
-      else if (activateQuestionOutput.canFinish) {
+      else if (!activateQuestionOutput.activationResult) {
         this.finishExam();
       }
-    }
-    else {
-      this.finishExam();
     }
   }
 

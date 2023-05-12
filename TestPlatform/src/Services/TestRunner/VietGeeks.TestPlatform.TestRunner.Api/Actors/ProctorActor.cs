@@ -43,7 +43,6 @@ public class ProctorActor : Actor, IProctorActor
         examState.QuestionIds = examContent.Questions.Select(q => q.Id).ToArray();
         examState.ActiveQuestionIndex = 0;
         examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
-        examState.ActiveQuestion = examContent.ActiveQuestion; 
         examState.StartedAt = DateTime.UtcNow;
         examState.CanSkipQuestion = examContent.CanSkipQuestion;
 
@@ -78,7 +77,7 @@ public class ProctorActor : Actor, IProctorActor
     public async Task SubmitAnswer(SubmitAnswerInput input)
     {
         //todo: refactor the way to store questions in order to validate whether or not the answer is valid in configured timespan.
-        await ExamStateAction(examState =>
+        await ExamStateAction(async examState =>
         {
             if (!examState.QuestionIds.Contains(input.QuestionId))
             {
@@ -95,7 +94,9 @@ public class ProctorActor : Actor, IProctorActor
                 throw new TestPlatformException("QuestionIsNotStarted");
             }
 
-            if (examState.ActiveQuestion?.ScoreSettings?.MustAnswerToContinue == true && (input.AnswerIds == null || !input.AnswerIds.Any()))
+            var activeQuestion = await GetActiveQuestionAsync(examState);
+
+            if (activeQuestion?.ScoreSettings?.MustAnswerToContinue == true && (input.AnswerIds == null || !input.AnswerIds.Any()))
             {
                 throw new TestPlatformException("MustAnswerToContinue");
             }
@@ -125,14 +126,15 @@ public class ProctorActor : Actor, IProctorActor
 
             if (nextQuestionIndex < 0 || nextQuestionIndex >= examState.QuestionIds.Length)
             {
-                throw new Exception("Cannot activate next question.");
+                return new ActivateQuestionOutput() 
+                {
+                    ActivationResult = false
+                };
             }
             else
             {
                 examState.ActiveQuestionIndex = nextQuestionIndex;
                 examState.ActiveQuestionId = examState.QuestionIds[examState.ActiveQuestionIndex.Value];
-                var activeQuestion = await GetActiveQuestionAsync(examState);
-                examState.ActiveQuestion = activeQuestion?.ToViewModel();
                 if (!examState.QuestionTimes.ContainsKey(examState.ActiveQuestionId)) 
                 {
                     examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming
@@ -149,9 +151,10 @@ public class ProctorActor : Actor, IProctorActor
             {
                 ActiveQuestionId = examState.ActiveQuestionId,
                 ActiveQuestionIndex = examState.ActiveQuestionIndex,
-                ActiveQuestion = examState.ActiveQuestion,
+                ActiveQuestion = (await GetActiveQuestionAsync(examState))?.ToViewModel(),
                 AnswerIds = answers,
-                CanFinish = examState.CanSkipQuestion && examState.Answers.Count == examState.QuestionIds?.Length
+                CanFinish = examState.CanSkipQuestion && examState.Answers.Count == examState.QuestionIds?.Length,
+                ActivationResult = true
             };
         });
     }
@@ -269,7 +272,7 @@ public class ProctorActor : Actor, IProctorActor
         public string[] QuestionIds { get; set; } = default!;
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
-        public ExamQuestion? ActiveQuestion {get;set;}
+        // public ExamQuestion? ActiveQuestion {get;set;}
         public TestDurationState TestDuration { get; set; } = default!;
         public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
