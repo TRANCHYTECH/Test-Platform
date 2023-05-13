@@ -49,8 +49,8 @@ public class ExamController : ControllerBase
         {
             AccessCode = verifyResult.AccessCode,
             TestName = verifyResult.TestName,
-            ConsentMessage = verifyResult.ConsentMessage ?? "DefaultConsentMessage",
-            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage"
+            ConsentMessage = verifyResult.ConsentMessage,
+            InstructionMessage = verifyResult.InstructionMessage
         });
     }
 
