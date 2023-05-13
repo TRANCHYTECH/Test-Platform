@@ -67,12 +67,17 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
 
   async submitAndGoNext() {
     if (this.question) {
-      await firstValueFrom(this.proctorService.submitAnswer({
+      const output = await firstValueFrom(this.proctorService.submitAnswer({
         questionId: this.question.id!,
         answerIds: this.getAnswerIds()
       }));
 
-      this.goToNextQuestion();
+      if (output?.terminated) {
+        return this.finishExam();
+      }
+      else {
+        return this.goToNextQuestion();
+      }
     }
   }
 

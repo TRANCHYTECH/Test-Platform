@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of } from 'rxjs';
 import { ApiExamService } from '../../api/services';
-import { ActivateQuestionOutput, ErrorDetails, FinishExamOutput, StartExamOutputViewModel } from '../../api/models';
+import { ActivateQuestionOutput, ErrorDetails, FinishExamOutput, StartExamOutputViewModel, SubmitAnswerOutput } from '../../api/models';
 import { RespondentField } from '../../state/test-session.model';
 @Injectable({
   providedIn: 'root'
@@ -38,10 +38,10 @@ export class ProctorService {
     return this._examService.startExam();
   }
 
-  submitAnswer(answer: { questionId: string, answerIds: string[] }): Observable<void> {
+  submitAnswer(answer: { questionId: string, answerIds: string[] }): Observable<SubmitAnswerOutput | null> {
     return this._examService.submitAnswer({ body: answer }).pipe(catchError((error) => {
       console.log("submit answer error: ", error);
-      return of();
+      return of(null);
     }));
   }
 

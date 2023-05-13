@@ -16,4 +16,5 @@ public interface IProctorService
     Task<QuestionDefinition?> GetTestRunQuestion(string examId, string questionId);
     Task<IEnumerable<QuestionDefinition>> GetTestRunQuestionsByExamId(string examId);
     Task<AfterTestConfigOutput> GetAfterTestConfigAsync(string examId);
+    bool IsCorrectAnswer(QuestionDefinition questionDefinition, string[] answers);
 }
