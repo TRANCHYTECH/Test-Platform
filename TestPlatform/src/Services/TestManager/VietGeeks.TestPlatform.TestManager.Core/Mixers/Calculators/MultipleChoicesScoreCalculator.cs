@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 
@@ -6,16 +7,21 @@ namespace VietGeeks.TestPlatform.TestManager.Core.Logics;
 
 public class MultipleChoicesScoreCalculator : IScoreCalculator
 {
+    public bool IsCorrectAnswer(QuestionDefinition question, string[]? answerIds) 
+    {
+        var (_, isFullyCorrect) = GetExamineeCorrectAnswers(question, answerIds);
+
+        return isFullyCorrect;
+    }
+
     public int Calculate(QuestionDefinition question, string[]? answerIds)
     {
-        if (question.ScoreSettings is not MultipleChoiceScoreSettings scoreSettings) {
+        if (question.ScoreSettings is not MultipleChoiceScoreSettings scoreSettings)
+        {
             throw new Exception("scoreSettings is not type of MultipleChoiceScoreSettings");
         }
 
-        var correctedAnswers = question.Answers.Where(c => c.IsCorrect);
-        var userCorrected = answerIds == null ? Array.Empty<Answer>() : correctedAnswers.Where(c => answerIds.Contains(c.Id));
-
-        var isFullyCorrect = userCorrected.Count() == correctedAnswers.Count();
+        var (userCorrected, isFullyCorrect) = GetExamineeCorrectAnswers(question, answerIds);
         var totalPoints = 0;
 
         if (scoreSettings.IsPartialAnswersEnabled)
@@ -35,5 +41,14 @@ public class MultipleChoicesScoreCalculator : IScoreCalculator
         }
 
         return totalPoints;
+    }
+
+    private static (IEnumerable<Answer>, bool) GetExamineeCorrectAnswers(QuestionDefinition question, string[]? answerIds)
+    {
+        var correctedAnswers = question.Answers.Where(c => c.IsCorrect);
+        var examineeCorrectAnswers = answerIds == null ? Array.Empty<Answer>() : correctedAnswers.Where(c => answerIds.Contains(c.Id));
+        var isFullyCorrect = examineeCorrectAnswers.Count() == correctedAnswers.Count();
+
+        return (examineeCorrectAnswers, isFullyCorrect);
     }
 }

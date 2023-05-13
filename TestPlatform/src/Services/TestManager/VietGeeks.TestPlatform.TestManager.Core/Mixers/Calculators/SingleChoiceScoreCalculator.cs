@@ -11,7 +11,12 @@ public class SingleChoiceScoreCalculator : IScoreCalculator
             throw new System.Exception("ScoreSettings is not SingleChoiceScoreSettings");
         }
 
-        var isCorrect = answerIds != null && question.Answers.Any(c => c.Id == answerIds[0] && c.IsCorrect);
+        var isCorrect = IsCorrectAnswer(question, answerIds);
         return isCorrect ? scoreSettings.CorrectPoint : scoreSettings.IncorrectPoint;
+    }
+
+    public bool IsCorrectAnswer(QuestionDefinition question, string[]? answerIds)
+    {
+        return answerIds != null && question.Answers.Any(c => c.Id == answerIds[0] && c.IsCorrect);
     }
 }

@@ -109,18 +109,18 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("SubmitAnswer")]
-    [ProducesResponseType((int)StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SubmitAnswerOutput), 200)]
     public async Task<IActionResult> SubmitAnswer(SubmitAnswerViewModel data)
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        await proctorExamActor.SubmitAnswer(new()
+        var output = await proctorExamActor.SubmitAnswer(new()
         {
             QuestionId = data.QuestionId,
             AnswerIds = data.AnswerIds
         });
 
-        return Ok();
+        return Ok(output);
     }
 
     [HttpPost("PreviousQuestion")]

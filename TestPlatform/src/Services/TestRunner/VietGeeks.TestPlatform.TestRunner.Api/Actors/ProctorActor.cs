@@ -1,7 +1,6 @@
 ﻿using Dapr.Actors.Runtime;
 using Microsoft.Extensions.Caching.Memory;
 using VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
-using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
@@ -46,14 +45,15 @@ public class ProctorActor : Actor, IProctorActor
         examState.StartedAt = DateTime.UtcNow;
         examState.CanSkipQuestion = examContent.CanSkipQuestion;
 
-        if (!string.IsNullOrEmpty(examState.ActiveQuestionId)) {
-            examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming 
+        if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
+        {
+            examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming
             {
                 StartedAt = DateTime.UtcNow
             };
         }
 
-        examState.TestDuration = new TestDurationState 
+        examState.TestDuration = new TestDurationState
         {
             Duration = examContent.TestDuration.Duration,
             Method = (int)examContent.TestDuration.Method
@@ -74,51 +74,79 @@ public class ProctorActor : Actor, IProctorActor
     }
 
     // TODO: refactor
-    public async Task SubmitAnswer(SubmitAnswerInput input)
+    public async Task<SubmitAnswerOutput> SubmitAnswer(SubmitAnswerInput input)
     {
         //todo: refactor the way to store questions in order to validate whether or not the answer is valid in configured timespan.
-        await ExamStateAction(async examState =>
+        return await ExamStateAction(async examState =>
         {
-            if (!examState.QuestionIds.Contains(input.QuestionId))
-            {
-                throw new TestPlatformException("NotFoundQuestion");
-            }
-
-            if (!examState.CanSkipQuestion && examState.Answers.ContainsKey(input.QuestionId))
-            {
-                throw new TestPlatformException("AlreadyAnswered");
-            }
-
-            if (!examState.QuestionTimes.ContainsKey(input.QuestionId))
-            {
-                throw new TestPlatformException("QuestionIsNotStarted");
-            }
-
             var activeQuestion = await GetActiveQuestionAsync(examState);
+            var validationError = await ValidateSubmissionAsync(input, examState, activeQuestion);
 
-            if (activeQuestion?.ScoreSettings?.MustAnswerToContinue == true && (input.AnswerIds == null || !input.AnswerIds.Any()))
+            if (!string.IsNullOrEmpty(validationError)) 
             {
-                throw new TestPlatformException("MustAnswerToContinue");
+                return new SubmitAnswerOutput 
+                {
+                    IsSuccess = false,
+                    Reason = validationError,
+                    Terminated = false
+                };
             }
 
             examState.Answers[input.QuestionId] = input.AnswerIds;
             examState.QuestionTimes[input.QuestionId].SubmittedAt = DateTime.UtcNow;
+
+            var output = new SubmitAnswerOutput() 
+            {
+                IsSuccess = true
+            };
+
+            if (activeQuestion?.ScoreSettings?.IsMandatory == true)
+            {
+                output.Terminated = !_proctorService.IsCorrectAnswer(activeQuestion, input.AnswerIds);
+            }
+
+            return output;
         });
     }
 
-    public async Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input) 
+    private async Task<string> ValidateSubmissionAsync(SubmitAnswerInput input, ExamState examState, QuestionDefinition? activeQuestion)
+    {
+        if (!examState.QuestionIds.Contains(input.QuestionId))
+        {
+            return "NotFoundQuestion";
+        }
+
+        if (!examState.CanSkipQuestion && examState.Answers.ContainsKey(input.QuestionId))
+        {
+            return "AlreadyAnswered";
+        }
+
+        if (!examState.QuestionTimes.ContainsKey(input.QuestionId))
+        {
+            return "QuestionIsNotStarted";
+        }
+
+        if (activeQuestion?.ScoreSettings?.MustAnswerToContinue == true && (input.AnswerIds == null || !input.AnswerIds.Any()))
+        {
+            return "MustAnswerToContinue";
+        }
+
+        return string.Empty;
+    }
+
+    public async Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input)
     {
         return await ExamStateAction(async examState =>
         {
             var questionIndex = Array.IndexOf(examState.QuestionIds, examState.ActiveQuestionId);
             var offset = input.Direction == ActivateDirection.Previous ? -1 : 1;
             var nextQuestionIndex = questionIndex + offset;
-            
+
             return await ActivateQuestion(nextQuestionIndex);
         });
     }
 
-    public async Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex) 
+    public async Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex)
     {
         return await ExamStateAction(async examState =>
         {
@@ -126,7 +154,7 @@ public class ProctorActor : Actor, IProctorActor
 
             if (nextQuestionIndex < 0 || nextQuestionIndex >= examState.QuestionIds.Length)
             {
-                return new ActivateQuestionOutput() 
+                return new ActivateQuestionOutput()
                 {
                     ActivationResult = false
                 };
@@ -135,14 +163,15 @@ public class ProctorActor : Actor, IProctorActor
             {
                 examState.ActiveQuestionIndex = nextQuestionIndex;
                 examState.ActiveQuestionId = examState.QuestionIds[examState.ActiveQuestionIndex.Value];
-                if (!examState.QuestionTimes.ContainsKey(examState.ActiveQuestionId)) 
+                if (!examState.QuestionTimes.ContainsKey(examState.ActiveQuestionId))
                 {
                     examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming
                     {
                         StartedAt = DateTime.UtcNow
                     };
                 }
-                if (examState.CanSkipQuestion && examState.Answers.TryGetValue(examState.ActiveQuestionId, out var previousAnswers)) {
+                if (examState.CanSkipQuestion && examState.Answers.TryGetValue(examState.ActiveQuestionId, out var previousAnswers))
+                {
                     answers = previousAnswers;
                 }
             }
@@ -204,10 +233,10 @@ public class ProctorActor : Actor, IProctorActor
             QuestionCount = examState.QuestionIds?.Length ?? 0,
             CanSkipQuestion = examState.CanSkipQuestion,
             ExamineeInfo = examState.ExamineeInfo,
-            TestDuration = new TestDuration 
+            TestDuration = new TestDuration
             {
                 Duration = examState.TestDuration.Duration,
-                Method = (TestDurationMethodType) examState.TestDuration.Method
+                Method = (TestDurationMethodType)examState.TestDuration.Method
             },
             Grading = examState.Grading,
             CanFinish = examState.CanSkipQuestion && examState.Answers.Count == examState.QuestionIds?.Length
@@ -217,7 +246,8 @@ public class ProctorActor : Actor, IProctorActor
     private async Task<QuestionDefinition?> GetActiveQuestionAsync(ExamState examState)
     {
         var testRunQuestions = await _memoryCache.GetOrCreateAsync(TEST_QUESTIONS_CACHE_KEY,
-        (entry) => {
+        (entry) =>
+        {
             entry.SlidingExpiration = TimeSpan.FromHours(1);
             return _proctorService.GetTestRunQuestionsByExamId(examState.ExamId);
         });
@@ -278,14 +308,14 @@ public class ProctorActor : Actor, IProctorActor
 
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 
-        public Dictionary<string, QuestionTiming> QuestionTimes {get;set;} = new Dictionary<string, QuestionTiming>();
+        public Dictionary<string, QuestionTiming> QuestionTimes { get; set; } = new Dictionary<string, QuestionTiming>();
         public IEnumerable<AggregatedGradingOuput> Grading { get; set; } = default!;
 
         public DateTime StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
-        
-        public bool CanSkipQuestion {get; set;}
+
+        public bool CanSkipQuestion { get; set; }
     }
 
     private class TestDurationState
@@ -295,9 +325,9 @@ public class ProctorActor : Actor, IProctorActor
         public TimeSpan Duration { get; set; }
     }
 
-    private class QuestionTiming 
+    private class QuestionTiming
     {
-        public DateTime StartedAt {get;set;}
-        public DateTime? SubmittedAt {get;set;}
+        public DateTime StartedAt { get; set; }
+        public DateTime? SubmittedAt { get; set; }
     }
 }

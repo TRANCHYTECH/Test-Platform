@@ -241,6 +241,11 @@ public class ProctorService : IProctorService
     public async Task<TestRun> GetTestRun(string testRunId) {
         return await DB.Find<TestRun>().Match(tr => tr.ID == testRunId).ExecuteSingleAsync();
     }
+
+    public bool IsCorrectAnswer(QuestionDefinition questionDefinition, string[] answers) 
+    {
+        return questionDefinition.IsCorrectAnswer(answers);
+    }
     
     private async Task<Exam> GetExam(string testRunId, string accessCode)
     {

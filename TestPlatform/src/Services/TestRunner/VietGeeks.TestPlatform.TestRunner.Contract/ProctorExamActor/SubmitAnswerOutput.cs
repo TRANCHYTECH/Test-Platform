@@ -1,9 +1,8 @@
 namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
-
-public class SubmitAnswerOutput: IActiveQuestion
+public class SubmitAnswerOutput
 {
-    public string? ActiveQuestionId { get; set; }
-    public int? ActiveQuestionIndex { get; set; }
-    public ExamQuestion? ActiveQuestion { get; set; }
+    public bool IsSuccess { get; set; }
+    public string? Reason { get; set; }
+    public bool Terminated { get; set; }
 }
