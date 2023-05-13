@@ -33,8 +33,8 @@ public class VerifyTestOutputViewModel
 {
     public string AccessCode { get; set; } = default!;
     public string TestName { get; set; } = default!;
-    public string ConsentMessage { get; set; } = default!;
-    public string InstructionMessage { get; set; } = default!;
+    public string? ConsentMessage { get; set; } = default!;
+    public string? InstructionMessage { get; set; } = default!;
 }
 
 public class VerifyTestOutput
