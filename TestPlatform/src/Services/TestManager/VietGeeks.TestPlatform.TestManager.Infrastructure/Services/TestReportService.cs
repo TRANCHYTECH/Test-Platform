@@ -99,7 +99,7 @@ public class TestReportService : ITestReportService
         }).ToList();
     }
 
-    //todo: build report into each readonly view in order to save server resources. but disadvangte of this approach is that if review template has break changes.
+    //todo: build report into each readonly view in order to save server resources. but disadvangte of this approach is that if review template has break changes. suggestion: create report version
     public async Task<ExamReview> GetExamReview(string examId)
     {
         var examEntity = await _managerDbContext.Find<Exam>()
@@ -126,7 +126,8 @@ public class TestReportService : ITestReportService
                 q.CategoryId,
                 CategoryName = questionCategories.Single(c => c.Id == q.CategoryId).Name,
                 TotalPoints = q.ScoreSettings.TotalPoints,
-                ActualPoints = GetActualScores(examEntity, q.ID)
+                ActualPoints = GetActualScores(examEntity, q.ID),
+                AnswerTime = GetAnswerTime(examEntity, q.ID)
             }),
             Answers = examEntity.Answers,
             Scores = examQuestions.GroupBy(c => c.CategoryId).Select(c => new
@@ -175,6 +176,18 @@ public class TestReportService : ITestReportService
         }
 
         return 0;
+    }
+
+    private string GetAnswerTime(Exam exam, string questionId)
+    {
+        var result = TimeSpan.FromSeconds(0);
+
+        if (exam.QuestionTimes.TryGetValue(questionId, out var period))
+        {
+            result = period[1]!.Value.Subtract(period[0]!.Value);
+        }
+
+        return result.ToString(@"mm\:ss");
     }
 }
 

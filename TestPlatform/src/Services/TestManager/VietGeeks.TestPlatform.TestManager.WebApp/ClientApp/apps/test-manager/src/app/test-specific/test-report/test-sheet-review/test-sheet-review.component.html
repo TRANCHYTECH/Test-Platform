@@ -132,7 +132,7 @@
                         <p class="mb-0">No feedback has been added</p>
                     </div>
                     <div>
-                        <button class="btn btn-outline-secondary">Add feedback</button>
+                        <button class="btn btn-outline-secondary" disabled>Add feedback</button>
                     </div>
                 </div>
             </div>
@@ -146,13 +146,14 @@
             <div class="card-body p-0">
                 <h5 class="card-title text-uppercase fs-13 py-3 px-3">Questions ({{examReview$.value.questions.length}})
                 </h5>
-                <ngb-accordion #acc="ngbAccordion" class="accordion-flush">
+                <ngb-accordion #acc="ngbAccordion" class="test-sheet-questions-review accordion-flush">
                     <ngb-panel *ngFor="let question of examReview$.value.questions; index as i">
-                        <ng-template ngbPanelTitle>
+                        <ng-template ngbPanelTitle let-opened="opened">
                             <div style="width: 50px;"><b>Q.{{i + 1}}</b></div>
-                            <div class="flex-grow-1">{{question.description | stripTags | truncate}}</div>
-                            <div class="me-2 text-uppercase">{{question.actualPoints}}/{{question.totalPoints}} p.</div>
-                            <div class="badge bg-secondary me-2 text-uppercase">{{question.categoryName}}</div>
+                            <div class="question-description flex-grow-1">{{question.description | stripTags | truncate}}</div>
+                            <div>{{question.answerTime}}'</div>
+                            <div class="text-uppercase text-nowrap">{{question.actualPoints}}/{{question.totalPoints}} p.</div>
+                            <div class="badge bg-secondary text-uppercase text-nowrap">{{question.categoryName}}</div>
                         </ng-template>
                         <ng-template ngbPanelContent>
                             <viet-geeks-question-view [question]="question"

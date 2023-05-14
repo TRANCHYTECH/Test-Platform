@@ -81,8 +81,22 @@
     }
 }
 
-.accordion {
-    .accordion-body {
-        color: unset;
+.test-sheet-questions-review {
+    &.accordion {
+        .accordion-header {
+            .accordion-button {
+                gap: 1.5rem;
+
+                &:not(.collapsed) {
+                    .question-description {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+
+        .accordion-body {
+            color: unset;
+        }
     }
 }

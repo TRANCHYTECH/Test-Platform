@@ -41,7 +41,7 @@ export class TestSheetReviewComponent extends TestReportBaseComponent {
   }
 
   displayScorePercentage(score: ScoresPerQuestionCatalog) {
-    return `${(score.actualPoints / score.totalPoints) * 100}%`;
+    return `${((score.actualPoints / score.totalPoints) * 100).toFixed()}%`;
   }
 
   private async loadRespondents(testRunIds: string[]) {

@@ -197,6 +197,7 @@ public class ProctorActor : Actor, IProctorActor
             {
                 ExamId = examState.ExamId,
                 Answers = examState.Answers,
+                QuestionTimes = examState.QuestionTimes.ToDictionary(c => c.Key, c => new[] { c.Value.StartedAt, c.Value.SubmittedAt }),
                 StartedAt = examState.StartedAt,
                 FinishededAt = examState.FinishedAt.GetValueOrDefault()
             });

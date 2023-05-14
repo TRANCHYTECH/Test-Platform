@@ -34,6 +34,7 @@ export type ScoresPerQuestionCatalog = {
 export interface ReadonlyQuestionScore {
     totalPoints: number;
     actualPoints: number;
+    answerTime: string;
 }
 
 export interface ExamReview {

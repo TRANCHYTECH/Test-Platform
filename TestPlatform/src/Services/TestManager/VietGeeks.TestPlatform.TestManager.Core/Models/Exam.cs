@@ -20,6 +20,8 @@ public class Exam : EntityBase
     
     public Dictionary<string, int> QuestionScores { get; set; } = default!;
 
+    public Dictionary<string, DateTime?[]> QuestionTimes { get; set; } = new Dictionary<string, DateTime?[]>();
+
     public string? CurrentQuestionId { get; set; }
 
     public int FinalMark { get; set; }

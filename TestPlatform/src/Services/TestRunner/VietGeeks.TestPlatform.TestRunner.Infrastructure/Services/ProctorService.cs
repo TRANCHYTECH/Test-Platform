@@ -169,10 +169,19 @@ public class ProctorService : IProctorService
         exam.FinishedAt = input.FinishededAt;
         exam.TotalTime = input.FinishededAt - input.StartedAt;
         exam.QuestionScores = CalculateQuestionScores(selectedQuestions, input.Answers);
+        exam.QuestionTimes = input.QuestionTimes;
         exam.FinalMark = CalculateExamMark(exam.QuestionScores);
         exam.Grading = testDefinition.GradingSettings.CalculateGrading(exam.FinalMark, selectedQuestions.Sum(c => c.ScoreSettings.TotalPoints));
 
-        var changedProps = new[] { nameof(Exam.Answers), nameof(Exam.StartedAt), nameof(Exam.FinishedAt), nameof(Exam.FinalMark), nameof(Exam.Grading), nameof(Exam.TotalTime), nameof(Exam.QuestionScores) };
+        var changedProps = new[] {
+            nameof(Exam.Answers),
+            nameof(Exam.StartedAt),
+            nameof(Exam.FinishedAt),
+            nameof(Exam.FinalMark),
+            nameof(Exam.Grading),
+            nameof(Exam.TotalTime),
+            nameof(Exam.QuestionScores),
+            nameof(Exam.QuestionTimes) };
         await DB.SaveOnlyAsync(exam, changedProps);
 
         var output = new FinishExamOutput
@@ -201,7 +210,7 @@ public class ProctorService : IProctorService
         var testEndConfig = testDefinition.GradingSettings.TestEndConfig;
         var informRespondentConfig = testDefinition.GradingSettings.InformRespondentConfig;
 
-        return new AfterTestConfigOutput 
+        return new AfterTestConfigOutput
         {
             TestEndConfig = _mapper.Map<TestEndConfigOutput>(testEndConfig),
             InformRespondentConfig = _mapper.Map<InformRespondentConfigOutput>(informRespondentConfig)
@@ -238,7 +247,8 @@ public class ProctorService : IProctorService
         return question;
     }
 
-    public async Task<TestRun> GetTestRun(string testRunId) {
+    public async Task<TestRun> GetTestRun(string testRunId)
+    {
         return await DB.Find<TestRun>().Match(tr => tr.ID == testRunId).ExecuteSingleAsync();
     }
 
@@ -274,9 +284,12 @@ public class ProctorService : IProctorService
         return await DB.Find<TestDefinition>().MatchID(testDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
     }
 
-    private static Dictionary<string, int> CalculateQuestionScores(List<QuestionDefinition> questions, Dictionary<string, string[]> answers) {
-        return questions.ToDictionary(q => q.ID, q => {
-            if (answers.TryGetValue(q.ID, out var answer)) {
+    private static Dictionary<string, int> CalculateQuestionScores(List<QuestionDefinition> questions, Dictionary<string, string[]> answers)
+    {
+        return questions.ToDictionary(q => q.ID, q =>
+        {
+            if (answers.TryGetValue(q.ID, out var answer))
+            {
                 return q.CalculateScores(answer);
             }
 
@@ -291,8 +304,8 @@ public class ProctorService : IProctorService
 
     private static bool ShowReturnDetailAnswers(TestDefinition testDefinition)
     {
-      var key = ((int)InformFactor.CorrectAnwsers).ToString();
-      var informFactors = testDefinition.GradingSettings?.InformRespondentConfig?.InformFactors;
+        var key = ((int)InformFactor.CorrectAnwsers).ToString();
+        var informFactors = testDefinition.GradingSettings?.InformRespondentConfig?.InformFactors;
         return informFactors != null && informFactors.TryGetValue(key, out var factor) && factor == true;
     }
 }
