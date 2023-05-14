@@ -1,5 +1,4 @@
-/* tslint:disable */
-/* eslint-disable */
+
 import { AggregatedGradingOuput } from './aggregated-grading-ouput';
 import { ExamQuestion } from './exam-question';
 import { ExamStep } from './exam-step';

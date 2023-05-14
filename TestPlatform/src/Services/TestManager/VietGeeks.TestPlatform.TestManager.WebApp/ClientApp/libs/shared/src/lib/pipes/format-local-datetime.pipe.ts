@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'formatLocalDateTime'
+  name: 'formatLocalDateTime',
+  standalone: true
 })
 export class FormatLocalDateTimePipe implements PipeTransform {
 
