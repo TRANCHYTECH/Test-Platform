@@ -10,7 +10,7 @@ import { UiIntegrationService } from '../../../_state/ui-integration.service';
 import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { Answer, AnswerType, Question, ScoreSettings } from '../../_state/questions/question.model';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
 
 const AnswerTypes = [

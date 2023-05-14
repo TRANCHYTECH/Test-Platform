@@ -2,6 +2,7 @@
 using FluentValidation;
 using FluentValidation.TestHelper;
 using FluentValidation.Validators;
+using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;

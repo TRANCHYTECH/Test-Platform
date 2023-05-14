@@ -2,12 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
 import { AppSettings } from '../../../app-setting.model';
-import { ExamSummary, Respondent, TestRunSummary } from './exam-summary.model';
+import { ExamReview, ExamSummary, Respondent, TestRunSummary } from './exam-summary.model';
 import { ExamSummaryStore } from './exam-summary.store';
 
 @Injectable({ providedIn: 'root' })
 export class ExamSummaryService {
-
   private _appSettingService = inject(AppSettingsService);
 
   constructor(private examSummaryStore: ExamSummaryStore, private http: HttpClient) {
@@ -23,6 +22,10 @@ export class ExamSummaryService {
 
   getRespondents(testRunIds: string[]) {
     return this.http.get<Respondent[]>(`${this.testManagerApiBaseUrl}/Management/TestReport/Respondents`, { params: { testRunIds: testRunIds } });
+  }
+
+  getExamReview(examId: string) {
+    return this.http.get<ExamReview>(`${this.testManagerApiBaseUrl}/Management/TestReport/Exam/${examId}/Review`);
   }
 
   private get testManagerApiBaseUrl() {

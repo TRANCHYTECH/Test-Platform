@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom, tap } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { AnswerType, Question } from '../../_state/questions/question.model';
+import { AnswerType, Question } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
 import { PaginationComponent } from '@viet-geeks/shared';

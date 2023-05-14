@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
+using VietGeeks.TestPlatform.SharedKernel;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 

@@ -4,7 +4,7 @@ import { LexoRank } from 'lexorank';
 import { cloneDeep, forEach } from 'lodash-es';
 import { firstValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { Question } from '../../_state/questions/question.model';
+import { Question } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
 
 @Component({

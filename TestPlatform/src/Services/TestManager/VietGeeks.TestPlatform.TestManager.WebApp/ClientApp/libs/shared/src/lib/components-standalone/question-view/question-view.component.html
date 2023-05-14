@@ -1,0 +1,9 @@
+<div class="mb-1 fs-15" [innerHTML]="question.description"></div>
+<ng-container *ngIf="question.answerType === AnswerType.SingleChoice">
+    <viet-geeks-answer-single-choice-view [question]="question"
+        [answers]="answers"></viet-geeks-answer-single-choice-view>
+</ng-container>
+<ng-container *ngIf="question.answerType === AnswerType.MultipleChoice">
+    <viet-geeks-answer-multiple-choice-view [question]="question"
+        [answers]="answers"></viet-geeks-answer-multiple-choice-view>
+</ng-container>

@@ -38,5 +38,13 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
 
             return Ok(respondents);
         }
+
+        [HttpGet("Exam/{examId}/Review")]
+        public async Task<IActionResult> GetExamReview(string examId)
+        {
+            var result = await _testReportService.GetExamReview(examId);
+
+            return Ok(result);
+        }
     }
 }

@@ -16,3 +16,8 @@ export * from './lib/functions/router-param-functions';
 export * from './lib/components/entity-specific-base.component';
 export * from './lib/services/ui-supported.service';
 export * from './lib/models/pagination-config';
+
+export * from './lib/models/question.model';
+export * from './lib/components-standalone/answer-single-choice-view/answer-single-choice-view.component';
+export * from './lib/components-standalone/answer-multiple-choice-view/answer-multiple-choice-view.component';
+export * from './lib/components-standalone/question-view/question-view.component';

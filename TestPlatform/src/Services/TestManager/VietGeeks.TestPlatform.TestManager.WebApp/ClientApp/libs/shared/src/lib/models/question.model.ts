@@ -38,6 +38,7 @@ export interface Answer {
   answerPoint: number;
   isCorrect: boolean;
 }
+
 export interface QuestionSummary {
   categoryId: string;
   numberOfQuestions: number;

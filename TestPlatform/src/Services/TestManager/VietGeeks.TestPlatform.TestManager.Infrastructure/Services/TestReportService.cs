@@ -3,22 +3,25 @@ using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Contract.Exam;
 using VietGeeks.TestPlatform.TestManager.Core.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 public interface ITestReportService
 {
     Task<List<TestRunSummary>> GetTestRunSummaries(string testId);
     Task<List<ExamSummary>> GetExamSummaries(string[] testRunIds);
     Task<List<Respondent>> GetRespondents(string[] testRunIds);
-    Task<ExamReview> LoadExamReview(string examId);
+    Task<ExamReview> GetExamReview(string examId);
 }
 
 public class TestReportService : ITestReportService
 {
     private readonly TestManagerDbContext _managerDbContext;
+    private readonly IQuestionCategoryService _questionCategoryService;
 
-    public TestReportService(TestManagerDbContext managerDbContext)
+    public TestReportService(TestManagerDbContext managerDbContext, IQuestionCategoryService questionCategoryService)
     {
         _managerDbContext = managerDbContext;
+        _questionCategoryService = questionCategoryService;
     }
 
     public async Task<List<ExamSummary>> GetExamSummaries(string[] testRunIds)
@@ -79,6 +82,7 @@ public class TestReportService : ITestReportService
             .Sort(c => c.StartedAt, Order.Descending)
             .Project(c => new Exam
             {
+                ID = c.ID,
                 ExamineeInfo = c.ExamineeInfo
             })
             .ExecuteAsync();
@@ -95,29 +99,46 @@ public class TestReportService : ITestReportService
         }).ToList();
     }
 
-    public async Task<ExamReview> LoadExamReview(string examId)
+    //todo: build report into each readonly view in order to save server resources. but disadvangte of this approach is that if review template has break changes.
+    public async Task<ExamReview> GetExamReview(string examId)
     {
         var examEntity = await _managerDbContext.Find<Exam>()
                    .IgnoreGlobalFilters()
                    .MatchID(examId)
-                   .ExecuteFirstAsync();
+                   .ExecuteFirstAsync() ?? throw new TestPlatformException("Not found exam");
 
-        if (examEntity == null)
-        {
-            throw new TestPlatformException("Not found exam");
-        }
+        var examQuestions = await GetTestRunQuestions(examEntity);
 
-        var batches = await DB.Find<TestRunQuestion>().ManyAsync(c => c.TestRunId == examEntity.TestRunId);
-        var questions = batches.SelectMany(c => c.Batch);
-
+        //todo: IMPORTANT -improve architecture design for query. store hierchacy data from testdef => test run => exam, tenant to query easily.
+        var testRun = await _managerDbContext.Find<TestRun>().MatchID(examEntity.TestRunId).Project(c => new TestRun { ID = c.ID, TestDefinitionSnapshot = c.TestDefinitionSnapshot }).ExecuteFirstAsync();
+        //todo: cache question categories within original method?
+        var questionCategories = await _questionCategoryService.GetCategories(testRun.TestDefinitionSnapshot.ID, default);
         return new()
         {
-            // Set questions
-            // Set answers
-            // Set scores
+            FirstName = GetExamInfoField(examEntity, "firstName"),
+            LastName = GetExamInfoField(examEntity, "lastName"),
+            Questions = examQuestions.Select(q => new
+            {
+                Id = q.ID,
+                q.Description,
+                q.Answers,
+                q.AnswerType,
+                q.CategoryId,
+                CategoryName = questionCategories.Single(c => c.Id == q.CategoryId).Name,
+                TotalPoints = q.ScoreSettings.TotalPoints,
+                ActualPoints = GetActualScores(examEntity, q.ID)
+            }),
+            Answers = examEntity.Answers,
+            Scores = examQuestions.GroupBy(c => c.CategoryId).Select(c => new
+            {
+                CategoryId = c.Key,
+                CategoryName = questionCategories.Single(d => d.Id == c.Key).Name,
+                NumberOfQuestions = c.Count(),
+                TotalPoints = c.Sum(q => q.ScoreSettings.TotalPoints),
+                ActualPoints = c.Select(d => GetActualScores(examEntity, d.ID)).Sum(score => score)
+            })
         };
     }
-
 
     public async Task<List<TestRunSummary>> GetTestRunSummaries(string testId)
     {
@@ -130,9 +151,30 @@ public class TestReportService : ITestReportService
         }).ToList();
     }
 
+    //todo: refactor this, move to extension methods of Exam Entity.
     private string GetExamInfoField(Exam exam, string fieldName)
     {
         return exam.ExamineeInfo.ContainsKey(fieldName) ? exam.ExamineeInfo[fieldName] : string.Empty;
+    }
+
+    private async Task<IEnumerable<QuestionDefinition>> GetTestRunQuestions(Exam examEntity)
+    {
+        var questionBatches = await _managerDbContext.Find<TestRunQuestion>().IgnoreGlobalFilters().ManyAsync(c => c.TestRunId == examEntity.TestRunId);
+        var testRunQuestions = questionBatches.SelectMany(c => c.Batch);
+        var examQuestions = examEntity.Questions.Select(id => testRunQuestions.Single(q => q.ID == id));
+
+        return examQuestions;
+    }
+
+    private int GetActualScores(Exam exam, string questionId)
+    {
+        //todo: Confirm the case user doesn't answer the question, do we store to questionscores with incorrect points from scoresettings's question?
+        if (exam.QuestionScores.TryGetValue(questionId, out int point))
+        {
+            return point;
+        }
+
+        return 0;
     }
 }
 

@@ -22,6 +22,13 @@
     "@angular/compiler-cli": "16.0.0",
     "@angular/language-service": "16.0.0",
     "@datorama/akita-ngdevtools": "^7.0.0",
+    "@nx/angular": "16.1.0",
+    "@nx/cypress": "16.1.0",
+    "@nx/eslint-plugin": "16.1.0",
+    "@nx/jest": "16.1.0",
+    "@nx/js": "16.1.0",
+    "@nx/linter": "16.1.0",
+    "@nx/workspace": "16.1.0",
     "@schematics/angular": "16.0.0",
     "@types/inputmask": "^5.0.3",
     "@types/jest": "29.4.4",
@@ -46,13 +53,7 @@
     "prettier": "^2.6.2",
     "ts-jest": "29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "5.0.4",
-    "@nx/workspace": "16.1.0",
-    "@nx/cypress": "16.1.0",
-    "@nx/eslint-plugin": "16.1.0",
-    "@nx/linter": "16.1.0",
-    "@nx/jest": "16.1.0",
-    "@nx/angular": "16.1.0"
+    "typescript": "5.0.4"
   },
   "dependencies": {
     "@angular/animations": "16.0.0",
@@ -98,12 +99,12 @@
     "ngx-cookie-service": "^15.0.0",
     "ngx-pagination": "^6.0.3",
     "ngx-spinner": "^15.0.1",
+    "nx-cloud": "16.0.5",
     "rxjs": "~7.5.0",
+    "string-strip-html": "^13.2.3",
+    "string-truncator": "^2.0.11",
     "sweetalert2": "^11.7.1",
     "tslib": "^2.3.0",
-    "zone.js": "0.13.0",
-    "nx-cloud": "16.0.5",
-    "string-strip-html": "^13.2.3",
-    "string-truncator": "^2.0.11"
+    "zone.js": "0.13.0"
   }
 }

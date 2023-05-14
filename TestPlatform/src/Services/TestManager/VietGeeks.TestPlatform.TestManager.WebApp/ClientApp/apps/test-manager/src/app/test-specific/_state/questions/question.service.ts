@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from '@viet-geeks/core';
-import { PagedSearchRequest, PagedSearchResponse } from '@viet-geeks/shared';
+import { PagedSearchRequest, PagedSearchResponse, Question, QuestionSummary } from '@viet-geeks/shared';
 import { firstValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AppSettings } from '../../../app-setting.model';
-import { Question, QuestionSummary } from './question.model';
 import { QuestionStore } from './question.store';
 
 @Injectable({ providedIn: 'root' })

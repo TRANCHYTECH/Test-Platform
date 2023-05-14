@@ -4,7 +4,7 @@ import { AppSettingsService, UserProfileService } from "@viet-geeks/core";
 import { TestCategory, TestCategoryUncategorizedId } from '../../../_state/test-category.model';
 import { keys, sumBy } from "lodash-es";
 import { AppSettings } from "../../../app-setting.model";
-import { QuestionSummary } from "../../_state/questions/question.model";
+import { QuestionSummary } from "../../../../../../../libs/shared/src/lib/models/question.model";
 import {
     BasicSettings,
     CompleteQuestionDuration,

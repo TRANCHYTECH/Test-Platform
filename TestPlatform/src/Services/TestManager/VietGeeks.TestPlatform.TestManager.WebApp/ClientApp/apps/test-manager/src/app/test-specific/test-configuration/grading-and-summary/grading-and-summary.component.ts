@@ -5,7 +5,7 @@ import { find, findIndex, forIn, sumBy } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { QuestionSummary } from '../../_state/questions/question.model';
+import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
 import { GradeRangeCriteriaDetail, GradingSettings, GradeRangeCriteria, PassMaskCriteria, TestEndConfig } from '../../_state/tests/test.model';
 import { GradingCriteriaConfigTypeUI, GradeTypeUI, InformFactorUI, RangeUnit, GradeType, GradingCriteriaConfigType, InformFactorCriteriaUI, RangeDetailsUI, InformFactor } from '../../_state/ui/grading-summary-ui.model';

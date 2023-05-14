@@ -1,13 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TestReportBaseComponent } from '../_components/test-report-base.component';
-import { Respondent } from '../_state/exam-summary.model';
+import { ExamReview, Respondent, ScoresPerQuestionCatalog } from '../_state/exam-summary.model';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'viet-geeks-test-sheet-review',
   templateUrl: './test-sheet-review.component.html',
-  styleUrls: ['./test-sheet-review.component.scss']
+  styleUrls: ['./test-sheet-review.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSheetReviewComponent extends TestReportBaseComponent {
   @ViewChild('respondentSelector')
@@ -17,20 +18,30 @@ export class TestSheetReviewComponent extends TestReportBaseComponent {
 
   selectedRespondent?: Respondent;
 
+  examReview$ = new BehaviorSubject<ExamReview>({ questions: [], answers: {}, firstName: '', lastName: '', scores: [] });
+
   override async postLoadEntity(): Promise<void> {
     await super.postLoadEntity();
 
     await this.loadRespondents(this.testRuns.map(c => c.id));
-  }
-
-  search(event: Event) {
-    const term = (event.target as HTMLInputElement).value;
-    this.respondentSelector.filter(term);
+    this.changeRef.markForCheck();
   }
 
   async testRunsSelected(testRunIds: string[]) {
     //todo: only filter client sides with all data there.
     await this.invokeLongAction(() => this.loadRespondents(testRunIds));
+  }
+
+  respondentSelected($event: Respondent) {
+    firstValueFrom(this._examSummaryService.getExamReview($event.examId)).then(rs => {
+      this.examReview$.next(rs);
+      //todo: check why need this.
+      this.changeRef.markForCheck();
+    });
+  }
+
+  displayScorePercentage(score: ScoresPerQuestionCatalog) {
+    return `${(score.actualPoints / score.totalPoints) * 100}%`;
   }
 
   private async loadRespondents(testRunIds: string[]) {
