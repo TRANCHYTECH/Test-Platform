@@ -1,3 +1,5 @@
+import { Question } from "@viet-geeks/shared";
+
 export interface ExamSummary {
     id: string;
     finalMark: number;
@@ -19,4 +21,25 @@ export interface Respondent {
     examId: string;
     firstName: string;
     lastName: string;
+}
+
+export type ScoresPerQuestionCatalog = {
+    categoryId: string;
+    categoryName: string;
+    totalPoints: number;
+    actualPoints: number;
+    numberOfQuestions: number;
+};
+
+export interface ReadonlyQuestionScore {
+    totalPoints: number;
+    actualPoints: number;
+}
+
+export interface ExamReview {
+    firstName: string;
+    lastName: string;
+    questions: (Question & ReadonlyQuestionScore)[];
+    answers: { [questionId: string]: string[] },
+    scores: ScoresPerQuestionCatalog[]
 }

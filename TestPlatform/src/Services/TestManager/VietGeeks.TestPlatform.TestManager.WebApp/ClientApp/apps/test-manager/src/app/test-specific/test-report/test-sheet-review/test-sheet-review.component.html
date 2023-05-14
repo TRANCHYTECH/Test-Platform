@@ -1,40 +1,37 @@
 <div class="d-flex">
     <h5 class="pb-2 flex-grow-1">Test sheets review</h5>
-    <div class="d-flex">
-        <viet-geeks-respondent-selector [data]="{value: respondents}"></viet-geeks-respondent-selector>
-        <button class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>Some func</button>
+    <div class="d-flex gap-2">
+        <viet-geeks-respondent-selector [data]="respondents"
+            (respondentSelected)="respondentSelected($event)"></viet-geeks-respondent-selector>
+
     </div>
 </div>
 <div class="row g-4 mb-3">
     <div class="col-sm-auto">
-        <viet-geeks-test-run-selector [data]="{value: testRuns, selectAll: true}" (runsSelected)="testRunsSelected($event)"></viet-geeks-test-run-selector>
+        <viet-geeks-test-run-selector [data]="{value: testRuns, selectAll: true}"
+            (runsSelected)="testRunsSelected($event)"></viet-geeks-test-run-selector>
     </div>
-    <div class="col-sm">
+    <!-- <div class="col-sm">
         <div class="d-flex justify-content-sm-end gap-2">
             <div class="search-box ms-2">
                 <input type="text" class="form-control" placeholder="Search...">
                 <i class="ri-search-line search-icon"></i>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 <div class="row">
     <div class="col">
         <div class="card">
-            <div class="card-body p-0">
-                <div class="row">
-                    <div class="col col-lg">
-                        <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">RESPONDENT</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="ri-user-line display-6 text-muted"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0"><span class="counter-value" data-target="2659">Tau Dang</span></h2>
-                                </div>
-                            </div>
-                        </div>
+            <div class="card-body">
+                <h5 class="card-title text-uppercase fs-13 pb-3">RESPONDENT</h5>
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="ri-user-line display-6 text-muted"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h2 class="mb-0">{{examReview$.value.firstName}}
+                            {{examReview$.value.lastName}}</h2>
                     </div>
                 </div>
             </div>
@@ -101,53 +98,18 @@
     <div class="col col-lg">
         <div class="card">
             <div class="card-body">
+                <h5 class="card-title text-uppercase fs-13 pb-3">SCORE PER QUESTION CATEGORY
+                    ({{examReview$.value.scores.length}})</h5>
                 <div class="row g-3">
-                    <div class="col-6">
+                    <div class="col-6" *ngFor="let score of examReview$.value.scores">
                         <div class="progress position-relative" style="height: 30px">
-                            <div class="progress-bar" role="progressbar" style="width: 70%;">
+                            <div class="progress-bar" role="progressbar" [style.width]="displayScorePercentage(score)">
                             </div>
                             <div
                                 class="progress-value d-flex position-absolute top-0 start-0 w-100 h-100 align-items-center ps-2 pe-2">
-                                <div class="flex-grow-1">Test category 1</div>
-                                <div>0%</div>
-                                <div>0/2 p</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="progress" style="height: 30px">
-                            <div class="progress-bar" role="progressbar" style="width: 20%;">Test category 1</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="progress" style="height: 30px">
-                            <div class="progress-bar" role="progressbar" style="width: 54%;">Test category 1</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col">
-        <div class="card">
-            <div class="card-body p-0">
-                <div class="row">
-                    <div class="col col-lg">
-                        <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">GENERAL FEEDBACK</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="ri-message-3-line display-6 text-muted"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <p class="mb-0">No feedback has been added</p>
-                                </div>
-                                <div>
-                                    <button class="btn btn-outline-secondary">Add feedback</button>
-                                </div>
+                                <div class="flex-grow-1">{{score.categoryName}}</div>
+                                <div class="pe-2">{{displayScorePercentage(score)}}</div>
+                                <div>{{score.actualPoints}}/{{score.totalPoints}} p.</div>
                             </div>
                         </div>
                     </div>
@@ -158,44 +120,46 @@
 </div>
 
 <div class="row">
-    <div class="col">
+    <div class="col-lg-12">
         <div class="card">
-            <div class="card-body p-0">
-                <div class="row">
-                    <div class="col col-lg">
-                        <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">GENERAL FEEDBACK</h5>
-
-                            <ngb-accordion #acc="ngbAccordion" class="accordion-flush" activeIds="ngb-panel-0">
-                                <ngb-panel>
-                                    <ng-template ngbPanelTitle>
-                                        <span><b>Q.1</b>Question 1</span>
-                                    </ng-template>
-                                    <ng-template ngbPanelContent>
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-                                        richardson ad squid. 3 wolf moon
-                                        officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                                        laborum eiusmod. Brunch 3 wolf
-                                        moon tempor, sunt aliqua put a bird on it squid
-                                    </ng-template>
-                                </ngb-panel>
-                                <ngb-panel>
-                                    <ng-template ngbPanelTitle>
-                                        <span><b>Q.2</b>Question 2</span>
-                                    </ng-template>
-                                    <ng-template ngbPanelContent>
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-                                        richardson ad squid. 3 wolf moon
-                                        officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                                        laborum eiusmod. Brunch 3 wolf
-                                        moon tempor, sunt aliqua put a bird on it squid
-                                    </ng-template>
-                                </ngb-panel>
-                            </ngb-accordion>
-
-                        </div>
+            <div class="card-body">
+                <h5 class="card-title text-uppercase fs-13 pb-3">GENERAL FEEDBACK</h5>
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="ri-message-3-line display-6 text-muted"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <p class="mb-0">No feedback has been added</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary">Add feedback</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body p-0">
+                <h5 class="card-title text-uppercase fs-13 py-3 px-3">Questions ({{examReview$.value.questions.length}})
+                </h5>
+                <ngb-accordion #acc="ngbAccordion" class="accordion-flush">
+                    <ngb-panel *ngFor="let question of examReview$.value.questions; index as i">
+                        <ng-template ngbPanelTitle>
+                            <div style="width: 50px;"><b>Q.{{i + 1}}</b></div>
+                            <div class="flex-grow-1">{{question.description | stripTags | truncate}}</div>
+                            <div class="me-2 text-uppercase">{{question.actualPoints}}/{{question.totalPoints}} p.</div>
+                            <div class="badge bg-secondary me-2 text-uppercase">{{question.categoryName}}</div>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+                            <viet-geeks-question-view [question]="question"
+                                [answers]="examReview$.value.answers[question.id] || []"></viet-geeks-question-view>
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
             </div>
         </div>
     </div>

@@ -17,6 +17,6 @@
   <ItemGroup>
     <PackageReference Include="MongoDB.Entities" Version="21.0.2" />
     <PackageReference Include="ListShuffle" Version="1.1.5" />
-    <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.4" />
+    <PackageReference Include="VietGeeks.TestPlatform.SharedKernel" Version="1.0.5" />
   </ItemGroup>
 </Project>

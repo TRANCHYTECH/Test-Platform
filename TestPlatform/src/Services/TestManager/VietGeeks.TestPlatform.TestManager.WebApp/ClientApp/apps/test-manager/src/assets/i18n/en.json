@@ -43,7 +43,9 @@
     "schedule": "Schedule",
     "endTest": "End test",
     "changeSettings": "Change settings",
-    "restart": "Start again"
+    "restart": "Start again",
+    "noUser": "No User",
+    "searchRespondents": "Search Respondents"
   },
   "summary": {
     "testTimeLimit": "Time limit for entire test is set to {{duration}}",
@@ -52,6 +54,5 @@
     "timePeriodActivation": "Test actication date is {{activeFromDate}} ({{timeZone}})",
     "publicLinkTest": "Test is in Public Link access mode",
     "privateAccessCodeTest": "Test is in Private Access Code mode"
-
   }
 }

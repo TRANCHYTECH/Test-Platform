@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { Question } from './question.model';
+import { Question } from '@viet-geeks/shared';
 
 export type QuestionsState = EntityState<Question>
 

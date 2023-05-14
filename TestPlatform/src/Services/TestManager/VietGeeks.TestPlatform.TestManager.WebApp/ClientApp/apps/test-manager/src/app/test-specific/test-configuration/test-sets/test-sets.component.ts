@@ -7,7 +7,7 @@ import { TestSpecificBaseComponent } from '../../_base/test-specific-base.compon
 import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { QuestionSummary } from '../../_state/questions/question.model';
+import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
 import { GeneratorTypes, TestSets } from '../../_state/tests/test.model';
 @UntilDestroy()
