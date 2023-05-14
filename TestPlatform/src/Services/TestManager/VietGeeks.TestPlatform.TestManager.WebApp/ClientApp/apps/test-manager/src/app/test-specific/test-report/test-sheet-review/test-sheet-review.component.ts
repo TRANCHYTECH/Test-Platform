@@ -18,7 +18,7 @@ export class TestSheetReviewComponent extends TestReportBaseComponent {
 
   selectedRespondent?: Respondent;
 
-  examReview$ = new BehaviorSubject<ExamReview>({ questions: [], answers: {}, firstName: '', lastName: '', scores: [] });
+  examReview$ = new BehaviorSubject<ExamReview>({ questions: [], answers: {}, firstName: '', lastName: '', scores: [], grading: [] });
 
   override async postLoadEntity(): Promise<void> {
     await super.postLoadEntity();

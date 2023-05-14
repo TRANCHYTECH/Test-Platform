@@ -41,7 +41,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-lg-6">
-      <viet-geeks-exam-result-overview [passMarkGrading]="passMarkGrading" [gradeRangesValues]="gradeRangesValues" [chartOptions]="chartOptions"></viet-geeks-exam-result-overview>
+      <viet-geeks-exam-result-overview [gradings]="sessionData.grading || []"></viet-geeks-exam-result-overview>
     </div>
     <div class="col-lg-6">
       <viet-geeks-exam-result-timer [examTime]="sessionData" [maxTime]="maxTime" [totalTime]="totalTime"></viet-geeks-exam-result-timer>
