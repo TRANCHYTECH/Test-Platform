@@ -40,30 +40,8 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <div class="card card-animate">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="fw-medium text-muted mb-0">Sessions</p>
-                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
-                                data-target="97.66">97.66</span>k</h2>
-                        <p class="mb-0 text-muted"><span class="badge bg-light text-danger mb-0"><i
-                                    class="ri-arrow-down-line align-middle"></i> 3.96 % </span> vs. previous month</p>
-                    </div>
-                    <div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-soft-info rounded-circle fs-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-activity text-info">
-                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <viet-geeks-exam-result-overview [gradings]="examReview$.value.grading"></viet-geeks-exam-result-overview>
+        
     </div>
     <div class="col-md-6">
         <div class="card card-animate">

@@ -3,7 +3,7 @@ import { RespondentMonitoringComponent } from './respondent-monitoring/responden
 import { ResultListComponent } from './result-list/result-list.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { TestReportRoutingModule } from './test-report-routing.module';
-import { QuestionViewComponent, SharedModule } from '@viet-geeks/shared';
+import { ExamResultOverviewComponent, QuestionViewComponent, SharedModule } from '@viet-geeks/shared';
 import { NgbAccordionModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TestRunSelectorComponent } from './_components/test-run-selector/test-run-selector.component';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +25,8 @@ import { RespondentSelectorComponent } from './_components/respondent-selector/r
     SharedModule,
     NgbAccordionModule,
     TestReportRoutingModule,
-    QuestionViewComponent
+    QuestionViewComponent,
+    ExamResultOverviewComponent
   ]
 })
 export class TestReportModule { }

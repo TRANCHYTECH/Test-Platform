@@ -1,4 +1,4 @@
-import { Question } from "@viet-geeks/shared";
+import { AggregatedGrading, Question } from "@viet-geeks/shared";
 
 export interface ExamSummary {
     id: string;
@@ -42,5 +42,6 @@ export interface ExamReview {
     lastName: string;
     questions: (Question & ReadonlyQuestionScore)[];
     answers: { [questionId: string]: string[] },
-    scores: ScoresPerQuestionCatalog[]
+    scores: ScoresPerQuestionCatalog[],
+    grading: AggregatedGrading[]
 }

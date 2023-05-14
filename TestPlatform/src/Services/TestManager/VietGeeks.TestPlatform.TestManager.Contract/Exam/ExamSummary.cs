@@ -32,4 +32,5 @@ public class ExamReview
     public string LastName { get; set; } = default!;
 
     public dynamic Scores { get; set; } = default!;
+    public dynamic? Grading { get; set; } = default!;
 }

@@ -137,7 +137,8 @@ public class TestReportService : ITestReportService
                 NumberOfQuestions = c.Count(),
                 TotalPoints = c.Sum(q => q.ScoreSettings.TotalPoints),
                 ActualPoints = c.Select(d => GetActualScores(examEntity, d.ID)).Sum(score => score)
-            })
+            }),
+            Grading = examEntity.Grading
         };
     }
 
