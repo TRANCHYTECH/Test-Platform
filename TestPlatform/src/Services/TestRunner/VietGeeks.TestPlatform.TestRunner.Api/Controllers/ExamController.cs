@@ -49,8 +49,8 @@ public class ExamController : ControllerBase
         {
             AccessCode = verifyResult.AccessCode,
             TestName = verifyResult.TestName,
-            ConsentMessage = verifyResult.ConsentMessage ?? "DefaultConsentMessage",
-            InstructionMessage = verifyResult.InstructionMessage ?? "DefaultInstructionMessage"
+            ConsentMessage = verifyResult.ConsentMessage,
+            InstructionMessage = verifyResult.InstructionMessage
         });
     }
 
@@ -114,13 +114,13 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        await proctorExamActor.SubmitAnswer(new()
+        var output = await proctorExamActor.SubmitAnswer(new()
         {
             QuestionId = data.QuestionId,
             AnswerIds = data.AnswerIds
         });
 
-        return Ok();
+        return Ok(output);
     }
 
     [HttpPost("PreviousQuestion")]

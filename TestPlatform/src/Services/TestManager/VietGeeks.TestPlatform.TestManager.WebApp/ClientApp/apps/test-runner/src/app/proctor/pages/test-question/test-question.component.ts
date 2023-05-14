@@ -2,13 +2,14 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subscription, firstValueFrom } from 'rxjs';
-import { ExamQuestion, TimeSpan } from '../../../api/models';
+import { ActivateQuestionOutput, ExamQuestion, TimeSpan } from '../../../api/models';
 import { AnswerType } from '../../../state/exam-content.model';
 import { ExamCurrentStep, TestDurationMethod, TestSession } from '../../../state/test-session.model';
 import { ProctorService } from '../../services/proctor.service';
 import { TestDurationService } from '../../services/test-duration.service';
 import { TestSessionService } from '../../services/test-session.service';
 import { ToastService } from '@viet-geeks/shared';
+
 @Component({
   selector: 'viet-geeks-test-question',
   templateUrl: './test-question.component.html',
@@ -28,14 +29,24 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   labels: string[] = [];
   index = 0;
   question?: ExamQuestion;
+  answers?: Array<string> | null;
   questionCount = 0;
   endTime: Date = new Date();
   remainingTime: TimeSpan = {};
   canSkipQuestion = false;
+  canFinish = false;
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
     this.answerForm = this._fb.group({});
+  }
+
+  get canGoNext() {
+    return this.index <= this.questionCount - 1;
+  }
+
+  get canGoBack() {
+    return this.index > 0;
   }
 
   ngOnInit() {
@@ -54,42 +65,71 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
     this.subscription?.unsubscribe();
  }
 
-  async submit() {
+  async submitAndGoNext() {
     if (this.question) {
-      const submitAnswerOutput = await firstValueFrom(this.proctorService.submitAnswer({
+      const output = await firstValueFrom(this.proctorService.submitAnswer({
         questionId: this.question.id!,
         answerIds: this.getAnswerIds()
       }));
 
-      if (submitAnswerOutput != null) {
-        this._testSessionService.setSessionData({
-          examStep: ExamCurrentStep.SubmitAnswer,
-          activeQuestion: submitAnswerOutput.activeQuestion,
-          activeQuestionStartAt: null,
-          questionIndex: submitAnswerOutput.activeQuestionIndex ?? undefined
-        });
-        this.question = submitAnswerOutput.activeQuestion;
-        this.index = submitAnswerOutput.activeQuestionIndex ?? this.index;
-        if (this.question) {
-          this.initAnswerForm();
-          this.initEndTime();
-        }
-        else {
-          this.finishExam();
-        }
+      if (output?.terminated) {
+        return this.finishExam();
       }
       else {
-        this.finishExam();
+        return this.goToNextQuestion();
       }
     }
   }
 
-  goToPreviousQuestion() {
+  async submitAndGoBack() {
+    if (this.question) {
+      await firstValueFrom(this.proctorService.submitAnswer({
+        questionId: this.question.id!,
+        answerIds: this.getAnswerIds()
+      }));
 
+      this.goToPreviousQuestion();
+    }
   }
 
-  goToNextQuestion() {
+  async goToPreviousQuestion() {
+    const activateQuestionOutput = await firstValueFrom(this.proctorService.activePreviousQuestion());
 
+    this.handleActivatedQuestion(activateQuestionOutput);
+  }
+
+  async goToNextQuestion() {
+    const activateQuestionOutput = await firstValueFrom(this.proctorService.activeNextQuestion());
+
+    this.handleActivatedQuestion(activateQuestionOutput);
+  }
+
+  private handleActivatedQuestion(activateQuestionOutput: ActivateQuestionOutput | null) {
+    if (!activateQuestionOutput?.activationResult) {
+      this.finishExam();
+    }
+    else {
+      this._testSessionService.setSessionData({
+        examStep: ExamCurrentStep.SubmitAnswer,
+        activeQuestion: activateQuestionOutput.activeQuestion,
+        activeQuestionStartAt: null,
+        activeQuestionAnswers: activateQuestionOutput.answerIds,
+        questionIndex: activateQuestionOutput.activeQuestionIndex ?? undefined
+      });
+
+      this.question = activateQuestionOutput.activeQuestion;
+      this.index = activateQuestionOutput.activeQuestionIndex ?? this.index;
+      this.answers = activateQuestionOutput.answerIds;
+      this.canFinish = activateQuestionOutput.canFinish ?? false;
+
+      if (this.question) {
+        this.initAnswerForm();
+        this.initEndTime();
+      }
+      else if (!activateQuestionOutput.activationResult) {
+        this.finishExam();
+      }
+    }
   }
 
   get submitEnabled() {
@@ -107,7 +147,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   private initAnswerForm() {
     if (this.question!.answerType == AnswerType.SingleChoice) {
       this.answerForm = this._fb.group({
-        selectedAnswer: 0
+        selectedAnswer: this.answers ?? []
       });
     }
     else {
@@ -116,8 +156,9 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       this.question!.answers?.forEach(answer => {
         const formGroup = this._fb.group({
           id: answer.id,
-          selected: false
+          selected: this.answers?.includes(answer.id!) ? true : false
         });
+
         selectedAnswerForms.push(formGroup);
       });
 
@@ -141,12 +182,12 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   }
 
   private async handleTimeUp() {
-    await this._notifyService.warning('Time is up. The answer will be submitted automatically.');
+    this._notifyService.warning('Time is up. The answer will be submitted automatically.');
 
     if (this.sessionData?.timeSettings?.method == TestDurationMethod.CompleteTestTime) {
       await this.finishExam();
     } else {
-      this.submit();
+      await this.goToNextQuestion();
     }
   }
 
@@ -157,7 +198,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
       examStep: ExamCurrentStep.FinishExam,
       grading: finishOutput?.grading,
       questions: finishOutput?.questions,
-      answers: finishOutput?.examAnswers,
+      allAnswers: finishOutput?.examAnswers,
       questionScores: finishOutput?.questionScores
     });
     this._router.navigate(['test/finish']);

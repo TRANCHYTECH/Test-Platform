@@ -217,7 +217,21 @@ public class ProctorService : IProctorService
         };
     }
 
-    // TODO: Optimize query
+   // TODO: Optimize query
+
+   public async Task<IEnumerable<QuestionDefinition>> GetTestRunQuestionsByExamId(string examId)
+    {
+        var exam = await GetExam(examId);
+
+        if (exam == null)
+        {
+            return Enumerable.Empty<QuestionDefinition>();
+        }
+
+        var batches = await DB.Find<TestRunQuestion>().ManyAsync(c => c.TestRunId == exam.TestRunId);
+        return batches.SelectMany(c => c.Batch);
+    }
+
     public async Task<QuestionDefinition?> GetTestRunQuestion(string examId, string questionId)
     {
         var exam = await GetExam(examId);
@@ -238,6 +252,11 @@ public class ProctorService : IProctorService
         return await DB.Find<TestRun>().Match(tr => tr.ID == testRunId).ExecuteSingleAsync();
     }
 
+    public bool IsCorrectAnswer(QuestionDefinition questionDefinition, string[] answers) 
+    {
+        return questionDefinition.IsCorrectAnswer(answers);
+    }
+    
     private async Task<Exam> GetExam(string testRunId, string accessCode)
     {
         return await DB.Find<Exam>().Match(c => c.TestRunId == testRunId && c.AccessCode == accessCode).ExecuteSingleAsync();

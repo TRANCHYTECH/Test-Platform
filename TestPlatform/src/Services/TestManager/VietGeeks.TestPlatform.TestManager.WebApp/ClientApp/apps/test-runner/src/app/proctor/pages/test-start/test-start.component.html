@@ -8,7 +8,7 @@
           </div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" *ngIf="config.instruction">
         <div class="card-body">
           <div class="mb-3">
             <h5 class="text-uppercase">Instruction</h5>
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-lg-6">
+    <div class="col-lg-12" *ngIf="config.consentMessage">
       <div class="card">
         <div class="card-body">
           <div class="mb-3">
@@ -29,25 +29,34 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-6">
+  </div>
+  <div>
+    <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
           <div class="mb-3">
             <h5 class="text-uppercase">TEST START FORM</h5>
             <label>Fill in the form before starting the test.</label>
           </div>
-          <ng-container [formGroup]="respondentIdentifyForm">
-            <div formArrayName="fields" *ngFor="let field of fields['controls']; let i = index;">
-              <div class="mb-3" [formGroupName]="i">
-                <div class="row">
-                  <div class="col-lg-8">
-                    <label for="fieldValue" class="form-label">{{labels[i]}}</label>
-                    <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="fieldValue">
+          <div class="row">
+            <div class="col-lg-10">
+              <ng-container [formGroup]="respondentIdentifyForm">
+                <div formArrayName="fields" *ngFor="let field of fields['controls']; let i = index;">
+                  <div class="mb-3" [formGroupName]="i">
+                    <div class="row">
+                      <div class="col-lg-8">
+                        <label for="fieldValue" class="form-label">{{labels[i]}}</label>
+                        <input type="text" class="form-control" id="mask-value" placeholder="" formControlName="fieldValue">
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
             </div>
-          </ng-container>
+            <!-- <div class="col-lg-2">
+              <i class="ri-profile-line"></i>
+            </div> -->
+          </div>
           <div class="mb-3">
             <div class="input-group">
               <button class="btn btn-primary" type="submit" (click)="startTest()">Start test</button>

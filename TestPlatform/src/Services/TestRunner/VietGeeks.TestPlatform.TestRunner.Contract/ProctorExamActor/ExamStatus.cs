@@ -16,7 +16,8 @@ public class ExamStatus: IActiveQuestion
     public DateTime? FinishededAt { get; set; }
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
     public IEnumerable<AggregatedGradingOuput> Grading { get; set; } = default!;
-    public bool CanSkipQuestion {get; set;}
+    public bool CanSkipQuestion { get; set; }
+    public bool CanFinish { get; set; }
 }
 
 public class ExamStatusWithStep: ExamStatus, IExamStepInfo

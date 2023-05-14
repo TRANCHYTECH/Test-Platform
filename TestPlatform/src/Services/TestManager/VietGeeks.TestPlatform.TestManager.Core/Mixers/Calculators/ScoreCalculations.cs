@@ -10,4 +10,11 @@ public static class ScoreCalculations
 
         return calculator.Calculate(question, answerIds);
     }
+
+    public static bool IsCorrectAnswer(this QuestionDefinition question, string[]? answerIds)
+    {
+        var calculator = ScoreCalculatorFactory.GetCalculator((AnswerType)question.AnswerType);
+
+        return calculator.IsCorrectAnswer(question, answerIds);
+    }
 }

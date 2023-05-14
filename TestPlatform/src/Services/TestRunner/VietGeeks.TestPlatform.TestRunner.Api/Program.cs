@@ -52,6 +52,8 @@ builder.Services.ConfigureApplicationCookie((options) => {
     options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 app.UseCors("dev");
