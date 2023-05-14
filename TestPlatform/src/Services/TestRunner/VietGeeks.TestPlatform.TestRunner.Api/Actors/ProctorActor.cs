@@ -39,18 +39,19 @@ public class ProctorActor : Actor, IProctorActor
         examState.QuestionIds = examContent.Questions.Select(q => q.Id).ToArray();
         examState.ActiveQuestionIndex = 0;
         examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
-        examState.ActiveQuestion = examContent.ActiveQuestion; 
+        examState.ActiveQuestion = examContent.ActiveQuestion;
         examState.StartedAt = DateTime.UtcNow;
         examState.CanSkipQuestion = examContent.CanSkipQuestion;
 
-        if (!string.IsNullOrEmpty(examState.ActiveQuestionId)) {
-            examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming 
+        if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
+        {
+            examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming
             {
                 StartedAt = DateTime.UtcNow
             };
         }
 
-        examState.TestDuration = new TestDurationState 
+        examState.TestDuration = new TestDurationState
         {
             Duration = examContent.TestDuration.Duration,
             Method = (int)examContent.TestDuration.Method
@@ -101,19 +102,19 @@ public class ProctorActor : Actor, IProctorActor
         });
     }
 
-    public async Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input) 
+    public async Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input)
     {
         return await ExamStateAction(async examState =>
         {
             var questionIndex = Array.IndexOf(examState.QuestionIds, input.CurrentQuestionId ?? examState.ActiveQuestionId);
             var offset = input.Direction == ActivateDirection.Previous ? -1 : 1;
             var nextQuestionIndex = questionIndex + offset;
-            
+
             return await ActivateQuestion(nextQuestionIndex);
         });
     }
 
-    public async Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex) 
+    public async Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex)
     {
         return await ExamStateAction(async examState =>
         {
@@ -129,7 +130,7 @@ public class ProctorActor : Actor, IProctorActor
                 examState.ActiveQuestionId = examState.QuestionIds[examState.ActiveQuestionIndex.Value];
                 var activeQuestion = await _proctorService.GetTestRunQuestion(examState.ExamId, examState.ActiveQuestionId);
                 examState.ActiveQuestion = activeQuestion?.ToViewModel();
-                if (!examState.QuestionTimes.ContainsKey(examState.ActiveQuestionId)) 
+                if (!examState.QuestionTimes.ContainsKey(examState.ActiveQuestionId))
                 {
                     examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming
                     {
@@ -140,12 +141,12 @@ public class ProctorActor : Actor, IProctorActor
 
             output.CanGoToNextQuestion = nextQuestionIndex < examState.QuestionIds.Length - 1;
 
-            if (examState.CanSkipQuestion) 
+            if (examState.CanSkipQuestion)
             {
                 output.CanGoToPreviousQuestion = nextQuestionIndex > 0;
                 output.CanFinish = true;
             }
-            else 
+            else
             {
                 output.CanFinish = output.CanGoToNextQuestion;
             }
@@ -168,6 +169,7 @@ public class ProctorActor : Actor, IProctorActor
             {
                 ExamId = examState.ExamId,
                 Answers = examState.Answers,
+                QuestionTimes = examState.QuestionTimes.ToDictionary(c => c.Key, c => new[] { c.Value.StartedAt, c.Value.SubmittedAt }),
                 StartedAt = examState.StartedAt,
                 FinishededAt = examState.FinishedAt.GetValueOrDefault()
             });
@@ -204,10 +206,10 @@ public class ProctorActor : Actor, IProctorActor
             QuestionCount = examState.QuestionIds?.Length ?? 0,
             CanSkipQuestion = examState.CanSkipQuestion,
             ExamineeInfo = examState.ExamineeInfo,
-            TestDuration = new TestDuration 
+            TestDuration = new TestDuration
             {
                 Duration = examState.TestDuration.Duration,
-                Method = (TestDurationMethodType) examState.TestDuration.Method
+                Method = (TestDurationMethodType)examState.TestDuration.Method
             },
             Grading = examState.Grading
         };
@@ -260,20 +262,20 @@ public class ProctorActor : Actor, IProctorActor
         public string[] QuestionIds { get; set; } = default!;
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
-        public ExamQuestion? ActiveQuestion {get;set;}
+        public ExamQuestion? ActiveQuestion { get; set; }
         public TestDurationState TestDuration { get; set; } = default!;
         public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
         public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 
-        public Dictionary<string, QuestionTiming> QuestionTimes {get;set;} = new Dictionary<string, QuestionTiming>();
+        public Dictionary<string, QuestionTiming> QuestionTimes { get; set; } = new Dictionary<string, QuestionTiming>();
         public IEnumerable<AggregatedGradingOuput> Grading { get; set; } = default!;
 
         public DateTime StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
-        
-        public bool CanSkipQuestion {get; set;}
+
+        public bool CanSkipQuestion { get; set; }
     }
 
     private class TestDurationState
@@ -283,9 +285,9 @@ public class ProctorActor : Actor, IProctorActor
         public TimeSpan Duration { get; set; }
     }
 
-    private class QuestionTiming 
+    private class QuestionTiming
     {
-        public DateTime StartedAt {get;set;}
-        public DateTime? SubmittedAt {get;set;}
+        public DateTime StartedAt { get; set; }
+        public DateTime? SubmittedAt { get; set; }
     }
 }

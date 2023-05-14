@@ -6,7 +6,6 @@ namespace VietGeeks.TestPlatform.TestManager.Core.ReadonlyModels;
 public class AggregatedGrading
 {
     public GradingCriteriaConfigType GradingType { get; set; }
-
     public Dictionary<string, string>? Grades { get; set; }
     public PassMarkGrade? PassMarkGrade {get;set;}
 }
