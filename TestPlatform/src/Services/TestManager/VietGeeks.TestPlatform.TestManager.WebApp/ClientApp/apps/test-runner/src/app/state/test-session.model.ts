@@ -43,7 +43,7 @@ export enum ExamCurrentStep {
     Start = 3,
     SubmitAnswer = 4,
     FinishExam = 5
-};
+}
 
 export enum GradingCriteriaConfigType
 {

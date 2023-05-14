@@ -2,20 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, TimeSpan } from '../../../api/models';
 import { GradingCriteriaConfigType, InformFactor, RangeUnit, RespondentField, TestSession } from '../../../state/test-session.model';
 import { TestDurationService } from '../../services/test-duration.service';
-import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ApexStroke } from 'ng-apexcharts';
 import { TestSessionService } from '../../services/test-session.service';
 import { firstValueFrom } from 'rxjs';
 import { ProctorService } from '../../services/proctor.service';
-
-export type ChartOptions = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  labels: string[];
-  plotOptions: ApexPlotOptions;
-  fill: ApexFill;
-  stroke: ApexStroke;
-  colors: any
-};
+import { ChartOptions } from '@viet-geeks/shared';
 
 @Component({
   selector: 'viet-geeks-test-finish',

@@ -10,7 +10,6 @@ export { ExamStatusWithStep } from './models/exam-status-with-step';
 export { ExamStep } from './models/exam-step';
 export { FinishExamOutput } from './models/finish-exam-output';
 export { InformRespondentConfigOutput } from './models/inform-respondent-config-output';
-export { PassMarkGradeOutput } from './models/pass-mark-grade-output';
 export { ProvideExamineeInfoOutput } from './models/provide-examinee-info-output';
 export { ProvideExamineeInfoViewModel } from './models/provide-examinee-info-view-model';
 export { QuestionOutput } from './models/question-output';

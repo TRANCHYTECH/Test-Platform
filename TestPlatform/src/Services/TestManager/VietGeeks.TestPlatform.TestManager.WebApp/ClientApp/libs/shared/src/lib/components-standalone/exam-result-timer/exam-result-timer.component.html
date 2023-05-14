@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title text-uppercase">Timer</h4>
+        <div>
+            <h5>Total time</h5>
+            <div class="row mb-3">
+                <div class="d-flex fs-3">
+                    <span class="fw-bold">{{totalTime | formatTimeSpan}}</span><span>/</span><span
+                        class="opacity-75">{{maxTime | formatTimeSpan}}</span>
+                </div>
+            </div>
+            <h5>Start time</h5>
+            <div class="row mb-3">
+                <div class="d-flex fs-3">
+                    <span class="fw-bold">{{examTime.startTime | formatLocalDateTime}}</span>
+                </div>
+            </div>
+            <h5>End time</h5>
+            <div class="row" mb-3>
+                <div class="d-flex fs-3">
+                    <span class="fw-bold">{{examTime.endTime | formatLocalDateTime}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

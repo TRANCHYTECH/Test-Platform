@@ -1,13 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TimeSpan } from '../../api/models';
-import padStart from 'lodash-es/padStart';
+import { padStart } from 'lodash-es';
+import { TimeSpanV1 } from '../models/timespan.model';
 
 @Pipe({
-  name: 'formatTimeSpan'
+  name: 'formatTimeSpan',
+  standalone: true
 })
 export class FormatTimespanPipe implements PipeTransform {
 
-  transform(time: TimeSpan | undefined): string {
+  transform(time: TimeSpanV1 | undefined): string {
     if (!time) {
       return '';
     }
