@@ -55,9 +55,9 @@ public class ProctorActor : Actor, IProctorActor
         examState.TestDuration = new TestDurationState
         {
             Duration = examContent.TestDuration.Duration,
-            Method = (int)examContent.TestDuration.Method,
-            TotalDuration = examState.TotalDuration
+            Method = (int)examContent.TestDuration.Method
         };
+        examState.TestDuration.TotalDuration = examState.TotalDuration();
 
         await SaveExamState(examState);
 
@@ -201,7 +201,7 @@ public class ProctorActor : Actor, IProctorActor
                 QuestionTimes = examState.QuestionTimes.ToDictionary(c => c.Key, c => new[] { c.Value.StartedAt, c.Value.SubmittedAt }),
                 StartedAt = examState.StartedAt,
                 FinishededAt = examState.FinishedAt.GetValueOrDefault(),
-                TotalDuration = examState.TotalDuration
+                TotalDuration = examState.TotalDuration()
             });
             examState.Grading = output.Grading;
 
@@ -319,7 +319,11 @@ public class ProctorActor : Actor, IProctorActor
 
         public bool CanSkipQuestion { get; set; }
 
-        public TimeSpan TotalDuration => TestDuration.Method == (int)TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : QuestionIds.Length * TestDuration.Duration;
+        //todo: better place
+        public TimeSpan TotalDuration()
+        {
+            return TestDuration.Method == (int)TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : QuestionIds.Length * TestDuration.Duration;
+        }
     }
 
     private class TestDurationState
@@ -327,7 +331,7 @@ public class ProctorActor : Actor, IProctorActor
         public int Method { get; set; }
 
         public TimeSpan Duration { get; set; }
-        
+
         public TimeSpan TotalDuration { get; set; }
     }
 
