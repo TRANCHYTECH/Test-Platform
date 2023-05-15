@@ -115,6 +115,10 @@ public class TestReportService : ITestReportService
         var questionCategories = await _questionCategoryService.GetCategories(testRun.TestDefinitionSnapshot.ID, default);
         return new()
         {
+            StartedAt = examEntity.StartedAt,
+            FinishedAt = examEntity.FinishedAt,
+            ActualTotalDuration = examEntity.TotalTime.ToString(@"hh\:mm\:ss"),
+            TotalDuration = examEntity.TotalDuration.ToString(@"hh\:mm\:ss"),
             FirstName = GetExamInfoField(examEntity, "firstName"),
             LastName = GetExamInfoField(examEntity, "lastName"),
             Questions = examQuestions.Select(q => new

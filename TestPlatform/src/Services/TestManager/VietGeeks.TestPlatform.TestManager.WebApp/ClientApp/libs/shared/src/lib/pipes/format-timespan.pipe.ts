@@ -8,9 +8,13 @@ import { TimeSpanV1 } from '../models/timespan.model';
 })
 export class FormatTimespanPipe implements PipeTransform {
 
-  transform(time: TimeSpanV1 | undefined): string {
+  transform(time: TimeSpanV1 | string | undefined): string {
     if (!time) {
       return '';
+    }
+
+    if (typeof time === 'string') {
+      return time;
     }
 
     const tryAddLeadingZero = (value?: number) => padStart((value ?? 0).toString(), 2, '0');

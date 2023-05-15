@@ -28,8 +28,9 @@ export interface TestSession {
 }
 
 export interface TimeSettings {
-  duration?: TimeSpan;
-  method?: number;
+  duration: TimeSpan;
+  totalDuration: TimeSpan;
+  method: number;
 }
 
 export enum TestDurationMethod {

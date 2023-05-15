@@ -33,6 +33,8 @@ public class Exam : EntityBase
     public DateTime FinishedAt { get; set; }
     
     public TimeSpan TotalTime { get; set; }
+    
+    public TimeSpan TotalDuration { get; set; }
 }
 
 

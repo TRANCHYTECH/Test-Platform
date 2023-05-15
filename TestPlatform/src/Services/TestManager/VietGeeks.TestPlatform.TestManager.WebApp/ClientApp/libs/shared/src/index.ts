@@ -16,7 +16,6 @@ export * from './lib/guards/can-deactivate.guard';
 export * from './lib/models/pagination-config';
 export * from './lib/models/question.model';
 export * from './lib/models/timespan.model';
-export * from './lib/pipes/format-local-datetime.pipe';
 export * from './lib/pipes/format-timespan.pipe';
 export * from './lib/pipes/strip-tags.pipe';
 export * from './lib/pipes/test-status-class.pipe';

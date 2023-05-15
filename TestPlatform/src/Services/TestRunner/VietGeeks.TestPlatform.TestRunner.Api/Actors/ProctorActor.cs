@@ -44,7 +44,6 @@ public class ProctorActor : Actor, IProctorActor
         examState.ActiveQuestionId = examContent.ActiveQuestion?.Id;
         examState.StartedAt = DateTime.UtcNow;
         examState.CanSkipQuestion = examContent.CanSkipQuestion;
-
         if (!string.IsNullOrEmpty(examState.ActiveQuestionId))
         {
             examState.QuestionTimes[examState.ActiveQuestionId] = new QuestionTiming
@@ -56,7 +55,8 @@ public class ProctorActor : Actor, IProctorActor
         examState.TestDuration = new TestDurationState
         {
             Duration = examContent.TestDuration.Duration,
-            Method = (int)examContent.TestDuration.Method
+            Method = (int)examContent.TestDuration.Method,
+            TotalDuration = examState.TotalDuration
         };
 
         await SaveExamState(examState);
@@ -69,7 +69,8 @@ public class ProctorActor : Actor, IProctorActor
             ActiveQuestion = examContent.ActiveQuestion,
             ActiveQuestionIndex = examState.ActiveQuestionIndex,
             TotalQuestion = examState.QuestionIds.Length,
-            CanSkipQuestion = examState.CanSkipQuestion
+            CanSkipQuestion = examState.CanSkipQuestion,
+
         };
     }
 
@@ -82,9 +83,9 @@ public class ProctorActor : Actor, IProctorActor
             var activeQuestion = await GetActiveQuestionAsync(examState);
             var validationError = await ValidateSubmissionAsync(input, examState, activeQuestion);
 
-            if (!string.IsNullOrEmpty(validationError)) 
+            if (!string.IsNullOrEmpty(validationError))
             {
-                return new SubmitAnswerOutput 
+                return new SubmitAnswerOutput
                 {
                     IsSuccess = false,
                     Reason = validationError,
@@ -95,7 +96,7 @@ public class ProctorActor : Actor, IProctorActor
             examState.Answers[input.QuestionId] = input.AnswerIds;
             examState.QuestionTimes[input.QuestionId].SubmittedAt = DateTime.UtcNow;
 
-            var output = new SubmitAnswerOutput() 
+            var output = new SubmitAnswerOutput()
             {
                 IsSuccess = true
             };
@@ -199,7 +200,8 @@ public class ProctorActor : Actor, IProctorActor
                 Answers = examState.Answers,
                 QuestionTimes = examState.QuestionTimes.ToDictionary(c => c.Key, c => new[] { c.Value.StartedAt, c.Value.SubmittedAt }),
                 StartedAt = examState.StartedAt,
-                FinishededAt = examState.FinishedAt.GetValueOrDefault()
+                FinishededAt = examState.FinishedAt.GetValueOrDefault(),
+                TotalDuration = examState.TotalDuration
             });
             examState.Grading = output.Grading;
 
@@ -303,7 +305,6 @@ public class ProctorActor : Actor, IProctorActor
         public string[] QuestionIds { get; set; } = default!;
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
-        // public ExamQuestion? ActiveQuestion {get;set;}
         public TestDurationState TestDuration { get; set; } = default!;
         public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
@@ -317,6 +318,8 @@ public class ProctorActor : Actor, IProctorActor
         public DateTime? FinishedAt { get; set; }
 
         public bool CanSkipQuestion { get; set; }
+
+        public TimeSpan TotalDuration => TestDuration.Method == (int)TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : QuestionIds.Length * TestDuration.Duration;
     }
 
     private class TestDurationState
@@ -324,6 +327,8 @@ public class ProctorActor : Actor, IProctorActor
         public int Method { get; set; }
 
         public TimeSpan Duration { get; set; }
+        
+        public TimeSpan TotalDuration { get; set; }
     }
 
     private class QuestionTiming
