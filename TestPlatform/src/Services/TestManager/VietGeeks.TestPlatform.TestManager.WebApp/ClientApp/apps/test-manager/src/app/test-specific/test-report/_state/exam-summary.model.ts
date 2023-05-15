@@ -38,6 +38,10 @@ export interface ReadonlyQuestionScore {
 }
 
 export interface ExamReview {
+    startedAt: Date;
+    finishedAt: Date;
+    actualTotalDuration: string;
+    totalDuration: string;
     firstName: string;
     lastName: string;
     questions: (Question & ReadonlyQuestionScore)[];

@@ -11,14 +11,12 @@ export class TestDurationService {
 
   mapToTimeSettings(testDuration?: TestDuration): TimeSettings {
     if (testDuration == null) {
-      return {};
+      return { duration: {}, totalDuration: {}, method: 0 };
     }
 
-    const durationString = testDuration.duration?.toString();
-    const duration  = this.parse(durationString);
-
     return {
-      duration: duration,
+      duration: this.parse(testDuration.duration?.toString()),
+      totalDuration: this.parse(testDuration.totalDuration?.toString()),
       method: testDuration.method as number
     };
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ChartOptions } from '@viet-geeks/shared';
 import { firstValueFrom } from 'rxjs';
 import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, TimeSpan } from '../../../api/models';
 import { GradingCriteriaConfigType, InformFactor, RespondentField, TestSession } from '../../../state/test-session.model';
@@ -23,7 +22,6 @@ export class TestFinishComponent implements OnInit {
   testResult?: FinishExamOutput | null;
   maxTime: TimeSpan = {};
   totalTime: TimeSpan = {};
-  chartOptions?: ChartOptions;
   passMarkGrading?: AggregatedGradingOuput;
   afterTestConfig?: AfterTestConfigOutput | null;
   showPassFailMessage = false;
@@ -60,7 +58,6 @@ export class TestFinishComponent implements OnInit {
     const gradings = this.sessionData.grading;
     this.passMarkGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.PassMask)[0];
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
-    this.maxTime = this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this.sessionData.questionCount);
+    this.maxTime = this.sessionData.timeSettings?.totalDuration ?? {}; //this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this.sessionData.questionCount);
   }
-
 }

@@ -32,5 +32,16 @@ public class ExamReview
     public string LastName { get; set; } = default!;
 
     public dynamic Scores { get; set; } = default!;
+
     public dynamic? Grading { get; set; } = default!;
+
+    public DateTime StartedAt { get; set; }
+
+    public DateTime FinishedAt { get; set; }
+
+    public string ActualTotalDuration { get; set; } = default!;
+
+    public string ConfiguredTotalTime { get; set; } = default!;
+
+    public string TotalDuration { get; set; } = default!;
 }

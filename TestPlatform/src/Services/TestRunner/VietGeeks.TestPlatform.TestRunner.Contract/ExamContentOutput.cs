@@ -8,6 +8,7 @@ public class ExamContentOutput
     public TestDuration TestDuration { get; set; } = default!;
 
     public bool CanSkipQuestion { get; set; }
+
     public ExamQuestion? ActiveQuestion { get; set; } = default!;
 }
 
@@ -35,7 +36,7 @@ public class ExamQuestion
 
     public ExamAnswer[] Answers { get; set; } = default!;
 
-    public ExamQuestionScoreSettings? ScoreSettings {get;set;}
+    public ExamQuestionScoreSettings? ScoreSettings { get; set; }
 }
 
 public class ExamAnswer

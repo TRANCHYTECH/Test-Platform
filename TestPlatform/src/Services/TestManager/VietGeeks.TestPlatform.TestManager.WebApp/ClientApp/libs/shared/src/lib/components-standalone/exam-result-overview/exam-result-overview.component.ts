@@ -14,7 +14,7 @@ import { GradingCriteriaConfigType, RangeUnit } from '../../models/test.model';
 export class ExamResultOverviewComponent {
   
   @Input({ required: true })
-  set gradings(value: AggregatedGrading[]) {
+  set gradings(value: AggregatedGrading[] | undefined) {
     this.passMarkGrading = value?.filter(g => g.gradingType == GradingCriteriaConfigType.PassMask)[0];
 
     const gradeRangesGrading = value?.filter(g => g.gradingType == GradingCriteriaConfigType.GradeRanges)[0];

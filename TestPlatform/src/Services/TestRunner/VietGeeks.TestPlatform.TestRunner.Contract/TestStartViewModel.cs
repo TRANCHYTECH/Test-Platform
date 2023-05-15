@@ -100,5 +100,6 @@ public class FinishExamInput
     public DateTime FinishededAt { get; set; }
     public DateTime StartedAt { get; set; }
     public Dictionary<string, DateTime?[]> QuestionTimes { get; set; } = default!;
+    public TimeSpan TotalDuration { get; set; }
     public Dictionary<string, string[]> Answers = default!;
 }

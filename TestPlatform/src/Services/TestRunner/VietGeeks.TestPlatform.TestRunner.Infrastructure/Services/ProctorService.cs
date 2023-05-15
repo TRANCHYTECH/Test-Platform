@@ -168,6 +168,7 @@ public class ProctorService : IProctorService
         exam.StartedAt = input.StartedAt;
         exam.FinishedAt = input.FinishededAt;
         exam.TotalTime = input.FinishededAt - input.StartedAt;
+        exam.TotalDuration = input.TotalDuration;
         exam.QuestionScores = CalculateQuestionScores(selectedQuestions, input.Answers);
         exam.QuestionTimes = input.QuestionTimes;
         exam.FinalMark = CalculateExamMark(exam.QuestionScores);
@@ -180,6 +181,7 @@ public class ProctorService : IProctorService
             nameof(Exam.FinalMark),
             nameof(Exam.Grading),
             nameof(Exam.TotalTime),
+            nameof(Exam.TotalDuration),
             nameof(Exam.QuestionScores),
             nameof(Exam.QuestionTimes) };
         await DB.SaveOnlyAsync(exam, changedProps);
