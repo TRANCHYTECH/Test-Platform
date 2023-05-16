@@ -1,12 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { getTestId, ToastService, UISupportedService } from '@viet-geeks/shared';
-import { TestStatus } from '../../../_state/test-support.model';
 import { BehaviorSubject, filter, Observable } from 'rxjs';
+import { TestStatus } from '../../../_state/test-support.model';
 import { TestActivationMethodType } from '../../_state/tests/test.model';
 import { TestsQuery } from '../../_state/tests/tests.query';
 import { TestsService } from '../../_state/tests/tests.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'viet-geeks-test-specific-layout',
@@ -109,7 +109,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
         // },
         {
           routerLink: ['report', 'test-sheet-review'],
-          text: 'Test sheets review',
+          text: 'Test sheet review',
           icon: 'ri-file-list-3-line',
           disable: false
         }

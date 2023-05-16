@@ -62,7 +62,7 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
     BrowserAnimationsModule,
     LayoutsModule,
     RouterModule.forRoot(appRoutes, {
-
+      bindToComponentInputs: true
     }),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     TranslateModule.forRoot({

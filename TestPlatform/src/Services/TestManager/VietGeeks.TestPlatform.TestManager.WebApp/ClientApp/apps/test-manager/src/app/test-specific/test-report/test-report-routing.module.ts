@@ -21,7 +21,7 @@ const routes: Routes = [
   },
   {
     path: 'test-sheet-review',
-    // title: 'Test sheets review',
+    title: 'Test sheet review',
     component: TestSheetReviewComponent
   }
 ];

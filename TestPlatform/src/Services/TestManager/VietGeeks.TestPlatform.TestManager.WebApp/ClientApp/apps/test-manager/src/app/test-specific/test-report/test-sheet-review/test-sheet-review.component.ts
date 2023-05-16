@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { TestReportBaseComponent } from '../_components/test-report-base.component';
@@ -14,7 +14,10 @@ export class TestSheetReviewComponent extends TestReportBaseComponent {
   @ViewChild('respondentSelector')
   respondentSelector!: NgSelectComponent;
 
-  respondents: Respondent[] = [];
+  @Input()
+  examId?: string;
+
+  respondentSelectorInput?: { dataSource: Respondent[], preSelectedExam?: string };
 
   selectedRespondent?: Respondent;
 
@@ -31,17 +34,22 @@ export class TestSheetReviewComponent extends TestReportBaseComponent {
     this.changeRef.markForCheck();
   }
 
+  override onInit(): void {
+    console.log('on init', this.examId);
+  }
+
   async testRunsSelected(testRunIds: string[]) {
     //todo: only filter client sides with all data there.
     await this.invokeLongAction(() => this.loadRespondents(testRunIds));
   }
 
   respondentSelected($event: Respondent) {
+    this.maskBusyForMainFlow();
     firstValueFrom(this._examSummaryService.getExamReview($event.examId)).then(rs => {
       this.examReview$.next(rs);
       //todo: check why need this.
       this.changeRef.markForCheck();
-    });
+    }).finally(() => this.maskReadyForMainFlow());
   }
 
   displayScorePercentage(score: ScoresPerQuestionCatalog) {
@@ -49,6 +57,7 @@ export class TestSheetReviewComponent extends TestReportBaseComponent {
   }
 
   private async loadRespondents(testRunIds: string[]) {
-    this.respondents = await firstValueFrom(this._examSummaryService.getRespondents(testRunIds));
+    const respondents = await firstValueFrom(this._examSummaryService.getRespondents(testRunIds));
+    this.respondentSelectorInput = { dataSource: respondents, preSelectedExam: this.examId };
   }
 }
