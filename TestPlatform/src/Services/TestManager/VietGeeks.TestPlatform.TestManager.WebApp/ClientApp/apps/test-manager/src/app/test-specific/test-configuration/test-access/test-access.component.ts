@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { assign, forIn, isNumber, range } from 'lodash-es';
 
 import { AppSettingsService } from '@viet-geeks/core';
@@ -10,7 +9,6 @@ import { AppSettings } from '../../../app-setting.model';
 import { TestStatus } from '../../../_state/test-support.model';
 
 //todo(tau): PLAN - Implement test set selection
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-access',
   templateUrl: './test-access.component.html',

@@ -1,14 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getTestId, ToastService, UISupportedService } from '@viet-geeks/shared';
 import { TestStatus } from '../../../_state/test-support.model';
 import { BehaviorSubject, filter, Observable } from 'rxjs';
 import { TestActivationMethodType } from '../../_state/tests/test.model';
 import { TestsQuery } from '../../_state/tests/tests.query';
 import { TestsService } from '../../_state/tests/tests.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-specific-layout',
   templateUrl: './test-specific-layout.component.html',
@@ -33,9 +32,10 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private _uiSupportedService = inject(UISupportedService);
+  private _destroyRef = inject(DestroyRef);
 
   constructor() {
-    this._router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
+    this._router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this.testId = getTestId(this._route);
 
       const isNewTest = this.testId === 'new';
@@ -118,7 +118,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this._testsQuery.selectActive().pipe(untilDestroyed(this), filter(test => test !== undefined)).subscribe(test => {
+    this._testsQuery.selectActive().pipe(takeUntilDestroyed(this._destroyRef), filter(test => test !== undefined)).subscribe(test => {
       if (test !== undefined) {
         this.pageTitle = test.basicSettings.name;
         this.testStatus = test.status;

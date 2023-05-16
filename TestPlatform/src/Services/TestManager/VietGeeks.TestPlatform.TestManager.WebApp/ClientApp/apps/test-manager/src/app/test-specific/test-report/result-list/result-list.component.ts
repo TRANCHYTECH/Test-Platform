@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { ExamSummary } from '../_state/exam-summary.model';
 import { TestReportBaseComponent } from '../_components/test-report-base.component';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-result-list',
   templateUrl: './result-list.component.html',

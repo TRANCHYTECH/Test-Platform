@@ -1,15 +1,15 @@
-import { Injectable, inject } from "@angular/core";
+import { DestroyRef, Injectable, inject } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router } from "@angular/router";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { BehaviorSubject, filter } from "rxjs";
 import { getPageTitle } from "../functions/router-param-functions";
 
-@UntilDestroy()
 @Injectable({ providedIn: 'root' })
 export class UISupportedService {
     private _sectionTitle = new BehaviorSubject<string>('Section title');
 
     private _router = inject(Router);
+    private _destroyRef = inject(DestroyRef);
 
     get sectionTitle() {
         return this._sectionTitle.asObservable();
@@ -17,7 +17,7 @@ export class UISupportedService {
 
     constructor() {
         // Default section title defined in route.
-        this._router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
+        this._router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
             this._sectionTitle.next(getPageTitle(this._router));
         });
     }

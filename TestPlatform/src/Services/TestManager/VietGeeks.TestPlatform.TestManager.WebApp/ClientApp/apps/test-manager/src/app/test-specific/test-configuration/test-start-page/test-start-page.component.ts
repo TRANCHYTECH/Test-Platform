@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { differenceWith } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { RespondentIdentifyConfig } from '../../_state/tests/test.model';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-start-page',
   templateUrl: './test-start-page.component.html',

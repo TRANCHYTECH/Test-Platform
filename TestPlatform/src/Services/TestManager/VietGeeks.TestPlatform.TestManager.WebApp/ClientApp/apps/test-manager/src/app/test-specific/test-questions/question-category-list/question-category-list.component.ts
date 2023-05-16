@@ -1,14 +1,13 @@
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { UiIntegrationService } from '../../../_state/ui-integration.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, firstValueFrom } from 'rxjs';
+import { UiIntegrationService } from '../../../_state/ui-integration.service';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-question-category-list',
   templateUrl: './question-category-list.component.html',
@@ -47,7 +46,7 @@ export class QuestionCategoryListComponent extends TestSpecificBaseComponent {
 
     this._questionCategoryQuery
       .selectAll({ filterBy: entity => entity.id !== QuestionCategoryGenericId })
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(rs => this.categories$.next(rs));
   }
 }

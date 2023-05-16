@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { TestReportBaseComponent } from '../_components/test-report-base.component';
-import { ExamReview, Respondent, ScoresPerQuestionCatalog } from '../_state/exam-summary.model';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { TestReportBaseComponent } from '../_components/test-report-base.component';
+import { ExamReview, Respondent, ScoresPerQuestionCatalog } from '../_state/exam-summary.model';
 
 @Component({
   selector: 'viet-geeks-test-sheet-review',

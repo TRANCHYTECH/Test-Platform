@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { TestCategory, TestCategoryUncategorizedId } from '../../_state/test-category.model';
 import { TestCategoryQuery } from '../../_state/test-category.query';
 import { TestCategoryService } from '../../_state/test-category.service';
 import { UiIntegrationService } from '../../_state/ui-integration.service';
 import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-category-list',
   templateUrl: './test-category-list.component.html',
@@ -19,6 +18,7 @@ export class TestCategoryListComponent implements OnInit {
   private _testCategoryService = inject(TestCategoryService);
   private _uiIntegrationService = inject(UiIntegrationService);
   private _testCategoryQuery = inject(TestCategoryQuery);
+  private _destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.loadData();
@@ -37,7 +37,7 @@ export class TestCategoryListComponent implements OnInit {
 
     this._testCategoryQuery
       .selectAll({ filterBy: entity => entity.id !== TestCategoryUncategorizedId })
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(rs => this.categories$.next(rs));
   }
 }

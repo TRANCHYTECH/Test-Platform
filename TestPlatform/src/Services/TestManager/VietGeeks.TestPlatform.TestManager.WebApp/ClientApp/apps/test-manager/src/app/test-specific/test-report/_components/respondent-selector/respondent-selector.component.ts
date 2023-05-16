@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'lodash-es';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Respondent } from '../../_state/exam-summary.model';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-respondent-selector',
   templateUrl: './respondent-selector.component.html',
@@ -20,6 +19,7 @@ export class RespondentSelectorComponent implements OnInit {
   respondents: Respondent[] = [];
   filteredRespondents$ = new BehaviorSubject<Respondent[]>([]);
 
+  private _destroyRef = inject(DestroyRef);
   private _searchText$ = new BehaviorSubject<string>('');
 
   @Input()
@@ -42,7 +42,7 @@ export class RespondentSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this._searchText$.pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this._destroyRef),
       debounceTime(50),
       distinctUntilChanged()).subscribe(text => {
         const searchTerm = text.toLowerCase();
