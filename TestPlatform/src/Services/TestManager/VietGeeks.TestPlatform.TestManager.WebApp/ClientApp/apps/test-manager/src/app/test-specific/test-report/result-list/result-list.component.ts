@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { ExamSummary } from '../_state/exam-summary.model';
 import { TestReportBaseComponent } from '../_components/test-report-base.component';
+import { ExamSummary } from '../_state/exam-summary.model';
 
 @Component({
   selector: 'viet-geeks-result-list',
@@ -31,5 +31,11 @@ export class ResultListComponent extends TestReportBaseComponent {
 
   async testRunsSelected(testRunIds: string[]) {
     await this.invokeLongAction(() => this.loadExamSummaries(testRunIds));
+  }
+
+  showDetails(exam: ExamSummary) {
+    this.router.navigate(['../test-sheet-review'], { relativeTo: this.route, queryParams: {
+      examId: exam.id
+    } });
   }
 }

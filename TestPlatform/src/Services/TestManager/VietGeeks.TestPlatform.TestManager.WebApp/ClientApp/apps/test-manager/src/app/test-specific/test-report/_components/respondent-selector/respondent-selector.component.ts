@@ -23,10 +23,10 @@ export class RespondentSelectorComponent implements OnInit {
   private _searchText$ = new BehaviorSubject<string>('');
 
   @Input()
-  set data(value: Respondent[]) {
-    this.respondents = value;
+  set data(data: { dataSource: Respondent[], preSelectedExam?: string } | undefined) {
+    this.respondents = data?.dataSource ?? [];
     if (this.respondents.length > 0) {
-      this.selectRespondent({ data: this.respondents[0] });
+      this.selectRespondent({ data: this.respondents.find(c => c.examId === data?.preSelectedExam) ?? this.respondents[0] });
       this.filteredRespondents$.next(this.respondents);
     }
   }

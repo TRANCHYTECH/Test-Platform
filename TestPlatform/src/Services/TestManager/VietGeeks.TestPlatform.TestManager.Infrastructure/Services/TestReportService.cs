@@ -38,6 +38,7 @@ public class TestReportService : ITestReportService
             .Match(c => testRunIds.Contains(c.TestRunId))
             .Project(c => new Exam
             {
+                ID = c.ID,
                 ExamineeInfo = c.ExamineeInfo,
                 FinalMark = c.FinalMark,
                 StartedAt = c.StartedAt,
@@ -174,8 +175,7 @@ public class TestReportService : ITestReportService
 
     private int GetActualScores(Exam exam, string questionId)
     {
-        //todo: Confirm the case user doesn't answer the question, do we store to questionscores with incorrect points from scoresettings's question?
-        if (exam.QuestionScores.TryGetValue(questionId, out int point))
+       if (exam.QuestionScores.TryGetValue(questionId, out int point))
         {
             return point;
         }
