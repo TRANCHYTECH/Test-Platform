@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { Summary, SummaryBuilder } from './summary-builder';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
@@ -8,7 +7,6 @@ import { TestCategoryQuery } from '../../../_state/test-category.query';
 import { TestCategoryService } from '../../../_state/test-category.service';
 import { TestStatus } from '../../../_state/test-support.model';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-overview',
   templateUrl: './overview.component.html',

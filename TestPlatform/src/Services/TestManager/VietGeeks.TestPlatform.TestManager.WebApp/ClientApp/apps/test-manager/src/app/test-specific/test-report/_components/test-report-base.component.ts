@@ -5,10 +5,7 @@ import { firstValueFrom } from "rxjs";
 import { ExamSummaryService } from "../_state/exam-summary.service";
 import { UserProfileService } from "@viet-geeks/core";
 
-@Component({
-    selector: 'viet-geeks-test-report-base',
-    template: ''
-})
+@Component({ template: '' })
 export class TestReportBaseComponent extends TestSpecificBaseComponent {
     testRuns: TestRunSummary[] = [];
 

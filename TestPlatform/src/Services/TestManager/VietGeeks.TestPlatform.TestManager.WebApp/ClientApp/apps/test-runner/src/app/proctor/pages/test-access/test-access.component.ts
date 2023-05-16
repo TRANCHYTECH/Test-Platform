@@ -1,17 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProctorService } from '../../services/proctor.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '@viet-geeks/shared';
 import { FingerprintjsProAngularService } from '@fingerprintjs/fingerprintjs-pro-angular';
-import { TestSessionStore } from '../../../state/test-session.store';
 import { ErrorDetails, VerifyTestOutputViewModel } from '../../../api/models';
 import { ExamCurrentStep } from '../../../state/test-session.model';
 import { TestSessionService } from '../../services/test-session.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-access',
   templateUrl: './test-access.component.html',
@@ -26,6 +24,7 @@ export class TestAccessComponent implements OnInit {
   private _notifyService = inject(ToastService);
   private _testSessionService = inject(TestSessionService);
   private _fingerprintjsProAngularService = inject(FingerprintjsProAngularService);
+  private _destroyRef = inject(DestroyRef);
 
   verifyTestForm: FormGroup;
   isLoading = false;
@@ -41,7 +40,7 @@ export class TestAccessComponent implements OnInit {
       console.log('visitor info', c);
     });
 
-    this._route.params.pipe(untilDestroyed(this)).subscribe(p => {
+    this._route.params.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(p => {
       const accessCode = p['access-code'];
       if (accessCode) {
         this.verifyTestForm.setValue({

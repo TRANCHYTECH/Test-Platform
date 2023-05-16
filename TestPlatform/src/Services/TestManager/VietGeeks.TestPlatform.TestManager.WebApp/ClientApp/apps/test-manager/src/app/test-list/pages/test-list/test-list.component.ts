@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { defaultPaginationConfig, PrimaryBaseComponent } from '@viet-geeks/shared';
 import { TestCategory } from '../../../_state/test-category.model';
 import { TestCategoryQuery } from '../../../_state/test-category.query';
@@ -8,7 +7,6 @@ import { tap } from 'rxjs';
 import { TestOverview } from '../../_state/test-overview.model';
 import { TestOverviewService } from '../../_state/test-overview.service';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-list',
   templateUrl: './test-list.component.html',

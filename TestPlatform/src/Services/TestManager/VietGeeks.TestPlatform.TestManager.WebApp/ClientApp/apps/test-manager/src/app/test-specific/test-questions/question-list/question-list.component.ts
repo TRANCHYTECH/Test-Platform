@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PaginationComponent } from '@viet-geeks/shared';
 import { BehaviorSubject, firstValueFrom, tap } from 'rxjs';
+import { AnswerType, Question } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { AnswerType, Question } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionsQuery } from '../../_state/questions/question.query';
 import { QuestionService } from '../../_state/questions/question.service';
-import { PaginationComponent } from '@viet-geeks/shared';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-question-list',
   templateUrl: './question-list.component.html',
@@ -40,7 +39,7 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
 
     await Promise.all([firstValueFrom(this._questionCategoriesService.get(this.testId))]);
 
-    this._questionsQuery.selectAll().pipe(untilDestroyed(this)).subscribe(questions => {
+    this._questionsQuery.selectAll().pipe(takeUntilDestroyed(this._destroyRef)).subscribe(questions => {
       this.questions$.next(questions);
     });
 

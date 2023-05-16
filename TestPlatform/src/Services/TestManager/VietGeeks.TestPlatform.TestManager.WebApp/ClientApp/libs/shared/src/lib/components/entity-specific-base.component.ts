@@ -1,13 +1,8 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { UntilDestroy } from "@ngneat/until-destroy";
 import { PrimaryBaseComponent } from "./primary-base.component";
 
-@UntilDestroy()
-@Component({
-    selector: 'viet-geeks-entity-specific-base',
-    template: ''
-})
+@Component({ template: '' })
 export abstract class EntitySpecificBaseComponent extends PrimaryBaseComponent implements OnInit {
     router = inject(Router);
     protected _refreshAfterSubmit = true;

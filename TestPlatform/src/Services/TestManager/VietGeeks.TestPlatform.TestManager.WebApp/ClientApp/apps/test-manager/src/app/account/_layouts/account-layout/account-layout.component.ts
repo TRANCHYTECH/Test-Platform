@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getPageTitle } from '@viet-geeks/shared';
 import { BehaviorSubject, filter } from 'rxjs';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-account-layout',
   templateUrl: './account-layout.component.html',
@@ -17,9 +16,10 @@ export class AccountLayoutComponent {
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
 
   private _router = inject(Router);
+  private _destroyRef = inject(DestroyRef);
 
   constructor() {
-    this._router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe(() => {
+    this._router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this.sectionTitle = getPageTitle(this._router);
     });
 

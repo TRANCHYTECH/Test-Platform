@@ -1,14 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { createMask } from '@ngneat/input-mask';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { UserProfileService } from '@viet-geeks/core';
 import { TestStatus } from '../../../_state/test-support.model';
 import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/tests/test.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const TestDurationMethod =
 {
@@ -22,7 +20,6 @@ export const TestActivationMethodType =
   TimePeriod: 2
 }
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-test-time-settings',
   templateUrl: './test-time-settings.component.html',
@@ -253,9 +250,9 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
     });
 
     // Use this in combination with dateGreaterThanValidator to trigger validation again when activeFromDate is changed.
-    this.setupControlValidityTrigger(this.testActivationMethodCtrl, [TestActivationMethodType.TimePeriod.toString(), 'activeFromDate'], [[TestActivationMethodType.TimePeriod.toString(), 'activeUntilDate']]);
-    this.listenTypeChange(this.testDurationMethodCtrl, this, values(TestDurationMethod));
-    this.listenTypeChange(this.testActivationMethodCtrl, this, values(TestActivationMethodType));
+    this.setupControlValidityTrigger(this._destroyRef, this.testActivationMethodCtrl, [TestActivationMethodType.TimePeriod.toString(), 'activeFromDate'], [[TestActivationMethodType.TimePeriod.toString(), 'activeUntilDate']]);
+    this.listenTypeChange(this._destroyRef, this.testDurationMethodCtrl, values(TestDurationMethod));
+    this.listenTypeChange(this._destroyRef, this.testActivationMethodCtrl, values(TestActivationMethodType));
     // Disable skip question option if the duration method is complete question.
     this.testDurationMethodCtrl.controls['type'].valueChanges.pipe().subscribe((c: number) => {
       const action = this.getChangeControlStateMethod(c === TestDurationMethod.CompleteTestTime);

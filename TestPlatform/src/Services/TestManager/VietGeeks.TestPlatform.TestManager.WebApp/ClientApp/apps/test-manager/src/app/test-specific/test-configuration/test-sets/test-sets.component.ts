@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators, FormControl } from '@angular/forms';
 import { find, forEach } from 'lodash-es';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { firstValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
@@ -10,7 +9,7 @@ import { QuestionCategoriesService } from '../../_state/question-categories/ques
 import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
 import { GeneratorTypes, TestSets } from '../../_state/tests/test.model';
-@UntilDestroy()
+
 @Component({
   selector: 'viet-geeks-test-sets',
   templateUrl: './test-sets.component.html',

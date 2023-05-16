@@ -1,14 +1,12 @@
-import { Component, inject } from "@angular/core";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Component, DestroyRef, inject } from "@angular/core";
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxSpinnerService } from "ngx-spinner";
 import { BehaviorSubject, combineLatest, of, switchMap } from "rxjs";
 
-@UntilDestroy()
-@Component({
-    selector: 'viet-geeks-primary-base',
-    template: ''
-})
+@Component({ template: '' })
 export abstract class PrimaryBaseComponent {
+    protected _destroyRef = inject(DestroyRef);
+
     // There are usually 2 flows, first is for main data, second is for supply data. 
     private _readyForUI = [new BehaviorSubject(false), new BehaviorSubject(false)];
 
@@ -35,7 +33,7 @@ export abstract class PrimaryBaseComponent {
     }
 
     protected configureLoadingIndicator() {
-        this.readyForUI$.pipe(untilDestroyed(this)).subscribe(v => {
+        this.readyForUI$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(v => {
             if (!v) {
                 this._spinner.show(undefined, {
                     type: 'ball-fussion',

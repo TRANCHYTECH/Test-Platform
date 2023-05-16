@@ -1,18 +1,15 @@
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { untilDestroyed } from "@ngneat/until-destroy";
 import { EntitySpecificBaseComponent, getTestId, TextEditorConfigsService, ToastService } from "@viet-geeks/shared";
-import { TestStatus } from '../../_state/test-support.model';
 import { firstValueFrom } from "rxjs";
+import { TestStatus } from '../../_state/test-support.model';
 import { createTest, Test } from "../_state/tests/test.model";
 import { TestsQuery } from "../_state/tests/tests.query";
 import { TestsService } from "../_state/tests/tests.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-@Component({
-    selector: 'viet-geeks-test-specific-base',
-    template: ''
-})
+@Component({ template: '' })
 export abstract class TestSpecificBaseComponent extends EntitySpecificBaseComponent implements OnInit, OnDestroy {
     testId!: string;
     test: Test = createTest({});
@@ -66,9 +63,8 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
     }
 
     //todo(tau): how to generalize it?
-    setupControlValidityTrigger(parent: FormGroup, sourcePath: string[], targetPaths: string[][]) {
-        //todo: improve the destroying subscription.
-        parent.get(sourcePath)?.valueChanges.pipe(untilDestroyed(this)).subscribe(() => setTimeout(() => {
+    setupControlValidityTrigger(instance: DestroyRef, parent: FormGroup, sourcePath: string[], targetPaths: string[][]) {
+        parent.get(sourcePath)?.valueChanges.pipe(takeUntilDestroyed(instance)).subscribe(() => setTimeout(() => {
             targetPaths.forEach(p => {
                 const control = parent.get(p);
                 control?.updateValueAndValidity();
@@ -77,8 +73,9 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
         }));
     }
 
-    listenTypeChange(formGroup: FormGroup, instance: object, controlIds: number[]) {
-        formGroup.get(['type'])?.valueChanges.pipe(untilDestroyed(instance)).subscribe(v => {
+    listenTypeChange(instance: DestroyRef, formGroup: FormGroup, controlIds: number[]) {
+        formGroup.get(['type'])?.valueChanges.pipe(takeUntilDestroyed(instance)).subscribe(v => {
+            console.log('formGroup type changed');
             controlIds.forEach(id => {
                 const ctrl = formGroup.get([id.toString()]);
                 v === id ? ctrl?.enable() : ctrl?.disable();
@@ -87,16 +84,16 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
     }
 
     //todo: rename it
-    listenToToggleControlState<T>(instance: T, formGroup: FormGroup, sourcePath: string, targetPath: string) {
-        formGroup.controls[sourcePath].valueChanges.pipe(untilDestroyed(instance)).subscribe((v: boolean) => {
-          setTimeout(() => {
-            const method = this.getChangeControlStateMethod(v);
-            formGroup.controls[targetPath][method]();
-          }, 100);
+    listenToToggleControlState(instance: DestroyRef, formGroup: FormGroup, sourcePath: string, targetPath: string) {
+        formGroup.controls[sourcePath].valueChanges.pipe(takeUntilDestroyed(instance)).subscribe((v: boolean) => {
+            setTimeout(() => {
+                const method = this.getChangeControlStateMethod(v);
+                formGroup.controls[targetPath][method]();
+            }, 100);
         });
-      }
+    }
 
     getChangeControlStateMethod(v: boolean) {
         return v ? 'enable' : 'disable';
-      }
+    }
 }

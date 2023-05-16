@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthClientConfig, AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { InputMaskModule } from '@ngneat/input-mask';
@@ -66,7 +65,6 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
 
     }),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
-    AkitaNgRouterStoreModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {

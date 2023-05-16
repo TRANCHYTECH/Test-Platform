@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { find, findIndex, forIn, sumBy } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
@@ -9,8 +8,8 @@ import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models
 import { QuestionService } from '../../_state/questions/question.service';
 import { GradeRangeCriteriaDetail, GradingSettings, GradeRangeCriteria, PassMaskCriteria, TestEndConfig } from '../../_state/tests/test.model';
 import { GradingCriteriaConfigTypeUI, GradeTypeUI, InformFactorUI, RangeUnit, GradeType, GradingCriteriaConfigType, InformFactorCriteriaUI, RangeDetailsUI, InformFactor } from '../../_state/ui/grading-summary-ui.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-grading-and-summary',
   templateUrl: './grading-and-summary.component.html',
@@ -122,23 +121,23 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     });
 
     // Triggers. 
-    this.setupControlValidityTrigger(this.testEndConfigCtrl, ['redirectTo'], [['toAddress']]);
-    this.setupControlValidityTrigger(this.passMaskGradeCtrl, ['unit'], [['value']]);
-    this.listenToToggleControlState(this, this.testEndConfigCtrl, 'redirectTo', 'toAddress');
+    this.setupControlValidityTrigger(this._destroyRef, this.testEndConfigCtrl, ['redirectTo'], [['toAddress']]);
+    this.setupControlValidityTrigger(this._destroyRef, this.passMaskGradeCtrl, ['unit'], [['value']]);
+    this.listenToToggleControlState(this._destroyRef, this.testEndConfigCtrl, 'redirectTo', 'toAddress');
 
     // Trigger running validators of range [From, To].
-    this.gradeRangesCtrl.controls['unit'].valueChanges.pipe(untilDestroyed(this)).subscribe(() => {
+    this.gradeRangesCtrl.controls['unit'].valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls();
     });
 
     // Trigger to enable/disable grade ranges based on grade type.
-    this.gradeRangesCtrl.controls['gradeType'].valueChanges.pipe(untilDestroyed(this)).subscribe((gradeType) => {
+    this.gradeRangesCtrl.controls['gradeType'].valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((gradeType) => {
       this.updateStatuesOfGradeRangeDetailsFormCtrls(gradeType);
       this._refreshInforFactorFormReq$.next({ criteriaId: GradingCriteriaConfigType.GradeRanges, enabled: true });
     });
 
     // Trigger to enable/disable controls of inform factor form.
-    this._refreshInforFactorFormReq$.pipe(untilDestroyed(this)).subscribe(rs => {
+    this._refreshInforFactorFormReq$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(rs => {
       switch (rs.criteriaId) {
         case GradingCriteriaConfigType.PassMask:
           this.updateInformFactorFormByPassMask(rs.enabled);

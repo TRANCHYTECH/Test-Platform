@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { UserBaseComponent } from '../_base/user-base.component';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-general-information',
   templateUrl: './general-information.component.html',

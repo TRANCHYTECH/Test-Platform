@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService, UISupportedService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
@@ -12,6 +11,7 @@ import { QuestionCategoriesQuery } from '../../_state/question-categories/questi
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
 import { Answer, AnswerType, Question, ScoreSettings } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const AnswerTypes = [
   {
@@ -36,7 +36,6 @@ const AnswerTypes = [
   }
 ];
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-question-details',
   templateUrl: './question-details.component.html',
@@ -68,6 +67,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
   private _questionService = inject(QuestionService);
   private _changeRef = inject(ChangeDetectorRef);
   private _uiSupportedService = inject(UISupportedService);
+  private _destroyRef = inject(DestroyRef);
 
   constructor() {
     this.questionForm = this._fb.group({
@@ -117,7 +117,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
   }
 
   ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe(async p => {
+    this.route.params.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(async p => {
       this.testId = getTestId(this.route);
       this.questionId = p['question-id'];
 
@@ -264,13 +264,13 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
 
   private registerControlEvents() {
     const answerTypeControl = this.questionForm.get('answerType') as FormControl;
-    answerTypeControl.valueChanges.pipe(untilDestroyed(this)).subscribe(t => {
+    answerTypeControl.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(t => {
       this.isMultipleChoiceAnswer = this.isMultipleChoice(t);
       this.answerType = t;
     });
 
     const isPartialAnswersEnabledControl = this.scoreSettingsForm.get('isPartialAnswersEnabled') as FormControl;
-    isPartialAnswersEnabledControl.valueChanges.pipe(untilDestroyed(this)).subscribe(v => {
+    isPartialAnswersEnabledControl.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(v => {
       this.isPartialScore = v;
       this.scoreSettingsForm.get('correctPoint')?.updateValueAndValidity();
       this.scoreSettingsForm.get('incorrectPoint')?.updateValueAndValidity();

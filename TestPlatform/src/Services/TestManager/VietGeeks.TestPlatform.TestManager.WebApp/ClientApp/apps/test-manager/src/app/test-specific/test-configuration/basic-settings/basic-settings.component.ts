@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { TestCategory, TestCategoryUncategorizedId } from '../../../_state/test-category.model';
 import { TestCategoryQuery } from '../../../_state/test-category.query';
 import { TestCategoryService } from '../../../_state/test-category.service';
@@ -8,7 +7,6 @@ import { UiIntegrationService } from '../../../_state/ui-integration.service';
 import { Observable, lastValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 
-@UntilDestroy()
 @Component({
   selector: 'viet-geeks-basic-settings',
   templateUrl: './basic-settings.component.html',
