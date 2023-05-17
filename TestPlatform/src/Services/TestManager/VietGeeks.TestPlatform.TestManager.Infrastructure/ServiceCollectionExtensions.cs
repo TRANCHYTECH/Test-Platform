@@ -5,6 +5,8 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
+using VietGeeks.TestPlatform.TestManager.Contract;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.MapperProfiles;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
 
@@ -24,7 +26,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IQuestionPointCalculationService, QuestionPointCalculationService>();
         serviceCollection.AddScoped<IQuestionRelatedValidationService, QuestionRelatedValidationService>();
         serviceCollection.AddSingleton<IClock, Clock>();
-        serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
+        serviceCollection.AddAutoMapper(cfg => { cfg.CreateMap<string, EncryptedId>().ConvertUsing<EncryptIdConverter>(); }, typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
         serviceCollection.AddAzureClients(builder => builder.AddServiceBusClient(options.ServiceBus.ConnectionString));
 

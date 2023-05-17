@@ -3,7 +3,7 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
 {
     public class TestDefinitionOverview
     {
-        public string Id { get; set; } = default!;
+        public EncryptedId Id { get; set; } = default!;
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public DateTime CreatedOn { get; set; } = default!;

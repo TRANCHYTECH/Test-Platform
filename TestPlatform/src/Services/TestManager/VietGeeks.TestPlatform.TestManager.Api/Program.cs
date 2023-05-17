@@ -1,8 +1,13 @@
 using VietGeeks.TestPlatform.AspNetCore;
+using VietGeeks.TestPlatform.TestManager.Api;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+// For minimal APIS.
+// builder.Services.Configure<JsonOptions>(opts => {
+//     opts.SerializerOptions.Converters.Add(new EncryptedIdConverter());
+// });
+builder.Services.AddControllers().AddJsonOptions(opts => opts.JsonSerializerOptions.Converters.Add(new EncryptedIdConverter()));
 builder.Services.AddVietGeeksAspNetCore(new()
 {
     Auth = builder.Configuration.GetSection("Auth").Get<AuthOptions>()
