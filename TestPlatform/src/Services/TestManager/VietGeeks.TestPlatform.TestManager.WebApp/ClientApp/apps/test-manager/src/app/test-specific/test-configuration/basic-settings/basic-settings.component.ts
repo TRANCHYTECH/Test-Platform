@@ -33,11 +33,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
 
   async postLoadEntity(): Promise<void> {
     await Promise.all([this._testCategoryService.get()]);
-    if (this.isNewTest) {
-      this._refreshAfterSubmit = false;
-    }
-    else {
-      this._refreshAfterSubmit = true;
+    if (!this.isNewTest) {
       const testCatetory = this._testCategoryQuery.getEntityWithFallback(this.test.basicSettings.category);
       this.basicSettingForm.reset({
         id: this.test.id,
@@ -61,7 +57,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     const basicSettings = { name: formValue.name, category: formValue.category, description: formValue.description };
     if (formValue.id === null) {
       const createdTest = await lastValueFrom(this.testsService.add({ basicSettings: basicSettings }));
-      this.router.navigate(['test', createdTest.id, 'config', 'basic-settings']);
+      await this.router.navigate(['test', createdTest.id, 'config', 'basic-settings']);
       this.notifyService.success('Test created');
     } else {
       await this.testsService.update(formValue.id, { basicSettings: basicSettings });
