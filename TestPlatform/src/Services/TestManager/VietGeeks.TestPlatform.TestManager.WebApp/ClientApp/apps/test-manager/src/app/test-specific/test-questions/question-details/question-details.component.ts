@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { CanComponentDeactivate, getTestId, IdService, TextEditorConfigsService, ToastService, UISupportedService } from '@viet-geeks/shared';
+import { DeactivatableComponent, getTestId, IdService, TextEditorConfigsService, ToastService, UISupportedService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
-import { firstValueFrom, from, lastValueFrom, Observable, of } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import { Answer, AnswerType, Question, ScoreSettings } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { UiIntegrationService } from '../../../_state/ui-integration.service';
 import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { Answer, AnswerType, Question, ScoreSettings } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const AnswerTypes = [
   {
@@ -42,7 +42,7 @@ const AnswerTypes = [
   styleUrls: ['./question-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate {
+export class QuestionDetailsComponent implements OnInit, DeactivatableComponent {
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
   scoreSettingsForm: FormGroup;
@@ -103,18 +103,7 @@ export class QuestionDetailsComponent implements OnInit, CanComponentDeactivate 
       isMandatory: false
     });
   }
-
-  //todo: move it to Guard CanDeativate
-  canDeactivate() {
-    if (!this.canSubmit || this.isSubmitted) {
-      return of(true);
-    }
-
-    return from(this.notifyService.confirm('You have unsave changed. Are you sure you want to leave?')
-      .then((result) => {
-        return result.isConfirmed;
-      }));
-  }
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.questionForm.dirty;
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(async p => {

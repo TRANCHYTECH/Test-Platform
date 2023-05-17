@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
+import { DeactivatableComponent } from '@viet-geeks/shared';
 import { differenceWith } from 'lodash-es';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { RespondentIdentifyConfig } from '../../_state/tests/test.model';
@@ -9,7 +10,7 @@ import { RespondentIdentifyConfig } from '../../_state/tests/test.model';
   templateUrl: './test-start-page.component.html',
   styleUrls: ['./test-start-page.component.scss'],
 })
-export class TestStartPageComponent extends TestSpecificBaseComponent {
+export class TestStartPageComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   testStartPageForm!: FormGroup;
 
   fieldConfigs = [
@@ -34,6 +35,8 @@ export class TestStartPageComponent extends TestSpecificBaseComponent {
       value: 'Phone'
     }
   ];
+
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.testStartPageForm.dirty;
 
   get respondentIdentifyConfig() {
     return this.testStartPageForm.controls['respondentIdentifyConfig'] as FormArray<FormGroup>;

@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { DeactivatableComponent } from '@viet-geeks/shared';
 import { find, findIndex, forIn, sumBy } from 'lodash-es';
 import { Subject } from 'rxjs';
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionService } from '../../_state/questions/question.service';
-import { GradeRangeCriteriaDetail, GradingSettings, GradeRangeCriteria, PassMaskCriteria, TestEndConfig } from '../../_state/tests/test.model';
-import { GradingCriteriaConfigTypeUI, GradeTypeUI, InformFactorUI, RangeUnit, GradeType, GradingCriteriaConfigType, InformFactorCriteriaUI, RangeDetailsUI, InformFactor } from '../../_state/ui/grading-summary-ui.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { GradeRangeCriteria, GradeRangeCriteriaDetail, GradingSettings, PassMaskCriteria, TestEndConfig } from '../../_state/tests/test.model';
+import { GradeType, GradeTypeUI, GradingCriteriaConfigType, GradingCriteriaConfigTypeUI, InformFactor, InformFactorCriteriaUI, InformFactorUI, RangeDetailsUI, RangeUnit } from '../../_state/ui/grading-summary-ui.model';
 
 @Component({
   selector: 'viet-geeks-grading-and-summary',
@@ -16,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./grading-and-summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
+export class GradingAndSummaryComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   GradingCriteriaConfigTypeUI = GradingCriteriaConfigTypeUI;
   GradeTypeUI = GradeTypeUI;
   InformFactorUI = InformFactorUI;
@@ -48,6 +49,8 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent {
     maxPoint: 0,
     maxPercentage: 100
   };
+
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.gradeForm.dirty;
 
   private _questionService = inject(QuestionService);
   private _refreshInforFactorFormReq$ = new Subject<{ criteriaId: number, enabled: boolean }>();

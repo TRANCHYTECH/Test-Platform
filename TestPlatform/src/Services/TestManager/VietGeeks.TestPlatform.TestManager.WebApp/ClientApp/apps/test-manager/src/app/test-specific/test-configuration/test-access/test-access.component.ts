@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { assign, forIn, isNumber, range } from 'lodash-es';
-
 import { AppSettingsService } from '@viet-geeks/core';
-import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
-import { TestAccessType, TestInvitationStats, TestAccessTypeUI, TestAccess, GroupPasswordType, PublicLinkType, PrivateAccessCodeType } from '../../_state/tests/test.model';
-import { AppSettings } from '../../../app-setting.model';
+import { DeactivatableComponent } from '@viet-geeks/shared';
+import { assign, forIn, isNumber, range } from 'lodash-es';
 import { TestStatus } from '../../../_state/test-support.model';
+import { AppSettings } from '../../../app-setting.model';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
+import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess, TestAccessType, TestAccessTypeUI, TestInvitationStats } from '../../_state/tests/test.model';
 
 //todo(tau): PLAN - Implement test set selection
 @Component({
@@ -15,7 +15,7 @@ import { TestStatus } from '../../../_state/test-support.model';
   styleUrls: ['./test-access.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestAccessComponent extends TestSpecificBaseComponent {
+export class TestAccessComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   readonly TestAccessType = TestAccessType;
 
   appSettingsService = inject(AppSettingsService);
@@ -62,6 +62,8 @@ export class TestAccessComponent extends TestSpecificBaseComponent {
     this._publicTestAccessLink = `${this.appSettingsService.get<AppSettings>().testRunnerBaseUrl}/test/public/${this.testId}`;
     return this._publicTestAccessLink;
   }
+
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.testAccessForm.dirty;
 
   constructor() {
     super();

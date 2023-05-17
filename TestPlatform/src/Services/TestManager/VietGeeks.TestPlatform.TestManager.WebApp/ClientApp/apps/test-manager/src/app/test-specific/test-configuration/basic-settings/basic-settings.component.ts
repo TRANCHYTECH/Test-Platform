@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
+import { DeactivatableComponent } from '@viet-geeks/shared';
+import { Observable, lastValueFrom } from 'rxjs';
 import { TestCategory, TestCategoryUncategorizedId } from '../../../_state/test-category.model';
 import { TestCategoryQuery } from '../../../_state/test-category.query';
 import { TestCategoryService } from '../../../_state/test-category.service';
 import { UiIntegrationService } from '../../../_state/ui-integration.service';
-import { Observable, lastValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 
 @Component({
@@ -13,7 +14,7 @@ import { TestSpecificBaseComponent } from '../../_base/test-specific-base.compon
   styleUrls: ['./basic-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BasicSettingsComponent extends TestSpecificBaseComponent {
+export class BasicSettingsComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   basicSettingForm: FormGroup;
   testCategories$!: Observable<TestCategory[]>;
 
@@ -30,6 +31,8 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
       description: ''
     });
   }
+
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.basicSettingForm.dirty;
 
   async postLoadEntity(): Promise<void> {
     await Promise.all([this._testCategoryService.get()]);

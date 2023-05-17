@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { canDeactivateForm } from '@viet-geeks/shared';
 import { QuestionCategoryListComponent } from './question-category-list/question-category-list.component';
 import { QuestionDetailsComponent } from './question-details/question-details.component';
 import { QuestionListComponent } from './question-list/question-list.component';
@@ -24,7 +25,8 @@ const routes: Routes = [
   {
     path: ':question-id',
     title: 'Question',
-    component: QuestionDetailsComponent
+    component: QuestionDetailsComponent,
+    canDeactivate: [canDeactivateForm]
   },
   {
     path: '**',

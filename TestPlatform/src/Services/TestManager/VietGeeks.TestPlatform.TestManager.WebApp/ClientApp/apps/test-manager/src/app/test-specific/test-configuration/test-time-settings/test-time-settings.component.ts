@@ -3,8 +3,9 @@ import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn, Validators }
 import { createMask } from '@ngneat/input-mask';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { UserProfileService } from '@viet-geeks/core';
-import { TestStatus } from '../../../_state/test-support.model';
+import { DeactivatableComponent } from '@viet-geeks/shared';
 import { assign, isEmpty, isNull, isUndefined, values } from 'lodash-es';
+import { TestStatus } from '../../../_state/test-support.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { CompleteQuestionDuration, CompleteTestDuration, ManualTestActivation, TimePeriodActivation, TimeSettings } from '../../_state/tests/test.model';
 
@@ -25,7 +26,7 @@ export const TestActivationMethodType =
   templateUrl: './test-time-settings.component.html',
   styleUrls: ['./test-time-settings.component.scss'],
 })
-export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
+export class TestTimeSettingsComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   userProfileService = inject(UserProfileService);
 
   TestActivationMethodTypeRef = TestActivationMethodType;
@@ -90,6 +91,8 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent {
       textKey: 'Activation in set time period'
     }
   ];
+
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.timeSettingsForm.dirty;
 
   private dhhmmssValidator = (control: AbstractControl<string>): ValidationErrors | null => {
     if (isNull(control.value) || isEmpty(control.value) || control.value.indexOf('_') > -1)

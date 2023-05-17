@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { TestConfigurationRoutingModule } from './test-configuration-routing.module';
-import { CanDeactivateGuard, SharedModule } from '@viet-geeks/shared';
+import { SharedModule } from '@viet-geeks/shared';
 import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
@@ -38,7 +38,6 @@ import { TestTimeSettingsComponent } from './test-time-settings/test-time-settin
     NgbPaginationModule,
     errorTailorImports,
     ClipboardModule
-  ],
-  providers: [CanDeactivateGuard]
+  ]
 })
 export class TestConfigurationModule { }
