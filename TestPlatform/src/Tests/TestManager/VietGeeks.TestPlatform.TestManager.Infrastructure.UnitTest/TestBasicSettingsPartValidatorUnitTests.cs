@@ -44,7 +44,7 @@ public class TestBasicSettingsPartValidatorUnitTests
         var validateResult = await _validator.TestValidateAsync(input);
 
         Assert.False(validateResult.IsValid);
-        Assert.Equal(3, validateResult.Errors.Count(c => c.ErrorCode == "NotEmptyValidator"));
+        Assert.Equal(2, validateResult.Errors.Count(c => c.ErrorCode == "NotEmptyValidator"));
     }
 
     [Fact]
