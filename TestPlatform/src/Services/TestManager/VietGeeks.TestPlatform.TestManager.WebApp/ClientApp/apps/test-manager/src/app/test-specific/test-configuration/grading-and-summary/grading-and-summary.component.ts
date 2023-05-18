@@ -254,7 +254,6 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
 
   private updateStatuesOfGradeRangeDetailsFormCtrls(gradeType?: number) {
     const selectedGrade = gradeType ?? this.getGradingCriteriaCtrl(GradingCriteriaConfigTypeUI.GradeRanges).get('gradeType')?.getRawValue();
-    console.log('This should not be called first time. updateStatuesOfGradeRangeDetailsFormCtrls called. Grade type', gradeType);
     const details = this.gradeRangesDetailsCtrl;
     const affected = RangeDetailsUI[selectedGrade];
     affected.enabled?.forEach((c: string) => {
