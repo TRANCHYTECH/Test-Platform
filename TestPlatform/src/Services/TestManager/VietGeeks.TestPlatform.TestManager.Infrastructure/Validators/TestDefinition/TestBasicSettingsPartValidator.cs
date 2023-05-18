@@ -16,7 +16,6 @@ public class TestBasicSettingsPartValidator : AbstractValidator<TestBasicSetting
             .MaximumLength(500);
 
         RuleFor(c => c.Description)
-            .NotEmpty()
             .MaximumLength(1000);
 
         RuleFor(c => c.Category)

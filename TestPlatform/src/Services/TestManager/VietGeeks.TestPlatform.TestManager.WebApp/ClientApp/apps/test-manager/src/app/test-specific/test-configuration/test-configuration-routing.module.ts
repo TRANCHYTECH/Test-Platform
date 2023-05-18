@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
+import { canDeactivateForm } from '@viet-geeks/shared';
 import { BasicSettingsComponent } from './basic-settings/basic-settings.component';
 import { GradingAndSummaryComponent } from './grading-and-summary/grading-and-summary.component';
 import { OverviewComponent } from './overview/overview.component';
@@ -36,37 +37,43 @@ const routes: Routes = [
     title: 'Basic Settings',
     resolve: {
       isNewTest: isNewTest()
-    }
+    },
+    canDeactivate: [canDeactivateForm]
   },
   {
     path: getTestSettingsPath(TestConfigRoutes.TestSets),
     component: TestSetsComponent,
     title: 'Test Sets',
-    canActivate: [isExistingTest()]
+    canActivate: [isExistingTest()],
+    canDeactivate: [canDeactivateForm]
   },
   {
     path: getTestSettingsPath(TestConfigRoutes.TestAccess),
     component: TestAccessComponent,
     title: 'Test Access',
-    canActivate: [isExistingTest()]
+    canActivate: [isExistingTest()],
+    canDeactivate: [canDeactivateForm]
   },
   {
     path: 'test-start-page',
     component: TestStartPageComponent,
     title: 'Test Start Page',
-    canActivate: [isExistingTest()]
+    canActivate: [isExistingTest()],
+    canDeactivate: [canDeactivateForm]
   },
   {
     path: getTestSettingsPath(TestConfigRoutes.GradingAndSummary),
     component: GradingAndSummaryComponent,
     title: 'Grading & Summary',
-    canActivate: [isExistingTest()]
+    canActivate: [isExistingTest()],
+    canDeactivate: [canDeactivateForm]
   },
   {
     path: getTestSettingsPath(TestConfigRoutes.TimeSettings),
     component: TestTimeSettingsComponent,
     title: 'Time Settings',
-    canActivate: [isExistingTest()]
+    canActivate: [isExistingTest()],
+    canDeactivate: [canDeactivateForm]
   },
     {
     path: getTestSettingsPath('question'),

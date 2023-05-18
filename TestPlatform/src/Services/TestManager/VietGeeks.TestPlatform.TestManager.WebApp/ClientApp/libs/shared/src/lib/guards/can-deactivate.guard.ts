@@ -1,20 +1,14 @@
-import { Observable } from 'rxjs';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { CanDeactivateFn } from '@angular/router'
 
-export interface CanComponentDeactivate {
-  canDeactivate: () => Observable<boolean>;
+export interface DeactivatableComponent {
+  canDeactivate: () => boolean | Promise<boolean>
 }
 
-@Injectable()
-export class CanDeactivateGuard  {
-  constructor(private readonly router: Router) {}
-
-  canDeactivate(
-    component: CanComponentDeactivate,
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ) {
-    return component.canDeactivate();
+export const canDeactivateForm: CanDeactivateFn<DeactivatableComponent> = async (component: DeactivatableComponent) => {
+  const canDeactivate = await Promise.resolve(component.canDeactivate());
+  if (canDeactivate === false) {
+    return confirm('Are you sure to discard changes?');
   }
+
+  return true;
 }

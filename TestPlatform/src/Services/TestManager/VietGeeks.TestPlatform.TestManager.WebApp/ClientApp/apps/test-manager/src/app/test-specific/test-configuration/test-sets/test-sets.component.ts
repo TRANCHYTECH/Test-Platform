@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormArray, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DeactivatableComponent } from '@viet-geeks/shared';
 import { find, forEach } from 'lodash-es';
 import { firstValueFrom } from 'rxjs';
+import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
-import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { QuestionService } from '../../_state/questions/question.service';
 import { GeneratorTypes, TestSets } from '../../_state/tests/test.model';
 
@@ -16,7 +17,7 @@ import { GeneratorTypes, TestSets } from '../../_state/tests/test.model';
   styleUrls: ['./test-sets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestSetsComponent extends TestSpecificBaseComponent {
+export class TestSetsComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   private _questionService = inject(QuestionService);
   private _questionCategoriesService = inject(QuestionCategoriesService);
   private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
@@ -51,9 +52,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent {
     { id: GeneratorTypes.RandomFromCategories, textKey: 'Pages.TestSets.GeneratorTypes.RandomFromCategories' }
   ]
 
-  constructor() {
-    super();
-  }
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.testSetsForm.dirty;
 
   async postLoadEntity(): Promise<void> {
     const configs = await Promise.all([this._questionService.getSummary(this.testId), firstValueFrom(this._questionCategoriesService.get(this.testId))]);

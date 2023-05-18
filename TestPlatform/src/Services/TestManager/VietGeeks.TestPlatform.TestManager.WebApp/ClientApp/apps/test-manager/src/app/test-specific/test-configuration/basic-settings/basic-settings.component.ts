@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
+import { DeactivatableComponent } from '@viet-geeks/shared';
+import { Observable, lastValueFrom } from 'rxjs';
 import { TestCategory, TestCategoryUncategorizedId } from '../../../_state/test-category.model';
 import { TestCategoryQuery } from '../../../_state/test-category.query';
 import { TestCategoryService } from '../../../_state/test-category.service';
 import { UiIntegrationService } from '../../../_state/ui-integration.service';
-import { Observable, lastValueFrom } from 'rxjs';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 
 @Component({
@@ -13,7 +14,7 @@ import { TestSpecificBaseComponent } from '../../_base/test-specific-base.compon
   styleUrls: ['./basic-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BasicSettingsComponent extends TestSpecificBaseComponent {
+export class BasicSettingsComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
   basicSettingForm: FormGroup;
   testCategories$!: Observable<TestCategory[]>;
 
@@ -31,13 +32,11 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     });
   }
 
+  canDeactivate: () => boolean | Promise<boolean> = () => !this.basicSettingForm.dirty;
+
   async postLoadEntity(): Promise<void> {
     await Promise.all([this._testCategoryService.get()]);
-    if (this.isNewTest) {
-      this._refreshAfterSubmit = false;
-    }
-    else {
-      this._refreshAfterSubmit = true;
+    if (!this.isNewTest) {
       const testCatetory = this._testCategoryQuery.getEntityWithFallback(this.test.basicSettings.category);
       this.basicSettingForm.reset({
         id: this.test.id,
@@ -61,7 +60,7 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent {
     const basicSettings = { name: formValue.name, category: formValue.category, description: formValue.description };
     if (formValue.id === null) {
       const createdTest = await lastValueFrom(this.testsService.add({ basicSettings: basicSettings }));
-      this.router.navigate(['test', createdTest.id, 'config', 'basic-settings']);
+      await this.router.navigate(['test', createdTest.id, 'config', 'basic-settings']);
       this.notifyService.success('Test created');
     } else {
       await this.testsService.update(formValue.id, { basicSettings: basicSettings });
