@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PaginationComponent } from '@viet-geeks/shared';
+import { AnswerType, PaginationComponent, Question } from '@viet-geeks/shared';
 import { BehaviorSubject, firstValueFrom, tap } from 'rxjs';
-import { AnswerType, Question } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';

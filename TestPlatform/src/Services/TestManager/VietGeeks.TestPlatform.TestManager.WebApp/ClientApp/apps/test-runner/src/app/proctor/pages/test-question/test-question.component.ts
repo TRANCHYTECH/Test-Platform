@@ -9,13 +9,14 @@ import { ProctorService } from '../../services/proctor.service';
 import { TestDurationService } from '../../services/test-duration.service';
 import { TestSessionService } from '../../services/test-session.service';
 import { ToastService } from '@viet-geeks/shared';
+import { TestRunnerBaseComponent } from '../base/test-runner-base.component';
 
 @Component({
   selector: 'viet-geeks-test-question',
   templateUrl: './test-question.component.html',
   styleUrls: ['./test-question.component.scss']
 })
-export class TestQuestionComponent implements OnInit, OnDestroy  {
+export class TestQuestionComponent extends TestRunnerBaseComponent implements OnInit, OnDestroy  {
 
   proctorService = inject(ProctorService);
   private _testDurationService = inject(TestDurationService);
@@ -38,6 +39,7 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
+    super();
     this.answerForm = this._fb.group({});
   }
 
@@ -66,39 +68,45 @@ export class TestQuestionComponent implements OnInit, OnDestroy  {
  }
 
   async submitAndGoNext() {
-    if (this.question) {
-      const output = await firstValueFrom(this.proctorService.submitAnswer({
-        questionId: this.question.id!,
-        answerIds: this.getAnswerIds()
-      }));
+    await this.triggerWithLoadingIndicator(async () => {
+      if (this.question) {
+        this.showLoadingIndicator();
+        const output = await firstValueFrom(this.proctorService.submitAnswer({
+          questionId: this.question.id!,
+          answerIds: this.getAnswerIds()
+        }));
 
-      if (output?.terminated) {
-        return this.finishExam();
+        if (output?.terminated) {
+          this.hideLoadingIndicator();
+          return this.finishExam();
+        }
+        else {
+          return this.goToNextQuestion();
+        }
       }
-      else {
-        return this.goToNextQuestion();
-      }
-    }
+    });
   }
 
   async submitAndGoBack() {
-    if (this.question) {
-      await firstValueFrom(this.proctorService.submitAnswer({
-        questionId: this.question.id!,
-        answerIds: this.getAnswerIds()
-      }));
+    await this.triggerWithLoadingIndicator(async () => {
+      if (this.question) {
+        await firstValueFrom(this.proctorService.submitAnswer({
+          questionId: this.question.id!,
+          answerIds: this.getAnswerIds()
+        }));
 
-      this.goToPreviousQuestion();
-    }
+        this.goToPreviousQuestion();
+      }
+    });
   }
 
-  async goToPreviousQuestion() {
+  private async goToPreviousQuestion() {
     const activateQuestionOutput = await firstValueFrom(this.proctorService.activePreviousQuestion());
 
     this.handleActivatedQuestion(activateQuestionOutput);
   }
 
-  async goToNextQuestion() {
+  private async goToNextQuestion() {
     const activateQuestionOutput = await firstValueFrom(this.proctorService.activeNextQuestion());
 
     this.handleActivatedQuestion(activateQuestionOutput);

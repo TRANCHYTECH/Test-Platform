@@ -31,7 +31,10 @@ export class ProctorService {
       body: {
         examineeInfo: examineeInfo
       }
-    });
+    }).pipe(catchError(error => {
+      console.log("provideExamineeInfo error: ", error);
+      return of(null);
+    }));
   }
 
   startExam(): Observable<StartExamOutputViewModel> {
