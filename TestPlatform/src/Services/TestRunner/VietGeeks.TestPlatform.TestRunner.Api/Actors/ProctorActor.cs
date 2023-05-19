@@ -64,7 +64,6 @@ public class ProctorActor : Actor, IProctorActor
         return new()
         {
             StartedAt = examState.StartedAt,
-            Questions = examContent.Questions,
             TestDuration = examContent.TestDuration,
             ActiveQuestion = examContent.ActiveQuestion,
             ActiveQuestionIndex = examState.ActiveQuestionIndex,
