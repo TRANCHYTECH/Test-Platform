@@ -5,8 +5,6 @@ namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
 public class StartExamOutput: IActiveQuestion
 {
-    public ExamQuestion[] Questions { get; set; } = default!;
-
     public ExamQuestion? ActiveQuestion { get; set; } = default!;
     public int? ActiveQuestionIndex { get; set; }
 
@@ -17,7 +15,7 @@ public class StartExamOutput: IActiveQuestion
     public bool CanSkipQuestion {get; set;}
 
     [JsonIgnore]
-    public TimeSpan TotalDuration => TestDuration.Method == TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : Questions.Length * TestDuration.Duration;
+    public TimeSpan TotalDuration => TestDuration.Method == TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : TotalQuestion * TestDuration.Duration;
 }
 
 public class StartExamOutputViewModel : StartExamOutput, IExamStepInfo

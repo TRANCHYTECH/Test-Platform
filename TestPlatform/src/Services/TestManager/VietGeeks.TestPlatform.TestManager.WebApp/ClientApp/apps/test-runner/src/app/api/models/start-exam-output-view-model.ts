@@ -7,7 +7,6 @@ export interface StartExamOutputViewModel {
   activeQuestion?: ExamQuestion;
   activeQuestionIndex?: null | number;
   canSkipQuestion?: boolean;
-  questions?: null | Array<ExamQuestion>;
   startedAt?: string;
   step?: ExamStep;
   testDuration?: TestDuration;
