@@ -1,25 +1,25 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-lg-12">
-      <div class="card">
+      <div class="card bg-soft-primary">
         <div class="card-body">
           <div>
             <h3>{{sessionData.testDescription}}</h3>
           </div>
         </div>
       </div>
-      <div class="card">
+      <div class="card bg-soft-primary">
         <div class="card-body">
           <div class="mb-3">
             <h5 class="text-uppercase">Respondent</h5>
             <div class="d-flex" *ngFor="let field of respondent">
-              <i class="bx bx-info-square fs-4 p-1"></i><span class="p-1">{{field.id}}: </span><span
+              <i class="bx bx-info-square fs-4 p-1"></i><span class="p-1">{{fieldLabels[field.id]}}: </span><span
                 class="p-1 fw-bold">{{field.fieldValue}}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="card">
+      <div class="card bg-soft-primary">
         <div class="card-body">
           <div class="mb-3">
             <h5 class="text-uppercase">Summary</h5>
@@ -41,10 +41,10 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-lg-6">
-      <viet-geeks-exam-result-overview [gradings]="sessionData.grading || []"></viet-geeks-exam-result-overview>
+      <viet-geeks-exam-result-overview containerClass="bg-soft-primary" [gradings]="sessionData.grading || []"></viet-geeks-exam-result-overview>
     </div>
     <div class="col-lg-6">
-      <viet-geeks-exam-result-timer [examTime]="sessionData" [maxTime]="maxTime" [totalTime]="totalTime"></viet-geeks-exam-result-timer>
+      <viet-geeks-exam-result-timer containerClass="bg-soft-primary" [examTime]="sessionData" [maxTime]="maxTime" [totalTime]="totalTime"></viet-geeks-exam-result-timer>
     </div>
   </div>
   <viet-geeks-test-finish-answers *ngIf="showCorrectAnswers" [sessionData]="sessionData" [afterTestConfig]="afterTestConfig"></viet-geeks-test-finish-answers>

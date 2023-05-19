@@ -12,6 +12,9 @@ import { FormatTimespanPipe } from '../../pipes/format-timespan.pipe';
 })
 export class ExamResultTimerComponent {
   @Input()
+  containerClass = '';
+
+  @Input()
   totalTime: TimeSpanV1 | string = {};
 
   @Input()

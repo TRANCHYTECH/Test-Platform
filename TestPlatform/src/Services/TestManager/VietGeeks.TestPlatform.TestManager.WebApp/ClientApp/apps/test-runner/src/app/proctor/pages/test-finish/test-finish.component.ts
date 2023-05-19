@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AfterTestConfigOutput, AggregatedGradingOuput, FinishExamOutput, TimeSpan } from '../../../api/models';
-import { GradingCriteriaConfigType, InformFactor, RespondentField, TestSession } from '../../../state/test-session.model';
+import { Dictionary, GradingCriteriaConfigType, InformFactor, RespondentField, TestSession } from '../../../state/test-session.model';
 import { ProctorService } from '../../services/proctor.service';
 import { TestDurationService } from '../../services/test-duration.service';
 import { TestSessionService } from '../../services/test-session.service';
+import { TestStartConfig } from '../common/data/test-start-config';
 
 @Component({
   selector: 'viet-geeks-test-finish',
@@ -26,12 +27,15 @@ export class TestFinishComponent implements OnInit {
   afterTestConfig?: AfterTestConfigOutput | null;
   showPassFailMessage = false;
   showCorrectAnswers = false;
+  config = TestStartConfig;
+  fieldLabels: Dictionary<string> = {};
 
   ngOnInit() {
     this.doInit();
   }
 
   private async doInit() {
+    this.fieldLabels = this.config.respondentIdentifyFields.reduce((r, f) => ({...r, [f.fieldId]: f.fieldLabel}), {});
     await this.setupData();
   }
 
