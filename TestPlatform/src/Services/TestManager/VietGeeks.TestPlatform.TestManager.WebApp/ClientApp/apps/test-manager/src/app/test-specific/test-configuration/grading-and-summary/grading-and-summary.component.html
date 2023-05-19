@@ -8,11 +8,11 @@
                         <label>Configure a message to be displayed to all respondents at the end of the test, regardless
                             of
                             its results.</label>
-                        <editor class="simple-editor" formControlName="message" [apiKey]="textEditorConfigs.apiKey"
+                        <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="message" [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
-                            (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
-                            #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor">
-                        <p>loading...</p>
+                            (onFocusOut)="gdprErrorTailor.showError()"
+                            [init]="textEditorConfigs.simpleEditorConfig" #gdprErrorTailor="errorTailor"
+                            [controlErrorAnchor]="messageAnchor">
                         </editor>
                         <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
                     </div>
@@ -113,17 +113,20 @@
                             <div class="card" formArrayName="details">
                                 <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
                                 <div class="card-body">
-                                    <div class="mb-3" [formGroup]="ctrl" *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
+                                    <div class="mb-3" [formGroup]="ctrl"
+                                        *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
                                         <div class="hstack">
                                             <div class="d-inline-flex align-items-center mb-3 gap-1">
                                                 <label class="fw-bold">Range {{i +
                                                     1}}:</label>
                                                 <label>From:</label>
-                                                <label>{{getToValueOfGradeRangesDetails(i - 1)}} {{selectedGradeRangeUnit}}</label>
+                                                <label>{{getToValueOfGradeRangesDetails(i - 1)}}
+                                                    {{selectedGradeRangeUnit}}</label>
                                                 <label>to:</label>
                                                 <div class="range-to-value">
                                                     <input type="number" class="form-control border-dashed"
-                                                        style="width: 100px;" formControlName="to" (change)="rangeChanged(i)">
+                                                        style="width: 100px;" formControlName="to"
+                                                        (change)="rangeChanged(i)">
                                                 </div>
                                                 <label>{{selectedGradeRangeUnit}}</label>
                                             </div>
@@ -186,7 +189,8 @@
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have passed:</label>
-                        <editor class="simple-editor" formControlName="passedMessage" [apiKey]="textEditorConfigs.apiKey"
+                        <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="passedMessage"
+                            [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('informRespondentConfig.passedMessage', $event)"
                             (onFocusOut)="passedMessageErrorTailor.showError()"
                             [init]="textEditorConfigs.simpleEditorConfig" #passedMessageErrorTailor="errorTailor"
@@ -195,7 +199,8 @@
                     </div>
                     <div class="mb-3">
                         <label>Message for users who have failed:</label>
-                        <editor class="simple-editor" formControlName="failedMessage" [apiKey]="textEditorConfigs.apiKey"
+                        <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="failedMessage"
+                            [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('informRespondentConfig.failedMessage', $event)"
                             (onFocusOut)="failedMessageErrorTailor.showError()"
                             [init]="textEditorConfigs.simpleEditorConfig" #failedMessageErrorTailor="errorTailor"

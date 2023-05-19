@@ -5,6 +5,28 @@
 .simple-editor {
     min-height: 300px;
     display: block;
+
+    position: relative;
+
+    &::after {
+        content: 'Loading Editor';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        top: 0;
+        left: 0;
+        text-align: center;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    &.rendered {
+        &::after {
+            display: none;
+        }
+    }
 }
 
 .ngx-spinner-overlay {
