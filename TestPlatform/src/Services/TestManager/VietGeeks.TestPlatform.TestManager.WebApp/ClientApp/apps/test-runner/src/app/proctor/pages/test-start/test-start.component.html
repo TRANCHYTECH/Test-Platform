@@ -39,7 +39,7 @@
             <label>Fill in the form before starting the test.</label>
           </div>
           <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-8 col-sm-12">
               <ng-container [formGroup]="respondentIdentifyForm">
                 <div formArrayName="fields" *ngFor="let field of fields['controls']; let i = index;">
                   <div class="mb-3" [formGroupName]="i">
@@ -53,9 +53,9 @@
                 </div>
               </ng-container>
             </div>
-            <!-- <div class="col-lg-2">
-              <i class="ri-profile-line"></i>
-            </div> -->
+            <div class="col-lg-4">
+              <img class="w-100" src="assets/images/verification-img.png" />
+            </div>
           </div>
           <div class="mb-3">
             <div class="input-group">
