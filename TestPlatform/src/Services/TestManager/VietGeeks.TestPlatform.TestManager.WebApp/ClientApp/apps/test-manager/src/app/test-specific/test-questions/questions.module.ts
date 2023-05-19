@@ -3,7 +3,7 @@ import { NgModule, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbDropdownModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
-import { QuestionViewComponent, SharedModule } from '@viet-geeks/shared';
+import { EditorLoadingIndicatorDirective, QuestionViewComponent, SharedModule } from '@viet-geeks/shared';
 import { UiIntegrationService } from '../../_state/ui-integration.service';
 import { NewQuestionCategoryComponent } from './new-question-category/new-question-category.component';
 import { QuestionCategoryListComponent } from './question-category-list/question-category-list.component';
@@ -27,7 +27,8 @@ import { QuestionsRoutingModule } from './questions-routing.module';
     errorTailorImports,
     QuestionsRoutingModule,
     DragDropModule,
-    QuestionViewComponent
+    QuestionViewComponent,
+    EditorLoadingIndicatorDirective
   ]
 })
 export class QuestionsModule {
