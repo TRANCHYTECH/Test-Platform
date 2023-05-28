@@ -15,12 +15,13 @@ import { TestsService } from '../../_state/tests/tests.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
+  TestStatusRef = TestStatus;
   pageTitle?= 'LOADING TEST';
   sectionTitle$!: Observable<string>;
   breadcrumbs$ = new BehaviorSubject<{ label?: string, active?: boolean }[]>([{ label: 'Loading test' }]);
   menus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
   testResultMenus$ = new BehaviorSubject<{ routerLink: string[], text: string, icon: string, disable: boolean }[]>([]);
-  testId!: string;
+  testId!: 'new' | string;
   testStatus = TestStatus.Draft;
   activateMethod: 'activate' | 'schedule' | '' = '';
   endMethod: 'endTest' | 'changeSettings' | '' = '';

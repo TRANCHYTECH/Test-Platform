@@ -60,6 +60,8 @@ export class BasicSettingsComponent extends TestSpecificBaseComponent implements
     const basicSettings = { name: formValue.name, category: formValue.category, description: formValue.description };
     if (formValue.id === null) {
       const createdTest = await lastValueFrom(this.testsService.add({ basicSettings: basicSettings }));
+      // trick to by pass deactivate check because actually no need.
+      this.basicSettingForm.markAsPristine();
       await this.router.navigate(['test', createdTest.id, 'config', 'basic-settings']);
       this.notifyService.success('Test created');
     } else {

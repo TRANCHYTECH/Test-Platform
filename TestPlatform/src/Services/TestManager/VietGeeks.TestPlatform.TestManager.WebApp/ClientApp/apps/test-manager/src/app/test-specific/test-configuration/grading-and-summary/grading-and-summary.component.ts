@@ -437,7 +437,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
   }
 
   deleteGrade(i: number) {
-    console.log('delete grade', i);
+    //
   }
 
   detailsTrackBy(index: number, detail: FormGroup) {

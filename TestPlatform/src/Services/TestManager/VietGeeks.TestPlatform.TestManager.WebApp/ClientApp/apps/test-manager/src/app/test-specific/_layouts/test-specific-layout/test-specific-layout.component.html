@@ -16,14 +16,19 @@
                                 [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
                                 <i [class]="menu.icon" class="align-middle me-2 fs-24"></i>{{menu.text}}</a>
                         </ng-container>
-                        <button *ngIf="testStatus  === 1" class="btn btn-primary w-sm" style="margin-top: 10px;"
-                            (click)="activateTest()">{{ "labels." + activateMethod | translate}}</button>
-                        <button *ngIf="testStatus  === 2 || testStatus  === 3" class="btn btn-primary w-sm"
-                            style="margin-top: 10px;" (click)="endTest()">{{ "labels." + endMethod |
-                            translate}}</button>
+                        <ng-container *ngIf="testId !== 'new'">
+                            <button *ngIf="testStatus === TestStatusRef.Draft" class="btn btn-primary w-sm"
+                                style="margin-top: 10px;" (click)="activateTest()">{{ "labels." + activateMethod |
+                                translate}}</button>
+                            <button
+                                *ngIf="testStatus  === TestStatusRef.Activated || testStatus  === TestStatusRef.Scheduled"
+                                class="btn btn-primary w-sm" style="margin-top: 10px;" (click)="endTest()">{{ "labels."
+                                + endMethod |
+                                translate}}</button>
 
-                        <button *ngIf="testStatus === 4" class="btn btn-primary w-sm" style="margin-top: 10px;"
-                            (click)="restart()">{{ "labels.restart" | translate}}</button>
+                            <button *ngIf="testStatus === TestStatusRef.Ended" class="btn btn-primary w-sm"
+                                style="margin-top: 10px;" (click)="restart()">{{ "labels.restart" | translate}}</button>
+                        </ng-container>
                     </div>
                 </ng-template>
             </ngb-panel>

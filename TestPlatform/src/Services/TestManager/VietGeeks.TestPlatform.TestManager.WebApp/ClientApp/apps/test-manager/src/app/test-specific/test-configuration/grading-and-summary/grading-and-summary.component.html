@@ -69,7 +69,7 @@
                         </div>
                         <div class="row" [attr.hidden]="isPassMaskGradeCtrlEnabled ? null : ''">
                             <div class="col-sm-auto">
-                                <label for="mask-value" class="form-label">Value</label>
+                                <label for="mask-value" class="form-label">Value <span class="required-asterisk">*</span></label>
                                 <input type="number" class="form-control" formControlName="value">
                             </div>
                             <div class="col-sm-auto">
@@ -137,13 +137,13 @@
                                         </div>
                                         <ng-container formGroupName="grades">
                                             <div class="mb-3" *ngIf="ctrl.get(['grades', GradeTypeUI.Grade])?.enabled">
-                                                <label class="text-muted">Grade:</label>
+                                                <label class="text-muted">Grade <span class="required-asterisk">*</span></label>
                                                 <input type="text" class="form-control"
                                                     formControlName="{{GradeTypeUI.Grade}}">
                                             </div>
                                             <div class="mb-3"
                                                 *ngIf="ctrl.get(['grades', GradeTypeUI.Descriptive])?.enabled">
-                                                <label class="text-muted">Descriptive grade:</label>
+                                                <label class="text-muted">Descriptive grade <span class="required-asterisk">*</span></label>
                                                 <textarea class="form-control"
                                                     (blur)="descriptiveErrorTailor.showError()"
                                                     formControlName="{{GradeTypeUI.Descriptive}}"
