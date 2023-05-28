@@ -25,8 +25,7 @@ export class TestsService {
       tap(rs => {
         this._testsStore.upsert(id, rs);
       }),
-      catchError((err => {
-        console.log('http client error', err);
+      catchError((() => {
         return EMPTY;
       })));
   }

@@ -19,7 +19,6 @@ export class RegionalSettingsComponent extends UserBaseComponent {
   }
 
   async submit() {
-    console.log('settings form', this.settingsForm.value);
     await this.userService.update(this.userProfile.id, { regionalSettings: this.settingsForm.value });
     this.notifyService.success('Regional settings updated');
   }

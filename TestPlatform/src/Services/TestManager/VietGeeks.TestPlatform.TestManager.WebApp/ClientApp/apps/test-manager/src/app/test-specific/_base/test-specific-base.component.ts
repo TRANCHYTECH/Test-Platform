@@ -75,7 +75,6 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
 
     listenTypeChange(instance: DestroyRef, formGroup: FormGroup, controlIds: number[]) {
         formGroup.get(['type'])?.valueChanges.pipe(takeUntilDestroyed(instance)).subscribe(v => {
-            console.log('formGroup type changed');
             controlIds.forEach(id => {
                 const ctrl = formGroup.get([id.toString()]);
                 v === id ? ctrl?.enable() : ctrl?.disable();

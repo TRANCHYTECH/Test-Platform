@@ -110,7 +110,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
     }
 
     const elementAt = this.gradeRangesDetailsCtrl.at(atIndex);
-    return elementAt === undefined ? 0 : (elementAt.value as GradeRangeCriteriaDetail).to;
+    return elementAt === undefined ? 0 : (elementAt.value as GradeRangeCriteriaDetail).to + 1;
   }
 
   async postLoadEntity(): Promise<void> {
@@ -155,23 +155,20 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
     //todo: validate word count html instead of all html length.
   }
 
-  rangeChanged(atIndex: number) {
-    this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls(atIndex + 1);
+  rangeChanged() {
+    this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls();
   }
 
   removeRangeDetail(i: number) {
     this.gradeRangesDetailsCtrl.removeAt(i);
-    this.gradeForm.markAsDirty();
+    this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls();
   }
 
-  private forceRunValidatorsOfGrandeRangeDetailsFormCtrls(fromIndex = 0) {
-    setTimeout(() => {
-      this.gradeRangesDetailsCtrl.controls.forEach((ctrl, idx) => {
-        if (idx >= fromIndex) {
-          ctrl.controls['to'].updateValueAndValidity();
-          ctrl.controls['to'].markAsTouched();
-        }
-      });
+  private forceRunValidatorsOfGrandeRangeDetailsFormCtrls() {
+    this.gradeRangesDetailsCtrl.controls.forEach((group) => {
+      const toCtrl = group.controls['to'];
+      toCtrl.updateValueAndValidity();
+      toCtrl.markAsTouched();
     });
   }
 
@@ -358,16 +355,20 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
         Validators.required,
         RxwebValidators.minNumber({
           dynamicConfig: (parent) => {
+            let minValue = 0;
+
             const unit = this.gradeRangeUnit;
             const details = this.gradeRangesDetailsCtrl.value as GradeRangeCriteriaDetail[];
             const foundIdx = findIndex(details, d => d.id === parent['id']);
-            let minValue = 0;
-            if (foundIdx <= 0) {
-              minValue = 1;
-            } else if (foundIdx < details.length - 1) {
-              minValue = details[foundIdx - 1].to;
-            } else {
+            if (details.length === 1 || foundIdx === details.length - 1) {
+              // case only one, or many:last.
               minValue = unit === RangeUnit.Percent ? 100 : this.gradeFormConfigs.maxPoint;
+            } else if (foundIdx === 0) {
+              // case many: first
+              minValue = 1;
+            } else {
+              // case many: middle
+              minValue = details[foundIdx - 1].to + 1;
             }
 
             return { value: minValue };
@@ -432,10 +433,11 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
 
   addNewGradeRange() {
     this.gradeRangesDetailsCtrl.push(this.createNewGradeRangeCtrl(this.selectedGradeRangeType ?? GradeType.Grade, {}));
+    this.forceRunValidatorsOfGrandeRangeDetailsFormCtrls();
   }
 
   deleteGrade(i: number) {
-    console.log('delete grade', i);
+    //
   }
 
   detailsTrackBy(index: number, detail: FormGroup) {
