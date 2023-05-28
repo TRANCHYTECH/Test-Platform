@@ -8,11 +8,11 @@
                         <label>Configure a message to be displayed to all respondents at the end of the test, regardless
                             of
                             its results.</label>
-                        <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="message" [apiKey]="textEditorConfigs.apiKey"
+                        <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="message"
+                            [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
-                            (onFocusOut)="gdprErrorTailor.showError()"
-                            [init]="textEditorConfigs.simpleEditorConfig" #gdprErrorTailor="errorTailor"
-                            [controlErrorAnchor]="messageAnchor">
+                            (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
+                            #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor">
                         </editor>
                         <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
                     </div>
@@ -113,6 +113,8 @@
                             <div class="card" formArrayName="details">
                                 <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
                                 <div class="card-body">
+                                    <div *ngIf="gradeRangesDetailsCtrl.hasError('required')"><label
+                                            class="control-error">{{'errors.listRequired' | translate}}</label></div>
                                     <div class="mb-3" [formGroup]="ctrl"
                                         *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
                                         <div class="hstack">
