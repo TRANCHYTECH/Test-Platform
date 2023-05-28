@@ -24,6 +24,7 @@
   },
   "errors": {
     "required": "The field is required",
+    "listRequired": "The list requires at least one",
     "minlength": "Expected length {{requiredLength}} got {{actualLength}}",
     "maxlength": "Expected length {{requiredLength}} got {{actualLength}}",
     "min": "Expected min value {{min}} got {{actual}}",
