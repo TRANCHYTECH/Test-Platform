@@ -127,8 +127,8 @@
                                                 <label>to:</label>
                                                 <div class="range-to-value">
                                                     <input type="number" class="form-control border-dashed"
-                                                        style="width: 100px;" formControlName="to"
-                                                        (change)="rangeChanged(i)">
+                                                        style="width: 100px;" formControlName="to" [controlErrorsOnChange]="true" 
+                                                        (change)="rangeChanged()">
                                                 </div>
                                                 <label>{{selectedGradeRangeUnit}}</label>
                                             </div>
