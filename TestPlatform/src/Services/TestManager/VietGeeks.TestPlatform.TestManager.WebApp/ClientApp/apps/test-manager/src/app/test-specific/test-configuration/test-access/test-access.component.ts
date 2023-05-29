@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppSettingsService } from '@viet-geeks/core';
 import { DeactivatableComponent } from '@viet-geeks/shared';
-import { assign, forIn, isNumber, range } from 'lodash-es';
+import { assign, findKey, forEach, forIn, isNumber, range } from 'lodash-es';
 import { TestStatus } from '../../../_state/test-support.model';
 import { AppSettings } from '../../../app-setting.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
@@ -25,6 +25,22 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
   codeGenerationForm: FormGroup;
   testAccessFormConfig = {
     attemptsPerRespondentRange: range(1, 11, 1)
+  }
+
+  @ViewChild('allCodesSelection')
+  allCodesSelection!: ElementRef;
+
+  codeSelections: { [key: string]: boolean } = {};
+
+  get hasSelectedCode() {
+    return findKey(this.codeSelections, v => v === true) !== undefined;
+  }
+
+  get selectedCodes() {
+    const rs: string[] = [];
+    forIn(this.codeSelections, (v, k) => { if (v === true) { rs.push(k) } });
+
+    return rs;
   }
 
   private _publicTestAccessLink?: string;
@@ -94,6 +110,11 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
   getTestInvitationStat(code: string) {
     const events = this.testInvitationStats.find(c => c.accessCode === code)?.events;
     return events === undefined ? 'Not send yet' : events.map(c => c.event).join(',');
+  }
+
+  checkTestInvitationSent(code: string) {
+    const events = this.getTestInvitationStat(code);
+    return events.includes('sent');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -183,12 +204,39 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     await this.generateCodes();
   };
 
-  async removeAccessCode(codeIndex: number) {
-    const ctrl = this.privateAccessCodeConfigsCtrl.controls[codeIndex];
-    const code = ctrl.controls['code'].value;
-    await this.testsService.removeAccessCode(this.testId, code);
-    this.privateAccessCodeConfigsCtrl.removeAt(codeIndex);
+  async removeAccessCode(code: string) {
+    this.codeSelections[code] = true;
+    this.removeAccessCodes();
+  }
+
+  async removeAccessCodes() {
+    const codes = this.selectedCodes;
+    if (codes.length === 0) {
+      return;
+    }
+
+    const codeCtrls = this.privateAccessCodeConfigsCtrl;
+    await this.testsService.removeAccessCodes(this.testId, codes);
+    forEach(codes, code => {
+      const ctrl = codeCtrls.controls.findIndex(c => c.controls['code'].value === code);
+      codeCtrls.removeAt(ctrl);
+    });
+    // Reset selection list.
+    this.codeSelections = {};
     this.changeRef.markForCheck();
+    this.notifyService.success('Access codes are removed');
+  }
+
+  async sendAccessCodes() {
+    const codes = this.selectedCodes;
+    if (codes.length === 0) {
+      return;
+    }
+    await this.testsService.sendAccessCodes(this.testId, codes);
+    const el = (this.allCodesSelection.nativeElement as HTMLInputElement);
+    el.checked = false;
+    el.dispatchEvent(new Event('change'));
+    this.notifyService.success('Access codes are scheduled to send');
   }
 
   generateGroupPassword() {
@@ -202,6 +250,16 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     this.privateAccessCodeConfigsCtrl.controls.forEach(groupCtrl => {
       groupCtrl.controls['sendCode'].patchValue(true);
     });
+    this.testAccessForm.markAsDirty();
+  }
+
+  toggleSelectAllAccessCodes(e: Event) {
+    const checked = (e.target as HTMLInputElement).checked;
+    this.privateAccessCodeConfigsCtrl.controls.forEach(groupCtrl => {
+      const code = groupCtrl.controls['code'].value;
+      this.codeSelections[code] = checked;
+    });
+    this.testAccessForm.markAsDirty();
   }
 
   copiedTestUrl() {

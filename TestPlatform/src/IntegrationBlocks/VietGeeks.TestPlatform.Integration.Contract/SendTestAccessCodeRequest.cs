@@ -19,6 +19,10 @@ public class SendTestAccessCodeRequest
 
 public class Receiver
 {
+    public Receiver()
+    {
+    }
+
     public Receiver(string accessCode, string email)
     {
         AccessCode = accessCode;

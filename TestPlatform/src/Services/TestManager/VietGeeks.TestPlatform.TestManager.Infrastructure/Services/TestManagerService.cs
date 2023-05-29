@@ -288,21 +288,7 @@ public class TestManagerService : ITestManagerService
             if (entity != null && entity.CurrentTestRun != null && (entity.TestAccessSettings?.Settings is PrivateAccessCodeType config))
             {
                 var receivers = config.Configs.Where(c => !string.IsNullOrEmpty(c.Email) && c.SendCode).Select(c => new Receiver(c.Code, c.Email)).ToArray();
-                if (receivers.Length > 0)
-                {
-                    var request = new SendTestAccessCodeRequest
-                    {
-                        //todo: configure test url.
-                        TestUrl = $"https://dev.test-runner.testmaster.io/start/{entity.ID}",
-                        TestDefinitionId = entity.ID,
-                        TestRunId = entity.CurrentTestRun.Id,
-                        Receivers = receivers
-                    };
-
-                    //todo: prevent harded code here.
-                    var sender = _bus.CreateSender("send-test-access-code");
-                    await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
-                }
+                await ProcessSendAccessCodes(entity, receivers);
             }
         }
         catch (Exception ex)
@@ -351,7 +337,12 @@ public class TestManagerService : ITestManagerService
         return accessCodes;
     }
 
-    public async Task RemoveAccessCode(string id, string code)
+    public Task RemoveAccessCode(string id, string code)
+    {
+        return RemoveAccessCodes(id, new[] { code });
+    }
+
+    public async Task RemoveAccessCodes(string id, string[] codes)
     {
         //todo: reuse logic for 2 same methods.
         // Get and verify the test definition.
@@ -371,13 +362,76 @@ public class TestManagerService : ITestManagerService
             throw new TestPlatformException("Invalid settings");
         }
 
-        var existingAccessCode = privateAccessCodeSettings.Configs.SingleOrDefault(c => c.Code == code);
-        if (existingAccessCode == null)
-            throw new TestPlatformException("Invalid access code");
+        foreach (var code in codes)
+        {
+            var existingAccessCode = privateAccessCodeSettings.Configs.SingleOrDefault(c => c.Code == code);
+            if (existingAccessCode == null)
+                throw new TestPlatformException("Invalid access code");
 
-        privateAccessCodeSettings.Configs.Remove(existingAccessCode);
+            privateAccessCodeSettings.Configs.Remove(existingAccessCode);
+        }
 
         // Update affected property: TestAccessSettings.
         await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
+    }
+
+    private async Task ProcessSendAccessCodes(TestDefinition entity, Receiver[] receivers)
+    {
+        if (receivers.Length == 0)
+        {
+            return;
+        }
+
+        var request = new SendTestAccessCodeRequest
+        {
+            //todo: configure test url.
+            TestUrl = $"https://dev.test-runner.testmaster.io/start/{entity.ID}",
+            TestDefinitionId = entity.ID!,
+            TestRunId = entity.CurrentTestRun?.Id!,
+            Receivers = receivers
+        };
+
+        //todo: prevent harded code here.
+        var sender = _bus.CreateSender("send-test-access-code");
+        await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
+    }
+
+    public async Task SendAccessCodes(string id, string[] codes)
+    {
+        //todo: reuse logic for 2 same methods.
+        // Get and verify the test definition.
+        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
+        {
+            throw new TestPlatformException("Invalid entity");
+        }
+
+        if (testDef.LatestStatus == Core.Models.TestDefinitionStatus.Ended)
+        {
+            throw new TestPlatformException("Invalid status");
+        }
+
+        if (testDef.TestAccessSettings.Settings is PrivateAccessCodeType privateAccessCodeSettings == false)
+        {
+            throw new TestPlatformException("Invalid settings");
+        }
+
+        var receivers = new List<Receiver>();
+        foreach (var code in codes)
+        {
+            var existingAccessCode = privateAccessCodeSettings.Configs.SingleOrDefault(c => c.Code == code);
+            if (existingAccessCode == null)
+                throw new TestPlatformException("Invalid access code");
+
+            if(string.IsNullOrWhiteSpace(existingAccessCode.Email))
+                throw new TestPlatformException("Invalid email");
+
+            receivers.Add(new() {
+                Email = existingAccessCode.Email,
+                AccessCode = existingAccessCode.Code
+            });
+        }
+
+        await ProcessSendAccessCodes(testDef, receivers.ToArray());
     }
 }
