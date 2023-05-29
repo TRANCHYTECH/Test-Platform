@@ -22,18 +22,18 @@ const AnswerTypes = [
     id: AnswerType.MultipleChoice,
     text: 'Multiple choices'
   },
-  {
-    id: 3,
-    text: 'Descriptive'
-  },
-  {
-    id: 4,
-    text: 'True/False'
-  },
-  {
-    id: 5,
-    text: 'Short Answer'
-  }
+  // {
+  //   id: 3,
+  //   text: 'Descriptive'
+  // },
+  // {
+  //   id: 4,
+  //   text: 'True/False'
+  // },
+  // {
+  //   id: 5,
+  //   text: 'Short Answer'
+  // }
 ];
 
 @Component({
@@ -59,7 +59,7 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
   answerType?: AnswerType;
   isPartialScore = false;
   singleChoiceIndex?: number;
-  private isSubmitted = false;
+
   private _fb = inject(FormBuilder);
   private _idService = inject(IdService);
   private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
@@ -215,6 +215,9 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
 
       if (this.questionId === 'new') {
         await lastValueFrom(this._questionService.add(this.testId, question));
+        // Trick to by pass discard confirmation.
+        this.questionForm.markAsPristine();
+        
         this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question created');
       } else {
@@ -223,7 +226,6 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
         this.notifyService.success('Question updated');
       }
 
-      this.isSubmitted = true;
     }
     catch (e) {
       this.notifyService.error('Error occured while saving question');

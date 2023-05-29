@@ -109,7 +109,6 @@ public class GradeRangeCriteriaValidator : AbstractValidator<GradeRangeCriteria>
             // First To must greater than 0.
             if (orderedRanges.First().To == 0)
             {
-
                 ctx.AddFailure(new ValidationFailure(ctx.PropertyName, "ERR.TESTDEF.GRADE.002"));
                 return;
             }

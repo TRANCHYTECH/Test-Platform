@@ -105,6 +105,23 @@ public class TestDefinitionManagementController : ControllerBase
         return Ok();
     }
 
+
+    [HttpPost("{id}/TestAccess/SendAccessCodes")]
+    public async Task<IActionResult> SendAccessCodes(string id, [FromBody] string[] codes)
+    {
+        await _testManagerService.SendAccessCodes(id, codes);
+
+        return Ok();
+    }
+
+    [HttpDelete("{id}/TestAccess/RemoveAccessCodes")]
+    public async Task<IActionResult> RemoveAccessCode(string id, [FromQuery(Name = "code")] string[] codes)
+    {
+        await _testManagerService.RemoveAccessCodes(id, codes);
+
+        return Ok();
+    }
+
     [HttpPost("{id}/TestInvitationStats")]
     public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
     {

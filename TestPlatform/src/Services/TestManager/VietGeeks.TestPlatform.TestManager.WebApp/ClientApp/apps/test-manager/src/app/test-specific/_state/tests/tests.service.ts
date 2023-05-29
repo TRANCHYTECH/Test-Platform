@@ -68,6 +68,16 @@ export class TestsService {
     return firstValueFrom(this._http.delete(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/RemoveAccessCode/${code}`));
   }
 
+  removeAccessCodes(id: string, codes: string[]) {
+    return firstValueFrom(this._http.delete(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/RemoveAccessCodes`, {
+      params: { code: codes }
+    }));
+  }
+
+  sendAccessCodes(id: string, codes: string[]) {
+    return firstValueFrom(this._http.post(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/SendAccessCodes`, codes));
+  }
+
   generateRandomCode() {
     return defKSUID32().next();
   }

@@ -51,7 +51,8 @@
                             <a class="form-control" [href]="publicTestAccessLink"
                                 target="_blank">{{publicTestAccessLink}}</a>
                             <button type="button" class="btn btn-outline-secondary flex-shrink-0"
-                                [cdkCopyToClipboard]="publicTestAccessLink" (cdkCopyToClipboardCopied)="copiedTestUrl()">Copy link</button>
+                                [cdkCopyToClipboard]="publicTestAccessLink"
+                                (cdkCopyToClipboardCopied)="copiedTestUrl()">Copy link</button>
                         </div>
                         <div class="hstack form-check form-switch form-switch-lg mb-3">
                             <input type="checkbox" role="switch" id="requireAccessCode" class="form-check-input"
@@ -94,42 +95,56 @@
                             <table class="table table-striped align-middle" formArrayName="configs">
                                 <thead>
                                     <tr>
-                                        <th scope="col"></th>
+                                        <th scope="col"><input type="checkbox" class="form-check-input" #allCodesSelection (change)="toggleSelectAllAccessCodes($event)"></th>
                                         <th scope="col">#</th>
                                         <th scope="col">Access code</th>
                                         <th scope="col">Test Set</th>
                                         <th scope="col">Email</th>
                                         <th scope="col"><input type="checkbox" class="form-check-input"
-                                                (change)="toggleSelectAllSendCode()"><span class="ms-2">Send a
+                                                (change)="toggleSelectAllSendCode()" *ngIf="!isReadonly"><span
+                                                class="ms-2">Send a
                                                 code</span></th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <ng-container
-                                        *ngFor="let control of privateAccessCodeConfigsCtrl.controls; let i = index">
-                                        <tr [formGroup]="control" class="align-baseline">
-                                            <th></th>
+                                        *ngFor="let group of privateAccessCodeConfigsCtrl.controls; let i = index">
+                                        <tr [formGroup]="group" class="align-baseline">
+                                            <th>
+                                                <input type="checkbox" class="form-check-input"
+                                                    [(ngModel)]="codeSelections[group.controls['code'].value]"
+                                                    [ngModelOptions]="{standalone: true}">
+                                            </th>
                                             <td>{{i + 1}}</td>
-                                            <td>{{control.get('code')?.value}}</td>
-                                            <td>{{control.get('setId')?.value ?? '[Auto]'}}</td>
+                                            <td>{{group.get('code')?.value}}</td>
+                                            <td>{{group.get('setId')?.value ?? '[Auto]'}}</td>
                                             <td><input class="form-control border-dashed" type="text"
-                                                    style="max-width: 300px;" formControlName="email"></td>
+                                                    style="max-width: 300px;" formControlName="email"
+                                                    [readonly]="checkTestInvitationSent(group.get('code')?.value)"></td>
                                             <td>
                                                 <input type="checkbox" class="form-check-input"
-                                                    formControlName="sendCode">
+                                                    formControlName="sendCode" *ngIf="!isReadonly">
                                                 <span
-                                                    class="btn btn-outline-info btn-sm ms-2">{{getTestInvitationStat(control.get('code')?.value)}}</span>
+                                                    class="btn btn-outline-info btn-sm ms-2">{{getTestInvitationStat(group.get('code')?.value)}}</span>
                                             </td>
                                             <td>
                                                 <i class="ri-delete-bin-line delete-icon"
                                                     [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }"
-                                                    (confirm)="removeAccessCode(i)"></i>
+                                                    (confirm)="removeAccessCode(group.get('code')?.value)"></i>
                                             </td>
                                         </tr>
                                     </ng-container>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex gap-2 mb-3">
+                            <button type="button" class="btn btn-outline-secondary"
+                                [swal]="{ title: 'Confirmation', text: 'You want to delete selected access codes!', showCancelButton: true }"
+                                (confirm)="removeAccessCodes()" [disabled]="!hasSelectedCode">Delete
+                                selected</button>
+                            <button type="button" class="btn btn-outline-secondary" (click)="sendAccessCodes()"
+                                [disabled]="!hasSelectedCode">Send access codes</button>
                         </div>
                         <div class="mb-3">
                             <h6>Attempts per respondent</h6>
