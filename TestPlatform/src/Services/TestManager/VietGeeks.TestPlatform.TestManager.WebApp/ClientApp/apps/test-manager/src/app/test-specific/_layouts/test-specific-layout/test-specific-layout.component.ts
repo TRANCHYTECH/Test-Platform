@@ -7,6 +7,7 @@ import { TestStatus } from '../../../_state/test-support.model';
 import { TestActivationMethodType } from '../../_state/tests/test.model';
 import { TestsQuery } from '../../_state/tests/tests.query';
 import { TestsService } from '../../_state/tests/tests.service';
+import { CoreEventsService } from '@viet-geeks/core';
 
 @Component({
   selector: 'viet-geeks-test-specific-layout',
@@ -34,7 +35,8 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _uiSupportedService = inject(UISupportedService);
   private _destroyRef = inject(DestroyRef);
-
+  private _coreEvents = inject(CoreEventsService);
+  
   constructor() {
     this._router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this.testId = getTestId(this._route);
@@ -149,16 +151,19 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
 
   async activateTest() {
     await this._testsService.activate(this.testId);
+    this._coreEvents.reasonOfChange.set(`test_${this.testId}_activated`);
     this._notifyService.success('Test activated/scheduled successfully');
   }
 
   async endTest() {
     await this._testsService.end(this.testId);
+    this._coreEvents.reasonOfChange.set(`test_${this.testId}_ended`);
     this._notifyService.success('Test ended successfully');
   }
 
   async restart() {
     await this._testsService.restart(this.testId);
+    this._coreEvents.reasonOfChange.set(`test_${this.testId}_restarted`);
     this._notifyService.success('Test restarted successfully');
     this._router.navigate([this._router.url], { onSameUrlNavigation: 'reload' });
   }

@@ -95,7 +95,7 @@
                             <table class="table table-striped align-middle" formArrayName="configs">
                                 <thead>
                                     <tr>
-                                        <th scope="col"><input type="checkbox" class="form-check-input" #allCodesSelection (change)="toggleSelectAllAccessCodes($event)"></th>
+                                        <th scope="col"><input type="checkbox" class="form-check-input" #allCodesSelection (change)="toggleSelectAllCodes($event)"></th>
                                         <th scope="col">#</th>
                                         <th scope="col">Access code</th>
                                         <th scope="col">Test Set</th>
@@ -141,10 +141,10 @@
                         <div class="d-flex gap-2 mb-3">
                             <button type="button" class="btn btn-outline-secondary"
                                 [swal]="{ title: 'Confirmation', text: 'You want to delete selected access codes!', showCancelButton: true }"
-                                (confirm)="removeAccessCodes()" [disabled]="!hasSelectedCode">Delete
+                                (confirm)="removeAccessCodes()" [disabled]="!hasSelectedCode" *ngIf="!isEndedTest">Delete
                                 selected</button>
                             <button type="button" class="btn btn-outline-secondary" (click)="sendAccessCodes()"
-                                [disabled]="!hasSelectedCode">Send access codes</button>
+                                [disabled]="!hasSelectedCode" *ngIf="isActivatedTest">Send access codes</button>
                         </div>
                         <div class="mb-3">
                             <h6>Attempts per respondent</h6>
@@ -246,7 +246,7 @@
             <div class="text-end mb-4">
                 <div class="d-flex gap-1 justify-content-end">
                     <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
-                        [canSubmit]="canSubmit"></viet-geeks-submit-button>
+                        [canSubmit]="canSubmit" *ngIf="!isEndedTest"></viet-geeks-submit-button>
                 </div>
             </div>
         </div>

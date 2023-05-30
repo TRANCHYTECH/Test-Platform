@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 
 import { AuthService } from '@auth0/auth0-angular';
-import { EventService, LanguageService } from '@viet-geeks/core';
+import { LanguageService } from '@viet-geeks/core';
 import { cartData } from './data';
 import { CartModel } from './topbar.model';
 
@@ -38,7 +38,6 @@ export class TopbarComponent implements OnInit {
   cart_length: any = 0;
 
   constructor(@Inject(DOCUMENT) private document: any,
-    private eventService: EventService,
     public languageService: LanguageService,
     public _cookiesService: CookieService,
     public translate: TranslateService) { }
@@ -115,8 +114,6 @@ export class TopbarComponent implements OnInit {
   */
   changeMode(mode: string) {
     this.mode = mode;
-    this.eventService.broadcast('changeMode', mode);
-
     switch (mode) {
       case 'light':
         document.body.setAttribute('data-layout-mode', "light");

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, DestroyRef, effect, inject, OnDestroy, OnInit, untracked } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -25,6 +25,34 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
 
     get isNewTest() {
         return this.testId === 'new';
+    }
+
+    get isActivatedTest() {
+        return this.test.status === TestStatus.Activated;
+    }
+
+    get isDraftTest() {
+        return this.test.status === TestStatus.Draft;
+    }
+
+    get isEndedTest() {
+        return this.test.status === TestStatus.Ended;
+    }
+
+    get isScheduledTest() {
+        return this.test.status === TestStatus.Scheduled;
+    }
+
+    constructor() {
+        super();
+        effect(() => {
+            const req = this.coreEvents.testChangedReason();
+            console.log('test changed reason:', req);
+            if (req !== false)
+                untracked(() => {
+                    this.processLoadingDataFlow();
+                });
+        });
     }
 
     ngOnDestroy(): void {

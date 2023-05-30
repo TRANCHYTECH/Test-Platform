@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { EventService } from '@viet-geeks/core';
 
 @Component({
   selector: 'viet-geeks-vertical',
@@ -10,8 +9,6 @@ export class VerticalComponent implements OnInit {
 
   isCondensed = false;
   
-  constructor(private eventService: EventService) { }
-
   ngOnInit(): void {
     document.documentElement.setAttribute('data-layout', 'vertical');
     document.documentElement.setAttribute('data-topbar', 'light');
@@ -71,9 +68,7 @@ export class VerticalComponent implements OnInit {
   onResize(event:any) {
     if(document.body.getAttribute('layout') == "twocolumn") {
       if (event.target.innerWidth <= 767) {
-        this.eventService.broadcast('changeLayout', 'vertical');     
       }else{
-        this.eventService.broadcast('changeLayout', 'twocolumn');  
         document.body.classList.remove('twocolumn-panel'); 
         document.body.classList.remove('vertical-sidebar-enable'); 
       }

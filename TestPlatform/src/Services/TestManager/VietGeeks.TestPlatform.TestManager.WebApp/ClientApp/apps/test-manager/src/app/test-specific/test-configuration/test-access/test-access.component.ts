@@ -3,7 +3,6 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppSettingsService } from '@viet-geeks/core';
 import { DeactivatableComponent } from '@viet-geeks/shared';
 import { assign, findKey, forEach, forIn, isNumber, range } from 'lodash-es';
-import { TestStatus } from '../../../_state/test-support.model';
 import { AppSettings } from '../../../app-setting.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { GroupPasswordType, PrivateAccessCodeType, PublicLinkType, TestAccess, TestAccessType, TestAccessTypeUI, TestInvitationStats } from '../../_state/tests/test.model';
@@ -21,14 +20,14 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
   appSettingsService = inject(AppSettingsService);
 
   testInvitationStats: TestInvitationStats[] = [];
-  testAccessForm: FormGroup;
-  codeGenerationForm: FormGroup;
+  testAccessForm: FormGroup =  this.fb.group({});
+  codeGenerationForm: FormGroup = this.fb.group({ count: ['', [Validators.min(1), Validators.max(50)]] });
   testAccessFormConfig = {
     attemptsPerRespondentRange: range(1, 11, 1)
   }
 
   @ViewChild('allCodesSelection')
-  allCodesSelection!: ElementRef;
+  allCodesSelection!: ElementRef<HTMLInputElement>;
 
   codeSelections: { [key: string]: boolean } = {};
 
@@ -81,12 +80,6 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
 
   canDeactivate: () => boolean | Promise<boolean> = () => !this.testAccessForm.dirty;
 
-  constructor() {
-    super();
-    this.testAccessForm = this.fb.group({});
-    this.codeGenerationForm = this.fb.group({ count: ['', [Validators.min(1), Validators.max(50)]] });
-  }
-
   async postLoadEntity(): Promise<void> {
     // Init default form.
     this.testAccessForm = this.fb.group({
@@ -99,7 +92,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
 
     //todo: move to func
     // Async get test invitation statistics.
-    if (this.test.status === TestStatus.Activated) {
+    if (this.isActivatedTest) {
       this.testsService.getTestInvitationStats(this.test.id).then(rs => {
         this.testInvitationStats = rs;
         this.changeRef.markForCheck();
@@ -168,7 +161,6 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     return result;
   }
 
-
   onAccessTypeSelected(accessType: number) {
     this.accessTypeCtrl.setValue(accessType);
     forIn(TestAccessTypeUI, (t) => {
@@ -221,9 +213,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
       const ctrl = codeCtrls.controls.findIndex(c => c.controls['code'].value === code);
       codeCtrls.removeAt(ctrl);
     });
-    // Reset selection list.
-    this.codeSelections = {};
-    this.changeRef.markForCheck();
+    this.resetCodeSelection();
     this.notifyService.success('Access codes are removed');
   }
 
@@ -233,9 +223,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
       return;
     }
     await this.testsService.sendAccessCodes(this.testId, codes);
-    const el = (this.allCodesSelection.nativeElement as HTMLInputElement);
-    el.checked = false;
-    el.dispatchEvent(new Event('change'));
+    this.resetCodeSelection();
     this.notifyService.success('Access codes are scheduled to send');
   }
 
@@ -253,13 +241,13 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     this.testAccessForm.markAsDirty();
   }
 
-  toggleSelectAllAccessCodes(e: Event) {
+  toggleSelectAllCodes(e: Event) {
     const checked = (e.target as HTMLInputElement).checked;
     this.privateAccessCodeConfigsCtrl.controls.forEach(groupCtrl => {
       const code = groupCtrl.controls['code'].value;
       this.codeSelections[code] = checked;
     });
-    this.testAccessForm.markAsDirty();
+    this.changeRef.markForCheck();
   }
 
   copiedTestUrl() {
@@ -320,5 +308,11 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
       email: [code.email, [Validators.email]],
       sendCode: code.sendCode ?? false
     });
+  }
+
+  private resetCodeSelection() {
+    this.allCodesSelection.nativeElement.checked = false;
+    this.codeSelections = {};
+    this.changeRef.markForCheck();
   }
 }
