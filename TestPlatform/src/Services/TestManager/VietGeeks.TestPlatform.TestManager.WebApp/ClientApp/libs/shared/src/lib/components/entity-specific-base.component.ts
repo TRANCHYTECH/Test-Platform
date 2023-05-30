@@ -1,10 +1,13 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { CoreEventsService } from "@viet-geeks/core";
 import { PrimaryBaseComponent } from "./primary-base.component";
 
 @Component({ template: '' })
 export abstract class EntitySpecificBaseComponent extends PrimaryBaseComponent implements OnInit {
     router = inject(Router);
+    coreEvents = inject(CoreEventsService);
+
     protected _refreshAfterSubmit = true;
 
     abstract loadEntity(): Promise<void>;
@@ -18,6 +21,7 @@ export abstract class EntitySpecificBaseComponent extends PrimaryBaseComponent i
         this.processLoadingDataFlow();
         this.configureLoadingIndicator();
         this.onInit();
+
     }
 
     onInit() {
@@ -37,8 +41,9 @@ export abstract class EntitySpecificBaseComponent extends PrimaryBaseComponent i
         }
     }
 
-    private async processLoadingDataFlow() {
+    protected async processLoadingDataFlow() {
         try {
+            console.log('load test data');
             this.maskBusyForMainFlow();
 
             await this.loadEntity();
