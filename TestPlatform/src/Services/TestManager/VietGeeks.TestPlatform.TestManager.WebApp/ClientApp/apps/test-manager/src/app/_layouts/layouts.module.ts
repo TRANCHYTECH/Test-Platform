@@ -4,11 +4,6 @@ import { RouterModule } from '@angular/router';
 
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-
-// Feather Icon
-import { FeatherModule } from 'angular-feather';
-import { allIcons } from 'angular-feather/icons';
-
 // Component pages
 import { VerticalComponent } from './vertical/vertical.component';
 import { TopbarComponent } from './topbar/topbar.component';
@@ -29,8 +24,7 @@ import { SharedModule } from '@viet-geeks/shared';
     RouterModule,
     NgbDropdownModule,
     NgbNavModule,
-    TranslateModule,
-    FeatherModule.pick(allIcons),
+    TranslateModule
   ],
   exports: [
     VerticalComponent

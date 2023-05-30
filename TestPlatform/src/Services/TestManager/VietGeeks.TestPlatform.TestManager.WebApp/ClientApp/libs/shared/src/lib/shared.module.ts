@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { FeatherModule } from 'angular-feather';
-import { allIcons } from 'angular-feather/icons';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 import { NgbPaginationModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +20,6 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    FeatherModule.pick(allIcons),
     NgbToastModule,
     NgbPaginationModule,
     EditorModule,
@@ -32,7 +29,6 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     CommonModule,
     HttpClientModule,
     TranslateModule,
-    FeatherModule,
     BreadcrumbsComponent,
     SubmitButtonComponent,
     PaginationComponent,
