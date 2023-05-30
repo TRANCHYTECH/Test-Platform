@@ -144,7 +144,7 @@
                                 (confirm)="removeAccessCodes()" [disabled]="!hasSelectedCode" *ngIf="!isEndedTest">Delete
                                 selected</button>
                             <button type="button" class="btn btn-outline-secondary" (click)="sendAccessCodes()"
-                                [disabled]="!hasSelectedCode" *ngIf="isActivatedTest">Send access codes</button>
+                                [disabled]="!hasSelectedCode" *ngIf="isActivatedTest || isScheduledTest">Send access codes</button>
                         </div>
                         <div class="mb-3">
                             <h6>Attempts per respondent</h6>
