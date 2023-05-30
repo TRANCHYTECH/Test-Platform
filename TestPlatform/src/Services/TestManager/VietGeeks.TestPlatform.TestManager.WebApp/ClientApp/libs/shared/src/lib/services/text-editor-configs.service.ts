@@ -16,17 +16,21 @@ const Toolbars = {
   image: '| image'
 }
 
-export const EDITOR_API_KEY = new InjectionToken<string>("tiny-editor-api-key");
+export type TextEditorConfigs = {
+  editorApiKey: string,
+  uploadPublicKey: string
+};
+export const TEXT_EDITOR_CONFIGS = new InjectionToken<TextEditorConfigs>("tiny-editor-configs");
 
 @Injectable({
   providedIn: 'root'
 })
 export class TextEditorConfigsService {
-  private _apiKey = inject(EDITOR_API_KEY);
-  private _client = new UploadClient({ publicKey: '8a991600a5b7c5405c5a' });
+  private _apiKey = inject(TEXT_EDITOR_CONFIGS);
+  private _client = new UploadClient({ publicKey: this._apiKey.uploadPublicKey });
   private _editorSubjects: { [key: string]: AsyncSubject<TinymceTextEditor> } = {};
 
-  apiKey = this._apiKey;
+  apiKey = this._apiKey.editorApiKey;
 
   simpleEditorConfig: EditorComponent['init'] = {
     menubar: false,

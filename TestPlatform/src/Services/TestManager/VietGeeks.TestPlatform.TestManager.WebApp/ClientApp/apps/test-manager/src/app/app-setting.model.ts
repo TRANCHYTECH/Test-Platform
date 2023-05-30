@@ -1,5 +1,5 @@
 import { ApiRouteDefinition } from '@auth0/auth0-angular';
-import {IAppSettings} from '@viet-geeks/core';
+import { IAppSettings } from '@viet-geeks/core';
 
 export class AppSettings implements IAppSettings {
     auth!: {
@@ -12,6 +12,8 @@ export class AppSettings implements IAppSettings {
 
     appTitle?: string;
     testManagerApiBaseUrl!: string;
-    accountManagerApiBaseUrl!:string;
+    accountManagerApiBaseUrl!: string;
     testRunnerBaseUrl!: string;
+    editorApiKey!: string;
+    uploadPubicKey!: string;
 }

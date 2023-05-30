@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS, HttpBackend, HttpClient } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule, inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -12,7 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { AppSettingsService, CoreModule, HttpErrorResponseInterceptor } from '@viet-geeks/core';
-import { ApiErrorHandler, EDITOR_API_KEY, SharedModule } from '@viet-geeks/shared';
+import { ApiErrorHandler, TEXT_EDITOR_CONFIGS, SharedModule, TextEditorConfigs } from '@viet-geeks/shared';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { firstValueFrom } from 'rxjs';
@@ -97,9 +97,8 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
       multi: true
     },
     {
-      provide: EDITOR_API_KEY,
-      //todo: use configuration from server.
-      useValue: 'x0yf00jatpue54s2pib29qju4ql049rbbv602narz7nfx4p2'
+      provide: TEXT_EDITOR_CONFIGS,
+      useFactory: textEditorConfigsFn()
     },
     provideErrorTailorConfig({
       errors: {
@@ -125,7 +124,6 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
         }, deps: [TranslateService]
       }
     }),
-    // { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' },
     {
       provide: ErrorHandler,
       useClass: ApiErrorHandler
@@ -135,6 +133,13 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
 })
 export class AppModule { }
 
-export function createTranslateLoader(http: HttpClient) {
+function textEditorConfigsFn() {
+  return () => {
+    const configs = inject(AppSettingsService).get<AppSettings>();
+    return <TextEditorConfigs>{ editorApiKey: configs.editorApiKey, uploadPublicKey: configs.uploadPubicKey };
+  };
+}
+
+function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
