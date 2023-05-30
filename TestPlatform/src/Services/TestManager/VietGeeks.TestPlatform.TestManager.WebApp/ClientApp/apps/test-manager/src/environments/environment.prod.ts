@@ -4,6 +4,8 @@ export const environment = {
     testManagerApiBaseUrl: "",
     accountManagerApiBaseUrl: "",
     testRunnerBaseUrl: "",
+    editorApiKey: "",
+    uploadPubicKey: "",
     auth: {
         domain: '',
         clientId: '',
