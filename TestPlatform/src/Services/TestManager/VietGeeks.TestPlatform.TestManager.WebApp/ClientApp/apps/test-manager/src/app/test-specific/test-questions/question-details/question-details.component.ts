@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { DeactivatableComponent, getTestId, IdService, TextEditorConfigsService, ToastService, UISupportedService } from '@viet-geeks/shared';
+import { DeactivatableComponent, IdService, UISupportedService } from '@viet-geeks/shared';
 import { isNumber } from 'lodash-es';
-import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import { Observable, firstValueFrom, lastValueFrom } from 'rxjs';
 import { Answer, AnswerType, Question, ScoreSettings } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { UiIntegrationService } from '../../../_state/ui-integration.service';
+import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategory, QuestionCategoryGenericId } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
 import { QuestionCategoriesService } from '../../_state/question-categories/question-categories.service';
@@ -42,40 +42,34 @@ const AnswerTypes = [
   styleUrls: ['./question-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionDetailsComponent implements OnInit, DeactivatableComponent {
+export class QuestionDetailsComponent extends TestSpecificBaseComponent implements DeactivatableComponent {
+  @Input('question-id')
+  questionId = '';
+
   questionCategories$!: Observable<QuestionCategory[]>;
   questionForm: FormGroup;
   scoreSettingsForm: FormGroup;
   answerTypes = AnswerTypes;
-
-  route = inject(ActivatedRoute);
-  router = inject(Router);
-  notifyService = inject(ToastService);
-  textEditorConfigs = inject(TextEditorConfigsService);
-  uiIntegrationService = inject(UiIntegrationService);
-  questionId = '';
-  testId = '';
   isMultipleChoiceAnswer = false;
   answerType?: AnswerType;
   isPartialScore = false;
   singleChoiceIndex?: number;
 
-  private _fb = inject(FormBuilder);
+  uiIntegrationService = inject(UiIntegrationService);
   private _idService = inject(IdService);
   private _questionCategoriesQuery = inject(QuestionCategoriesQuery);
   private _questionCategoriesService = inject(QuestionCategoriesService);
   private _questionService = inject(QuestionService);
-  private _changeRef = inject(ChangeDetectorRef);
   private _uiSupportedService = inject(UISupportedService);
-  private _destroyRef = inject(DestroyRef);
 
   constructor() {
-    this.questionForm = this._fb.group({
+    super();
+    this.questionForm = this.fb.group({
       questionNo: 1, //todo: last count + 1
       description: ['', [Validators.required]],
       categoryId: [QuestionCategoryGenericId, [Validators.required]],
       answerType: ['', [Validators.required]],
-      answers: this._fb.array([])
+      answers: this.fb.array([])
     });
 
     const pointMandatoryCondition = () => (this.answerType == AnswerType.SingleChoice || this.answerType == AnswerType.MultipleChoice) && !this.isPartialScore;
@@ -84,7 +78,7 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
         return this.answerType === AnswerType.MultipleChoice && this.isPartialScore;
       }
 
-    this.scoreSettingsForm = this._fb.group({
+    this.scoreSettingsForm = this.fb.group({
       correctPoint: [0, [RxwebValidators.compose({
         validators: [Validators.required, RxwebValidators.range({ minimumNumber: 0, maximumNumber: 1000 })], conditionalExpression: pointMandatoryCondition
       })]],
@@ -103,55 +97,52 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
       isMandatory: false
     });
   }
+
   canDeactivate: () => boolean | Promise<boolean> = () => !this.questionForm.dirty;
 
-  ngOnInit(): void {
-    this.route.params.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(async p => {
-      this.testId = getTestId(this.route);
-      this.questionId = p['question-id'];
+  override async postLoadEntity(): Promise<void> {
+    firstValueFrom(this._questionCategoriesService.get(this.testId));
+    this.questionCategories$ = this._questionCategoriesQuery.selectAll();
 
-      firstValueFrom(this._questionCategoriesService.get(this.testId));
-      this.questionCategories$ = this._questionCategoriesQuery.selectAll();
+    if (this.questionId === 'new') {
+      this._uiSupportedService.setSectionTitle('New Question');
+    }
+    else {
+      const question = await firstValueFrom(this._questionService.getQuestion(this.testId, this.questionId));
+      this._uiSupportedService.setSectionTitle(`Question ${question.questionNo}`);
+      this.questionForm.reset({
+        questionNo: question?.questionNo,
+        description: question?.description,
+        categoryId: question?.categoryId,
+        answerType: question?.answerType
+      });
 
-      if (this.questionId === 'new') {
-        this._uiSupportedService.setSectionTitle('New Question');
-      }
-      else {
-        const question = await firstValueFrom(this._questionService.getQuestion(this.testId, this.questionId));
-        this._uiSupportedService.setSectionTitle(`Question ${question.questionNo}`);
-        this.questionForm.reset({
-          questionNo: question?.questionNo,
-          description: question?.description,
-          categoryId: question?.categoryId,
-          answerType: question?.answerType
+      if (question?.scoreSettings) {
+        this.scoreSettingsForm.reset({
+          correctPoint: question.scoreSettings.correctPoint,
+          incorrectPoint: question.scoreSettings.incorrectPoint,
+          isPartialAnswersEnabled: question.scoreSettings.isPartialAnswersEnabled,
+          bonusPoints: question.scoreSettings.bonusPoints,
+          partialIncorrectPoint: question.scoreSettings.partialIncorrectPoint,
+          isDisplayMaximumScore: question.scoreSettings.isDisplayMaximumScore,
+          mustAnswerToContinue: question.scoreSettings.mustAnswerToContinue,
+          isMandatory: question.scoreSettings.isMandatory
         });
-
-        if (question?.scoreSettings) {
-          this.scoreSettingsForm.reset({
-            correctPoint: question.scoreSettings.correctPoint,
-            incorrectPoint: question.scoreSettings.incorrectPoint,
-            isPartialAnswersEnabled: question.scoreSettings.isPartialAnswersEnabled,
-            bonusPoints: question.scoreSettings.bonusPoints,
-            partialIncorrectPoint: question.scoreSettings.partialIncorrectPoint,
-            isDisplayMaximumScore: question.scoreSettings.isDisplayMaximumScore,
-            mustAnswerToContinue: question.scoreSettings.mustAnswerToContinue,
-            isMandatory: question.scoreSettings.isMandatory
-          });
-        }
-
-        if (question?.answers) {
-          this.singleChoiceIndex = question?.answers?.findIndex(a => a.isCorrect);
-          question.answers.forEach((answer) => {
-            this.addAnswer(answer);
-          });
-        }
-
-        this.isMultipleChoiceAnswer = this.isMultipleChoice(question?.answerType);
-        this.answerType = question?.answerType;
-        this.isPartialScore = question?.scoreSettings?.isPartialAnswersEnabled ?? false;
-        this._changeRef.markForCheck();
       }
-    });
+
+      if (question?.answers) {
+        this.singleChoiceIndex = question?.answers?.findIndex(a => a.isCorrect);
+        question.answers.forEach((answer) => {
+          this.addAnswer(answer);
+        });
+      }
+
+      this.isMultipleChoiceAnswer = this.isMultipleChoice(question?.answerType);
+      this.answerType = question?.answerType;
+      this.isPartialScore = question?.scoreSettings?.isPartialAnswersEnabled ?? false;
+      this.changeRef.markForCheck();
+    }
+
     this.registerControlEvents();
   }
 
@@ -186,14 +177,6 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
     return this.questionForm.dirty || this.scoreSettingsForm.dirty;
   }
 
-  submitFunc = async () => {
-    if (!this.canSubmit) {
-      return;
-    }
-
-    await this.submit();
-  };
-
   async submit() {
     try {
       if (this.questionForm.invalid || this.scoreSettingsForm.invalid) {
@@ -215,17 +198,15 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
 
       if (this.questionId === 'new') {
         await lastValueFrom(this._questionService.add(this.testId, question));
-        // Trick to by pass discard confirmation.
-        this.questionForm.markAsPristine();
-        
-        this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question created');
       } else {
         await this._questionService.update(this.testId, this.questionId, question);
-        this.router.navigate(['../list'], { relativeTo: this.route });
         this.notifyService.success('Question updated');
       }
 
+      // Trick to by pass discard confirmation.
+      this.questionForm.markAsPristine();
+      this.router.navigate(['../list'], { relativeTo: this.route });
     }
     catch (e) {
       this.notifyService.error('Error occured while saving question');
@@ -275,7 +256,7 @@ export class QuestionDetailsComponent implements OnInit, DeactivatableComponent 
   }
 
   private addAnswer(answer: Answer) {
-    const formGroup = this._fb.group({
+    const formGroup = this.fb.group({
       id: answer.id,
       answerDescription: [answer.answerDescription, [Validators.required]],
       answerPoint: [answer.answerPoint, [RxwebValidators.compose({
