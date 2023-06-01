@@ -77,6 +77,8 @@
             </tr>
           </tbody>
         </table>
+        <div *ngIf="answers.hasError('required')"><label
+          class="control-error">{{'errors.listRequired' | translate}}</label></div>
         <button type="button" class="btn btn-outline-secondary btn-label" (click)="addEmptyAnswer()"><i
             class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add answer</button>
       </div>
