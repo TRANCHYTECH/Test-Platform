@@ -15,9 +15,9 @@
           <div class="flex-grow-1">
             <div class="d-flex" *ngFor="let answer of question.questionAnswers">
               <ng-container *ngIf="answersDictionary[question.id!][answer.id!]; else blank">
-                <i *ngIf="answer.isCorrect; else incorrect" class="bx bx-check fs-3 text-success"></i>
+                <i *ngIf="answer.isCorrect; else incorrect" class="ri-check-line fs-3 text-success"></i>
                 <ng-template #incorrect>
-                  <i class="bx bx-x fs-3 text-danger"></i>
+                  <i class="ri-close-line fs-3 text-danger"></i>
                 </ng-template>
               </ng-container>
               <div class="form-check mb-3 flex-grow-1" [ngClass]="{'bg-light': answer.isCorrect}">
@@ -31,9 +31,9 @@
           <div class="flex-grow-1">
             <div class="d-flex" *ngFor="let answer of question.questionAnswers">
               <ng-container *ngIf="answersDictionary[question.id!][answer.id!]; else blank">
-                <i *ngIf="answer.isCorrect; else incorrect" class="bx bx-check fs-3 text-success"></i>
+                <i *ngIf="answer.isCorrect; else incorrect" class="ri-check-line fs-3 text-success"></i>
                 <ng-template #incorrect>
-                  <i class="bx bx-x fs-3 text-danger"></i>
+                  <i class="ri-close-line fs-3 text-danger"></i>
                 </ng-template>
               </ng-container>
               <div class="form-check form-check-outline form-check-primary mb-3 flex-grow-1" [ngClass]="{'bg-light': answer.isCorrect}">
@@ -52,5 +52,5 @@
   </div>
 </div>
 <ng-template #blank>
-  <i class="bx bx-lemon fs-3 opacity-0"></i>
+  <i class="ri-pulse-line fs-3 opacity-0"></i>
 </ng-template>
