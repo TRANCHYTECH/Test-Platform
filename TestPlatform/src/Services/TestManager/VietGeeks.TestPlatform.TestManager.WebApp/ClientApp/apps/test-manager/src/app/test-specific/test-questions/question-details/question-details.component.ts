@@ -69,7 +69,7 @@ export class QuestionDetailsComponent extends TestSpecificBaseComponent implemen
       description: ['', [Validators.required]],
       categoryId: [QuestionCategoryGenericId, [Validators.required]],
       answerType: ['', [Validators.required]],
-      answers: this.fb.array([])
+      answers: this.fb.array([], [Validators.required])
     });
 
     const pointMandatoryCondition = () => (this.answerType == AnswerType.SingleChoice || this.answerType == AnswerType.MultipleChoice) && !this.isPartialScore;
@@ -174,7 +174,7 @@ export class QuestionDetailsComponent extends TestSpecificBaseComponent implemen
   }
 
   get canSubmit(): boolean {
-    return this.questionForm.dirty || this.scoreSettingsForm.dirty;
+    return this.questionForm.valid && (this.questionForm.dirty || this.scoreSettingsForm.dirty);
   }
 
   async submit() {
