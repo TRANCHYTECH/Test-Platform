@@ -4,14 +4,13 @@
         <div class="row">
             <div class="col-xl-6" >
                 <div *ngIf="passMarkGrading" class="mb-3">
-                    <div class="d-flex pass" *ngIf="passMarkGrading.passMarkGrade?.isPass; else fail">
-                        <i class="bx bxs-check-square fs-3"></i>
-                        <h5>Test passed</h5>
+                    <div class="d-flex align-items-center pass" *ngIf="passMarkGrading.passMarkGrade?.isPass; else fail">
+                        <i class="ri-checkbox-circle-line fs-3"></i>
+                        <h5 class="mb-0">Test passed</h5>
                     </div>
                     <ng-template #fail>
-                        <div class="d-flex fail">
-                            <i class="bx bxs-x-square fs-3"></i>
-                            <h5>Test failed</h5>
+                        <div class="d-flex align-items-center fail">           
+                            <i class="ri-close-circle-line fs-3"></i><h5 class="mb-0">Test failed</h5>
                         </div>
                     </ng-template>
                 </div>
