@@ -15,7 +15,7 @@ import { QuestionService } from '../../_state/questions/question.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionListComponent extends TestSpecificBaseComponent {
-  @ViewChild('pagination', {static: true})
+  @ViewChild('pagination', { static: true })
   paginationComp!: PaginationComponent;
 
   AnswerType = AnswerType;
@@ -55,6 +55,10 @@ export class QuestionListComponent extends TestSpecificBaseComponent {
 
   goToQuestionDetails(questionId: string, e: Event) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!this.isDraftTest) {
+      return;
+    }
+
     const fromQuestionActionMenu = e.composedPath().find((c: any) => (typeof c.className) === "string" && c.className.includes('question-action-menu'));
     if (fromQuestionActionMenu === undefined)
       this.router.navigate(['../', questionId], { relativeTo: this.route });
