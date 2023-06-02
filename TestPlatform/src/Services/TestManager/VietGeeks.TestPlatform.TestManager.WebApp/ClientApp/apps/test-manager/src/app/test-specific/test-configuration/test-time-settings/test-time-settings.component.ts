@@ -92,7 +92,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent impleme
     }
   ];
 
-  canDeactivate: () => boolean | Promise<boolean> = () => !this.timeSettingsForm.dirty;
+  canDeactivate: () => boolean | Promise<boolean> = () => this.isReadonly || !this.timeSettingsForm.dirty;
 
   private dhhmmssValidator = (control: AbstractControl<string>): ValidationErrors | null => {
     if (isNull(control.value) || isEmpty(control.value) || control.value.indexOf('_') > -1)
@@ -235,7 +235,7 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent impleme
         [TestDurationMethod.CompleteQuestionTime]: this.fb.group({
           duration: [null, [RxwebValidators.required(), this.mmssValidator]]
         })
-      }),
+      }, {}),
       testActivationMethod: this.fb.group({
         type: [TestActivationMethodType.ManualTest],
         [TestActivationMethodType.ManualTest]: this.fb.group({

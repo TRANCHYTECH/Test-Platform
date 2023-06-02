@@ -6,7 +6,7 @@
         </div>
         <a routerLink="../categories" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Manage Question Categories</a>
-        <a routerLink="../order" class="btn btn-soft-secondary"><i
+        <a routerLink="../order" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
                 class="ri-list-settings-fill align-bottom me-1"></i>Change Question Order</a>
     </div>
 </div>
@@ -56,7 +56,8 @@
                                             <i class="ri-more-line"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item" 
+                                                *ngIf="isDraftTest"
                                                 [swal]="{ title: 'Confirmation', text: 'You want to delete this test category?', showCancelButton: true }"
                                                 (confirm)="removeQuestion(question.id)"><i
                                                     class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>Delete</a>

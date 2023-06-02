@@ -43,6 +43,10 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
         return this.test.status === TestStatus.Scheduled;
     }
 
+    get isReadonly() {
+        return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
+    }
+    
     constructor() {
         super();
         effect(() => {
@@ -77,10 +81,6 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
 
     onDestroy() {
         // Default do nothing.
-    }
-
-    get isReadonly() {
-        return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
     }
 
     async invokeLongAction(action: () => Promise<void>) {

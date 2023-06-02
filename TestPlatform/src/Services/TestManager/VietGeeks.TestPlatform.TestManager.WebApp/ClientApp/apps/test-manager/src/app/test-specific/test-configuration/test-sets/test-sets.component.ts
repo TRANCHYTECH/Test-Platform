@@ -60,7 +60,7 @@ export class TestSetsComponent extends TestSpecificBaseComponent implements Deac
     this.questionCategories = this._questionCategoriesQuery.getAll();
 
     this.testSetsForm = this.fb.group({
-      generatorType: this.test?.testSetSettings?.generatorType || GeneratorTypes.Default,
+      generatorType: this.fb.control({ value: this.test?.testSetSettings?.generatorType || GeneratorTypes.Default, disabled: this.isReadonly }),
       generator: this.fb.group({
         $type: GeneratorTypes.RandomFromCategories,
         configs: this.createGeneratorConfigsForm()

@@ -20,7 +20,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
   appSettingsService = inject(AppSettingsService);
 
   testInvitationStats: TestInvitationStats[] = [];
-  testAccessForm: FormGroup =  this.fb.group({});
+  testAccessForm: FormGroup = this.fb.group({});
   codeGenerationForm: FormGroup = this.fb.group({ count: ['', [Validators.min(1), Validators.max(50)]] });
   testAccessFormConfig = {
     attemptsPerRespondentRange: range(1, 11, 1)
@@ -134,7 +134,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     const details = setting.accessType === TestAccessType.PublicLink ? <PublicLinkType>setting.settings : null;
     const result = this.fb.group({
       requireAccessCode: this.fb.control({ value: details?.requireAccessCode ?? false, disabled: true }),
-      attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
+      attempts: this.fb.control({ value: details?.attempts ?? 1, disabled: this.isReadonly }, { validators: [Validators.required, Validators.min(1), Validators.max(10)] })
     });
 
     if (details === undefined || details === null) {
@@ -151,7 +151,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
 
     const result = this.fb.group({
       configs: configCtrls,
-      attempts: [details?.attempts ?? 1, [Validators.required, Validators.min(1), Validators.max(10)]]
+      attempts: this.fb.control({ value: details?.attempts ?? 1, disabled: this.isReadonly }, { validators: [Validators.required, Validators.min(1), Validators.max(10)] })
     });
 
     if (details === undefined || details === null) {
