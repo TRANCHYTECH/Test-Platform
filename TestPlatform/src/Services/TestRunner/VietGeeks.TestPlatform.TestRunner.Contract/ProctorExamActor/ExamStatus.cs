@@ -12,6 +12,7 @@ public class ExamStatus: IActiveQuestion
     public DateTime? ActiveQuestionStartedAt {get;set;}
     public int? QuestionCount { get; set; }
     public TestDuration TestDuration { get; set; } = default!;
+    public TimeSpan? TotalDuration { get; set;}
     public DateTime StartedAt { get; set; }
     public DateTime? FinishededAt { get; set; }
     public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();

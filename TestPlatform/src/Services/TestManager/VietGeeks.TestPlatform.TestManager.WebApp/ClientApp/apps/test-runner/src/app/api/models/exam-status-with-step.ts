@@ -1,8 +1,10 @@
-
+/* tslint:disable */
+/* eslint-disable */
 import { AggregatedGradingOuput } from './aggregated-grading-ouput';
 import { ExamQuestion } from './exam-question';
 import { ExamStep } from './exam-step';
 import { TestDuration } from './test-duration';
+import { TimeSpan } from './time-span';
 export interface ExamStatusWithStep {
   activeQuestion?: ExamQuestion;
   activeQuestionIndex?: null | number;
@@ -20,4 +22,5 @@ export interface ExamStatusWithStep {
   step?: ExamStep;
   testDuration?: TestDuration;
   testName?: null | string;
+  totalDuration?: TimeSpan;
 }
