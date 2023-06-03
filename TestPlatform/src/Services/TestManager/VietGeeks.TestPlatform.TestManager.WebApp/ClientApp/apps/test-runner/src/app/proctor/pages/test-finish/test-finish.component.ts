@@ -62,6 +62,6 @@ export class TestFinishComponent implements OnInit {
     const gradings = this.sessionData.grading;
     this.passMarkGrading = gradings?.filter(g => g.gradingType == GradingCriteriaConfigType.PassMask)[0];
     this.totalTime = this._testDurationService.getDuration(this.sessionData.startTime, this.sessionData.endTime);
-    this.maxTime = this.sessionData.timeSettings?.totalDuration ?? {}; //this._testDurationService.getMaximumTime(this.sessionData.timeSettings, this.sessionData.questionCount);
+    this.maxTime = this.sessionData.timeSettings?.totalDuration ?? {};
   }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 
 namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
@@ -14,8 +13,7 @@ public class StartExamOutput: IActiveQuestion
     public DateTime StartedAt { get; set; }
     public bool CanSkipQuestion {get; set;}
 
-    [JsonIgnore]
-    public TimeSpan TotalDuration => TestDuration.Method == TestDurationMethodType.CompleteTestTime ? TestDuration.Duration : TotalQuestion * TestDuration.Duration;
+    public TimeSpan TotalDuration { get; set;}
 }
 
 public class StartExamOutputViewModel : StartExamOutput, IExamStepInfo

@@ -36,6 +36,7 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
   remainingTime: TimeSpan = {};
   canSkipQuestion = false;
   canFinish = false;
+  isTimeUp = false;
   private subscription?: Subscription;
 
   constructor(private _fb: FormBuilder) {
@@ -60,7 +61,7 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
     this.initAnswerForm();
     this.initEndTime();
     this.subscription = interval(1000)
-      .subscribe(() => this.getTimeDifference());
+      .subscribe(() => this.onTick());
   }
 
   ngOnDestroy() {
@@ -70,14 +71,12 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
   async submitAndGoNext() {
     await this.triggerWithLoadingIndicator(async () => {
       if (this.question) {
-        this.showLoadingIndicator();
         const output = await firstValueFrom(this.proctorService.submitAnswer({
           questionId: this.question.id!,
           answerIds: this.getAnswerIds()
         }));
 
         if (output?.terminated) {
-          this.hideLoadingIndicator();
           return this.finishExam();
         }
         else {
@@ -176,7 +175,7 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
     }
   }
 
-  private getTimeDifference() {
+  private onTick() {
     const timeDifference = this._testDurationService.getTimeDifference(new Date(), this.endTime);
     if (timeDifference <= 0) {
       this.handleTimeUp();
@@ -190,12 +189,17 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
   }
 
   private async handleTimeUp() {
+    if (this.isTimeUp) {
+      return;
+    }
+
+    this.isTimeUp = true;
     this._notifyService.warning('Time is up. The answer will be submitted automatically.');
 
     if (this.sessionData?.timeSettings?.method == TestDurationMethod.CompleteTestTime) {
       await this.finishExam();
     } else {
-      await this.goToNextQuestion();
+      await this.submitAndGoNext();
     }
   }
 
@@ -214,12 +218,12 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
 
   private initEndTime() {
     const timeSettings = this.sessionData.timeSettings;
-    const durationInMinutes = (timeSettings?.duration?.hours ?? 0) * 60 + (timeSettings?.duration?.minutes ?? 0);
+    const durationInSeconds = this.getValueOrZero(timeSettings?.duration.hours) * 3600 + this.getValueOrZero(timeSettings?.duration?.minutes) * 60 + this.getValueOrZero(timeSettings?.duration?.seconds);
 
     if (timeSettings?.method == TestDurationMethod.CompleteTestTime) {
       const startTime = this.sessionData.startTime ?? new Date();
       this.endTime = new Date();
-      this.endTime.setMinutes(startTime.getMinutes() + durationInMinutes);
+      this.endTime.setSeconds(startTime.getSeconds() + durationInSeconds);
     }
     else {
       let startTime;
@@ -230,7 +234,11 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
         startTime = new Date();
       }
 
-      this.endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
+      this.endTime = new Date(startTime.getTime() + durationInSeconds * 1000);
     }
+  }
+
+  private getValueOrZero(value: number | undefined | null) {
+    return value ?? 0;
   }
 }

@@ -69,11 +69,10 @@ public class ProctorActor : Actor, IProctorActor
             ActiveQuestionIndex = examState.ActiveQuestionIndex,
             TotalQuestion = examState.QuestionIds.Length,
             CanSkipQuestion = examState.CanSkipQuestion,
-
+            TotalDuration = examState.TotalDuration()
         };
     }
 
-    // TODO: refactor
     public async Task<SubmitAnswerOutput> SubmitAnswer(SubmitAnswerInput input)
     {
         //todo: refactor the way to store questions in order to validate whether or not the answer is valid in configured timespan.
@@ -240,6 +239,7 @@ public class ProctorActor : Actor, IProctorActor
                 Duration = examState.TestDuration.Duration,
                 Method = (TestDurationMethodType)examState.TestDuration.Method
             },
+            TotalDuration = examState.TotalDuration(),
             Grading = examState.Grading,
             CanFinish = examState.CanSkipQuestion && examState.Answers.Count == examState.QuestionIds?.Length
         };

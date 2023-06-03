@@ -67,7 +67,7 @@ export class TestStartComponent extends TestRunnerBaseComponent implements OnIni
 
       this._testSessionServive.setSessionData({
         startTime: new Date(startExamOutput.startedAt ?? ''),
-        timeSettings: this._testDurationService.mapToTimeSettings(startExamOutput.testDuration),
+        timeSettings: this._testDurationService.mapToTimeSettings(startExamOutput.testDuration, startExamOutput.totalDuration),
         respondentFields: respondentIdentify.fields,
         activeQuestion: startExamOutput.activeQuestion,
         questionCount: startExamOutput.totalQuestion,

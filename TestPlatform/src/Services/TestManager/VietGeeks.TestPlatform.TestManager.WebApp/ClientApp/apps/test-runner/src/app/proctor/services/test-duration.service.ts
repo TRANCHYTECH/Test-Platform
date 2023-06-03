@@ -9,14 +9,14 @@ export class TestDurationService {
   private _minutesInAnHour = 60;
   private _secondsInAMinute = 60;
 
-  mapToTimeSettings(testDuration?: TestDuration): TimeSettings {
+  mapToTimeSettings(testDuration?: TestDuration, totalDuration?: TimeSpan): TimeSettings {
     if (testDuration == null) {
       return { duration: {}, totalDuration: {}, method: 0 };
     }
 
     return {
       duration: this.parse(testDuration.duration?.toString()),
-      totalDuration: this.parse(testDuration.totalDuration?.toString()),
+      totalDuration: this.parse(totalDuration?.toString()),
       method: testDuration.method as number
     };
   }

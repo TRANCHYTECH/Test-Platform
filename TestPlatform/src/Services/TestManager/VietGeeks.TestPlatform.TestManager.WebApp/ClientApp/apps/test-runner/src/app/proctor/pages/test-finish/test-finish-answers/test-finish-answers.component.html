@@ -14,14 +14,14 @@
         <div class="d-flex mb-2" *ngIf="question.answerType === 1">
           <div class="flex-grow-1">
             <div class="d-flex" *ngFor="let answer of question.questionAnswers">
-              <ng-container *ngIf="answersDictionary[question.id!][answer.id!]; else blank">
+              <ng-container *ngIf="answersDictionary[question.id!] && answersDictionary[question.id!][answer.id!]; else blank">
                 <i *ngIf="answer.isCorrect; else incorrect" class="ri-check-line fs-3 text-success"></i>
                 <ng-template #incorrect>
                   <i class="ri-close-line fs-3 text-danger"></i>
                 </ng-template>
               </ng-container>
               <div class="form-check mb-3 flex-grow-1" [ngClass]="{'bg-light': answer.isCorrect}">
-                <input type="radio" [value]="answer.id" class="form-check-input opacity-100" name="question_{{question.id}}" id="answer_{{answer.id}}" disabled [checked]="answersDictionary[question.id!][answer.id!]">
+                <input type="radio" [value]="answer.id" class="form-check-input opacity-100" name="question_{{question.id}}" id="answer_{{answer.id}}" disabled [checked]="answersDictionary[question.id!] && answersDictionary[question.id!][answer.id!]">
                 <label for="answer_{{answer.id}}" class="form-check-label opacity-100">{{answer?.answerDescription}}</label>
               </div>
             </div>
@@ -30,14 +30,14 @@
         <div class="d-flex mb-2" *ngIf="question.answerType === 2">
           <div class="flex-grow-1">
             <div class="d-flex" *ngFor="let answer of question.questionAnswers">
-              <ng-container *ngIf="answersDictionary[question.id!][answer.id!]; else blank">
+              <ng-container *ngIf="answersDictionary[question.id!] && answersDictionary[question.id!][answer.id!]; else blank">
                 <i *ngIf="answer.isCorrect; else incorrect" class="ri-check-line fs-3 text-success"></i>
                 <ng-template #incorrect>
                   <i class="ri-close-line fs-3 text-danger"></i>
                 </ng-template>
               </ng-container>
               <div class="form-check form-check-outline form-check-primary mb-3 flex-grow-1" [ngClass]="{'bg-light': answer.isCorrect}">
-                <input class="form-check-input opacity-100" type="checkbox" id="answer_{{answer.id}}" value="answer.id" disabled [checked]="answersDictionary[question.id!][answer.id!]">
+                <input class="form-check-input opacity-100" type="checkbox" id="answer_{{answer.id}}" value="answer.id" disabled [checked]="answersDictionary[question.id!] && answersDictionary[question.id!][answer.id!]">
                 <label class="form-check-label opacity-100">
                   {{answer?.answerDescription}}
                 </label>
