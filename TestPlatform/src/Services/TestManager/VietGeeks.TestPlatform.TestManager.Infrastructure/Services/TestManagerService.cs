@@ -14,6 +14,7 @@ using VietGeeks.TestPlatform.Integration.Contract;
 using shortid;
 using FluentValidation;
 using MongoDB.Entities;
+using MongoDB.Driver;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
@@ -115,7 +116,7 @@ public class TestManagerService : ITestManagerService
             {
                 var currentCodes = GetPrivateAccessCodes(entity.TestAccessSettings.Settings);
                 var updatedCodes = GetPrivateAccessCodes(updatedTestAccessSettings.Settings);
-                if (currentCodes.Except(updatedCodes).Count() > 0)
+                if (currentCodes.Count() != updatedCodes.Count() || currentCodes.Except(updatedCodes).Count() > 0)
                 {
                     throw new TestPlatformException("Mismatched Access Codes");
                 }
@@ -297,13 +298,21 @@ public class TestManagerService : ITestManagerService
         }
     }
 
-    public async Task<List<string>> GenerateAccessCodes(string id, int quantity)
+    public async Task<dynamic> GenerateAccessCodes(string id, int quantity)
     {
         if (quantity <= 0)
             throw new TestPlatformException("Invalid argument quantity");
 
         // Get and verify the test definition.
-        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id)
+        .Project(c => c
+            .Include(nameof(TestDefinition.ModifiedOn))
+            .Include(nameof(TestDefinition.CreatedOn))
+            .Include(nameof(TestDefinition.TimeSettings))
+            .Include(nameof(TestDefinition.TestAccessSettings))
+            .Include(nameof(TestDefinition.CurrentTestRun)))
+        .IncludeRequiredProps()
+        .ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
         if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
         {
             throw new TestPlatformException("Invalid entity");
@@ -334,19 +343,28 @@ public class TestManagerService : ITestManagerService
         // Update affected property: TestAccessSettings.
         await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
 
-        return accessCodes;
+        return new
+        {
+            TestAccessSettings = _mapper.Map<TestAccessSettingsViewModel>(testDef.TestAccessSettings),
+            ModifiedOn = testDef.ModifiedOn
+        };
     }
 
-    public Task RemoveAccessCode(string id, string code)
-    {
-        return RemoveAccessCodes(id, new[] { code });
-    }
-
-    public async Task RemoveAccessCodes(string id, string[] codes)
+    public async Task<dynamic> RemoveAccessCodes(string id, string[] codes)
     {
         //todo: reuse logic for 2 same methods.
         // Get and verify the test definition.
-        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        var testDef = await _managerDbContext
+        .Find<TestDefinition>()
+        .MatchID(id)
+        .Project(c => c
+            .Include(nameof(TestDefinition.ModifiedOn))
+            .Include(nameof(TestDefinition.CreatedOn))
+            .Include(nameof(TestDefinition.TimeSettings))
+            .Include(nameof(TestDefinition.TestAccessSettings))
+            .Include(nameof(TestDefinition.CurrentTestRun)))
+        .IncludeRequiredProps()
+        .ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
         if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
         {
             throw new TestPlatformException("Invalid entity");
@@ -373,6 +391,12 @@ public class TestManagerService : ITestManagerService
 
         // Update affected property: TestAccessSettings.
         await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
+
+        return new
+        {
+            TestAccessSettings = _mapper.Map<TestAccessSettingsViewModel>(testDef.TestAccessSettings),
+            ModifiedOn = testDef.ModifiedOn
+        };
     }
 
     private async Task ProcessSendAccessCodes(TestDefinition entity, Receiver[] receivers)
@@ -423,10 +447,11 @@ public class TestManagerService : ITestManagerService
             if (existingAccessCode == null)
                 throw new TestPlatformException("Invalid access code");
 
-            if(string.IsNullOrWhiteSpace(existingAccessCode.Email))
+            if (string.IsNullOrWhiteSpace(existingAccessCode.Email))
                 throw new TestPlatformException("Invalid email");
 
-            receivers.Add(new() {
+            receivers.Add(new()
+            {
                 Email = existingAccessCode.Email,
                 AccessCode = existingAccessCode.Code
             });

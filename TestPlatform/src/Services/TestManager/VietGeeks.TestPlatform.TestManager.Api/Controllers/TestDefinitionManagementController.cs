@@ -92,19 +92,10 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpGet("{id}/TestAccess/GenerateAccessCodes/{quantity:range(1,50)}")]
     public async Task<IActionResult> GenerateAccessCodes(string id, int quantity)
     {
-        List<string> accessCodes = await _testManagerService.GenerateAccessCodes(id, quantity);
+        var result = await _testManagerService.GenerateAccessCodes(id, quantity);
 
-        return Ok(new { AccessCodes = accessCodes });
+        return Ok(result);
     }
-
-    [HttpDelete("{id}/TestAccess/RemoveAccessCode/{code}")]
-    public async Task<IActionResult> RemoveAccessCode(string id, string code)
-    {
-        await _testManagerService.RemoveAccessCode(id, code);
-
-        return Ok();
-    }
-
 
     [HttpPost("{id}/TestAccess/SendAccessCodes")]
     public async Task<IActionResult> SendAccessCodes(string id, [FromBody] string[] codes)
@@ -117,9 +108,9 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpDelete("{id}/TestAccess/RemoveAccessCodes")]
     public async Task<IActionResult> RemoveAccessCode(string id, [FromQuery(Name = "code")] string[] codes)
     {
-        await _testManagerService.RemoveAccessCodes(id, codes);
+        var result = await _testManagerService.RemoveAccessCodes(id, codes);
 
-        return Ok();
+        return Ok(result);
     }
 
     [HttpPost("{id}/TestInvitationStats")]
