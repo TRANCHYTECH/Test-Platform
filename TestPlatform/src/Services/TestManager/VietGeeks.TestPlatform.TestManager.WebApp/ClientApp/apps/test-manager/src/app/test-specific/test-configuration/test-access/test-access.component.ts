@@ -263,7 +263,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     const accessType = this.activatedAccessType;
     const model: TestAccess = {
       accessType: accessType,
-      settings: assign({ $type: accessType }, this.activatedAccessTypeForm.value)
+      settings: assign({ $type: accessType }, this.activatedAccessTypeForm.getRawValue())
     };
 
     await this.testsService.update(this.testId, { testAccessSettings: model });
