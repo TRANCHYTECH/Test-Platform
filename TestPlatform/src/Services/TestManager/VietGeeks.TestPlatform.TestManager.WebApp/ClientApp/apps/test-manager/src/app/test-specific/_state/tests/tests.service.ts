@@ -59,19 +59,20 @@ export class TestsService {
   }
 
   generateAccessCodes(id: string, quantity: number) {
-    return firstValueFrom(this._http.get<{ accessCodes: string[] }>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/GenerateAccessCodes/${quantity}`).pipe(switchMap(rs => {
-      return of(rs.accessCodes);
+    return firstValueFrom(this._http.get<Partial<Test>>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/GenerateAccessCodes/${quantity}`).pipe(tap(rs => {
+      this._testsStore.update(id, rs)
+    }), switchMap(rs => {
+      return of(rs.testAccessSettings === undefined ? [] : (<PrivateAccessCodeType>rs.testAccessSettings.settings).configs);
     })));
   }
 
-  removeAccessCode(id: string, code: string) {
-    return firstValueFrom(this._http.delete(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/RemoveAccessCode/${code}`));
-  }
-
   removeAccessCodes(id: string, codes: string[]) {
-    return firstValueFrom(this._http.delete(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/RemoveAccessCodes`, {
+    return firstValueFrom(this._http.delete<Partial<Test>>(`${this.testManagerApiBaseUrl}/Management/TestDefinition/${id}/TestAccess/RemoveAccessCodes`, {
       params: { code: codes }
-    }));
+    })
+      .pipe(tap(rs => {
+        this._testsStore.update(id, rs)
+      })));
   }
 
   sendAccessCodes(id: string, codes: string[]) {

@@ -180,9 +180,10 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     if (count <= 0) {
       return;
     }
-
+    
     const codes = await this.testsService.generateAccessCodes(this.testId, count);
-    codes.forEach(code => this.privateAccessCodeConfigsCtrl.push(this.newAccessCodeConfigCtrl({ code: code })));
+    this.privateAccessCodeConfigsCtrl.clear();
+    codes.forEach(code => this.privateAccessCodeConfigsCtrl.push(this.newAccessCodeConfigCtrl(code)));
     this.codeGenerationCountCtrl.reset(undefined);
     this.changeRef.markForCheck();
   }
@@ -262,7 +263,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     const accessType = this.activatedAccessType;
     const model: TestAccess = {
       accessType: accessType,
-      settings: assign({ $type: accessType }, this.activatedAccessTypeForm.value)
+      settings: assign({ $type: accessType }, this.activatedAccessTypeForm.getRawValue())
     };
 
     await this.testsService.update(this.testId, { testAccessSettings: model });

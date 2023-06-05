@@ -1,4 +1,5 @@
-﻿using MongoDB.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Entities;
 
 namespace VietGeeks.TestPlatform.TestManager.Core.Models;
 
@@ -19,6 +20,7 @@ public partial class TestDefinition : EntityBase
 
     public CurrentTestRunPart? CurrentTestRun { get; private set; }
 
+    [BsonRequired]
     public TestDefinitionStatus Status { get; private set; } = TestDefinitionStatus.Draft;
 }
 

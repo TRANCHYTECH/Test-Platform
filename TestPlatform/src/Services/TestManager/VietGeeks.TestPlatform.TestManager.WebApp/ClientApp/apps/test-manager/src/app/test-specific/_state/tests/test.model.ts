@@ -10,6 +10,7 @@ export interface Test {
   testStartSettings: TestStartSettings;
   currentTestRun: CurrentTestRun;
   createdOn: Date;
+  modifiedOn: Date;
   isEnabled: boolean;
   status: TestStatus;
 }
@@ -145,7 +146,7 @@ export interface PrivateAccessCodeType extends IAccessType {
     email: string,
     sendCode: boolean,
     setId: string,
-    uiStatuses: any[]
+    uiStatuses: unknown[]
   }[];
   attempts: number;
 }
