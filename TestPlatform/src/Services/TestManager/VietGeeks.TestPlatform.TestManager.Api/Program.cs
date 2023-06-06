@@ -1,4 +1,5 @@
 using VietGeeks.TestPlatform.AspNetCore;
+using VietGeeks.TestPlatform.TestManager.Api.GraphQL;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +30,15 @@ builder.Services.RegisterInfrastructureModule(new()
 
 builder.Services.AddDaprClient();
 
+builder.Services
+    .AddGraphQLServer()
+    .AddAuthorization()
+    .AddQueryType()
+    .AddTypeExtension<TestCategoryQueries>();
+
 var app = builder.Build();
+
+app.MapGraphQL();
 
 app.UseCors("dev");
 
