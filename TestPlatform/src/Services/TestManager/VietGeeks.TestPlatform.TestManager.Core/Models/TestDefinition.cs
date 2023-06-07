@@ -19,8 +19,7 @@ public partial class TestDefinition : EntityBase
     public TestStartSettingsPart TestStartSettings { get; set; } = default!;
 
     public CurrentTestRunPart? CurrentTestRun { get; private set; }
-
-    [BsonRequired]
+    
     public TestDefinitionStatus Status { get; private set; } = TestDefinitionStatus.Draft;
 }
 
