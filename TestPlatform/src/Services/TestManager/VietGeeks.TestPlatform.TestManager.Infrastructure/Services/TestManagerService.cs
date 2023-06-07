@@ -306,12 +306,12 @@ public class TestManagerService : ITestManagerService
         // Get and verify the test definition.
         var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id)
         .Project(c => c
+            .Include(nameof(TestDefinition.Status))
             .Include(nameof(TestDefinition.ModifiedOn))
             .Include(nameof(TestDefinition.CreatedOn))
             .Include(nameof(TestDefinition.TimeSettings))
             .Include(nameof(TestDefinition.TestAccessSettings))
             .Include(nameof(TestDefinition.CurrentTestRun)))
-        .IncludeRequiredProps()
         .ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
         if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
         {
@@ -358,12 +358,12 @@ public class TestManagerService : ITestManagerService
         .Find<TestDefinition>()
         .MatchID(id)
         .Project(c => c
+            .Include(nameof(TestDefinition.Status))
             .Include(nameof(TestDefinition.ModifiedOn))
             .Include(nameof(TestDefinition.CreatedOn))
             .Include(nameof(TestDefinition.TimeSettings))
             .Include(nameof(TestDefinition.TestAccessSettings))
             .Include(nameof(TestDefinition.CurrentTestRun)))
-        .IncludeRequiredProps()
         .ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
         if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
         {
