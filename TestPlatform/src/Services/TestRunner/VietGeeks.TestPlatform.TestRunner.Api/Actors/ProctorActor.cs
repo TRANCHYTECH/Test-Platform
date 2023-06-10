@@ -12,12 +12,11 @@ public class ProctorActor : Actor, IProctorActor
     private const string EXAM_STATE_NAME = "Exam";
     private const string TEST_QUESTIONS_CACHE_KEY = "Exam_TestQuestions";
     private readonly IProctorService _proctorService;
-    private readonly IMemoryCache _memoryCache;
+    private List<QuestionDefinition> _testRunQuestions;
 
-    public ProctorActor(ActorHost host, IProctorService proctorService, IMemoryCache memoryCache) : base(host)
+    public ProctorActor(ActorHost host, IProctorService proctorService) : base(host)
     {
         _proctorService = proctorService;
-        _memoryCache = memoryCache;
     }
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
@@ -247,14 +246,11 @@ public class ProctorActor : Actor, IProctorActor
 
     private async Task<QuestionDefinition?> GetActiveQuestionAsync(ExamState examState)
     {
-        var testRunQuestions = await _memoryCache.GetOrCreateAsync(TEST_QUESTIONS_CACHE_KEY,
-        (entry) =>
-        {
-            entry.SlidingExpiration = TimeSpan.FromHours(1);
-            return _proctorService.GetTestRunQuestionsByExamId(examState.ExamId);
-        });
+        if (_testRunQuestions == null) {
+            _testRunQuestions = (await _proctorService.GetTestRunQuestionsByExamId(examState.ExamId)).ToList();
+        }
 
-        return testRunQuestions?.SingleOrDefault(q => q.ID == examState.ActiveQuestionId);
+        return _testRunQuestions?.SingleOrDefault(q => q.ID == examState.ActiveQuestionId);
     }
 
     private async Task<T> ExamStateAction<T>(Func<ExamState, Task<T>> action)
