@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar">
+<nav class="navbar navbar-expand-lg navbar-landing fixed-top bg-primary" id="navbar">
   <div class="container">
     <a class="navbar-brand" routerLink="/">
       <img src="assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="logo dark" height="17">
@@ -64,7 +64,7 @@
             <ng-template #navigationButtons>
               <div>
                 <button type="button" class="btn btn-primary me-2" type="submit" [disabled]="!canGoBack" (click)="submitAndGoBack()">Previous</button>
-                <button type="button" class="btn btn-primary me-2" type="submit" [disabled]="!canGoNext" (click)="submitAndGoNext()">Next</button>
+                <button type="button" class="btn btn-primary me-2" type="submit" [disabled]="!canGoNext" (click)="submitAndGoNext()">{{ isLastQuestion ? 'Submit' : 'Next'}}</button>
               </div>
             </ng-template>
           </div>

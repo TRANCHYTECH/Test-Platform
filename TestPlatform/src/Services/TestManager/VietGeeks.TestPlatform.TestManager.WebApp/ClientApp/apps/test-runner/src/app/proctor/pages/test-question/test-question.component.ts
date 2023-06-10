@@ -69,8 +69,8 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
  }
 
   async submitAndGoNext() {
-    if (this.canSkipQuestion && this.index == this.questionCount - 1) {
-      const result = await this._notifyService.confirm("This is the last question. By go next you are agree to finish the exam session. Are you sure to continue?");
+    if (this.isLastQuestion) {
+      const result = await this._notifyService.confirm("Do you want to submit your exam?");
       if (result.isDenied) {
         return;
       }
@@ -104,6 +104,10 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
         this.goToPreviousQuestion();
       }
     });
+  }
+  
+  get isLastQuestion() {
+    return this.canSkipQuestion && this.index == this.questionCount - 1;
   }
 
   private async goToPreviousQuestion() {
@@ -183,8 +187,9 @@ export class TestQuestionComponent extends TestRunnerBaseComponent implements On
   }
 
   private onTick() {
-    const timeDifference = this._testDurationService.getTimeDifference(new Date(), this.endTime);
-    if (timeDifference <= 0) {
+    const timeDifference = this._testDurationService.getTimeDifferenceInMiliseconds(new Date(), this.endTime);
+    // remaining time is less than 1 second
+    if (timeDifference < 1000) {
       this.handleTimeUp();
     }
 

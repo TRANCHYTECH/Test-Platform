@@ -22,7 +22,7 @@ export class TestDurationService {
   }
 
   getDuration(startTime?: Date, endTime?: Date): TimeSpan {
-    const timeDifference = this.getTimeDifference(startTime, endTime);
+    const timeDifference = this.getTimeDifferenceInMiliseconds(startTime, endTime);
     return this.getDurationFromTimeDifference(timeDifference);
   }
 
@@ -36,7 +36,7 @@ export class TestDurationService {
     return duration;
   }
 
-  getTimeDifference(startTime?: Date, endTime?: Date) {
+  getTimeDifferenceInMiliseconds(startTime?: Date, endTime?: Date) {
     if (!startTime || !endTime) {
       return 0;
     }
