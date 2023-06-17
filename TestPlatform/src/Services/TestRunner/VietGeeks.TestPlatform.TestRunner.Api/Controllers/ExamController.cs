@@ -129,7 +129,7 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        var output = await proctorExamActor.ActivateNextQuestion(new()
+        var output = await proctorExamActor.ActivateQuestionFromCurrent(new()
         {
             Direction = ActivateDirection.Previous
         });
@@ -143,7 +143,7 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        var output = await proctorExamActor.ActivateNextQuestion(new()
+        var output = await proctorExamActor.ActivateQuestionFromCurrent(new()
         {
             Direction = ActivateDirection.Next
         });
@@ -157,7 +157,7 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(ExamStep.SubmitAnswer);
         var proctorExamActor = GetProctorActor(testSession);
-        var output = await proctorExamActor.ActivateQuestion(questionIndex);
+        var output = await proctorExamActor.ActivateQuestionByIndex(questionIndex);
 
         return Ok(output);
     }

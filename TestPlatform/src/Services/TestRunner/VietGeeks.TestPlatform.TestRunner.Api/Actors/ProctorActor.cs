@@ -11,8 +11,10 @@ public class ProctorActor : Actor, IProctorActor
 {
     private const string EXAM_STATE_NAME = "Exam";
     private const string TEST_QUESTIONS_CACHE_KEY = "Exam_TestQuestions";
+    private const int SUBMIT_ALLOW_WINDOW_SECONDS = 5;
+    
     private readonly IProctorService _proctorService;
-    private List<QuestionDefinition> _testRunQuestions;
+    private List<QuestionDefinition>? _testRunQuestions;
 
     public ProctorActor(ActorHost host, IProctorService proctorService) : base(host)
     {
@@ -123,6 +125,14 @@ public class ProctorActor : Actor, IProctorActor
         {
             return "QuestionIsNotStarted";
         }
+        
+        var startTime = examState.TestDuration.Method == (int)TestDurationMethodType.CompleteTestTime
+            ? examState.StartedAt
+            : examState.QuestionTimes[input.QuestionId].StartedAt;
+
+        if (examState.TestDuration.TotalDuration <= (DateTime.UtcNow - startTime - TimeSpan.FromSeconds(SUBMIT_ALLOW_WINDOW_SECONDS))) {
+            return "TimeUp";
+        }
 
         if (activeQuestion?.ScoreSettings?.MustAnswerToContinue == true && (input.AnswerIds == null || !input.AnswerIds.Any()))
         {
@@ -132,7 +142,7 @@ public class ProctorActor : Actor, IProctorActor
         return string.Empty;
     }
 
-    public async Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input)
+    public async Task<ActivateQuestionOutput> ActivateQuestionFromCurrent(ActivateNextQuestionInput input)
     {
         return await ExamStateAction(async examState =>
         {
@@ -140,11 +150,11 @@ public class ProctorActor : Actor, IProctorActor
             var offset = input.Direction == ActivateDirection.Previous ? -1 : 1;
             var nextQuestionIndex = questionIndex + offset;
 
-            return await ActivateQuestion(nextQuestionIndex);
+            return await ActivateQuestionByIndex(nextQuestionIndex);
         });
     }
 
-    public async Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex)
+    public async Task<ActivateQuestionOutput> ActivateQuestionByIndex(int nextQuestionIndex)
     {
         return await ExamStateAction(async examState =>
         {
