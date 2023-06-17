@@ -14,6 +14,6 @@ public interface IProctorActor : IActor
 
     Task<FinishExamOutput> FinishExam();
     Task<ExamStatus> GetExamStatus();
-    Task<ActivateQuestionOutput> ActivateNextQuestion(ActivateNextQuestionInput input);
-    Task<ActivateQuestionOutput> ActivateQuestion(int nextQuestionIndex);
+    Task<ActivateQuestionOutput> ActivateQuestionFromCurrent(ActivateNextQuestionInput input);
+    Task<ActivateQuestionOutput> ActivateQuestionByIndex(int nextQuestionIndex);
 }
