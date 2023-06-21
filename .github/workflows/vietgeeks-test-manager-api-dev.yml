@@ -9,7 +9,7 @@ on:
       - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/**'
       - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**'
 env:
-  CONTAINER_APP_CONTAINER_NAME: vietgeeks-test-manager-api
+  CONTAINER_APP_CONTAINER_NAME: ca-vg-tm-tmgrapi-dev-sa-001
   CONTAINER_APP_NAME: ca-vg-tm-tmgrapi-dev-sa-001
   CONTAINER_APP_RESOURCE_GROUP_NAME: rg-vg-tm-dev-sa-001
   CONTAINER_REGISTRY_LOGIN_SERVER: vgeektestmasterdev.azurecr.io
@@ -58,7 +58,7 @@ jobs:
 
           az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.vgtmgrdevRegistry_USERNAME }} --password ${{ secrets.vgtmgrdevRegistry_PASSWORD }}
 
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} --set-env-vars ASPNETCORE_ENVIRONMENT=Development
     - name: logout
       run: >
         az logout

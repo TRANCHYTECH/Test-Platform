@@ -14,6 +14,7 @@ Container Apps:
     Account manager Api: ca-vg-tm-amgrapi-dev-sa-001
 - Service bus:
 - AZ function
+- SSL ? use free of azure
 
 deploymentName='ExampleDeployment'$RANDOM \\
 az group create -l southeastasia -n rg-vg-tm-dev-sa-001 \\
