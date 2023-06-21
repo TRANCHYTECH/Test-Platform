@@ -34,7 +34,9 @@ builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddQueryType()
-    .AddTypeExtension<TestCategoryQueries>();
+        .AddTypeExtension<TestCategoryQueries>()
+    .AddMutationType()
+        .AddTypeExtension<TestCategoryMutations>();
 
 var app = builder.Build();
 
