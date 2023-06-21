@@ -12,7 +12,7 @@ env:
   CONTAINER_APP_CONTAINER_NAME: vietgeeks-test-manager-api
   CONTAINER_APP_NAME: ca-vg-tm-tmgrapi-dev-sa-001
   CONTAINER_APP_RESOURCE_GROUP_NAME: rg-vg-tm-dev-sa-001
-  CONTAINER_REGISTRY_LOGIN_SERVER: vgtmgrdev.azurecr.io
+  CONTAINER_REGISTRY_LOGIN_SERVER: vgeektestmasterdev.azurecr.io
   DOCKER_FILE_PATH: TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformtestmanagerapi
 jobs:
