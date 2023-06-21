@@ -10,7 +10,7 @@ on:
 env:
   CONTAINER_APP_CONTAINER_NAME: vietgeeks-test-runner-webapp
   CONTAINER_APP_NAME: vietgeeks-test-runner-webapp
-  CONTAINER_APP_RESOURCE_GROUP_NAME: az-vietgeeks
+  CONTAINER_APP_RESOURCE_GROUP_NAME: rg-vg-tm-dev-sa-001
   CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
   DOCKER_FILE_PATH: TestPlatform/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.WebApp/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformtestrunnerwebapp

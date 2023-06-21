@@ -199,6 +199,15 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   properties: {}
 }
 
+var containerRegistryName = 'vgeektestmasterdev'
+module acr 'containerRegistry.bicep' = {
+  name: 'acr'
+  params: {
+    location: location
+    containerRegistryName: containerRegistryName
+  }
+}
+
 @batchSize(5)
 module containerApps 'containerApp.bicep' = [for appName in containerAppNames: {
   name: '${deployment().name}-${appName}'
