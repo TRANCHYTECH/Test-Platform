@@ -1,0 +1,33 @@
+Container Apps:
+- Resource group:
+    rg-vg-tm-dev-sa-001
+- App Environment
+    App environment: cae-vg-tm-dev-sa-001
+    Setup dapr components: 
+    Log workspace: log-vg-tm-dev-sa-001
+    Enable Dapr
+- Container apps:
+    TestManager web: ca-vg-tm-tmgrapp-dev-sa-001
+    TestManager Api: ca-vg-tm-tmgrapi-dev-sa-001
+    TestRunner Web: ca-vg-tm-trunnerapp-dev-sa-001
+    TestRunner Api: ca-vg-tm-trunnerapi-dev-sa-001
+    Account manager Api: ca-vg-tm-amgrapi-dev-sa-001
+- Service bus:
+- AZ function
+
+deploymentName='ExampleDeployment'$RANDOM \\
+az group create -l southeastasia -n rg-vg-tm-dev-sa-001 \\
+az deployment group create --name depoy-001 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app\\main.bicep
+
+{
+  "clientId": "8877c0ae-655b-446f-8c3c-e09684329e01",
+  "clientSecret": "d~D8Q~fEy3rrHXnTx0vWoEX2GE9dNjMLly3CobRR",
+  "subscriptionId": "ec4dddda-f3cb-4c93-a2f1-4f3c705dfc88",
+  "tenantId": "de0dcb0a-9ef5-4e7f-8037-02fe3a42f876",
+  "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",      
+  "resourceManagerEndpointUrl": "https://management.azure.com/",
+  "activeDirectoryGraphResourceId": "https://graph.windows.net/",
+  "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+  "galleryEndpointUrl": "https://gallery.azure.com/",
+  "managementEndpointUrl": "https://management.core.windows.net/"
+}
