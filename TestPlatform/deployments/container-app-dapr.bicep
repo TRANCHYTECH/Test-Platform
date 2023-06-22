@@ -67,7 +67,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
       activeRevisionsMode: revisionMode
       secrets: [
         {
-          name: 'registryPassword'
+          name: 'registry-password'
           value: registryPassword
         }
       ]
@@ -75,7 +75,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         {
           server: containerRegistry
           username: containerRegistryUsername
-          passwordSecretRef: 'registryPassword'
+          passwordSecretRef: 'registry-password'
         }
       ] 
       dapr: {
