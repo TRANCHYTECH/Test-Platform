@@ -50,6 +50,8 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.vietgeeks_testmanager_webapp_SPN }}
+    - name: checkoout
+      uses: actions/checkout@v3
     - name: Deploy to containerapp
       uses: azure/arm-deploy@v1
       with:
