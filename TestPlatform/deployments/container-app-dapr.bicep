@@ -47,37 +47,55 @@ param minReplicas int = 1
 @maxValue(25)
 param maxReplicas int = 3
 
-param environmentName string 
+param environmentName string
 param revisionMode string = 'Single'
 param containerRegistry string
-param containerRegistryUsername string
-@secure()
-param registryPassword string
+param subDomainCertificate string
+
+var acrPullRole = resourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
 
 resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
   name: environmentName
 }
 
+resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments/managedCertificates@2023-04-01-preview' existing = {
+  name: subDomainCertificate
+}
+
+resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+  name: 'id-${containerAppName}'
+  location: location
+}
+
+@description('This allows the managed identity of the container app to access the registry, note scope is applied to the wider ResourceGroup not the ACR')
+resource uaiRbac 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, uai.id, acrPullRole)
+  properties: {
+    roleDefinitionId: acrPullRole
+    principalId: uai.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
   name: containerAppName
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${uai.id}': {}
+    }
+  }
   properties: {
     environmentId: environment.id
     configuration: {
       activeRevisionsMode: revisionMode
-      secrets: [
+      registries: [
         {
-          name: 'registry-password'
-          value: registryPassword
+          identity: uai.id
+          server: containerRegistry
         }
       ]
-      registries:  [
-        {
-          server: containerRegistry
-          username: containerRegistryUsername
-          passwordSecretRef: 'registry-password'
-        }
-      ] 
       dapr: {
         enabled: true
         appId: containerAppName
@@ -93,6 +111,13 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
           {
             latestRevision: true
             weight: 100
+          }
+        ]
+        customDomains: [
+          {
+            name: managedEnvironmentManagedCertificate.properties.subjectName
+            bindingType: 'SniEnabled'
+            certificateId: managedEnvironmentManagedCertificate.id
           }
         ]
       }

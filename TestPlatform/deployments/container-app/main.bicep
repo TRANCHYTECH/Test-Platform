@@ -208,18 +208,82 @@ module acr 'containerRegistry.bicep' = {
   }
 }
 
-@batchSize(5)
-module containerApps 'containerApp.bicep' = [for appName in containerAppNames: {
-  name: '${deployment().name}-${appName}'
-  params: {
-    location: location
-    containerAppEnvId: containerAppEnv.id
-    containerAppName: appName
-    minReplicas: minReplicas
-    maxReplicas: maxReplicas
-    cpuCore: cpuCore
-    memorySize: memorySize
-    containerImage: containerImage
-    targetPort: targetPort
+var subDomains  = [
+  'test-manager-api'
+  'test-manager'
+  'test-runner-api'
+  'test-runner'
+  'webhook'
+]
+
+resource customDomainsProvisioningContainerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
+  name: 'vgeek-custom-domains'
+  location: location
+  properties: {
+    environmentId: containerAppEnv.id
+    configuration: {
+      ingress: {
+        external: true
+        targetPort: targetPort
+        allowInsecure: false
+        traffic: [
+          {
+            latestRevision: true
+            weight: 100
+          }
+        ]
+        customDomains: [for item in subDomains: {
+          name: 'dev.${item}.testmaster.io'
+          bindingType: 'Disabled'
+        }]
+      }
+    }
+    template: {
+      revisionSuffix: 'firstrevision'
+      containers: [
+        {
+          name: 'vgeek-customdomains-provisioning'
+          image: 'mcr.microsoft.com/k8se/quickstart:latest'
+          resources: {
+            cpu: json(cpuCore)
+            memory: '${memorySize}Gi'
+          }
+        }
+      ]
+      scale: {
+        minReplicas: 1
+        maxReplicas: 2
+      }
+    }
   }
+}
+
+@batchSize(5)
+resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments/managedCertificates@2023-04-01-preview' = [for item in subDomains: {
+  parent: containerAppEnv
+  name: 'dev-${item}-certificate'
+  location: location
+  properties: {
+    subjectName: 'dev.${item}.testmaster.io'
+    domainControlValidation: 'TXT'
+  }
+  dependsOn: [
+    customDomainsProvisioningContainerApp
+  ]
 }]
+
+// @batchSize(5)
+// module containerApps 'containerApp.bicep' = [for appName in containerAppNames: {
+//   name: '${deployment().name}-${appName}'
+//   params: {
+//     location: location
+//     containerAppEnvId: containerAppEnv.id
+//     containerAppName: appName
+//     minReplicas: minReplicas
+//     maxReplicas: maxReplicas
+//     cpuCore: cpuCore
+//     memorySize: memorySize
+//     containerImage: containerImage
+//     targetPort: targetPort
+//   }
+// }]

@@ -1,6 +1,8 @@
 Container Apps:
 - Resource group:
     rg-vg-tm-dev-sa-001
+- Key vault:
+    
 - App Environment
     App environment: cae-vg-tm-dev-sa-001
     Setup dapr components: 
@@ -19,6 +21,13 @@ Container Apps:
 deploymentName='ExampleDeployment'$RANDOM \\
 az group create -l southeastasia -n rg-vg-tm-dev-sa-001 \\
 az deployment group create --name depoy-001 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app\\main.bicep
+az deployment group create --name depoy-00100 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr.bicep --parameters F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr.bicepparam
+
+az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-manager-api-certificate --hostname dev.test-manager-api.testmaster.io --validation-method TXT
+az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-manager-certificate --hostname dev.test-manager.testmaster.io --validation-method TXT
+az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-runner-api-certificate --hostname dev.test-runner-api.testmaster.io --validation-method TXT
+az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-runner-certificate --hostname dev.test-runner.testmaster.io --validation-method TXT
+az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-webhook-certificate --hostname dev.webhook.testmaster.io --validation-method TXT
 
 {
   "clientId": "8877c0ae-655b-446f-8c3c-e09684329e01",
