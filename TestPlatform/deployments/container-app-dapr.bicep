@@ -65,11 +65,17 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
     environmentId: environment.id
     configuration: {
       activeRevisionsMode: revisionMode
+      secrets: [
+        {
+          name: 'registryPassword'
+          value: registryPassword
+        }
+      ]
       registries:  [
         {
           server: containerRegistry
           username: containerRegistryUsername
-          passwordSecretRef: registryPassword
+          passwordSecretRef: 'registryPassword'
         }
       ] 
       dapr: {
