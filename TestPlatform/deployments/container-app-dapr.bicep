@@ -67,15 +67,15 @@ resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-previe
   name: 'id-ca-vg-tm-tmgrapi-dev-sa-001'
 }
 
-@description('This allows the managed identity of the container app to access the registry, note scope is applied to the wider ResourceGroup not the ACR')
-resource uaiRbac 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, uai.id, acrPullRole)
-  properties: {
-    roleDefinitionId: acrPullRole
-    principalId: uai.properties.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
+// @description('This allows the managed identity of the container app to access the registry, note scope is applied to the wider ResourceGroup not the ACR')
+// resource uaiRbac 'Microsoft.Authorization/roleAssignments@2022-04-01' existing = {
+//   name: guid(resourceGroup().id, uai.id, acrPullRole)
+//   properties: {
+//     roleDefinitionId: acrPullRole
+//     principalId: uai.properties.principalId
+//     principalType: 'ServicePrincipal'
+//   }
+// }
 
 resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
   name: containerAppName
