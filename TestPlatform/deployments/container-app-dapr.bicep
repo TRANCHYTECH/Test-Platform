@@ -63,9 +63,8 @@ resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments
   parent: environment
 }
 
-resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
-  name: 'id-${containerAppName}'
-  location: location
+resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: 'id-ca-vg-tm-tmgrapi-dev-sa-001'
 }
 
 @description('This allows the managed identity of the container app to access the registry, note scope is applied to the wider ResourceGroup not the ACR')

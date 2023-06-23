@@ -49,6 +49,8 @@ az ad sp create-for-rbac --name "test-master-github" --role contributor --scopes
 ### Step 1
 Create resource group:
 az group create -l southeastasia -n rg-vg-tm-dev-sa-001
+Create SP to allow CD from github, run command, paste result to github action secret ''
+az ad sp create-for-rbac --name "test-master-github" --role contributor --scopes /subscriptions/ec4dddda-f3cb-4c93-a2f1-4f3c705dfc88/resourceGroups/rg-vg-tm-dev-sa-001 --sdk-auth
 ### Step 2
 Init environments:
 Run bicep 
