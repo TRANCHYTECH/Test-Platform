@@ -60,6 +60,7 @@ resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' exis
 
 resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments/managedCertificates@2023-04-01-preview' existing = {
   name: subDomainCertificate
+  parent: environment
 }
 
 resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
@@ -116,8 +117,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         customDomains: [
           {
             name: managedEnvironmentManagedCertificate.properties.subjectName
-            bindingType: 'SniEnabled'
             certificateId: managedEnvironmentManagedCertificate.id
+            bindingType: 'SniEnabled'
           }
         ]
       }

@@ -8,10 +8,10 @@ on:
       - 'TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/**'
       - '!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/ClientApp/apps/test-runner/**'
 env:
-  CONTAINER_APP_CONTAINER_NAME: vietgeeks-testmanager-webapp
-  CONTAINER_APP_NAME: vietgeeks-testmanager-webapp
+  CONTAINER_APP_CONTAINER_NAME: ca-vg-tm-tmgrapp-dev-sa-001
+  CONTAINER_APP_NAME: ca-vg-tm-tmgrapp-dev-sa-001
   CONTAINER_APP_RESOURCE_GROUP_NAME: rg-vg-tm-dev-sa-001
-  CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
+  CONTAINER_REGISTRY_LOGIN_SERVER: vgeektestmasterdev.azurecr.io
   DOCKER_FILE_PATH: TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformtestmanagerwebapp
 jobs:
@@ -26,8 +26,8 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_0729 }}
-        password: ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_0729 }}
+        username: ${{ secrets.vgtmgrdevRegistry_USERNAME }}
+        password: ${{ secrets.vgtmgrdevRegistry_PASSWORD }}
     - name: Build and push container image to registry
       uses: docker/build-push-action@v4
       with:
@@ -43,15 +43,24 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.vietgeeks_testmanager_webapp_SPN }}
+    - name: checkoout
+      uses: actions/checkout@v3
     - name: Deploy to containerapp
-      uses: azure/CLI@v1
+      uses: azure/arm-deploy@v1
       with:
-        inlineScript: >
-          az config set extension.use_dynamic_install=yes_without_prompt
+        resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
+        template: ./TestPlatform/deployments/container-app-dapr.bicep
+        parameters: ./TestPlatform/deployments/container-app-dapr.bicepparam location=southeastasia environmentName=cae-vg-tm-dev-sa-001 subDomainCertificate=dev-test-manager containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+        failOnStdErr: false  
+    # - name: Deploy to containerapp
+    #   uses: azure/CLI@v1
+    #   with:
+    #     inlineScript: >
+    #       az config set extension.use_dynamic_install=yes_without_prompt
 
-          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_0729 }} --password ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_0729 }}
+    #       az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_0729 }} --password ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_0729 }}
 
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+    #       az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
     - name: logout
       run: >
         az logout

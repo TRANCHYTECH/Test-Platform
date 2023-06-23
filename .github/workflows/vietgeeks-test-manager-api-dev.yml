@@ -57,7 +57,7 @@ jobs:
       with:
         resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
         template: ./TestPlatform/deployments/container-app-dapr.bicep
-        parameters: ./TestPlatform/deployments/container-app-dapr.bicepparam location=southeastasia environmentName=cae-vg-tm-dev-sa-001 subDomainCertificate=dev-test-manager-api-certificate containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} containerRegistryUsername=${{ secrets.vgtmgrdevRegistry_USERNAME }} registryPassword=${{ secrets.vgtmgrdevRegistry_PASSWORD }}
+        parameters: ./TestPlatform/deployments/container-app-dapr.bicepparam location=southeastasia environmentName=cae-vg-tm-dev-sa-001 subDomainCertificate=dev-test-manager-api containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
         failOnStdErr: false     
     # - name: Deploy to containerapp
     #   uses: azure/CLI@v1.0.7
