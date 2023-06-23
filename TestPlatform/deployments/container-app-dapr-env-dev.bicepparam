@@ -7,3 +7,8 @@ param env = [
   }
 ]
 
+param location = ''
+param containerAppName = ''
+param environmentName = ''
+param containerRegistry = ''
+param subDomainCertificate = ''
