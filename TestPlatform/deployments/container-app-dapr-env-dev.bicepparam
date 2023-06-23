@@ -9,7 +9,6 @@ param env = [
 
 param location = ''
 param containerAppName = ''
-param env = []
 param targetPort = 80
 param containerImage = 'mcr.microsoft.com/k8se/quickstart:latest'
 param cpuCore = '0.25'
