@@ -2,7 +2,6 @@ Container Apps:
 - Resource group:
     rg-vg-tm-dev-sa-001
 - Key vault:
-    
 - App Environment
     App environment: cae-vg-tm-dev-sa-001
     Setup dapr components: 
@@ -14,8 +13,10 @@ Container Apps:
     TestRunner Web: ca-vg-tm-trunnerapp-dev-sa-001
     TestRunner Api: ca-vg-tm-trunnerapi-dev-sa-001
     Account manager Api: ca-vg-tm-amgrapi-dev-sa-001
+    Webhook Api: ca-vg-tm-whapi-dev-sa-001
 - Service bus:
-- AZ function
+- AZ function app:
+    Send mail: func-vg-tm-sm-dev-sa-001
 - SSL ? use free of azure
 
 deploymentName='ExampleDeployment'$RANDOM \\

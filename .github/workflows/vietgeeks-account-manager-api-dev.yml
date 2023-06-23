@@ -5,52 +5,54 @@ on:
     branches:
       - master
     paths:
-      - 'TestPlatform/src/Services/AccountManager/**'
+      - "TestPlatform/src/Services/AccountManager/**"
 env:
-  CONTAINER_APP_CONTAINER_NAME: vietgeeks-account-manager-api
-  CONTAINER_APP_NAME: vietgeeks-account-manager-api
+  CONTAINER_APP_ENVIRONMENT: cae-vg-tm-dev-sa-001
+  CONTAINER_APP_NAME: ca-vg-tm-amgrapi-dev-sa-001
   CONTAINER_APP_RESOURCE_GROUP_NAME: rg-vg-tm-dev-sa-001
-  CONTAINER_REGISTRY_LOGIN_SERVER: vietgeekstestplatformtestmanagerapi20230312081520.azurecr.io
+  CONTAINER_APP_RESOURCE_LOCATION: southeastasia
+  CONTAINER_APP_DOMAIN_CERTIFICATE: dev-account-manager
   DOCKER_FILE_PATH: TestPlatform/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/Dockerfile
   PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformaccountmanagerapi
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout to the branch
-      uses: actions/checkout@v3
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-    - name: Log in to container registry
-      uses: docker/login-action@v2
-      with:
-        registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_2A2F }}
-        password: ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_2A2F }}
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v4
-      with:
-        context: ./TestPlatform/src
-        push: true
-        tags: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
-        file: ${{ env.DOCKER_FILE_PATH }}
+      - name: Checkout to the branch
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Log in to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.VGTMGRDEVREGISTRY_USERNAME }}
+          password: ${{ secrets.VGTMGRDEVREGISTRY_PASSWORD }}
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          context: ./TestPlatform/src
+          push: true
+          tags: ${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+          file: ${{ env.DOCKER_FILE_PATH }}
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.vietgeeks_testmanager_webapp_SPN }}
-    - name: Deploy to containerapp
-      uses: azure/CLI@v1.0.7
-      with:
-        inlineScript: >
-          az config set extension.use_dynamic_install=yes_without_prompt
-
-          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_USERNAME_4ADE }} --password ${{ secrets.VietGeeksTestPlatformTestManagerApi20230312081520_PASSWORD_4ADE }}
-
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
-    - name: logout
-      run: >
-        az logout
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.VIETGEEKS_TESTMANAGER_WEBAPP_SPN }}
+      - name: checkoout
+        uses: actions/checkout@v3
+      - name: Deploy to containerapp
+        uses: azure/arm-deploy@v1
+        with:
+          resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
+          template: ./TestPlatform/deployments/container-app-dapr.bicep
+          parameters: location=${{ env.CONTAINER_APP_RESOURCE_LOCATION }} environmentName=${{ env.CONTAINER_APP_ENVIRONMENT }} containerAppName=${{ env.CONTAINER_APP_NAME }} subDomainCertificate=${{ env.CONTAINER_APP_DOMAIN_CERTIFICATE }} containerImage=${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          failOnStdErr: false
+          deploymentName: deploy-${{ env.CONTAINER_APP_NAME }}-${{ github.sha }}
+      - name: logout
+        run: >
+          az logout

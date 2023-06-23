@@ -8,7 +8,7 @@ on:
       - 'TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**'
       - 'TestPlatform/src/IntegrationBlocks/VietGeek.TestPlatform.Integration.Contract/**'
 env:
-  AZURE_FUNCTIONAPP_NAME: vietgeek-send-mail-dev
+  AZURE_FUNCTIONAPP_NAME: func-vg-tm-sm-dev-sa-001
   AZURE_FUNCTIONAPP_PACKAGE_PATH: Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 7.0.x
