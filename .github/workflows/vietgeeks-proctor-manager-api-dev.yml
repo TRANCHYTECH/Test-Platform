@@ -49,7 +49,7 @@ jobs:
         with:
           resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
           template: ./TestPlatform/deployments/container-app-dapr.bicep
-          parameters: location=southeastasia environmentName=cae-vg-tm-dev-sa-001 containerAppName=ca-vg-tm-whapi-dev-sa-001 subDomainCertificate=dev-test-webhook containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          parameters: ./TestPlatform/deployments/container-app-dapr-env-dev.bicepparam location=southeastasia environmentName=cae-vg-tm-dev-sa-001 containerAppName=ca-vg-tm-whapi-dev-sa-001 subDomainCertificate=dev-test-webhook containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
           failOnStdErr: false
           deploymentName: dev-webhook-${{ github.sha }}
       - name: logout
