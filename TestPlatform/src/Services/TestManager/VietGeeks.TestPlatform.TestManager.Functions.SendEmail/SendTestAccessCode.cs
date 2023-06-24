@@ -1,12 +1,9 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Mailjet.Client;
-using Mailjet.Client.Resources;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.Integration.Contracts;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VietGeeks.TestPlatform.TestManager.Functions.SendEmail;
 
