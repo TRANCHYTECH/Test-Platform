@@ -73,6 +73,7 @@ var serviceBusNameSpaceName = 'vgtrunnerdev'
 var queueNames = [
   'user-create-request'
   'access-code-email-notification'
+  'send-test-access-code'
 ]
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {

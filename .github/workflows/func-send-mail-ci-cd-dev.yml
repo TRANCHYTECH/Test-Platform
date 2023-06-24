@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Setup .NET Core (for inproc extensions)
@@ -43,7 +43,7 @@ jobs:
     needs: build
     steps:
     - name: Download artifact from build job
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: functionapp
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
@@ -51,5 +51,5 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        publish-profile: ${{ secrets.vietgeek_send_mail_dev_56C8 }}
+        publish-profile: ${{ secrets.func_vg_tm_sm_dev_sa_001_2321 }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
