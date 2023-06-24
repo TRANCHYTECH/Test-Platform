@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Azure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -35,7 +36,7 @@ public static class ServiceCollectionExtensions
             var dataProtectionOption = options.DataProtection;
             serviceCollection.AddDataProtection()
             .SetApplicationName(dataProtectionOption.ApplicationName)
-            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl));
+            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential());
         }
     }
 
