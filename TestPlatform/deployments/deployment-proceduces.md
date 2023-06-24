@@ -24,6 +24,8 @@ deploymentName='ExampleDeployment'$RANDOM \\
 az deployment group create --name depoy-001 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app\\main.bicep
 az deployment group create --name depoy-00101 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr.bicep --parameters F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr.bicepparam
 
+az deployment group create --name depoy-test-manager-api-dev-1 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr.bicep --parameters F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr-test-manager-api-dev.bicepparam
+
 az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-manager-api --hostname dev.test-manager-api.testmaster.io --validation-method CNAME
 az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-manager --hostname dev.test-manager.testmaster.io --validation-method CNAME
 az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-runner-api --hostname dev.test-runner-api.testmaster.io --validation-method CNAME

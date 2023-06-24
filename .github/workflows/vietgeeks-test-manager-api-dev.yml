@@ -57,7 +57,7 @@ jobs:
         with:
           resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
           template: ./TestPlatform/deployments/container-app-dapr.bicep
-          parameters: ./TestPlatform/deployments/container-app-dapr-env-dev.bicepparam location=southeastasia environmentName=cae-vg-tm-dev-sa-001 containerAppName=ca-vg-tm-tmgrapi-dev-sa-001 subDomainCertificate=dev-test-manager-api containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          parameters: ./TestPlatform/deployments/container-app-dapr-test-manager-api-dev.bicepparam containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
           failOnStdErr: false
           deploymentName: dev-test-manager-api-${{ github.sha }}
       - name: logout
