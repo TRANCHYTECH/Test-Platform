@@ -11,7 +11,7 @@ param environmentName = 'cae-vg-tm-dev-sa-001'
 
 param containerAppName = 'ca-vg-tm-tmgrapi-dev-sa-001'
 param targetPort = 80
-param containerImage = 'vgeektestmasterdev.azurecr.io/vietgeekstestplatformtestmanagerapi:636419cdb2cb143e53b37a0fa54ae8fbbb8b3e61'
+param containerImage = ''
 param cpuCore = '0.25'
 param memorySize = '0.5'
 param minReplicas = 1
