@@ -29,7 +29,10 @@
           "apps/test-runner/src/assets/scss/icons.scss",
           "apps/test-runner/src/assets/scss/config/minimal/app.scss",
           "node_modules/ngx-spinner/animations/ball-fussion.css",
-          "apps/test-runner/src/styles.scss"
+          "apps/test-runner/src/styles.scss",
+          "apps/test-runner/src/assets/landing/css/lineicons.css",
+          "apps/test-runner/src/assets/landing/css/animate.css",
+          "apps/test-runner/src/assets/landing/css/main.css"
         ],
         "scripts": []
       },
