@@ -50,9 +50,9 @@ jobs:
         with:
           resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
           template: ./TestPlatform/deployments/container-app-dapr.bicep
-          parameters: ./TestPlatform/deployments/container-app-dapr-env-dev.bicepparam location=${{ env.CONTAINER_APP_RESOURCE_LOCATION }} environmentName=${{ env.CONTAINER_APP_ENVIRONMENT }} containerAppName=${{ env.CONTAINER_APP_NAME }} subDomainCertificate=${{ env.CONTAINER_APP_DOMAIN_CERTIFICATE }} containerImage=${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          parameters: location=${{ env.CONTAINER_APP_RESOURCE_LOCATION }} environmentName=${{ env.CONTAINER_APP_ENVIRONMENT }} containerAppName=${{ env.CONTAINER_APP_NAME }} subDomainCertificate=${{ env.CONTAINER_APP_DOMAIN_CERTIFICATE }} containerImage=${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ secrets.CONTAINER_REGISTRY_LOGIN_SERVER }}
           failOnStdErr: false
-          deploymentName: deploy-${{ env.CONTAINER_APP_NAME }}-${{ github.sha }}
+          deploymentName: deploy-account-mgr-api-${{ github.sha }}
       - name: logout
         run: >
           az logout
