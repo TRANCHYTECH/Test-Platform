@@ -15,6 +15,8 @@ Container Apps:
     Account manager Api: ca-vg-tm-amgrapi-dev-sa-001
     Webhook Api: ca-vg-tm-whapi-dev-sa-001
 - Service bus:
+- Storage Account:
+    st-vg-tm-general-dev-sa-001
 - AZ function app:
     Send mail: func-vg-tm-sm-dev-sa-001
 - SSL ? use free of azure
@@ -28,6 +30,7 @@ az deployment group create --name depoy-test-manager-api-dev-1 --resource-group 
 
 az deployment group create --name depoy-test-manager-api-dev-21 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\deployments\container-app\roles.bicep
 
+az deployment group create --name depoy-test-manager-api-dev-22 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\container-app\storage.bicep
 az containerapp env certificate create -g rg-vg-tm-dev-
 sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-manager-api --hostname dev.test-manager-api.testmaster.io --validation-method CNAME
 az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-test-manager --hostname dev.test-manager.testmaster.io --validation-method CNAME
