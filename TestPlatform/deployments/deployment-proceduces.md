@@ -17,6 +17,7 @@ Container Apps:
 - Service bus:
 - Storage Account:
     st-vg-tm-general-dev-sa-001
+    st-vg-tm-sendmailfunc-dev-sa-001
 - AZ function app:
     Send mail: func-vg-tm-sm-dev-sa-001
 - SSL ? use free of azure
