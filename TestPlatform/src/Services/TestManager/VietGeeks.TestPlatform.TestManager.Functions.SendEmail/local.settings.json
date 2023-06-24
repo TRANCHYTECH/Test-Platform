@@ -1,0 +1,10 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "MJ_APIKEY_PRIVATE": "1e6c1392c1c42080f2c11bf1aeea7f12",
+    "MJ_APIKEY_PUBLIC": "945293c90ded43a5bf8f0fb95605678e",
+    "TestRunnerSB__fullyQualifiedNamespace": "vgtrunnerdev.servicebus.windows.net"
+  }
+}
