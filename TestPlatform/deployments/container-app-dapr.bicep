@@ -4,7 +4,7 @@ param location string
 @description('Specifies the name of the container app.')
 param containerAppName string
 
-param env array = []
+param aspNetEnv string = 'Development'
 
 @description('Specifies the container port.')
 param targetPort int = 80
@@ -115,7 +115,12 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         {
           name: containerAppName
           image: containerImage
-          env: env
+          env: [
+            {
+              name: 'ASPNETCORE_ENVIRONMENT'
+              value: aspNetEnv
+            }
+          ]
           resources: {
             cpu: json(cpuCore)
             memory: '${memorySize}Gi'

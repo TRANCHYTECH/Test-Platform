@@ -1,11 +1,5 @@
 using './container-app-dapr.bicep'
 
-param env = [
-  {
-    name: 'ASPNETCORE_ENVIRONMENT'
-    value: 'Development'
-  }
-]
 param location = 'southeastasia'
 param environmentName = 'cae-vg-tm-dev-sa-001'
 
