@@ -62,7 +62,7 @@ resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments
 }
 
 resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
-  name: 'id-ca-vg-tm-tmgrapi-dev-sa-001'
+  name: 'test-master-services-access-identity'
 }
 
 resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {

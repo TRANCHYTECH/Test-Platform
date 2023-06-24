@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Azure.Identity;
+using Azure.Messaging.ServiceBus;
+using FluentValidation;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
@@ -26,7 +28,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
-        serviceCollection.AddAzureClients(builder => builder.AddServiceBusClient(options.ServiceBus.ConnectionString));
+        serviceCollection.AddAzureClients(builder => builder.AddServiceBusClientWithNamespace($"{options.ServiceBus.Namespace}.servicebus.windows.net").WithCredential(new DefaultAzureCredential()));
 
         serviceCollection.AddValidators();
     }
@@ -59,7 +61,7 @@ public class DatabaseOptions
 
 public class ServiceBusOptions
 {
-    public string ConnectionString { get; set; } = default!;
+    public string Namespace { get; set; } = default!;
 }
 
 public class InfrastructureDataOptions
