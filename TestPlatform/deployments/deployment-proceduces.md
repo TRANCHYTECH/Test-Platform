@@ -79,3 +79,4 @@ az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-d
 az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-dev-sa-001 --certificate-name  dev-account-manager --hostname dev.account-manager.testmaster.io --validation-method CNAME
 ### Step 3
 
+### 
