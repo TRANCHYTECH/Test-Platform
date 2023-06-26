@@ -17,7 +17,7 @@
     <PackageReference Include="Dapr.AspNetCore" Version="1.10.0" />
     <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.10.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-    <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.9" />
+    <PackageReference Include="VietGeeks.TestPlatform.AspNetCore" Version="1.1.10" />
   </ItemGroup>
 
   <ItemGroup>
