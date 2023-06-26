@@ -61,6 +61,11 @@ resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments
   parent: environment
 }
 
+var serviceBusNameSpaceName = 'vgtrunnerdev'
+
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' existing = {
+  name: serviceBusNameSpaceName
+}
 resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: 'test-master-services-access-identity'
 }
@@ -119,6 +124,14 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
             {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: aspNetEnv
+            }
+            {
+              name: 'TestManagerServiceBus__Namespace'
+              value: serviceBusNamespace.name
+            }
+            {
+              name: 'TestManagerServiceBus__ManagedIdentityClientId'
+              value: uai.properties.clientId
             }
           ]
           resources: {

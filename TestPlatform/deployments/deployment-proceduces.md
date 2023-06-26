@@ -80,3 +80,5 @@ az containerapp env certificate create -g rg-vg-tm-dev-sa-001 --name cae-vg-tm-d
 ### Step 3
 
 ### 
+Update mailjet webhook endpoint
+Update Auth0 post user registration endpoint

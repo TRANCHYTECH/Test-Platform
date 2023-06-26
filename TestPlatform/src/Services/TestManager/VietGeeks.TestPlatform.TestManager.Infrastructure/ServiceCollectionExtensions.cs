@@ -28,7 +28,11 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
-        serviceCollection.AddAzureClients(builder => builder.AddServiceBusClientWithNamespace($"{options.ServiceBus.Namespace}.servicebus.windows.net").WithCredential(new DefaultAzureCredential()));
+        serviceCollection.AddAzureClients(builder => builder.AddServiceBusClientWithNamespace($"{options.ServiceBus.Namespace}.servicebus.windows.net")
+        .WithCredential(new DefaultAzureCredential(new DefaultAzureCredentialOptions
+        {
+            ManagedIdentityClientId = options.ServiceBus.ManagedIdentityClientId
+        })));
 
         serviceCollection.AddValidators();
     }
@@ -62,6 +66,8 @@ public class DatabaseOptions
 public class ServiceBusOptions
 {
     public string Namespace { get; set; } = default!;
+
+    public string ManagedIdentityClientId { get; set; } = default!;
 }
 
 public class InfrastructureDataOptions
