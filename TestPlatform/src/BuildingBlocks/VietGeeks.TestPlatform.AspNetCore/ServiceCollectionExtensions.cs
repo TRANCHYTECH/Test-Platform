@@ -36,7 +36,9 @@ public static class ServiceCollectionExtensions
             var dataProtectionOption = options.DataProtection;
             serviceCollection.AddDataProtection()
             .SetApplicationName(dataProtectionOption.ApplicationName)
-            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential());
+            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential(new DefaultAzureCredentialOptions {
+                ManagedIdentityClientId = dataProtectionOption.ManagedIdentityClientId
+            }));
         }
     }
 
@@ -71,6 +73,8 @@ public class DataProtectionOptions
     public string ApplicationName { get; set; } = default!;
 
     public string DataProtectionBlobUrl { get; set; } = default!;
+
+    public string ManagedIdentityClientId { get; set; } = default!;
 }
 
 public class AuthOptions
