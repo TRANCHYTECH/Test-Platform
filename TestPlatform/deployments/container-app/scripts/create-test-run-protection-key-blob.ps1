@@ -6,7 +6,7 @@ param (
 
 $ErrorActionPreference = 'Stop'
 
-$storageContainerName = 'data-protecion-keys'
+$storageContainerName = 'data-protection'
 $storageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $StorageAccountName
 $ctx = $storageAccount.Context
 
@@ -18,7 +18,7 @@ $ctx = $storageAccount.Context
     {  
         New-AzStorageContainer -Context $ctx -Name $storageContainerName -Permission Off 
         New-Item $IndexDocument -Force
-        Set-Content $IndexDocument ''
+        #Set-Content $IndexDocument ''
         Set-AzStorageBlobContent -Context $ctx -Container $storageContainerName -File $IndexDocument -Blob $IndexDocument -Properties @{'ContentType' = 'text/plain'}  
     }      
 
