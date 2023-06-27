@@ -143,9 +143,39 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
       scale: {
         minReplicas: minReplicas
         maxReplicas: maxReplicas
+        rules: [
+          {
+            name: 'http-scale-rule'
+            http: {
+              metadata: {
+                concurrentRequests: '500'
+              }
+            }
+          }
+          {
+            name: 'cpu-scale-rule'
+            custom: {
+              type: 'cpu'
+              metadata: {
+                metricType : 'Utilization'
+                value: '70'
+              }
+            }
+          }
+          {
+            name: 'memory-scale-rule'
+            custom: {
+              type: 'memory'
+              metadata: {
+                metricType : 'AverageValue'
+                value: '70'
+              }
+            }
+          }
+        ]
       }
     }
   }
 }
 
-output fqdn string = containerApp.properties.configuration.ingress.fqdn
+output containerAppFQDN string = containerApp.properties.configuration.ingress.fqdn
