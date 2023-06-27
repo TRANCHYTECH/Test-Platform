@@ -23,6 +23,10 @@ Container Apps:
 - SSL ? use free of azure
 Static web apps:
     TestManager web: sttapp-vg-tm-tmgrapp-dev-sa-001
+    Deployment note:
+    set environment env yaml:
+        NPM_CONFIG_FORCE: true
+        NPM_CONFIG_LEGACY_PEER_DEPS: true
 deploymentName='ExampleDeployment'$RANDOM \\
  \\
 az deployment group create --name depoy-001 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app\\main.bicep
