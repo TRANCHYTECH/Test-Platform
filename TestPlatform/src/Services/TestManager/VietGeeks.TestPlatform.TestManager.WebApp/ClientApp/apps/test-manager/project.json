@@ -25,6 +25,7 @@
         ],
         "inlineStyleLanguage": "scss",
         "assets": [
+          "apps/test-manager/src/staticwebapp.config.json",
           "apps/test-manager/src/favicon.ico",
           "apps/test-manager/src/assets",
           {
