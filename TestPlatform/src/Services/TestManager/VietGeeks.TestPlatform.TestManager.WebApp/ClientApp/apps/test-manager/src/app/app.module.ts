@@ -24,16 +24,18 @@ import { appRoutes } from './app.routes';
 
 const appInitializerFn = (httpBackend: HttpBackend, authClientConfig: AuthClientConfig, appSettingsService: AppSettingsService) => {
   return () => {
+    appSettingsService.set<AppSettings>(environment);
+    setAuthClientConfig(authClientConfig, environment);
     // if (!environment.production) {
     //   appSettingsService.set<AppSettings>(environment);
     //   setAuthClientConfig(authClientConfig, environment);
     //   return;
     // }
 
-    return firstValueFrom((new HttpClient(httpBackend)).get<AppSettings>('/Configuration')).then(appSettings => {
-      appSettingsService.set(appSettings);
-      setAuthClientConfig(authClientConfig, appSettings);
-    });
+    // return firstValueFrom((new HttpClient(httpBackend)).get<AppSettings>('/Configuration')).then(appSettings => {
+    //   appSettingsService.set(appSettings);
+    //   setAuthClientConfig(authClientConfig, appSettings);
+    // });
   }
 }
 
