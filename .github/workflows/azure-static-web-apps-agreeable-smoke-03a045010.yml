@@ -9,7 +9,9 @@ on:
   #     - "TestPlatform/src/Services/TestManager/**"
   #     - "!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.WebApp/**"
   #     - "!TestPlatform/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**"
-
+env: 
+  NPM_CONFIG_FORCE: true
+  NPM_CONFIG_LEGACY_PEER_DEPS: true
 jobs:
   build_and_deploy_job:
     # if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
