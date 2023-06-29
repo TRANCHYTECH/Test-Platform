@@ -23,6 +23,7 @@ Container Apps:
 - SSL ? use free of azure
 Static web apps:
     TestManager web: sttapp-vg-tm-tmgrapp-dev-sa-001
+    TestRunner web: sttapp-vg-tm-trunnerapp-dev-sa-001
     Deployment note:
     set environment env yaml:
         NPM_CONFIG_FORCE: true
@@ -35,6 +36,8 @@ az deployment group create --name depoy-00101 --resource-group rg-vg-tm-dev-sa-0
 az deployment group create --name depoy-test-manager-api-dev-1 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr.bicep --parameters F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app-dapr-test-manager-api-dev.bicepparam
 
 az deployment group create --name depoy-test-manager-api-dev-21 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\deployments\container-app\roles.bicep
+
+az deployment group create --name depoy-test-runner-app --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\\container-app\\static-web-app.bicep --parameters location=eastasia appName=sttapp-vg-tm-trunnerapp-dev-sa-001
 
 az deployment group create --name depoy-test-manager-api-dev-22 --resource-group rg-vg-tm-dev-sa-001 --template-file F:\\Workspace\\VietGeeksRepo\\TestPlatform\\deployments\container-app\storage.bicep
 az containerapp env certificate create -g rg-vg-tm-dev-
@@ -64,6 +67,7 @@ az ad sp create-for-rbac --name "test-master-github" --role contributor --scopes
 ### Step 1
 Create resource group:
 az group create -l southeastasia -n rg-vg-tm-dev-sa-001
+az group create -l eastasia -n rg-vg-tm-dev-ea-001
 Create SP to allow CD from github, run command, paste result to github action secret ''
 az ad sp create-for-rbac --name "test-master-github" --role contributor --scopes /subscriptions/ec4dddda-f3cb-4c93-a2f1-4f3c705dfc88/resourceGroups/rg-vg-tm-dev-sa-001 --sdk-auth
 ### Step 2

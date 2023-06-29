@@ -29,10 +29,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     NgbModule,
     ApiModule.forRoot({ rootUrl: environment.testRunnerApiBaseUrl }),
-    FingerprintjsProAngularModule.forRoot({loadOptions: {
-      apiKey: "JdKT9k9MyKIUAudQFlcB",
-      region: "ap"
-    }}),
+    FingerprintjsProAngularModule.forRoot({
+      loadOptions: {
+        apiKey: "JdKT9k9MyKIUAudQFlcB",
+        region: "ap"
+      }
+    })
   ],
   providers: [
     {
@@ -52,7 +54,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         useValue: {
           required: 'This field is required',
           minlength: ({ requiredLength, actualLength }) =>
-                      `Expect ${requiredLength} but got ${actualLength}`,
+            `Expect ${requiredLength} but got ${actualLength}`,
           invalidAddress: error => `Address isn't valid`
         }
       }
@@ -64,15 +66,18 @@ export class AppModule { }
 
 function appInitializerFactory(httpBackend: HttpBackend, appSettingsService: AppSettingsService) {
   return () => {
-    if (!environment.production) {
-      appSettingsService.set<AppSettings>(environment);
+    appSettingsService.set<AppSettings>(environment);
+    return of(true);
 
-      return of(true);
-    }
+    // if (environment.production) {
+    //   appSettingsService.set<AppSettings>(environment);
 
-    return (new HttpClient(httpBackend)).get<AppSettings>('/Configuration')
-      .pipe(tap(appSettings => {
-        appSettingsService.set(appSettings);
-      }));
+    //   return of(true);
+    // }
+
+    // return (new HttpClient(httpBackend)).get<AppSettings>('/Configuration')
+    //   .pipe(tap(appSettings => {
+    //     appSettingsService.set(appSettings);
+    //   }));
   }
 }
