@@ -36,7 +36,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
   private _uiSupportedService = inject(UISupportedService);
   private _destroyRef = inject(DestroyRef);
   private _coreEvents = inject(CoreEventsService);
-  
+
   constructor() {
     this._router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       this.testId = getTestId(this._route);
@@ -49,43 +49,43 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
       this.menus$.next([
         {
           routerLink: ['config', 'basic-settings'],
-          text: 'Basic settings',
+          text: 'basicSettings',
           icon: 'ri-settings-2-line',
           disable: false
         },
         {
           routerLink: ['config', 'question'],
-          text: 'Questions',
+          text: 'questions',
           icon: 'ri-equalizer-fill',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'test-sets'],
-          text: 'Test sets',
+          text: 'testSets',
           icon: 'ri-tools-line',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'test-access'],
-          text: 'Test access',
+          text: 'testAccess',
           icon: 'ri-shield-keyhole-line',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'test-start-page'],
-          text: 'Test start page',
+          text: 'testStartPage',
           icon: 'ri-eye-line',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'grading-and-summary'],
-          text: 'Grading and summary',
+          text: 'gradingAndSummary',
           icon: 'ri-mark-pen-line',
           disable: isNewTest
         },
         {
           routerLink: ['config', 'time-settings'],
-          text: 'Time settings',
+          text: 'timeSettings',
           icon: 'ri-time-line',
           disable: isNewTest
         }
@@ -94,7 +94,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
       this.testResultMenus$.next([
         {
           routerLink: ['report', 'list'],
-          text: 'Test results',
+          text: 'testResults',
           icon: 'ri-list-check',
           disable: false
         },
@@ -112,7 +112,7 @@ export class TestSpecificLayoutComponent implements OnInit, AfterViewInit {
         // },
         {
           routerLink: ['report', 'test-sheet-review'],
-          text: 'Test sheet review',
+          text: 'testSheetReview',
           icon: 'ri-file-list-3-line',
           disable: false
         }

@@ -17,8 +17,8 @@ export class AppComponent {
   private _destroyRef = inject(DestroyRef);
 
   constructor(translate: TranslateService, apiErrorNotifyService: CoreEventsService) {
-    translate.setDefaultLang('en');
-    translate.use('en');
+    translate.setDefaultLang('vi');
+    translate.use('vi');
 
     apiErrorNotifyService.httpCallErrors.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(errorMsg => {
       this.notifyService.error(errorMsg);

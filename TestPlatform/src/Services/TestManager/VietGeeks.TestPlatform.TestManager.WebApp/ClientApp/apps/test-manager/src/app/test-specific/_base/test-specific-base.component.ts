@@ -8,6 +8,7 @@ import { TestStatus } from '../../_state/test-support.model';
 import { createTest, Test } from "../_state/tests/test.model";
 import { TestsQuery } from "../_state/tests/tests.query";
 import { TestsService } from "../_state/tests/tests.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({ template: '' })
 export abstract class TestSpecificBaseComponent extends EntitySpecificBaseComponent implements OnInit, OnDestroy {
@@ -22,6 +23,7 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
     testsQuery = inject(TestsQuery);
     notifyService = inject(ToastService);
     textEditorConfigs = inject(TextEditorConfigsService);
+    translateService = inject(TranslateService);
 
     get isNewTest() {
         return this.testId === 'new';
@@ -46,7 +48,7 @@ export abstract class TestSpecificBaseComponent extends EntitySpecificBaseCompon
     get isReadonly() {
         return this.test.status !== undefined && this.test.status !== TestStatus.Draft;
     }
-    
+
     constructor() {
         super();
         effect(() => {

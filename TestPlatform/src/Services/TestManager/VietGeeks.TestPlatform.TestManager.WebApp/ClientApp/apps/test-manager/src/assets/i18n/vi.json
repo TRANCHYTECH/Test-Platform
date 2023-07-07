@@ -1,7 +1,7 @@
 {
   "MENUITEMS": {
     "account": {
-      "text": "Account"
+      "text": "Tài khoản"
     },
     "MENU": {
       "TEXT": "MENU"
@@ -10,7 +10,7 @@
       "TEXT": "Dashboard",
       "BADGE": "New",
       "LIST": {
-        "tests": "My Tests"
+        "tests": "Bài kiểm tra"
       }
     }
   },
@@ -40,13 +40,28 @@
     "greaterThanDate": "The date must be greater than {{comparedDate}}"
   },
   "labels": {
-    "activate": "Activate",
-    "schedule": "Schedule",
-    "endTest": "End test",
+    "activate": "Kích hoạt",
+    "schedule": "Đặt lịch",
+    "endTest": "Kết thúc",
     "changeSettings": "Change settings",
-    "restart": "Start again",
+    "restart": "Kích hoạt lại",
     "noUser": "No User",
-    "searchRespondents": "Search Respondents"
+    "searchRespondents": "Search Respondents",
+    "testConfiguration": "Cấu hình",
+    "testProgressAndResults": "Kết quả",
+    "newQuestion": "Thêm câu hỏi",
+    "questionNumber": "Câu hỏi {{number}}"
+  },
+  "testParts": {
+    "basicSettings": "Cơ bản",
+    "questions": "Câu hỏi",
+    "testSets": "Bộ đề",
+    "testAccess": "Truy cập",
+    "testStartPage": "Trang bắt đầu",
+    "gradingAndSummary": "Điểm",
+    "timeSettings": "Thời gian",
+    "testResults": "Kết quả",
+    "testSheetReview": "Chi tiết bài thi"
   },
   "summary": {
     "testTimeLimit": "Time limit for entire test is set to {{duration}}",
@@ -55,5 +70,10 @@
     "timePeriodActivation": "Test actication date is {{activeFromDate}} ({{timeZone}})",
     "publicLinkTest": "Test is in Public Link access mode",
     "privateAccessCodeTest": "Test is in Private Access Code mode"
+  },
+  "testStatuses": {
+    "Activated": "Đã kích hoạt",
+    "Ended": "Đã kết thúc",
+    "Draft": "Bản nháp"
   }
 }
