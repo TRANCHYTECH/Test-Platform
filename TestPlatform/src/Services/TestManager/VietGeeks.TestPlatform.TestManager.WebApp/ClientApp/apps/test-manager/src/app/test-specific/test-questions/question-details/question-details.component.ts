@@ -105,11 +105,11 @@ export class QuestionDetailsComponent extends TestSpecificBaseComponent implemen
     this.questionCategories$ = this._questionCategoriesQuery.selectAll();
 
     if (this.questionId === 'new') {
-      this._uiSupportedService.setSectionTitle('New Question');
+      this._uiSupportedService.setSectionTitle(this.translateService.instant('labels.newQuestion'));
     }
     else {
       const question = await firstValueFrom(this._questionService.getQuestion(this.testId, this.questionId));
-      this._uiSupportedService.setSectionTitle(`Question ${question.questionNo}`);
+      this._uiSupportedService.setSectionTitle(this.translateService.instant('labels.questionNumber', {number: question.questionNo}));
       this.questionForm.reset({
         questionNo: question?.questionNo,
         description: question?.description,
@@ -206,6 +206,7 @@ export class QuestionDetailsComponent extends TestSpecificBaseComponent implemen
 
       // Trick to by pass discard confirmation.
       this.questionForm.markAsPristine();
+      this._refreshAfterSubmit = false;
       this.router.navigate(['../list'], { relativeTo: this.route });
     }
     catch (e) {

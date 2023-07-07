@@ -6,8 +6,8 @@ import { TestStatus } from '../models/test.model';
 })
 export class TestStatusPipe implements PipeTransform {
 
-  transform(status: number | null) {
-    return TestStatus[status || TestStatus.Draft];
+  transform(status: number | null, suffix: string = 'testStatuses.') {
+    return suffix + TestStatus[status || TestStatus.Draft];
   }
 }
 
