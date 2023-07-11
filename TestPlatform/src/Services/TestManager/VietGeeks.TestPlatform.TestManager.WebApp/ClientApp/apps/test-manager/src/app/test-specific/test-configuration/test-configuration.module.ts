@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { TestConfigurationRoutingModule } from './test-configuration-routing.module';
 import { EditorLoadingIndicatorDirective, SharedModule } from '@viet-geeks/shared';
-import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbAlertModule, NgbDropdownModule, NgbNavModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from '@ngneat/input-mask';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { BasicSettingsComponent } from './basic-settings/basic-settings.component';
