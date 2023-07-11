@@ -40,6 +40,9 @@
     "greaterThanDate": "The date must be greater than {{comparedDate}}"
   },
   "labels": {
+    "save": "Lưu",
+    "saving": "Đang lưu...",
+    "cancel": "Huỷ",
     "activate": "Kích hoạt",
     "schedule": "Đặt lịch",
     "endTest": "Kết thúc",
@@ -50,7 +53,24 @@
     "testConfiguration": "Cấu hình",
     "testProgressAndResults": "Kết quả",
     "newQuestion": "Thêm câu hỏi",
-    "questionNumber": "Câu hỏi {{number}}"
+    "questionNumber": "Câu hỏi {{number}}",
+    "manageQuestionCategories": "Quản lý loại câu hỏi",
+    "questionsPerPage": "Câu hỏi từng trang",
+    "testCategory": "Thể loại",
+    "addTestCategory": "Thêm thể loại",
+    "testCategoryName": "Tên thể loại",
+    "testCategoryNameHint": "Nhập tên thể loại",
+    "testName": "Tên bài thi",
+    "testNamePlaceHolder": "Nhập tên bài thi",
+    "testCategoryHint": "Giúp phân loại bài thi dễ dàng",
+    "testDescription": "Mô tả",
+    "testDescriptionHint": "Gợi nhớ mục đích bài thi",
+    "changeQuestionOrder": "Thay đổi thứ tự câu hỏi",
+    "questionTypeIs": "Loại {{type}}",
+    "questionPointIs": "Điểm {{point}}",
+    "questionOrders": "Thứ tự câu hỏi",
+    "questionOrderOptions": "Lựa chọn một trong các loại",
+    "delete": "Xoá"
   },
   "testParts": {
     "basicSettings": "Cơ bản",
@@ -75,5 +95,9 @@
     "Activated": "Đã kích hoạt",
     "Ended": "Đã kết thúc",
     "Draft": "Bản nháp"
+  },
+  "questionTypes": {
+    "SingleChoice" : "Một đáp án",
+    "MultipleChoice": "Nhiều đáp án"
   }
 }

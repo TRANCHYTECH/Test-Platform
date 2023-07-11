@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -11,15 +12,17 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubmitButtonComponent {
+  translateService = inject(TranslateService);
+
   isProcessing$ = new Subject<boolean>();
   @Input()
   class!: string;
 
   @Input()
-  text = 'Save';
+  text = this.translateService.instant('labels.save');
 
   @Input()
-  processingText = 'Saving...';
+  processingText =  this.translateService.instant('labels.saving');
 
   @Input()
   isDisabled?: boolean;

@@ -1,39 +1,38 @@
 <div class="row" [formGroup]="basicSettingForm">
-    <ng-container *ngIf="readyForUI$ | async">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Test name <span class="required-asterisk">*</span></label>
-                        <input formControlName="name" type="text" class="form-control" placeholder="Enter test name" [readOnly]="isReadonly">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Catetory</label>
-                        <div class="input-group">
-                            <select data-choices formControlName="category" class="form-select">
-                                <option [ngValue]="c.id" *ngFor="let c of testCategories$ | async">{{c.name}}</option>
-                            </select>
-                            <button class="btn btn-outline-primary" (click)="openAddTestCategoryModal()">Add New
-                                Category</button>
-                        </div>
-                        <small class="form-text text-muted">Select test category to keep track of all your
-                            tests.</small>
-                    </div>
+  <ng-container *ngIf="readyForUI$ | async">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">{{'labels.testName' | translate}}<span class="required-asterisk">*</span></label>
+            <input formControlName="name" type="text" class="form-control"
+              placeholder="{{'labels.testNamePlaceHolder' | translate}}" [readOnly]="isReadonly">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{'labels.testCategory' | translate}}</label>
+            <div class="input-group">
+              <select data-choices formControlName="category" class="form-select">
+                <option [ngValue]="c.id" *ngFor="let c of testCategories$ | async">{{c.name}}</option>
+              </select>
+              <button class="btn btn-outline-primary" (click)="openAddTestCategoryModal()">{{'labels.addTestCategory' |
+                translate}}</button>
+            </div>
+            <small class="form-text text-muted">{{'labels.testCategoryHint' | translate}}</small>
+          </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="description">Description</label>
-                        <textarea formControlName="description" id="descripion" class="form-control"></textarea>
-                        <small class="form-text text-muted">Add test description for identification purposes. It will be
-                            visible <b>to you only</b>.</small>
-                    </div>
-                </div>
-            </div>
-            <div class="text-end mb-4">
-                <div class="d-flex gap-1 justify-content-end">
-                    <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
-                        [canSubmit]="canSubmit"></viet-geeks-submit-button>
-                </div>
-            </div>
+          <div class="mb-3">
+            <label class="form-label" for="description">{{'labels.testDescription' | translate}}</label>
+            <textarea formControlName="description" id="descripion" class="form-control"></textarea>
+            <small class="form-text text-muted">{{'labels.testDescriptionHint' | translate}}</small>
+          </div>
         </div>
-    </ng-container>
+      </div>
+      <div class="text-end mb-4">
+        <div class="d-flex gap-1 justify-content-end">
+          <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
+            [canSubmit]="canSubmit"></viet-geeks-submit-button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>
