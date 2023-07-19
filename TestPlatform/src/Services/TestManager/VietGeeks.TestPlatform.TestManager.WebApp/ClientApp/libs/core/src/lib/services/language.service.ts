@@ -20,7 +20,7 @@ export class LanguageService {
     else {
       browserLang = translate.getBrowserLang();
     }
-    translate.use(browserLang.match(/en|es|de|it|ru/) ? browserLang : 'en');
+    translate.use(browserLang.match(/en|es|de|it|ru/) ? browserLang : 'vi');
   }
 
   /***

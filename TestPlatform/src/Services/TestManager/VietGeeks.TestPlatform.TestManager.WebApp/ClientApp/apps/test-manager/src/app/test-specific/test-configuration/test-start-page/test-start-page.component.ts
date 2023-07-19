@@ -15,23 +15,23 @@ export class TestStartPageComponent extends TestSpecificBaseComponent implements
 
   fieldConfigs = [
     {
-      key: 'First name - text field',
+      key: 'firstName',
       value: 'FirstName'
     },
     {
-      key: 'Last name - text field',
+      key: 'lastName',
       value: 'LastName'
     },
     {
-      key: 'City - text field',
+      key: 'city',
       value: 'City'
     },
     {
-      key: 'Organization Name - text field',
+      key: 'organizationName',
       value: 'OrganizationName'
     },
     {
-      key: 'Phone - text field',
+      key: 'phone',
       value: 'Phone'
     }
   ];

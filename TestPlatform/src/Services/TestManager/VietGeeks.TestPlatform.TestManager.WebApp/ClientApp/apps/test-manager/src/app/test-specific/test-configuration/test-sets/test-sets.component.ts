@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DeactivatableComponent } from '@viet-geeks/shared';
+import { DeactivatableComponent, QuestionSummary } from '@viet-geeks/shared';
 import { find, forEach } from 'lodash-es';
 import { firstValueFrom } from 'rxjs';
-import { QuestionSummary } from '../../../../../../../libs/shared/src/lib/models/question.model';
 import { TestSpecificBaseComponent } from '../../_base/test-specific-base.component';
 import { QuestionCategory } from '../../_state/question-categories/question-categories.model';
 import { QuestionCategoriesQuery } from '../../_state/question-categories/question-categories.query';
@@ -48,8 +47,8 @@ export class TestSetsComponent extends TestSpecificBaseComponent implements Deac
   }
 
   readonly generatorTypeOptions = [
-    { id: GeneratorTypes.Default, textKey: 'Pages.TestSets.GeneratorTypes.Default' },
-    { id: GeneratorTypes.RandomFromCategories, textKey: 'Pages.TestSets.GeneratorTypes.RandomFromCategories' }
+    { id: GeneratorTypes.Default, textKey: 'pages.testSets.generatorTypes.default' },
+    { id: GeneratorTypes.RandomFromCategories, textKey: 'pages.testSets.generatorTypes.randomFromCategories' }
   ]
 
   canDeactivate: () => boolean | Promise<boolean> = () => !this.testSetsForm.dirty;

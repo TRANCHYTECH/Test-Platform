@@ -2,9 +2,9 @@
     <ng-container *ngIf="readyForUI$ | async">
         <div class="col-lg-12" [formGroup]="testStartPageForm">
             <div class="card">
-                <h5 class="card-header border-bottom-0">INSTRUCTIONS FOR RESPONDENTS</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.testStartPage.instruction</h5>
                 <div class="card-body">
-                    <label>Provide test instructions to be displayed to respondents on the test start page.</label>
+                    <label translate>pages.testStartPage.instructionHint</label>
                     <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="instruction" [apiKey]="textEditorConfigs.apiKey"
                         (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
                         (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"
@@ -13,14 +13,14 @@
                 </div>
             </div>
             <div class="card">
-                <h5 class="card-header border-bottom-0">TEST START FORM</h5>
+                <h5 class="card-header border-bottom-0" translate>pages.testStartPage.respondentForm</h5>
                 <div class="card-body">
-                    <label>Configure test start form and collect data to identify respondents.</label>
-                    <table class="table caption-top table-nowrap" formArrayName="respondentIdentifyConfig">
+                    <label translate>pages.testStartPage.respondentFormHint</label>
+                    <table class="table caption-top table-nowrap" formArrayName="respondentIdentifyConfig" aria-describedby="">
                         <thead class="table-light">
                             <tr class="text-center">
-                                <th scope="col">Field</th>
-                                <th scope="col">Mandatory</th>
+                                <th scope="col" translate>pages.testStartPage.field</th>
+                                <th scope="col" translate>pages.testStartPage.fieldMandatory</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -30,7 +30,7 @@
                                     <td>
                                         <select data-choices formControlName="fieldId" class="form-select" readonly>
                                             <option [ngValue]="field.value" *ngFor="let field of fieldConfigs">
-                                                {{field.key}}</option>
+                                                {{'pages.testStartPage.respondentFormFields.' + field.key | translate}}</option>
                                         </select>
                                     </td>
                                     <td class="text-center">
@@ -54,18 +54,16 @@
                     </table>
                     <div class="hstack gap-3">
                         <button type="button" class="btn btn-outline-secondary btn-label" (click)="addNewField()">
-                            <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add a field</button>
+                            <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>{{ 'pages.testStartPage.addField' | translate }}</button>
                         <button type="button" class="btn btn-outline-secondary btn-label" disabled>
-                            <i class="ri-pencil-line label-icon align-middle fs-24 me-2"></i>Manage custom
-                            Fields</button>
+                            <i class="ri-pencil-line label-icon align-middle fs-24 me-2"></i>{{ 'pages.testStartPage.manageCustomFields' | translate }}</button>
                     </div>
                 </div>
             </div>
             <div class="card">
-                <h5 class="card-header border-bottom-0">Consent</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.testStartPage.consent</h5>
                 <div class="card-body">
-                    <label>If you require consent or acceptance before respondents can take the test, specify it
-                        below.</label>
+                    <label translate>pages.testStartPage.consentHint</label>
                     <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="consent" [apiKey]="textEditorConfigs.apiKey"
                         (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
                         (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorConfig"

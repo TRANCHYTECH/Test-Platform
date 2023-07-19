@@ -14,11 +14,11 @@
       }
     }
   },
-  "Pages": {
-    "TestSets": {
-      "GeneratorTypes": {
-        "Default": "Fixed questions and answers order as defined in Questions manager",
-        "RandomFromCategories": "Random questions and answers order"
+  "pages": {
+    "testSets": {
+      "generatorTypes": {
+        "default": "Fixed questions and answers order as defined in Questions manager",
+        "randomFromCategories": "Random questions and answers order"
       }
     }
   },

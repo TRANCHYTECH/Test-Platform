@@ -27,3 +27,4 @@ export * from './lib/services/text-editor-configs.service';
 export * from './lib/services/ui-supported.service';
 export * from './lib/shared.module';
 export * from './lib/components/editor-loading-indicator.directive';
+export * from './lib/services/app-missing-translation-handler';
