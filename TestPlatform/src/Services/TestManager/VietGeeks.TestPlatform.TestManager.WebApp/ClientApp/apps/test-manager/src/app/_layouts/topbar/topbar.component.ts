@@ -19,7 +19,7 @@ import { CartModel } from './topbar.model';
 export class TopbarComponent implements OnInit {
   listLang = [
     { text: 'English', flag: 'assets/images/flags/us.svg', lang: 'en' },
-    { text: 'Tiếng việt', flag: 'assets/images/flags/vn.svg', lang: 'vn' }
+    { text: 'Tiếng việt', flag: 'assets/images/flags/vn.svg', lang: 'vi' }
   ];
 
   public authService = inject(AuthService);

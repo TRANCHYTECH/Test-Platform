@@ -7,12 +7,12 @@ import { AuthClientConfig, AuthHttpInterceptor, AuthModule } from '@auth0/auth0-
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { InputMaskModule } from '@ngneat/input-mask';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { AppSettingsService, CoreModule, HttpErrorResponseInterceptor } from '@viet-geeks/core';
-import { ApiErrorHandler, TEXT_EDITOR_CONFIGS, SharedModule, TextEditorConfigs } from '@viet-geeks/shared';
+import { ApiErrorHandler, TEXT_EDITOR_CONFIGS, SharedModule, TextEditorConfigs, AppMissingTranslationHandler } from '@viet-geeks/shared';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { firstValueFrom } from 'rxjs';
@@ -68,7 +68,8 @@ const setAuthClientConfig = (authClientConfig: AuthClientConfig, appSettings: Ap
     }),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     TranslateModule.forRoot({
-      defaultLanguage: 'en',
+      missingTranslationHandler: {provide: MissingTranslationHandler, useClass: AppMissingTranslationHandler},
+      defaultLanguage: 'vi',
       loader: {
         provide: TranslateLoader,
         useFactory: createTranslateLoader,

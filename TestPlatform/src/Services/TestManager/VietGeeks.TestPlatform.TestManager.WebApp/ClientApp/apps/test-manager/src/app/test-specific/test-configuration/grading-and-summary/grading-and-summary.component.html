@@ -2,12 +2,10 @@
     <ng-container *ngIf="readyForUI$ | async">
         <div class="col-lg-12" [formGroup]="gradeForm">
             <div class="card" formGroupName="testEndConfig">
-                <h5 class="card-header border-bottom-0">TEST END MESSAGE</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.grading.testEndMessage</h5>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label>Configure a message to be displayed to all respondents at the end of the test, regardless
-                            of
-                            its results.</label>
+                        <label translate>pages.grading.testEndMessageHint</label>
                         <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="message"
                             [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('testEndConfig.message', $event)"
@@ -19,8 +17,7 @@
                     <div class="form-check form-switch form-switch-lg mb-3">
                         <input type="checkbox" role="switch" id="i3" class="form-check-input"
                             formControlName="redirectTo">
-                        <label for="i3" class="form-check-label">Set redirection to an external website at the end of
-                            the test</label>
+                        <label for="i3" class="form-check-label" translate>pages.grading.redirectAfterTest</label>
                     </div>
                     <ngb-alert [type]="'info'" [dismissible]="false"
                         class="alert-additional fade show custom-alert mb-3">
@@ -30,16 +27,16 @@
                                     <i class="ri-information-line fs-16 align-middle"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h5 class="alert-heading">Enter full website address (incl. http/https).</h5>
+                                    <h5 class="alert-heading"translate>pages.grading.redirectAfterTestHint</h5>
                                 </div>
                             </div>
                         </div>
                     </ngb-alert>
-                    <input formControlName="toAddress" type="url" class="form-control" placeholder="Website">
+                    <input formControlName="toAddress" type="url" class="form-control" placeholder="{{ 'pages.grading.website' | translate }}">
                 </div>
             </div>
             <div class="card" formGroupName="gradingCriterias">
-                <h5 class="card-header border-bottom-0">GRADING CRITERIA</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.grading.criteria.title</h5>
                 <div class="card-body">
                     <ngb-alert [type]="'info'" [dismissible]="false"
                         class="alert-additional fade show custom-alert mb-3">
@@ -48,16 +45,14 @@
                                 <div class="flex-shrink-0 me-3">
                                     <i class="ri-information-line fs-16 align-middle"></i>
                                 </div>
-                                <div class="flex-grow-1">`
-                                    <h5 class="alert-heading">Set grading criteria</h5>
-                                    <p class="mb-0">Define grading criteria now or when all test scores are available.
-                                    </p>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0" translate>pages.grading.criteria.hint</p>
                                 </div>
                             </div>
                         </div>
                     </ngb-alert>
                     <div class="mb-3">
-                        <label>Maximum possible score 100% or {{gradeFormConfigs.maxPoint}} points.</label>
+                        <label>{{'pages.grading.criteria.hint2' | translate:{percent: 100, point: gradeFormConfigs.maxPoint} }}</label>
                     </div>
                     <!-- Pass mask criteria -->
                     <div class="mb-3" formGroupName="{{GradingCriteriaConfigTypeUI.PassMask}}">
@@ -65,15 +60,15 @@
                             <input type="checkbox" role="switch" class="form-check-input" id="passmask-criteria-toggler"
                                 [checked]="passMaskGradeCtrl.enabled"
                                 (change)="toggleGradeCriteria({id: GradingCriteriaConfigTypeUI.PassMask, originEvent: $event})">
-                            <label for="passmask-criteria-toggler" class="form-check-label">Pass mark</label>
+                            <label for="passmask-criteria-toggler" class="form-check-label" translate>pages.grading.criteria.passMark</label>
                         </div>
                         <div class="row" [attr.hidden]="isPassMaskGradeCtrlEnabled ? null : ''">
                             <div class="col-sm-auto">
-                                <label for="mask-value" class="form-label">Value <span class="required-asterisk">*</span></label>
+                                <label for="mask-value" class="form-label">{{ 'pages.grading.criteria.passMarkValue' | translate }}<span class="required-asterisk">*</span></label>
                                 <input type="number" class="form-control" formControlName="value">
                             </div>
                             <div class="col-sm-auto">
-                                <label class="form-label">Unit</label>
+                                <label class="form-label" translate>pages.grading.criteria.passMarkUnit</label>
                                 <select class="form-select" formControlName="unit">
                                     <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.rangeUnits">{{r.key}}
                                     </option>
@@ -87,14 +82,12 @@
                             <input type="checkbox" role="switch" id="grade-ranges-toggler" class="form-check-input"
                                 [checked]="gradeRangesCtrl.enabled"
                                 (change)="toggleGradeCriteria({id: GradingCriteriaConfigTypeUI.GradeRanges, originEvent: $event})">
-                            <label for="grade-ranges-toggler" class="form-check-label">Define grade ranges based
-                                on
-                                points or percents</label>
+                            <label for="grade-ranges-toggler" class="form-check-label" translate>pages.grading.criteria.rangesHint</label>
                         </div>
                         <div [attr.hidden]="isGradeRangesCtrlEnabled ? null : ''">
                             <div class="row mb-3">
                                 <div class="col-sm-auto">
-                                    <label class="form-label">Types of grades:</label>
+                                    <label class="form-label" translate>pages.grading.criteria.gradeTypes</label>
                                     <select class="form-select" formControlName="gradeType">
                                         <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.gradeTypes">
                                             {{r.key}}
@@ -102,7 +95,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-auto">
-                                    <label class="form-label">Ranges unit:</label>
+                                    <label class="form-label" translate>pages.grading.criteria.gradeUnit</label>
                                     <select class="form-select" formControlName="unit">
                                         <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.rangeUnits">
                                             {{r.key}}
@@ -111,7 +104,7 @@
                                 </div>
                             </div>
                             <div class="card" formArrayName="details">
-                                <h5 class="card-header">RANGES ({{gradeRangesDetailsCtrl.length}})</h5>
+                                <h5 class="card-header"><span translate>pages.grading.criteria.ranges</span> ({{gradeRangesDetailsCtrl.length}})</h5>
                                 <div class="card-body">
                                     <div *ngIf="gradeRangesDetailsCtrl.hasError('required')"><label
                                             class="control-error">{{'errors.listRequired' | translate}}</label></div>
@@ -119,15 +112,11 @@
                                         *ngFor="let ctrl of gradeRangesDetailsCtrl.controls;  index as i;">
                                         <div class="hstack">
                                             <div class="d-inline-flex align-items-center mb-3 gap-1">
-                                                <label class="fw-bold">Range {{i +
-                                                    1}}:</label>
-                                                <label>From:</label>
-                                                <label>{{getToValueOfGradeRangesDetails(i - 1)}}
-                                                    {{selectedGradeRangeUnit}}</label>
-                                                <label>to:</label>
+                                                <label class="fw-bold">{{ 'pages.grading.criteria.rangeNumber' | translate: {number: i + 1} }}:</label>
+                                                <label translate [translateParams]="{number: getToValueOfGradeRangesDetails(i - 1), unit: selectedGradeRangeUnit}">pages.grading.criteria.rangeFrom</label>
                                                 <div class="range-to-value">
                                                     <input type="number" class="form-control border-dashed"
-                                                        style="width: 100px;" formControlName="to" [controlErrorsOnChange]="true" 
+                                                        style="width: 100px;" formControlName="to" [controlErrorsOnChange]="true"
                                                         (change)="rangeChanged()">
                                                 </div>
                                                 <label>{{selectedGradeRangeUnit}}</label>
@@ -137,7 +126,7 @@
                                         </div>
                                         <ng-container formGroupName="grades">
                                             <div class="mb-3" *ngIf="ctrl.get(['grades', GradeTypeUI.Grade])?.enabled">
-                                                <label class="text-muted">Grade <span class="required-asterisk">*</span></label>
+                                                <label class="text-muted">{{ 'pages.grading.criteria.grade' | translate }} <span class="required-asterisk">*</span></label>
                                                 <input type="text" class="form-control"
                                                     formControlName="{{GradeTypeUI.Grade}}">
                                             </div>
@@ -156,7 +145,7 @@
                                     </div>
                                     <button type="button" class="btn btn-outline-secondary btn-label"
                                         (click)="addNewGradeRange()">
-                                        <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>Add range</button>
+                                        <i class="ri-add-line label-icon align-middle fs-24 me-2"></i>{{ 'pages.grading.criteria.addRange' | translate }}</button>
                                 </div>
                             </div>
                         </div>
@@ -164,9 +153,9 @@
                 </div>
             </div>
             <div class="card" formGroupName="informRespondentConfig">
-                <h5 class="card-header border-bottom-0">INFORMATION FOR RESPONDENTS</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.grading.infoForRespondents</h5>
                 <div class="card-body">
-                    <label>Choose what information to show to respondents at the end of the test</label>
+                    <label translate>pages.grading.infoForRespondentsHint</label>
                     <ngb-alert [type]="'info'" [dismissible]="false"
                         class="alert-additional fade show custom-alert mb-3">
                         <div class="alert-body">
@@ -175,9 +164,7 @@
                                     <i class="ri-information-line fs-16 align-middle"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h5 class="alert-heading">Two-phase feedback</h5>
-                                    <p class="mb-0">You can initially hide some information from respondents. After
-                                        reviewing all results, you can reveal the rest.</p>
+                                    <p class="mb-0" translate>pages.grading.infoForRespondentsHint2</p>
                                 </div>
                             </div>
                         </div>
@@ -186,11 +173,11 @@
                         <div class="form-check form-check" *ngFor="let factor of InformFactorUI | keyvalue">
                             <input class="form-check-input" type="checkbox" id="inform-factor-{{factor.value}}"
                                 formControlName="{{factor.value}}">
-                            <label class="form-check-label" for="inform-factor-{{factor.value}}">{{factor.key}}</label>
+                            <label class="form-check-label" for="inform-factor-{{factor.value}}">{{ 'pages.grading.informFactors.' + factor.key | translate }}</label>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label>Message for users who have passed:</label>
+                        <label translate>pages.grading.passMessage</label>
                         <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="passedMessage"
                             [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('informRespondentConfig.passedMessage', $event)"
@@ -200,7 +187,7 @@
                         <ng-template controlErrorAnchor #passedMessageAnchor="controlErrorAnchor"></ng-template>
                     </div>
                     <div class="mb-3">
-                        <label>Message for users who have failed:</label>
+                        <label translate>pages.grading.failMessage</label>
                         <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="failedMessage"
                             [apiKey]="textEditorConfigs.apiKey"
                             (onInit)="textEditorConfigs.handleEditorInit('informRespondentConfig.failedMessage', $event)"
@@ -212,11 +199,9 @@
                     <div class="form-check form-switch form-switch-lg">
                         <input type="checkbox" role="switch" id="informViaEmailToggler" class="form-check-input"
                             formControlName="informViaEmail">
-                        <label for="informViaEmailToggler" class="form-check-label">Inform respondent about result via
-                            email</label>
+                        <label for="informViaEmailToggler" class="form-check-label" translate>pages.grading.informResultViaEmail</label>
                     </div>
-                    <small class="text-muted">The email will display the same content as the one at the end of the
-                        test.</small>
+                    <small class="text-muted" translate>pages.grading.informResultViaEmailHint</small>
                 </div>
             </div>
             <!-- <div class="card">

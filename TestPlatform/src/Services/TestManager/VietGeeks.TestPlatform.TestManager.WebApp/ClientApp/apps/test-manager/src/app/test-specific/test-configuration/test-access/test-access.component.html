@@ -4,47 +4,50 @@
             <div class="card" [formGroup]="testAccessForm">
                 <div class="card-body">
                     <div class="mb-3">
-                        <h5>Channel</h5>
+                        <h5 translate>pages.testAccess.channel.title</h5>
                         <div class="d-flex gap-3">
                             <button type="button" class="btn btn-primary btn-label active">
-                                <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>Web Browser</button>
+                                <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>{{ 'pages.testAccess.channel.browser' | translate }}</button>
                             <button type="button" class="btn btn-primary btn-label" disabled>
-                                <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>Microsoft Teams</button>
+                                <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>{{ 'pages.testAccess.channel.microsoftTeams' | translate }}</button>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <h5>Access type</h5>
+                        <h5>{{ 'pages.testAccess.accessType.title' | translate }}</h5>
                         <div class="d-flex gap-3">
                             <button type="radio" [class.active]="activatedAccessType === TestAccessType.PublicLink"
                                 class="btn btn-primary btn-label"
                                 (click)="onAccessTypeSelected(TestAccessType.PublicLink)" [disabled]="isReadonly">
-                                <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>Public link</button>
+                                <i class="ri-ie-fill label-icon align-middle fs-24 me-2"></i>{{
+                                'pages.testAccess.accessType.publicLink' | translate }}</button>
 
                             <button type="button"
                                 [class.active]="activatedAccessType === TestAccessType.PrivateAccessCode"
                                 class="btn btn-primary btn-label"
                                 (click)="onAccessTypeSelected(TestAccessType.PrivateAccessCode)"
                                 [disabled]="isReadonly">
-                                <i class="ri-lock-password-line label-icon align-middle fs-24 me-2"></i>Private code
-                                access</button>
+                                <i class="ri-lock-password-line label-icon align-middle fs-24 me-2"></i>{{
+                                'pages.testAccess.accessType.privateAccessCode' | translate }}</button>
 
                             <button type="button" [class.active]="activatedAccessType === TestAccessType.GroupPassword"
                                 class="btn btn-primary btn-label"
                                 (click)="onAccessTypeSelected(TestAccessType.GroupPassword)" [disabled]="true">
-                                <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>Group password</button>
+                                <i class="ri-team-line label-icon align-middle fs-24 me-2"></i>{{
+                                'pages.testAccess.accessType.groupPassword' | translate }}</button>
 
                             <button type="button" [class.active]="activatedAccessType === TestAccessType.Training"
                                 class="btn btn-primary btn-label" [disabled]="true"
                                 (click)="onAccessTypeSelected(TestAccessType.Training)" [disabled]="true">
-                                <i class="ri-ball-pen-line label-icon align-middle fs-24 me-2"></i>Training</button>
+                                <i class="ri-ball-pen-line label-icon align-middle fs-24 me-2"></i>{{
+                                'pages.testAccess.accessType.training' | translate }}</button>
                         </div>
                     </div>
                     <ng-container *ngIf="activatedAccessType === TestAccessType.PublicLink"
                         formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
-                                <i class="ri-airplay-line me-3 align-middle"></i><span>Anyone who has a link will be
-                                    able to take the test</span>
+                                <i class="ri-airplay-line me-3 align-middle"></i><span>{{
+                                    'pages.testAccess.accessType.publicLinkHint' | translate }}</span>
                             </div>
                         </div>
                         <div class="hstack gap-3 mb-3">
@@ -52,22 +55,22 @@
                                 target="_blank">{{publicTestAccessLink}}</a>
                             <button type="button" class="btn btn-outline-secondary flex-shrink-0"
                                 [cdkCopyToClipboard]="publicTestAccessLink"
-                                (cdkCopyToClipboardCopied)="copiedTestUrl()">Copy link</button>
+                                (cdkCopyToClipboardCopied)="copiedTestUrl()">{{ 'labels.copyLink' | translate
+                                }}</button>
                         </div>
                         <div class="hstack form-check form-switch form-switch-lg mb-3">
                             <input type="checkbox" role="switch" id="requireAccessCode" class="form-check-input"
                                 formControlName="requireAccessCode">
-                            <label for="requireAccessCode" class="form-check-label">Require a private test access code
-                                to authenticate a respondent. Before the test starts, a respondent will have to enter
-                                their email address to which code will be sent.</label>
+                            <label for="requireAccessCode" class="form-check-label">{{
+                                'pages.testAccess.accessType.publicLinkWithAccessCode' | translate }}</label>
                         </div>
                         <div class="mb-3">
-                            <h6>Attempts per respondent</h6>
+                            <h6>{{ 'pages.testAccess.attemptCounts' | translate }}</h6>
                             <select data-choices class="form-select" style="width: 300px;" formControlName="attempts">
                                 <option *ngFor="let time of testAccessFormConfig.attemptsPerRespondentRange"
                                     [ngValue]="time">{{time}}</option>
                             </select>
-                            <small class="text-muted">Number of times a respondent can take test.</small>
+                            <small class="text-muted">{{ 'pages.testAccess.attemptCountsHint' | translate }}</small>
                         </div>
                         <!-- <button type="button" class="btn btn-link waves-effect">
                             <i class="ri-window-line label-icon align-middle fs-24 me-2"></i>How to embed a test on a
@@ -77,8 +80,8 @@
                         formGroupName="{{activatedAccessType}}">
                         <div class="mb-3">
                             <div class="alert alert-info alert-border-left alert-dismissible fade show" role="alert">
-                                <i class="ri-airplay-line me-3 align-middle"></i><span>Test access will be possible only
-                                    with an individual access code</span>
+                                <i class="ri-airplay-line me-3 align-middle"></i><span>{{
+                                    'pages.testAccess.accessType.privateAccessCodeHint' | translate }}</span>
                             </div>
                         </div>
                         <div class="hstack gap-3 mb-3 align-items-start" [formGroup]="codeGenerationForm">
@@ -87,23 +90,24 @@
                                     formControlName="count">
                             </div>
                             <viet-geeks-submit-button [class]="'btn btn-secondary flex-shrink-0'"
-                                [submitFunc]="generateCodesFunc" [canSubmit]="canGenerateCodes" text="Generate"
-                                processingText="Generating..."></viet-geeks-submit-button>
+                                [submitFunc]="generateCodesFunc" [canSubmit]="canGenerateCodes"
+                                text="{{ 'pages.testAccess.generateCode' | translate }}"
+                                processingText="{{ 'pages.testAccess.generatingCode' | translate }}"></viet-geeks-submit-button>
 
                         </div>
                         <div class="gap-3 mb-3">
                             <table class="table table-striped align-middle" formArrayName="configs">
                                 <thead>
                                     <tr>
-                                        <th scope="col"><input type="checkbox" class="form-check-input" #allCodesSelection (change)="toggleSelectAllCodes($event)"></th>
+                                        <th scope="col"><input type="checkbox" class="form-check-input"
+                                                #allCodesSelection (change)="toggleSelectAllCodes($event)"></th>
                                         <th scope="col">#</th>
-                                        <th scope="col">Access code</th>
-                                        <th scope="col">Test Set</th>
-                                        <th scope="col">Email</th>
+                                        <th scope="col" translate>pages.testAccess.accessCode</th>
+                                        <th scope="col" translate>pages.testAccess.testSet</th>
+                                        <th scope="col" translate>labels.email</th>
                                         <th scope="col"><input type="checkbox" class="form-check-input"
                                                 (change)="toggleSelectAllSendCode()" *ngIf="!isReadonly"><span
-                                                class="ms-2">Send a
-                                                code</span></th>
+                                                class="ms-2" translate>pages.testAccess.sendCode</span></th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
@@ -111,26 +115,28 @@
                                     <ng-container
                                         *ngFor="let group of privateAccessCodeConfigsCtrl.controls; let i = index">
                                         <tr [formGroup]="group" class="align-baseline">
-                                            <th>
+                                            <td>
                                                 <input type="checkbox" class="form-check-input"
                                                     [(ngModel)]="codeSelections[group.controls['code'].value]"
                                                     [ngModelOptions]="{standalone: true}">
-                                            </th>
+                                            </td>
                                             <td>{{i + 1}}</td>
                                             <td>{{group.get('code')?.value}}</td>
-                                            <td>{{group.get('setId')?.value ?? '[Auto]'}}</td>
+                                            <td>{{group.get('setId')?.value ?? ('pages.testSets.auto' | translate) }}
+                                            </td>
                                             <td><input class="form-control border-dashed" type="text"
                                                     style="max-width: 300px;" formControlName="email"
                                                     [readonly]="checkTestInvitationSent(group.get('code')?.value)"></td>
                                             <td>
                                                 <input type="checkbox" class="form-check-input"
                                                     formControlName="sendCode" *ngIf="!isReadonly">
-                                                <span
-                                                    class="btn btn-outline-info btn-sm ms-2">{{getTestInvitationStat(group.get('code')?.value)}}</span>
+                                                <span class="btn btn-outline-info btn-sm ms-2">{{
+                                                    getTestInvitationStat(group.get('code')?.value) | translate
+                                                    }}</span>
                                             </td>
                                             <td>
                                                 <i class="ri-delete-bin-line delete-icon"
-                                                    [swal]="{ title: 'Confirmation', text: 'You want to delete this access code!', showCancelButton: true }"
+                                                    [swal]="{ title: ('labels.confirmationTitle' | translate), text: ('pages.testAccess.confirmDeleteCodes' | translate), showCancelButton: true }"
                                                     (confirm)="removeAccessCode(group.get('code')?.value)"></i>
                                             </td>
                                         </tr>
@@ -140,19 +146,20 @@
                         </div>
                         <div class="d-flex gap-2 mb-3">
                             <button type="button" class="btn btn-outline-secondary"
-                                [swal]="{ title: 'Confirmation', text: 'You want to delete selected access codes!', showCancelButton: true }"
-                                (confirm)="removeAccessCodes()" [disabled]="!hasSelectedCode" *ngIf="!isEndedTest">Delete
-                                selected</button>
+                                [swal]="{ title: ('labels.confirmationTitle' | translate), text: ('pages.testAccess.confirmDeleteCodes' | translate), showCancelButton: true }"
+                                (confirm)="removeAccessCodes()" [disabled]="!hasSelectedCode" *ngIf="!isEndedTest"
+                                translate>pages.testAccess.deleteSelected</button>
                             <button type="button" class="btn btn-outline-secondary" (click)="sendAccessCodes()"
-                                [disabled]="!hasSelectedCode" *ngIf="isActivatedTest || isScheduledTest">Send access codes</button>
+                                [disabled]="!hasSelectedCode" *ngIf="isActivatedTest || isScheduledTest">Send access
+                                codes</button>
                         </div>
                         <div class="mb-3">
-                            <h6>Attempts per respondent</h6>
+                            <h6 translate>pages.testAccess.attemptCounts</h6>
                             <select data-choices class="form-select" style="width: 300px;" formControlName="attempts">
                                 <option *ngFor="let time of testAccessFormConfig.attemptsPerRespondentRange"
                                     [ngValue]="time">{{time}}</option>
                             </select>
-                            <small class="text-muted">Number of times a respondent can take test.</small>
+                            <small class="text-muted" translate>pages.testAccess.attemptCountsHint</small>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="activatedAccessType === TestAccessType.GroupPassword"

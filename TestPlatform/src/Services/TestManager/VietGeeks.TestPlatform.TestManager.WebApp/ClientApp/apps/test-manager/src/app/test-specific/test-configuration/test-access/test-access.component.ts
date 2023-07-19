@@ -102,7 +102,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
 
   getTestInvitationStat(code: string) {
     const events = this.testInvitationStats.find(c => c.accessCode === code)?.events;
-    return events === undefined ? 'Not send yet' : events.map(c => c.event).join(',');
+    return events === undefined ? 'pages.testAccess.notSend' : events.map(c => c.event).join(',');
   }
 
   checkTestInvitationSent(code: string) {
@@ -180,7 +180,7 @@ export class TestAccessComponent extends TestSpecificBaseComponent implements De
     if (count <= 0) {
       return;
     }
-    
+
     const codes = await this.testsService.generateAccessCodes(this.testId, count);
     this.privateAccessCodeConfigsCtrl.clear();
     codes.forEach(code => this.privateAccessCodeConfigsCtrl.push(this.newAccessCodeConfigCtrl(code)));
