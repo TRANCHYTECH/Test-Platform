@@ -90,7 +90,7 @@
                                     <label class="form-label" translate>pages.grading.criteria.gradeTypes</label>
                                     <select class="form-select" formControlName="gradeType">
                                         <option [ngValue]="r.value" *ngFor="let r of gradeFormConfigs.gradeTypes">
-                                            {{r.key}}
+                                            {{r.key | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -121,8 +121,7 @@
                                                 </div>
                                                 <label>{{selectedGradeRangeUnit}}</label>
                                             </div>
-                                            <i class="ri-delete-bin-line delete-icon ms-auto"
-                                                (click)="removeRangeDetail(i)"></i>
+                                            <i class="ri-delete-bin-line delete-icon ms-auto" (click)="removeRangeDetail(i)"></i>
                                         </div>
                                         <ng-container formGroupName="grades">
                                             <div class="mb-3" *ngIf="ctrl.get(['grades', GradeTypeUI.Grade])?.enabled">
@@ -132,7 +131,7 @@
                                             </div>
                                             <div class="mb-3"
                                                 *ngIf="ctrl.get(['grades', GradeTypeUI.Descriptive])?.enabled">
-                                                <label class="text-muted">Descriptive grade <span class="required-asterisk">*</span></label>
+                                                <label class="text-muted">{{ 'pages.grading.gradeTypes.descriptiveGrades' | translate }} <span class="required-asterisk">*</span></label>
                                                 <textarea class="form-control"
                                                     (blur)="descriptiveErrorTailor.showError()"
                                                     formControlName="{{GradeTypeUI.Descriptive}}"

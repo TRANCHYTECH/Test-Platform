@@ -35,15 +35,15 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
     gradeTypes: [
       {
         value: GradeType.Grade,
-        key: 'Grades'
+        key: 'pages.grading.gradeTypes.grades'
       },
       {
         value: GradeType.Descriptive,
-        key: 'Descriptive grades'
+        key: 'pages.grading.gradeTypes.descriptiveGrades'
       },
       {
         value: GradeType.GradeAndDescriptive,
-        key: 'Grade and descriptive grades'
+        key: 'pages.grading.gradeTypes.gradeAndDescriptive'
       },
     ],
     maxPoint: 0,
@@ -123,7 +123,7 @@ export class GradingAndSummaryComponent extends TestSpecificBaseComponent implem
       informRespondentConfig: this.createInformFactorsFormGroup(gradingSettings)
     });
 
-    // Triggers. 
+    // Triggers.
     this.setupControlValidityTrigger(this._destroyRef, this.testEndConfigCtrl, ['redirectTo'], [['toAddress']]);
     this.setupControlValidityTrigger(this._destroyRef, this.passMaskGradeCtrl, ['unit'], [['value']]);
     this.listenToToggleControlState(this._destroyRef, this.testEndConfigCtrl, 'redirectTo', 'toAddress');

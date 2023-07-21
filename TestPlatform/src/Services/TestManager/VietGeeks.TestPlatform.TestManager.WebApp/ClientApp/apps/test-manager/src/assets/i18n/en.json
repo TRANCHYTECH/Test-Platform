@@ -41,7 +41,7 @@
   },
   "labels": {
     "activate": "Activate",
-    "schedule": "Schedule",
+    "schedule": "Schedule ",
     "endTest": "End test",
     "changeSettings": "Change settings",
     "restart": "Start again",

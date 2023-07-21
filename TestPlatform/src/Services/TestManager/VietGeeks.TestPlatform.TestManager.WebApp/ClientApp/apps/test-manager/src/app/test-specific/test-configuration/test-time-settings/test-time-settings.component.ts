@@ -71,12 +71,12 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent impleme
   readonly testDurationMethodOptions = [
     {
       id: TestDurationMethod.CompleteTestTime,
-      textKey: 'Time to complete the test: (hh:mm). Max value is 23:59',
+      textKey: 'pages.testTime.testDuration.completeTestMethod',
       inputMask: this.hhmmInputMask
     },
     {
       id: TestDurationMethod.CompleteQuestionTime,
-      textKey: 'Time limit for each test question (mm:ss). Max value is 59:59',
+      textKey: 'pages.testTime.testDuration.timeEachQuestionMethod',
       inputMask: this.mmssInputMask
     }
   ];
@@ -84,11 +84,11 @@ export class TestTimeSettingsComponent extends TestSpecificBaseComponent impleme
   readonly testActivationMethodOptions = [
     {
       id: TestActivationMethodType.ManualTest,
-      textKey: 'Manual test activation'
+      textKey: 'pages.testTime.testActivation.manualActivation'
     },
     {
       id: TestActivationMethodType.TimePeriod,
-      textKey: 'Activation in set time period'
+      textKey: 'pages.testTime.testActivation.timePeriodActivation'
     }
   ];
 
