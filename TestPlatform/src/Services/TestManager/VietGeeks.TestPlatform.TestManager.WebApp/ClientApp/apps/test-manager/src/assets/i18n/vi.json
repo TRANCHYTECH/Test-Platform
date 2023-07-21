@@ -99,30 +99,60 @@
         "Grade": "Loại",
         "PassOrFailMessage": "Thông báo kết quả",
         "PercentageScore": "Phần trăm",
-        "PointsScore": "Điểm"
+        "PointsScore": "Điểm số"
+      },
+      "gradeTypes": {
+        "grades": "Loại",
+        "descriptiveGrades": "Mô tả",
+        "gradeAndDescriptive": "Loại và mô tả"
       },
       "passMessage": "Thông báo cho người dùng đã vượt qua",
       "failMessage": "Thông báo cho người dùng đã thất bại",
       "informResultViaEmail": "Thông báo cho người trả lời về kết quả qua email",
       "informResultViaEmailHint": "Email sẽ hiển thị cùng nội dung với nội dung ở cuối bài kiểm tra"
+    },
+    "testTime": {
+      "testDuration": {
+        "title": "Thời gian thi",
+        "hint": "Lựa chọn cách tính thời gian thi",
+        "completeTestMethod": "Thời gian hoàn thành bài thi (hh:mm). Tối đa: 23:59",
+        "timeEachQuestionMethod": "Thời gian giới hạn cho từng câu hỏi (hh:ss). Tối đa: 23:59"
+      },
+      "testActivation": {
+        "title": "Cách kích hoạt kiểm tra",
+        "hint": "Chọn phương thức kích hoạt",
+        "manualActivation": "Kích hoạt thủ công",
+        "manualActivationHint": "Ở phần dưới cùng của menu cấu hình, bạn sẽ tìm thấy nút \"Kích hoạt kiểm tra\". Sau khi nhấp vào nó, người trả lời có thể truy cập bài kiểm tra trong khung thời gian được chỉ định bên dưới. Khi đặt giá trị, hãy nhớ rằng những người đến sau sẽ không được phép bắt đầu bài kiểm tra.",
+        "manualActivationLabel": "Kiểm tra sẽ vẫn hoạt động cho ([d.]hh:mm:ss)",
+        "timePeriodActivation": "Kích hoạt trong khoảng thời gian đã đặt",
+        "timePeriodActivationHint": "Đặt ngày mà bài kiểm tra của bạn sẽ bắt đầu hoạt động và hạn chót mà người trả lời phải bắt đầu làm bài kiểm tra đó (họ vẫn có thể hoàn thành bài kiểm tra sau thời hạn).",
+        "testActivationDate": "Ngày kích hoạt thử nghiệm",
+        "testClosingDate": "Ngày kết thúc truy cập",
+        "timeZoneInfo": "Giờ máy chủ hiện tại theo múi giờ của bạn là: {{time}} ({{zone}}). Bạn có thể thay đổi múi giờ của mình trong",
+        "languageAndRegionSettings": "Cài đặt ngôn ngữ và khu vực",
+        "addtionalOptions": {
+          "title":"Lựạ chọn bổ sung",
+          "allowAnswerAnyOrder": "Cho phép trả lời các câu hỏi theo thứ tự bất kỳ và lùi hoặc bỏ qua câu hỏi"
+        }
+      }
     }
   },
   "errors": {
-    "required": "The field is required",
-    "listRequired": "The list requires at least one",
-    "minlength": "Expected length {{requiredLength}} got {{actualLength}}",
-    "maxlength": "Expected length {{requiredLength}} got {{actualLength}}",
-    "min": "Expected min value {{min}} got {{actual}}",
-    "max": "Expected max value {{max}} got {{actual}}",
-    "inputMask": "Invalid input",
-    "maxHours": "Expected max hour value {{max}} got {{actual}}",
-    "maxMins": "Expected max minute value {{max}} got {{actual}}",
-    "maxSeconds": "Expected max second value {{max}} got {{actual}}",
-    "email": "The email is invalid",
-    "url": "The url is invalid",
-    "duration": "Invalid duration",
-    "furtureDate": "The date must be in furture",
-    "greaterThanDate": "The date must be greater than {{comparedDate}}"
+    "required": "Thông tin bắt buộc",
+    "listRequired": "Danh sách yêu cầu ít nhất một",
+    "minlength": "Độ dài dự kiến {{requiredLength}} có {{actualLength}}",
+    "maxlength": "Độ dài dự kiến {{requiredLength}} có {{actualLength}}",
+    "min": "Giá trị tối thiểu dự kiến {{min}} nhận được {{actual}}",
+    "max": "Giá trị tối đa dự kiến {{max}} nhận được {{actual}}",
+    "inputMask": "Đầu vào không hợp lệ",
+    "maxHours": "Giá trị giờ tối đa dự kiến {{max}} đã nhận được {{actual}}",
+    "maxMins": "Giá trị phút tối đa dự kiến {{max}} đã nhận được {{actual}}",
+    "maxSeconds": "Giá trị giây tối đa dự kiến {{max}} đã nhận được {{actual}}",
+    "email": "Email không hợp lệ",
+    "url": "Url không hợp lệ",
+    "duration": "Thời hạn không hợp lệ",
+    "furtureDate": "Ngày phải ở trong tương lai",
+    "greaterThanDate": "Ngày phải lớn hơn {{comparedDate}}"
   },
   "labels": {
     "save": "Lưu",
@@ -133,7 +163,7 @@
     "endTest": "Kết thúc",
     "changeSettings": "Change settings",
     "restart": "Kích hoạt lại",
-    "noUser": "No User",
+    "noUser": "Không có người dùng",
     "searchRespondents": "Search Respondents",
     "testConfiguration": "Cấu hình",
     "testProgressAndResults": "Kết quả",

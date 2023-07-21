@@ -2,15 +2,15 @@
     <ng-container *ngIf="readyForUI$ | async">
         <div class="col-lg-12" [formGroup]="timeSettingsForm">
             <div class="card" formGroupName="testDurationMethod">
-                <h5 class="card-header border-bottom-0">TEST DURATION</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.testTime.testDuration.title</h5>
                 <div class="card-body">
-                    <label>Select test duration measuring method:</label>
+                    <label translate>pages.testTime.testDuration.hint</label>
                     <div class="vstack mb-3" *ngFor="let option of testDurationMethodOptions; let i = index;">
                         <div class="form-check mb-2">
                             <input class="form-check-input" [value]="option.id" type="radio"
                                 id="test-duration-method-{{i}}" formControlName="type">
                             <label class="form-check-label" for="test-duration-method-{{i}}">
-                                {{option.textKey}}
+                                {{option.textKey | translate}}
                             </label>
                         </div>
                         <div formGroupName="{{option.id}}">
@@ -21,15 +21,15 @@
                 </div>
             </div>
             <div class="card" formGroupName="testActivationMethod">
-                <h5 class="card-header border-bottom-0">TEST ACTIVATION OPTIONS</h5>
+                <h5 class="card-header border-bottom-0 text-uppercase" translate>pages.testTime.testActivation.title</h5>
                 <div class="card-body">
-                    <label>Choose test activation method:</label>
+                    <label translate>pages.testTime.testActivation.hint</label>
                     <ng-container *ngFor="let option of testActivationMethodOptions; let i = index;">
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="radio" [value]="option.id"
                                 id="activate-method-{{i}}-toggler" formControlName="type">
                             <label class="form-check-label" for="activate-method-{{i}}-toggler">
-                                {{option.textKey}}
+                                {{option.textKey | translate}}
                             </label>
                         </div>
                         <ng-container *ngIf="option.id === TestActivationMethodTypeRef.ManualTest">
@@ -41,20 +41,13 @@
                                             <i class="ri-information-line fs-16 align-middle"></i>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <p class="mb-0">In the bottom part of the configuration menu, you will find
-                                                the
-                                                "Activate test" button. After
-                                                clicking it, respondents can access the test in the timeframe specified
-                                                below.
-                                                When
-                                                setting the
-                                                value, remember that latecomers won't be allowed to start the test.</p>
+                                            <p class="mb-0" translate>pages.testTime.testActivation.manualActivationHint</p>
                                         </div>
                                     </div>
                                 </div>
                             </ngb-alert>
                             <div class="mb-3" formGroupName="{{TestActivationMethodTypeRef.ManualTest}}">
-                                <label for="flexRadioDefault2">Test will remain active for ([d.]hh:mm:ss):</label>
+                                <label for="flexRadioDefault2" translate>pages.testTime.testActivation.timePeriodActivation</label>
                                 <input class="form-control border-dashed" type="text" style="width: 150px;"
                                     [inputMask]="dhhmmssInputMask" formControlName="activeUntil">
                             </div>
@@ -69,9 +62,7 @@
                                             <i class="ri-information-line fs-16 align-middle"></i>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <p class="mb-0">Set a date on which your test will be active and the
-                                                deadline before which respondents must start taking it (they will still
-                                                be able to finish it after the deadline).</p>
+                                            <p class="mb-0" translate>pages.testTime.testActivation.timePeriodActivationHint</p>
                                         </div>
                                     </div>
                                 </div>
@@ -79,24 +70,18 @@
                             <div class="d-flex flex-wrap gap-3"
                                 formGroupName="{{TestActivationMethodTypeRef.TimePeriod}}">
                                 <div class="flemb-3">
-                                    <label for="flexRadioDefault2">Test activation date</label>
+                                    <label for="flexRadioDefault2" translate>pages.testTime.testActivation.testActivationDate</label>
                                     <input class="form-control border-dashed" type="datetime-local"
                                         style="width: 200px;" formControlName="activeFromDate">
                                 </div>
                                 <div class="flex-grow-1 mb-3">
-                                    <label for="flexRadioDefault2">Access closing date</label>
+                                    <label for="flexRadioDefault2" translate>pages.testTime.testActivation.testClosingDate</label>
                                     <input class="form-control border-dashed" type="datetime-local"
                                         style="width: 200px;" formControlName="activeUntilDate">
                                 </div>
                                 <div class="col-lg-12">
-                                    <label>Current server time in your time zone is: <b>{{userProfileService.currentUserTime}}
-                                            ({{userProfileService.currentTimeZone}})</b>. You can change
-                                        your
-                                        time
-                                        zone in : </label>
-                                    <a [routerLink]="['/']" class="btn btn-link"><i
-                                            class="ri-global-line align-bottom me-1"></i>Language and region
-                                        settings</a>
+                                    <label>{{ 'pages.testTime.testActivation.timeZoneInfo' | translate:{time: userProfileService.currentUserTime, zone: userProfileService.currentTimeZone} }}</label>
+                                    <a [routerLink]="['/']" class="btn btn-link"><i class="ri-global-line align-bottom me-1"></i>{{'pages.testTime.testActivation.languageAndRegionSettings' | translate}}</a>
                                 </div>
                             </div>
                         </ng-container>
@@ -104,14 +89,12 @@
                 </div>
             </div>
             <div class="card">
-                <h5 class="card-header border-bottom-0">ADDTIONAL OPTIONS</h5>
+                <h5 class="card-header border-bottom-0" translate>pages.testTime.testActivation.addtionalOptions.title</h5>
                 <div class="card-body" formGroupName="answerQuestionConfig">
                     <div class="form-check form-switch form-switch-lg mb-3">
                         <input class="form-check-input" type="checkbox" role="switch" id="skipQuestionTogogler"
                             formControlName="skipQuestion">
-                        <label class="form-check-label" for="skipQuestionTogogler">
-                            Allow answering questions in any order and moving back or skipping questions
-                        </label>
+                        <label class="form-check-label" for="skipQuestionTogogler" translate>pages.testTime.testActivation.addtionalOptions.allowAnswerAnyOrder</label>
                     </div>
                 </div>
             </div>
