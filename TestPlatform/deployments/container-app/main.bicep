@@ -179,7 +179,7 @@ resource daprStateMongoDb 'Microsoft.App/managedEnvironments/daprComponents@2023
       }
       {
         name: 'password'
-        value: 'jZeAEmK8TwGslaiP'
+        value: 'Need-Change'
       }
       {
         name: 'databaseName'

@@ -6,9 +6,9 @@ spec:
   type: pubsub.azure.servicebus.queues
   version: v1
   metadata:
-  # Required when not using Azure AD Authentication
-  - name: connectionString
-    value: "Endpoint=sb://testrunnerdev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=a5R0TKn+6va8kfszl2KFXdcvmHfCSTqzh+ASbJKCZBs="
+    # Required when not using Azure AD Authentication
+    - name: connectionString
+      value: "Endpoint=sb://testrunnerdev.servicebus.windows.net"
   # - name: timeoutInSec # Optional
   #   value: 60
   # - name: handlerTimeoutInSec # Optional

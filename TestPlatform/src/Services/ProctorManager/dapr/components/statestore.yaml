@@ -6,22 +6,22 @@ spec:
   type: state.mongodb
   version: v1
   metadata:
-  - name: server
-    value: cluster0.agnomfq.mongodb.net
-  - name: username
-    value: testmaster
-  - name: password
-    value: jZeAEmK8TwGslaiP
-  - name: databaseName
-    value: TestRunnerDevLocal
-  - name: collectionName
-    value: testrunner
-  - name: actorStateStore
-    value: true
-  - name: operationTimeout
-    value: 10s
-  - name: writeConcern
-    value: majority
+    - name: server
+      value: cluster0.agnomfq.mongodb.net
+    - name: username
+      value: testmaster
+    - name: password
+      value: Need-Change
+    - name: databaseName
+      value: TestRunnerDevLocal
+    - name: collectionName
+      value: testrunner
+    - name: actorStateStore
+      value: true
+    - name: operationTimeout
+      value: 10s
+    - name: writeConcern
+      value: majority
 ---
 apiVersion: dapr.io/v1alpha1
 kind: Component
@@ -31,17 +31,17 @@ spec:
   type: state.mongodb
   version: v1
   metadata:
-  - name: server
-    value: cluster0.agnomfq.mongodb.net
-  - name: username
-    value: testmaster
-  - name: password
-    value: jZeAEmK8TwGslaiP
-  - name: databaseName
-    value: TestRunnerDevLocal
-  - name: collectionName
-    value: testnotification
-  - name: operationTimeout
-    value: 10s
-  - name: writeConcern
-    value: majority
+    - name: server
+      value: cluster0.agnomfq.mongodb.net
+    - name: username
+      value: testmaster
+    - name: password
+      value: Need-Change
+    - name: databaseName
+      value: TestRunnerDevLocal
+    - name: collectionName
+      value: testnotification
+    - name: operationTimeout
+      value: 10s
+    - name: writeConcern
+      value: majority

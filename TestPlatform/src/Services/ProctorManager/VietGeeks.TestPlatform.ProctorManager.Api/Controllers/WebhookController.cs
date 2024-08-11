@@ -46,7 +46,7 @@ public class WebhookController : ControllerBase
     // {
     //     var parsedEvent = JsonSerializer.Deserialize<UserCreateRequest>(@event) ?? throw new Exception("Wrong events");
 
-       
+
     //     Console.WriteLine("processed event {0}", parsedEvent.UserId);
 
     //     return Ok();
@@ -59,7 +59,7 @@ public class WebhookController : ControllerBase
         var parsedEvents = JsonSerializer.Deserialize<MailjetEvent[]>(@event) ?? throw new Exception("Wrong events");
         foreach (var g in parsedEvents.GroupBy(c => c.Payload).Where(c => !string.IsNullOrEmpty(c.Key)))
         {
-            var state = await client.GetStateAsync<TestInvitiationEventData>("general-notify-store", g.Key) ?? new TestInvitiationEventData();
+            var state = await client.GetStateAsync<TestInvitationEventData>("general-notify-store", g.Key) ?? new TestInvitationEventData();
 
             state.Events.AddRange(g.Select(c => c.GetData()));
             await client.SaveStateAsync("general-notify-store", g.Key, state);
@@ -76,7 +76,7 @@ public class WebhookController : ControllerBase
         IReadOnlyList<BulkStateItem> states = await client.GetBulkStateAsync("general-notify-store", keys.ToList(), 0);
         foreach (var state in states)
         {
-            var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(state.Value, client.JsonSerializerOptions);
+            var parsedEvents = JsonSerializer.Deserialize<TestInvitationEventData>(state.Value, client.JsonSerializerOptions);
             if (parsedEvents == null)
             {
                 continue;

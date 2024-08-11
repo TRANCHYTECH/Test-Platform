@@ -262,7 +262,7 @@ public class TestManagerService : ITestManagerService
                 continue;
             }
 
-            var parsedEvents = JsonSerializer.Deserialize<TestInvitiationEventData>(foundEvent.Value, _daprClient.JsonSerializerOptions);
+            var parsedEvents = JsonSerializer.Deserialize<TestInvitationEventData>(foundEvent.Value, _daprClient.JsonSerializerOptions);
             if (parsedEvents == null)
             {
                 continue;
