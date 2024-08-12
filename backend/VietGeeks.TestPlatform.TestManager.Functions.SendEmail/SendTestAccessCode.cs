@@ -3,7 +3,7 @@ using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using VietGeeks.TestPlatform.Integration.Contracts;
+using VietGeeks.TestPlatform.Integration.Contract;
 
 namespace VietGeeks.TestPlatform.TestManager.Functions.SendEmail;
 

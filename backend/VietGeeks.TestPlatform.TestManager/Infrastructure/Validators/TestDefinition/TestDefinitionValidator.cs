@@ -2,9 +2,9 @@
 using FluentValidation.Results;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
-public class TestDefinitionValidator : AbstractValidator<TestDefinition>
+public class TestDefinitionValidator : AbstractValidator<Data.Models.TestDefinition>
 {
     public TestDefinitionValidator(
         IValidator<TestBasicSettingsPart> testBasicSettingsValidator,
@@ -18,16 +18,16 @@ public class TestDefinitionValidator : AbstractValidator<TestDefinition>
         RuleFor(c => c.GradingSettings).NotNull().SetValidator(gradingSettingsPartValidator);
     }
 
-    protected override bool PreValidate(ValidationContext<TestDefinition> context, ValidationResult result)
+    protected override bool PreValidate(ValidationContext<Data.Models.TestDefinition> context, ValidationResult result)
     {
         context.RootContextData["TestId"] = context.InstanceToValidate.ID;
         return true;
     }
 
     public static readonly string[] ChildValidators = new string[] {
-        nameof(TestDefinition.BasicSettings),
-        nameof(TestDefinition.TestSetSettings),
-        nameof(TestDefinition.TestAccessSettings),
-        nameof(TestDefinition.GradingSettings)
+        nameof(Data.Models.TestDefinition.BasicSettings),
+        nameof(Data.Models.TestDefinition.TestSetSettings),
+        nameof(Data.Models.TestDefinition.TestAccessSettings),
+        nameof(Data.Models.TestDefinition.GradingSettings)
     };
 }

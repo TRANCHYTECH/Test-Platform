@@ -2,7 +2,7 @@ using System.Text.Json;
 using Dapr;
 using Microsoft.AspNetCore.Mvc;
 using VietGeeks.TestPlatform.AccountManager.Services;
-using VietGeeks.TestPlatform.Integration.Contracts;
+using VietGeeks.TestPlatform.Integration.Contract;
 
 namespace VietGeeks.TestPlatform.AccountManager.Controllers;
 

@@ -7,9 +7,9 @@ using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 public class QuestionManagerService : IQuestionManagerService
 {

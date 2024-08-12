@@ -1,6 +1,6 @@
 ﻿using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 public class QuestionRelatedValidationService : IQuestionRelatedValidationService
 {

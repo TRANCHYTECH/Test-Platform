@@ -5,8 +5,8 @@ using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.Integration.Contract;
-using VietGeeks.TestPlatform.Integration.Contracts;
-namespace VietGeeks.TestPlatform.ProctorManager.Api.Controllers;
+
+namespace VietGeeks.TestPlatform.AccountManager.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -159,4 +159,3 @@ public class MailjetSpamEvent : MailjetEvent
         return result;
     }
 }
-

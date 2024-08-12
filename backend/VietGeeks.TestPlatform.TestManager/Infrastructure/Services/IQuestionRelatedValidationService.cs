@@ -1,4 +1,4 @@
-﻿namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+﻿namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 public interface IQuestionRelatedValidationService
 {

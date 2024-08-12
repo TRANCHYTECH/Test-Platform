@@ -3,26 +3,18 @@
   "profiles": {
     "dapr": {
       "commandName": "Executable",
-      "executablePath": "dapr.exe",
-      "commandLineArgs": "run --app-id dapr-service --resources-path ../dapr/components/ --app-port 5190 -- dotnet run --project .",
+      "executablePath": "dapr",
+      "commandLineArgs": "run --app-id front-office --app-protocol https --resources-path ./../.dapr/components/ --app-port 7200 --dapr-http-port 3200 -- dotnet run --project .",
       "workingDirectory": "$(ProjectDir)",
-      "environmentVariables": {}
-    },
-    "http": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:6200",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true
+      }
     },
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7200;http://localhost:5087",
+      "applicationUrl": "https://localhost:7200",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

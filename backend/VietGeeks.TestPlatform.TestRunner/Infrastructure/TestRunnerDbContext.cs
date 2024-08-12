@@ -1,6 +1,6 @@
 ﻿using MongoDB.Entities;
 
-namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure
 {
     public class TestRunnerDbContext: DBContext
     {

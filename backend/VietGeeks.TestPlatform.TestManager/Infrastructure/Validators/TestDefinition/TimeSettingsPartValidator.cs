@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
 public class TimeSettingsPartValidator : AbstractValidator<TimeSettingsPart>
 {

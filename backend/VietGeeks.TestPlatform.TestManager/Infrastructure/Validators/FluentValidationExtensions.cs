@@ -1,7 +1,8 @@
+using FluentValidation;
 using FluentValidation.Results;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
-namespace FluentValidation;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 
 //todo: move to shared place
 public static class FluentValidationExtensions

@@ -1,7 +1,7 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 
-namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure.MapperProfiles;
 
 public static class ManualMapper
 {

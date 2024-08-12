@@ -3,7 +3,7 @@ using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Data.ReadonlyModels;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
-namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.MapperProfiles;
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure.MapperProfiles;
 
 public class ExamProfile : Profile
 {

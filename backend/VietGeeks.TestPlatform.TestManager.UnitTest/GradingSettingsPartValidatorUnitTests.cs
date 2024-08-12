@@ -2,7 +2,7 @@
 using FluentValidation.TestHelper;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
 namespace VietGeeks.TestPlatform.TestManager.UnitTest;
 

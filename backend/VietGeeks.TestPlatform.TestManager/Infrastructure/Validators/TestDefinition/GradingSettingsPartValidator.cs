@@ -5,7 +5,7 @@ using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
 public class GradingSettingsPartValidator : AbstractValidator<GradingSettingsPart>
 {

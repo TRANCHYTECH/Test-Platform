@@ -1,8 +1,7 @@
-﻿
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace VietGeeks.TestPlatform.AspNetCore;
+namespace VietGeeks.TestPlatform.AspNetCore.Services;
 
 public class Tenant : ITenant
 {

@@ -1,7 +1,7 @@
 ﻿using Moq;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefintion;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
 namespace VietGeeks.TestPlatform.TestManager.UnitTest;
 

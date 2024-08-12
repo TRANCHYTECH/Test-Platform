@@ -1,4 +1,4 @@
-﻿namespace VietGeeks.TestPlatform.AspNetCore;
+﻿namespace VietGeeks.TestPlatform.AspNetCore.Services;
 
 public interface ITenant
 {

@@ -1,7 +1,7 @@
 ﻿using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 public interface ITestManagerService
 {
     Task<PagedSearchResult<TestDefinitionOverview>> GetTestDefinitionOverviews(int pageNumber, int pageSize, CancellationToken cancellationToken);

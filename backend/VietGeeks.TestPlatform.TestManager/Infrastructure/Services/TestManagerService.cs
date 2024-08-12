@@ -1,22 +1,22 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
+using Azure.Messaging.ServiceBus;
+using Dapr.Client;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Entities;
+using shortid;
+using VietGeeks.TestPlatform.Integration.Contract;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Contract;
-using VietGeeks.TestPlatform.Integration.Contracts;
-using Azure.Messaging.ServiceBus;
-using System.Text.Json;
-using MongoDB.Bson;
-using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
-using Dapr.Client;
-using VietGeeks.TestPlatform.Integration.Contract;
-using shortid;
-using FluentValidation;
-using MongoDB.Entities;
-using MongoDB.Driver;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 public class TestManagerService : ITestManagerService
 {

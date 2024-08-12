@@ -2,13 +2,14 @@
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
-using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Data.Mixers;
 using VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators;
+using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 using VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
+using VietGeeks.TestPlatform.TestRunner.Infrastructure.MapperProfiles;
 
-namespace VietGeeks.TestPlaftorm.TestRunner.Infrastructure.Services;
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
 public class ProctorService : IProctorService
 {

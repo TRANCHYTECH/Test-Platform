@@ -1,4 +1,4 @@
-﻿namespace VietGeeks.TestPlatform.Integration.Contracts;
+﻿namespace VietGeeks.TestPlatform.Integration.Contract;
 
 public class SendTestAccessCodeRequest
 {

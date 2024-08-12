@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.AccountManager.Contract;
 using VietGeeks.TestPlatform.AccountManager.Services;
 using VietGeeks.TestPlatform.AspNetCore;
+using VietGeeks.TestPlatform.AspNetCore.Services;
 
 namespace VietGeeks.TestPlatform.AccountManager.Controllers;
 

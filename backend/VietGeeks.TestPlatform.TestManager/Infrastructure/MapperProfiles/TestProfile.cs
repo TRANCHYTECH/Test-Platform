@@ -3,7 +3,7 @@ using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.MappingProfiles;
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.MapperProfiles;
 
 public class TestProfile : Profile
 {

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 

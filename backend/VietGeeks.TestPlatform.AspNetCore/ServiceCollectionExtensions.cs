@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VietGeeks.TestPlatform.AspNetCore.Services;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
 namespace VietGeeks.TestPlatform.AspNetCore;
@@ -35,10 +36,11 @@ public static class ServiceCollectionExtensions
         {
             var dataProtectionOption = options.DataProtection;
             serviceCollection.AddDataProtection()
-            .SetApplicationName(dataProtectionOption.ApplicationName)
-            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential(new DefaultAzureCredentialOptions {
-                ManagedIdentityClientId = dataProtectionOption.ManagedIdentityClientId
-            }));
+                .SetApplicationName(dataProtectionOption.ApplicationName);
+            //todo: finish setup
+            // .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential(new DefaultAzureCredentialOptions {
+            //     ManagedIdentityClientId = dataProtectionOption.ManagedIdentityClientId
+            // }));
         }
     }
 
@@ -56,7 +58,7 @@ public static class ServiceCollectionExtensions
                 if (exceptionHandlerPathFeature?.Error is TestPlatformException ex)
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsJsonAsync<ErrorDetails>(new() { Error = ex.Message });
+                    await context.Response.WriteAsJsonAsync(new ErrorDetails { Error = ex.Message });
                 }
             }));
     }
