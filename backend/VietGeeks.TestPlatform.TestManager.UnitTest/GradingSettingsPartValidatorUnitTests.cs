@@ -7,15 +7,8 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinitio
 namespace VietGeeks.TestPlatform.TestManager.UnitTest;
 
 [Collection(TestDefinitionValidatorTestCollection.CollectionId)]
-public class GradingSettingsPartValidatorUnitTests
+public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
 {
-    private readonly TestDefinitionValidatorFixture _fixture;
-
-    public GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
-    {
-        _fixture = fixture;
-    }
-
     [Fact]
     public async Task GradingSettingsPart_TestEndConfig_Validate_Failure_Miss_ToAddress()
     {
@@ -179,7 +172,7 @@ public class GradingSettingsPartValidatorUnitTests
         //todo: rename.
         var input = CreateFullValidSampleOfGradingSettingsPart();
 
-        var validator = _fixture.CreateGradingSettingsPartValidator();
+        var validator = fixture.CreateGradingSettingsPartValidator();
         var ctx = new ValidationContext<GradingSettingsPart>(input);
         ctx.RootContextData["TestId"] = TestDefinitionValidatorFixture.TestMock.Id;
         var result = await validator.TestValidateAsync(ctx);
@@ -189,7 +182,7 @@ public class GradingSettingsPartValidatorUnitTests
 
     public async Task<TestValidationResult<GradeRangeCriteria>> DoGradeRangeCriteriaValidate(GradeRangeCriteria input)
     {
-        var validator = new GradeRangeCriteriaValidator(_fixture.QuestionManagerServiceMock.Object);
+        var validator = new GradeRangeCriteriaValidator(fixture.QuestionManagerServiceMock.Object);
         var ctx = new ValidationContext<GradeRangeCriteria>(input);
         ctx.RootContextData["TestId"] = TestDefinitionValidatorFixture.TestMock.Id;
 

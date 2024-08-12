@@ -9,21 +9,14 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 [ApiController]
 [Route("Management/TestDefinition/{testId}/Question")]
 [Authorize]
-public class QuestionDefinitionManagementController : ControllerBase
+public class QuestionDefinitionManagementController(IQuestionManagerService questionManagerService) : ControllerBase
 {
-    private readonly IQuestionManagerService _questionManagerService;
-
-    public QuestionDefinitionManagementController(IQuestionManagerService questionManagerService)
-    {
-        _questionManagerService = questionManagerService;
-    }
-
     [HttpPost]
     [ProducesResponseType(typeof(QuestionViewModel), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<QuestionViewModel>> Create(string testId, [FromBody] CreateOrUpdateQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
-        var question = await _questionManagerService.CreateQuestion(testId, viewModel, cancellationToken);
+        var question = await questionManagerService.CreateQuestion(testId, viewModel, cancellationToken);
 
         return question;
     }
@@ -32,13 +25,13 @@ public class QuestionDefinitionManagementController : ControllerBase
     [ProducesResponseType(typeof(PagedSearchResult<QuestionViewModel>), StatusCodes.Status200OK)]
     public async Task<PagedSearchResult<QuestionViewModel>> Get(string testId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
-        return await _questionManagerService.GetQuestions(testId, pageNumber ?? 1, pageSize ?? 10, cancellationToken);
+        return await questionManagerService.GetQuestions(testId, pageNumber ?? 1, pageSize ?? 10, cancellationToken);
     }
 
     [HttpGet("Order")]
     public async Task<IActionResult> QuestionOrders(string testId, CancellationToken cancellation)
     {
-        var questions = await _questionManagerService.GetQuestions(testId, cancellation);
+        var questions = await questionManagerService.GetQuestions(testId, cancellation);
         return Ok(questions);
     }
 
@@ -46,7 +39,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     public async Task<IActionResult> UpdateQuestionOrders(string testId, [FromBody]UpdateQuestionOrderViewModel[] viewModel,  CancellationToken cancellation)
     {
         //todo: impl
-        await _questionManagerService.UpdateQuestionOrders(testId, viewModel, cancellation);
+        await questionManagerService.UpdateQuestionOrders(testId, viewModel, cancellation);
         return Ok();
     }
 
@@ -54,7 +47,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [ProducesResponseType(typeof(QuestionViewModel), StatusCodes.Status201Created)]
     public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
     {
-        var question = await _questionManagerService.GetQuestion(id, cancellationToken);
+        var question = await questionManagerService.GetQuestion(id, cancellationToken);
 
         if (question == null)
         {
@@ -75,7 +68,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(string id, CreateOrUpdateQuestionViewModel viewModel, CancellationToken cancellationToken)
     {
-        var updatedQuestion = await _questionManagerService.UpdateQuestion(id, viewModel, cancellationToken);
+        var updatedQuestion = await questionManagerService.UpdateQuestion(id, viewModel, cancellationToken);
 
         return Ok(updatedQuestion);
     }
@@ -83,7 +76,7 @@ public class QuestionDefinitionManagementController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
     {
-        await _questionManagerService.DeleteQuestion(id, cancellationToken);
+        await questionManagerService.DeleteQuestion(id, cancellationToken);
 
         return Ok();
     }
@@ -92,6 +85,6 @@ public class QuestionDefinitionManagementController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<QuestionSummaryViewModel>), StatusCodes.Status200OK)]
     public Task<IEnumerable<QuestionSummaryViewModel>> GetQuestionSummary(string testId, CancellationToken cancellationToken)
     {
-        return _questionManagerService.GetQuestionSummary(testId, cancellationToken);
+        return questionManagerService.GetQuestionSummary(testId, cancellationToken);
     }
 }

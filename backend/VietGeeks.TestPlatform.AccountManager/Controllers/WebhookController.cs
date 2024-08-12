@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using Dapr;
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.Integration.Contract;
 
 namespace VietGeeks.TestPlatform.AccountManager.Controllers;
@@ -17,13 +16,6 @@ public class WebhookController : ControllerBase
     private const string AccessCodeSendingStatusQueue = "access-code-email-notification";
 
     private const string UserCreateRequestQueue = "user-create-request";
-
-    private readonly ILogger<WebhookController> _logger;
-
-    public WebhookController(ILogger<WebhookController> logger)
-    {
-        _logger = logger;
-    }
 
     [HttpPost("CreateUserRequest")]
     public async Task<IActionResult> CreateUserRequest([FromServices] DaprClient client, [FromBody] UserCreateRequest request)
@@ -64,7 +56,7 @@ public class WebhookController : ControllerBase
 
             state.Events.AddRange(g.Select(c => c.GetData()));
             await client.SaveStateAsync("general-notify-store", g.Key, state);
-        };
+        }
         Console.WriteLine("processed event {0}", parsedEvents.Count());
 
         return Ok();
@@ -78,19 +70,14 @@ public class WebhookController : ControllerBase
         foreach (var state in states)
         {
             var parsedEvents = JsonSerializer.Deserialize<TestInvitationEventData>(state.Value, client.JsonSerializerOptions);
-            if (parsedEvents == null)
-            {
-                continue;
-            }
-            if (parsedEvents.Events == null)
+            if (parsedEvents?.Events == null)
             {
                 continue;
             }
 
             result.Add(new
             {
-                UniqueId = state.Key,
-                Events = parsedEvents.Events
+                UniqueId = state.Key, parsedEvents.Events,
             });
         }
 
@@ -114,9 +101,9 @@ public abstract class MailjetEvent
     public string customcampaign { get; set; } = default!;
     public string Payload { get; set; } = default!;
 
-    public virtual Dictionary<string, string> GetData() => new Dictionary<string, string>{
+    public virtual IDictionary<string, string> GetData() => new Dictionary<string, string>{
                         {"email", email},
-                        {"time", time.ToString()}
+                        {"time", time.ToString()},
                     };
 }
 
@@ -124,7 +111,7 @@ public class MailjetSentEvent : MailjetEvent
 {
     public string smtp_reply { get; set; } = default!;
 
-    public override Dictionary<string, string> GetData()
+    public override IDictionary<string, string> GetData()
     {
         var result = base.GetData();
         result["event"] = "sent";
@@ -137,7 +124,7 @@ public class MailjetBlockedEvent : MailjetEvent
     public string error_related_to { get; set; } = default!;
     public string error { get; set; } = default!;
 
-    public override Dictionary<string, string> GetData()
+    public override IDictionary<string, string> GetData()
     {
         var result = base.GetData();
         result["event"] = "blocked";
@@ -151,7 +138,7 @@ public class MailjetSpamEvent : MailjetEvent
 {
     public string source { get; set; } = default!;
 
-    public override Dictionary<string, string> GetData()
+    public override IDictionary<string, string> GetData()
     {
         var result = base.GetData();
         result["event"] = "spam";

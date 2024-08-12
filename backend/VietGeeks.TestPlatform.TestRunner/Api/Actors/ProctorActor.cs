@@ -7,23 +7,17 @@ using VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
 
-public class ProctorActor : Actor, IProctorActor
+public class ProctorActor(ActorHost host, IProctorService proctorService) : Actor(host), IProctorActor
 {
     private const string EXAM_STATE_NAME = "Exam";
     private const string TEST_QUESTIONS_CACHE_KEY = "Exam_TestQuestions";
     private const int SUBMIT_ALLOW_WINDOW_SECONDS = 5;
-    
-    private readonly IProctorService _proctorService;
-    private List<QuestionDefinition>? _testRunQuestions;
 
-    public ProctorActor(ActorHost host, IProctorService proctorService) : base(host)
-    {
-        _proctorService = proctorService;
-    }
+    private List<QuestionDefinition>? _testRunQuestions;
 
     public async Task<string> ProvideExamineeInfo(ProvideExamineeInfoInput input)
     {
-        var examId = await _proctorService.ProvideExamineeInfo(input);
+        var examId = await proctorService.ProvideExamineeInfo(input);
         ExamState examState = CreateExamState(examId);
         examState.ExamineeInfo = input.ExamineeInfo;
         examState.TestRunId = input.TestRunId;
@@ -34,7 +28,7 @@ public class ProctorActor : Actor, IProctorActor
 
     public async Task<StartExamOutput> StartExam(StartExamInput input)
     {
-        var examContent = await _proctorService.GenerateExamContent(new()
+        var examContent = await proctorService.GenerateExamContent(new()
         {
             ExamId = input.ExamId
         });
@@ -102,7 +96,7 @@ public class ProctorActor : Actor, IProctorActor
 
             if (activeQuestion?.ScoreSettings?.IsMandatory == true)
             {
-                output.Terminated = !_proctorService.IsCorrectAnswer(activeQuestion, input.AnswerIds);
+                output.Terminated = !proctorService.IsCorrectAnswer(activeQuestion, input.AnswerIds);
             }
 
             return output;
@@ -201,7 +195,7 @@ public class ProctorActor : Actor, IProctorActor
         var result = await ExamStateAction(async examState =>
         {
             examState.FinishedAt = DateTime.UtcNow;
-            var output = await _proctorService.FinishExam(new()
+            var output = await proctorService.FinishExam(new()
             {
                 ExamId = examState.ExamId,
                 Answers = examState.Answers,
@@ -230,7 +224,7 @@ public class ProctorActor : Actor, IProctorActor
             activeQuestionStartedAt = examState.QuestionTimes[examState.ActiveQuestionId]?.StartedAt;
         }
 
-        var testRun = await this._proctorService.GetTestRun(examState.TestRunId);
+        var testRun = await proctorService.GetTestRun(examState.TestRunId);
 
         return new ExamStatus()
         {
@@ -257,7 +251,7 @@ public class ProctorActor : Actor, IProctorActor
     private async Task<QuestionDefinition?> GetActiveQuestionAsync(ExamState examState)
     {
         if (_testRunQuestions == null) {
-            _testRunQuestions = (await _proctorService.GetTestRunQuestionsByExamId(examState.ExamId)).ToList();
+            _testRunQuestions = (await proctorService.GetTestRunQuestionsByExamId(examState.ExamId)).ToList();
         }
 
         return _testRunQuestions?.SingleOrDefault(q => q.ID == examState.ActiveQuestionId);

@@ -16,25 +16,20 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ExamController : ControllerBase
+public class ExamController(
+    IProctorService proctorService,
+    IDataProtectionProvider dataProtectionProvider,
+    IMapper mapper)
+    : ControllerBase
 {
-    private readonly IProctorService _proctorService;
-    private readonly ITimeLimitedDataProtector _dataProtector;
-    private readonly IMapper _mapper;
-
-    public ExamController(IProctorService proctorService, IDataProtectionProvider dataProtectionProvider, IMapper mapper)
-    {
-        _proctorService = proctorService;
-        _dataProtector = dataProtectionProvider.CreateProtector("TestSession").ToTimeLimitedDataProtector();
-        _mapper = mapper;
-    }
+    private readonly ITimeLimitedDataProtector _dataProtector = dataProtectionProvider.CreateProtector("TestSession").ToTimeLimitedDataProtector();
 
     [HttpPost("PreStart/Verify")]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(VerifyTestOutputViewModel))]
     [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ErrorDetails))]
     public async Task<IActionResult> Verify(VerifyTestInput input)
     {
-        var verifyResult = await _proctorService.VerifyTest(input);
+        var verifyResult = await proctorService.VerifyTest(input);
         SetTestSession(new()
         {
             ProctorExamId = verifyResult.ProctorExamId,
@@ -102,7 +97,7 @@ public class ExamController : ControllerBase
             LifeTime = examContent.TotalDuration.Add(TimeSpan.FromMinutes(5))
         });
 
-        var output = this._mapper.Map<StartExamOutputViewModel>(examContent);
+        var output = mapper.Map<StartExamOutputViewModel>(examContent);
         output.Step = ExamStep.Start;
 
         return Ok(output);
@@ -188,7 +183,7 @@ public class ExamController : ControllerBase
     {
         var testSession = GetTestSession(ExamStep.FinishExam);
 
-        var output = await _proctorService.GetAfterTestConfigAsync(testSession?.ExamId);
+        var output = await proctorService.GetAfterTestConfigAsync(testSession?.ExamId);
 
         return Ok(output);
     }
@@ -206,7 +201,7 @@ public class ExamController : ControllerBase
 
         var proctorExamActor = GetProctorActor(testSession);
         var examStatus = await proctorExamActor.GetExamStatus();
-        var result = _mapper.Map<ExamStatusWithStep>(examStatus);
+        var result = mapper.Map<ExamStatusWithStep>(examStatus);
 
         result.Step = testSession.PreviousStep;
 

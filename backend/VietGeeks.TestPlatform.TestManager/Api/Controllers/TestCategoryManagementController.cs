@@ -9,21 +9,17 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 [ApiController]
 [Route("Management/TestCategory")]
 [Authorize]
-public class TestCategoryManagementController : ControllerBase
+public class TestCategoryManagementController(
+    ILogger<TestCategoryManagementController> logger,
+    ITestCategoryService testManagerService)
+    : ControllerBase
 {
-    private readonly ILogger<TestCategoryManagementController> _logger;
-    private readonly ITestCategoryService _testCatalogService;
-
-    public TestCategoryManagementController(ILogger<TestCategoryManagementController> logger, ITestCategoryService testManagerService)
-    {
-        _logger = logger;
-        _testCatalogService = testManagerService;
-    }
+    private readonly ILogger<TestCategoryManagementController> _logger = logger;
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var testCategories = await _testCatalogService.GetTestCategories();
+        var testCategories = await testManagerService.GetTestCategories();
 
         return Ok(testCategories);
     }
@@ -31,7 +27,7 @@ public class TestCategoryManagementController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(NewTestCategoryViewModel viewModel)
     {
-        var createdTestCategory = await _testCatalogService.CreateTestCategory(viewModel);
+        var createdTestCategory = await testManagerService.CreateTestCategory(viewModel);
 
         return Ok(createdTestCategory);
     }
@@ -39,7 +35,7 @@ public class TestCategoryManagementController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete([FromQuery] string[] ids)
     {
-        await _testCatalogService.DeleteTestCategories(ids);
+        await testManagerService.DeleteTestCategories(ids);
 
         return Ok();
     }

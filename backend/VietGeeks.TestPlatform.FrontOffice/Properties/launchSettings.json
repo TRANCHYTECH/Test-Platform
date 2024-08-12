@@ -4,7 +4,7 @@
     "dapr": {
       "commandName": "Executable",
       "executablePath": "dapr",
-      "commandLineArgs": "run --app-id front-office --app-protocol https --resources-path ./../.dapr/components/ --app-port 7200 --dapr-http-port 3200 -- dotnet run --project .",
+      "commandLineArgs": "run --app-id front-office --app-protocol https --resources-path ./../.dapr/components/ --app-port 7300 --dapr-http-port 3300 -- dotnet run --project .",
       "workingDirectory": "$(ProjectDir)",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -14,19 +14,11 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7200",
+      "applicationUrl": "https://localhost:7300",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "environmentVariables": {},
-      "useSSL": true,
-      "publishAllPorts": true
     }
   }
 }

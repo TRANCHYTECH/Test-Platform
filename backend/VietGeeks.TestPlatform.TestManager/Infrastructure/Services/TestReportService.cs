@@ -13,27 +13,21 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
         Task<ExamReview> GetExamReview(string examId);
     }
 
-    public class TestReportService : ITestReportService
+    public class TestReportService(
+        TestManagerDbContext managerDbContext,
+        IQuestionCategoryService questionCategoryService)
+        : ITestReportService
     {
-        private readonly TestManagerDbContext _managerDbContext;
-        private readonly IQuestionCategoryService _questionCategoryService;
-
-        public TestReportService(TestManagerDbContext managerDbContext, IQuestionCategoryService questionCategoryService)
-        {
-            _managerDbContext = managerDbContext;
-            _questionCategoryService = questionCategoryService;
-        }
-
         public async Task<List<ExamSummary>> GetExamSummaries(string[] testRunIds)
         {
             // Verify that test runs belongs to user.
-            var testRuns = await _managerDbContext.Find<TestRun>().Match(c => testRunIds.Contains(c.ID)).Project(c => new TestRun { ID = c.ID }).ExecuteAsync();
+            var testRuns = await managerDbContext.Find<TestRun>().Match(c => testRunIds.Contains(c.ID)).Project(c => new TestRun { ID = c.ID }).ExecuteAsync();
             if (testRuns.Count != testRunIds.Count())
             {
                 throw new TestPlatformException("Invalid Test Run Ids");
             }
 
-            var examEntities = await _managerDbContext.Find<Exam>()
+            var examEntities = await managerDbContext.Find<Exam>()
                 .IgnoreGlobalFilters()
                 .Match(c => testRunIds.Contains(c.TestRunId))
                 .Project(c => new Exam
@@ -67,7 +61,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
         public async Task<List<Respondent>> GetRespondents(string[] testRunIds)
         {
             // Verify that test runs belongs to user.
-            var testRuns = await _managerDbContext.Find<TestRun>()
+            var testRuns = await managerDbContext.Find<TestRun>()
                 .Match(c => testRunIds.Contains(c.ID))
                 .Project(c => new TestRun { ID = c.ID })
                 .ExecuteAsync();
@@ -77,7 +71,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
                 throw new TestPlatformException("Invalid Test Run Ids");
             }
 
-            var examEntities = await _managerDbContext.Find<Exam>()
+            var examEntities = await managerDbContext.Find<Exam>()
                 .IgnoreGlobalFilters()
                 .Match(c => testRunIds.Contains(c.TestRunId))
                 .Sort(c => c.StartedAt, Order.Descending)
@@ -103,7 +97,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
         //todo: build report into each readonly view in order to save server resources. but disadvangte of this approach is that if review template has break changes. suggestion: create report version
         public async Task<ExamReview> GetExamReview(string examId)
         {
-            var examEntity = await _managerDbContext.Find<Exam>()
+            var examEntity = await managerDbContext.Find<Exam>()
                 .IgnoreGlobalFilters()
                 .MatchID(examId)
                 .ExecuteFirstAsync() ?? throw new TestPlatformException("Not found exam");
@@ -111,9 +105,9 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             var examQuestions = await GetTestRunQuestions(examEntity);
 
             //todo: IMPORTANT -improve architecture design for query. store hierchacy data from testdef => test run => exam, tenant to query easily.
-            var testRun = await _managerDbContext.Find<TestRun>().MatchID(examEntity.TestRunId).Project(c => new TestRun { ID = c.ID, TestDefinitionSnapshot = c.TestDefinitionSnapshot }).ExecuteFirstAsync();
+            var testRun = await managerDbContext.Find<TestRun>().MatchID(examEntity.TestRunId).Project(c => new TestRun { ID = c.ID, TestDefinitionSnapshot = c.TestDefinitionSnapshot }).ExecuteFirstAsync();
             //todo: cache question categories within original method?
-            var questionCategories = await _questionCategoryService.GetCategories(testRun.TestDefinitionSnapshot.ID, default);
+            var questionCategories = await questionCategoryService.GetCategories(testRun.TestDefinitionSnapshot.ID, default);
             return new()
             {
                 StartedAt = examEntity.StartedAt,
@@ -149,7 +143,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 
         public async Task<List<TestRunSummary>> GetTestRunSummaries(string testId)
         {
-            var testRunEntities = await _managerDbContext.Find<TestRun>().Match(c => c.TestDefinitionSnapshot.ID == testId).ExecuteAsync();
+            var testRunEntities = await managerDbContext.Find<TestRun>().Match(c => c.TestDefinitionSnapshot.ID == testId).ExecuteAsync();
             return testRunEntities.Select(c => new TestRunSummary
             {
                 Id = c.ID,
@@ -166,7 +160,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 
         private async Task<IEnumerable<QuestionDefinition>> GetTestRunQuestions(Exam examEntity)
         {
-            var questionBatches = await _managerDbContext.Find<TestRunQuestion>().IgnoreGlobalFilters().ManyAsync(c => c.TestRunId == examEntity.TestRunId);
+            var questionBatches = await managerDbContext.Find<TestRunQuestion>().IgnoreGlobalFilters().ManyAsync(c => c.TestRunId == examEntity.TestRunId);
             var testRunQuestions = questionBatches.SelectMany(c => c.Batch);
             var examQuestions = examEntity.Questions.Select(id => testRunQuestions.Single(q => q.ID == id));
 

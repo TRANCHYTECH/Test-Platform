@@ -7,14 +7,9 @@ using VietGeeks.TestPlatform.Integration.Contract;
 
 namespace VietGeeks.TestPlatform.TestManager.Functions.SendEmail;
 
-public class SendTestAccessCode
+public class SendTestAccessCode(ILoggerFactory loggerFactory)
 {
-    private readonly ILogger _logger;
-
-    public SendTestAccessCode(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger<SendTestAccessCode>();
-    }
+    private readonly ILogger _logger = loggerFactory.CreateLogger<SendTestAccessCode>();
 
     [FunctionName("SendTestAccessCode")]
     public async Task Run([ServiceBusTrigger("send-test-access-code", Connection = "TestRunnerSB")] SendTestAccessCodeRequest invitation)

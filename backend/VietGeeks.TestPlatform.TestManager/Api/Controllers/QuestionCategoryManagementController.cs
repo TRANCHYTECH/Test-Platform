@@ -10,21 +10,17 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 [ApiController]
 [Route("Management/TestDefinition/{testId}/QuestionCategory")]
 [Authorize]
-public class QuestionCategoryManagementController : ControllerBase
+public class QuestionCategoryManagementController(
+    ILogger<QuestionCategoryManagementController> logger,
+    IQuestionCategoryService questionCategoryService)
+    : ControllerBase
 {
-    private readonly ILogger<QuestionCategoryManagementController> _logger;
-    private readonly IQuestionCategoryService _questionCategoryService;
-
-    public QuestionCategoryManagementController(ILogger<QuestionCategoryManagementController> logger, IQuestionCategoryService questionCategoryService)
-    {
-        _logger = logger;
-        _questionCategoryService = questionCategoryService;
-    }
+    private readonly ILogger<QuestionCategoryManagementController> _logger = logger;
 
     [HttpGet]
     public async Task<IActionResult> Get(string testId, CancellationToken cancellationToken)
     {
-        var categories = await _questionCategoryService.GetCategories(testId, cancellationToken);
+        var categories = await questionCategoryService.GetCategories(testId, cancellationToken);
 
         return Ok(categories);
     }
@@ -33,7 +29,7 @@ public class QuestionCategoryManagementController : ControllerBase
     [ProducesResponseType(typeof(QuestionCategoryViewModel), 200)]
     public async Task<IActionResult> Create(string testId, NewQuestionCategoryViewModel viewModel, CancellationToken cancellationToken)
     {
-        var createdCategory = await _questionCategoryService.CreateCategory(testId, viewModel, cancellationToken);
+        var createdCategory = await questionCategoryService.CreateCategory(testId, viewModel, cancellationToken);
 
         return Ok(createdCategory);
     }
@@ -41,7 +37,7 @@ public class QuestionCategoryManagementController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete([FromQuery] string[] ids)
     {
-        await _questionCategoryService.DeleteCategories(ids);
+        await questionCategoryService.DeleteCategories(ids);
 
         return Ok();
     }

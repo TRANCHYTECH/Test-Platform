@@ -11,40 +11,26 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-public class QuestionManagerService : IQuestionManagerService
+public class QuestionManagerService(
+    IMapper mapper,
+    IClock clock,
+    IValidator<QuestionDefinition> questionDefinitionValidator,
+    TestManagerDbContext managerDbContext,
+    IQuestionPointCalculationService questionPointCalculationService)
+    : IQuestionManagerService
 {
-    private readonly IMapper _mapper;
-    private readonly IClock _clock;
-    private readonly IValidator<QuestionDefinition> _questionDefinitionValidator;
-    private readonly TestManagerDbContext _managerDbContext;
-    private readonly IQuestionPointCalculationService _questionPointCalculationService;
-
-    public QuestionManagerService(
-        IMapper mapper,
-        IClock clock,
-        IValidator<QuestionDefinition> questionDefinitionValidator,
-        TestManagerDbContext managerDbContext,
-        IQuestionPointCalculationService questionPointCalculationService)
-    {
-        _mapper = mapper;
-        _clock = clock;
-        _questionDefinitionValidator = questionDefinitionValidator;
-        _managerDbContext = managerDbContext;
-        _questionPointCalculationService = questionPointCalculationService;
-    }
-
     public async Task<IEnumerable<QuestionViewModel>> GetQuestions(string testId, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(q => q.TestId == testId, cancellationToken);
+        var entities = await managerDbContext.Find<QuestionDefinition>().ManyAsync(q => q.TestId == testId, cancellationToken);
 
         entities = AssignQuestionNumbers(entities);
 
-        return _mapper.Map<List<QuestionViewModel>>(entities);
+        return mapper.Map<List<QuestionViewModel>>(entities);
     }
 
     public async Task<PagedSearchResult<QuestionViewModel>> GetQuestions(string testId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.PagedSearch<QuestionDefinition>()
+        var entities = await managerDbContext.PagedSearch<QuestionDefinition>()
             .Match(q => q.TestId == testId)
             .Sort(q => q.Order, Order.Ascending)
             .PageSize(pageSize)
@@ -55,7 +41,7 @@ public class QuestionManagerService : IQuestionManagerService
 
         return new PagedSearchResult<QuestionViewModel>
         {
-            Results = _mapper.Map<List<QuestionViewModel>>(processedEntities),
+            Results = mapper.Map<List<QuestionViewModel>>(processedEntities),
             TotalCount = entities.TotalCount,
             PageCount = entities.PageCount
         };
@@ -63,31 +49,31 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<QuestionViewModel> GetQuestion(string id, CancellationToken cancellationToken)
     {
-        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
+        var entity = await managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken);
 
         // Get question number.
         entity.QuestionNo = await GetQuestionNo(entity);
 
-        return _mapper.Map<QuestionViewModel>(entity);
+        return mapper.Map<QuestionViewModel>(entity);
     }
 
     public async Task<QuestionViewModel> CreateQuestion(string testId, CreateOrUpdateQuestionViewModel questionViewModel, CancellationToken cancellationToken)
     {
-        var entity = _mapper.Map<QuestionDefinition>(questionViewModel);
+        var entity = mapper.Map<QuestionDefinition>(questionViewModel);
         entity.TestId = testId;
         entity.Order = GenerateOrderSequence();
-        entity.ScoreSettings.TotalPoints = _questionPointCalculationService.CalculateTotalPoints(entity);
+        entity.ScoreSettings.TotalPoints = questionPointCalculationService.CalculateTotalPoints(entity);
 
-        await _questionDefinitionValidator.TryValidate(entity);
+        await questionDefinitionValidator.TryValidate(entity);
 
-        await _managerDbContext.SaveAsync(entity, cancellationToken);
+        await managerDbContext.SaveAsync(entity, cancellationToken);
 
-        return _mapper.Map<QuestionViewModel>(entity);
+        return mapper.Map<QuestionViewModel>(entity);
     }
 
     private string GenerateOrderSequence()
     {
-        var @decimal = _clock.UtcNow.Subtract(new DateTime(2022, 1, 30)).TotalMilliseconds.ToString(NumberFormatInfo.InvariantInfo);
+        var @decimal = clock.UtcNow.Subtract(new DateTime(2022, 1, 30)).TotalMilliseconds.ToString(NumberFormatInfo.InvariantInfo);
         @decimal = @decimal.Replace(".", "a").Insert(6, ":");
         var rank = LexoRank.Parse($"0|{@decimal}");
 
@@ -96,20 +82,20 @@ public class QuestionManagerService : IQuestionManagerService
 
     public async Task<QuestionViewModel> UpdateQuestion(string id, CreateOrUpdateQuestionViewModel questionViewModel, CancellationToken cancellationToken)
     {
-        var entity = await _managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken) ?? throw new EntityNotFoundException(id, nameof(QuestionDefinition));
-        entity = _mapper.Map(questionViewModel, entity);
-        entity.ScoreSettings.TotalPoints = _questionPointCalculationService.CalculateTotalPoints(entity);
+        var entity = await managerDbContext.Find<QuestionDefinition>().MatchID(id).ExecuteFirstAsync(cancellationToken) ?? throw new EntityNotFoundException(id, nameof(QuestionDefinition));
+        entity = mapper.Map(questionViewModel, entity);
+        entity.ScoreSettings.TotalPoints = questionPointCalculationService.CalculateTotalPoints(entity);
 
-        await _questionDefinitionValidator.TryValidate(entity);
+        await questionDefinitionValidator.TryValidate(entity);
 
-        await _managerDbContext.SaveAsync(entity, cancellationToken);
+        await managerDbContext.SaveAsync(entity, cancellationToken);
 
-        return _mapper.Map<QuestionViewModel>(entity);
+        return mapper.Map<QuestionViewModel>(entity);
     }
 
     public async Task<IEnumerable<QuestionSummaryViewModel>> GetQuestionSummary(string testId, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.Find<QuestionDefinition>().Project(q => new QuestionDefinition { ID = q.ID, CategoryId = q.CategoryId, ScoreSettings = q.ScoreSettings }).ManyAsync(q => q.TestId == testId, cancellationToken);
+        var entities = await managerDbContext.Find<QuestionDefinition>().Project(q => new QuestionDefinition { ID = q.ID, CategoryId = q.CategoryId, ScoreSettings = q.ScoreSettings }).ManyAsync(q => q.TestId == testId, cancellationToken);
 
         return entities.GroupBy(c => c.CategoryId).Select(c => new QuestionSummaryViewModel
         {
@@ -129,7 +115,7 @@ public class QuestionManagerService : IQuestionManagerService
     public async Task DeleteQuestion(string id, CancellationToken cancellationToken)
     {
         //todo: verify condition if test is ended or activated, so not allow to modify/delete
-        var result = await _managerDbContext.DeleteAsync<QuestionDefinition>(id);
+        var result = await managerDbContext.DeleteAsync<QuestionDefinition>(id);
         if (result.DeletedCount == 0)
         {
             throw new TestPlatformException("Not found question");
@@ -139,7 +125,7 @@ public class QuestionManagerService : IQuestionManagerService
     public async Task UpdateQuestionOrders(string testId, UpdateQuestionOrderViewModel[] viewModel, CancellationToken cancellation)
     {
         //todo: verify condition if test is ended or activated, so not allow to update.
-        var bulkUpdate = _managerDbContext.Update<QuestionDefinition>();
+        var bulkUpdate = managerDbContext.Update<QuestionDefinition>();
         foreach (var questionOrder in viewModel)
         {
             bulkUpdate.MatchID(questionOrder.Id)
@@ -188,7 +174,7 @@ public class QuestionManagerService : IQuestionManagerService
         .Tag("TestId", question.TestId)
         .Tag("Order", question.Order);
 
-        var result = await _managerDbContext
+        var result = await managerDbContext
         .Find<QuestionDefinition>()
         .Match(pipeline)
         .Project(c => new QuestionDefinition { Order = c.Order })

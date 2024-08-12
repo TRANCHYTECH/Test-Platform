@@ -11,17 +11,8 @@ using VietGeeks.TestPlatform.TestRunner.Infrastructure.MapperProfiles;
 
 namespace VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
-public class ProctorService : IProctorService
+public class ProctorService(IMapper mapper, IClock time) : IProctorService
 {
-    private readonly IMapper _mapper;
-    private readonly IClock _time;
-
-    public ProctorService(IMapper mapper, IClock time)
-    {
-        _mapper = mapper;
-        _time = time;
-    }
-
     //todo: PLAN - need to refactor this class, instead of directly access to original database, it should be a separate microservice.
     // For verifying test, still use test definition instead of test run.
     public async Task<VerifyTestOutput> VerifyTest(VerifyTestInput input)
@@ -92,7 +83,7 @@ public class ProctorService : IProctorService
         }
 
         // Check period time of test run is still valid.
-        var checkMoment = _time.UtcNow;
+        var checkMoment = time.UtcNow;
         if (testRun.ExplicitEnd || checkMoment > testRun.EndAtUtc)
         {
             throw new TestPlatformException("The test is already ended");
@@ -191,14 +182,14 @@ public class ProctorService : IProctorService
         var output = new FinishExamOutput
         {
             FinalMark = exam.FinalMark,
-            Grading = _mapper.Map<List<AggregatedGradingOuput>>(exam.Grading),
+            Grading = mapper.Map<List<AggregatedGradingOuput>>(exam.Grading),
             FinishedAt = exam.FinishedAt,
             TotalTime = exam.TotalTime
         };
 
         if (ShowReturnDetailAnswers(testDefinition))
         {
-            output.Questions = _mapper.Map<IEnumerable<QuestionOutput>>(selectedQuestions);
+            output.Questions = mapper.Map<IEnumerable<QuestionOutput>>(selectedQuestions);
             output.ExamAnswers = exam.Answers;
             output.QuestionScores = exam.QuestionScores;
         }
@@ -216,8 +207,8 @@ public class ProctorService : IProctorService
 
         return new AfterTestConfigOutput
         {
-            TestEndConfig = _mapper.Map<TestEndConfigOutput>(testEndConfig),
-            InformRespondentConfig = _mapper.Map<InformRespondentConfigOutput>(informRespondentConfig)
+            TestEndConfig = mapper.Map<TestEndConfigOutput>(testEndConfig),
+            InformRespondentConfig = mapper.Map<InformRespondentConfigOutput>(informRespondentConfig)
         };
     }
 

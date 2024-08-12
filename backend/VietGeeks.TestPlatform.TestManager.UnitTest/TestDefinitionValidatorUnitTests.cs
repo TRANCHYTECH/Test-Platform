@@ -6,15 +6,8 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinitio
 namespace VietGeeks.TestPlatform.TestManager.UnitTest;
 
 [Collection(TestDefinitionValidatorTestCollection.CollectionId)]
-public class TestDefinitionValidatorUnitTests
+public class TestDefinitionValidatorUnitTests(TestDefinitionValidatorFixture fixture)
 {
-    private readonly TestDefinitionValidatorFixture _fixture;
-
-    public TestDefinitionValidatorUnitTests(TestDefinitionValidatorFixture fixture)
-    {
-        _fixture = fixture;
-    }
-
     /// <summary>
     /// Create a wrong input to verify all child validators are envolved.
     /// </summary>
@@ -30,7 +23,7 @@ public class TestDefinitionValidatorUnitTests
             GradingSettings = new GradingSettingsPart()
         };
         var ctx = new ValidationContext<TestDefinition>(input);
-        var validator = _fixture.CreateTestDefinitionValidator();
+        var validator = fixture.CreateTestDefinitionValidator();
         var result = await validator.TestValidateAsync(ctx);
         Assert.False(result.IsValid);
         Assert.True(TestDefinitionValidator.ChildValidators.ToList().TrueForAll(c =>

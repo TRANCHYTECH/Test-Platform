@@ -18,37 +18,19 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-public class TestManagerService : ITestManagerService
+public class TestManagerService(
+    IValidator<TestDefinition> testDefinitionValidator,
+    DaprClient daprClient,
+    IMapper mapper,
+    TestManagerDbContext managerDbContext,
+    ServiceBusClient bus,
+    ILogger<TestManagerService> logger,
+    IClock clock)
+    : ITestManagerService
 {
-    private readonly IValidator<TestDefinition> _testDefinitionValidator;
-    private readonly DaprClient _daprClient;
-    private readonly IMapper _mapper;
-    private readonly TestManagerDbContext _managerDbContext;
-    private readonly ServiceBusClient _bus;
-    private readonly ILogger<TestManagerService> _logger;
-    private readonly IClock _clock;
-
-    public TestManagerService(
-        IValidator<TestDefinition> testDefinitionValidator,
-        DaprClient daprClient,
-        IMapper mapper,
-        TestManagerDbContext managerDbContext,
-        ServiceBusClient bus,
-        ILogger<TestManagerService> logger,
-        IClock clock)
-    {
-        _testDefinitionValidator = testDefinitionValidator;
-        _daprClient = daprClient;
-        _mapper = mapper;
-        _managerDbContext = managerDbContext;
-        _bus = bus;
-        _logger = logger;
-        _clock = clock;
-    }
-
     public async Task<TestDefinitionViewModel> CreateTestDefinition(NewTestDefinitionViewModel newTest)
     {
-        var testEntity = _mapper.Map<TestDefinition>(newTest);
+        var testEntity = mapper.Map<TestDefinition>(newTest);
         // Assign default settings.
         //todo: some default values should be getted from db.
         testEntity.TestSetSettings = TestSetSettingsPart.Default();
@@ -57,23 +39,23 @@ public class TestManagerService : ITestManagerService
         testEntity.GradingSettings = GradingSettingsPart.Default();
         testEntity.TimeSettings = TimeSettingsPart.Default();
 
-        await _testDefinitionValidator.TryValidate(testEntity);
+        await testDefinitionValidator.TryValidate(testEntity);
 
-        await _managerDbContext.SaveAsync(testEntity);
+        await managerDbContext.SaveAsync(testEntity);
 
-        return _mapper.Map<TestDefinitionViewModel>(testEntity);
+        return mapper.Map<TestDefinitionViewModel>(testEntity);
     }
 
     public async Task<TestDefinitionViewModel> GetTestDefinition(string id)
     {
-        var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync();
+        var entity = await managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync();
 
-        return _mapper.Map<TestDefinitionViewModel>(entity);
+        return mapper.Map<TestDefinitionViewModel>(entity);
     }
 
     public async Task<PagedSearchResult<TestDefinitionOverview>> GetTestDefinitionOverviews(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var entities = await _managerDbContext.PagedSearch<TestDefinition>()
+        var entities = await managerDbContext.PagedSearch<TestDefinition>()
             .Sort(c => c.CreatedOn, Order.Descending)
             .PageSize(pageSize)
             .PageNumber(pageNumber)
@@ -82,7 +64,7 @@ public class TestManagerService : ITestManagerService
 
         return new PagedSearchResult<TestDefinitionOverview>
         {
-            Results = _mapper.Map<List<TestDefinitionOverview>>(entities.Results),
+            Results = mapper.Map<List<TestDefinitionOverview>>(entities.Results),
             TotalCount = entities.TotalCount,
             PageCount = entities.PageCount
         };
@@ -90,7 +72,7 @@ public class TestManagerService : ITestManagerService
 
     public async Task<TestDefinitionViewModel> UpdateTestDefinition(string id, UpdateTestDefinitionViewModel viewModel)
     {
-        var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync();
+        var entity = await managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync();
         if (entity == null)
             throw new EntityNotFoundException(id, nameof(TestDefinition));
 
@@ -98,19 +80,19 @@ public class TestManagerService : ITestManagerService
 
         if (viewModel.BasicSettings != null)
         {
-            entity.BasicSettings = _mapper.Map<TestBasicSettingsPart>(viewModel.BasicSettings);
+            entity.BasicSettings = mapper.Map<TestBasicSettingsPart>(viewModel.BasicSettings);
             updatedProperties.Add(nameof(TestDefinition.BasicSettings));
         }
 
         if (viewModel.TestSetSettings != null)
         {
-            entity.TestSetSettings = _mapper.Map<TestSetSettingsPart>(viewModel.TestSetSettings);
+            entity.TestSetSettings = mapper.Map<TestSetSettingsPart>(viewModel.TestSetSettings);
             updatedProperties.Add(nameof(TestDefinition.TestSetSettings));
         }
 
         if (viewModel.TestAccessSettings != null)
         {
-            var updatedTestAccessSettings = _mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
+            var updatedTestAccessSettings = mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
             // BUSINESS: User are not allowed to change access codes with this flow. So we have to verify input codes match exactly with existing.
             if (updatedTestAccessSettings.AccessType == TestAcessType.PrivateAccessCode && entity.TestAccessSettings.AccessType == TestAcessType.PrivateAccessCode)
             {
@@ -121,37 +103,37 @@ public class TestManagerService : ITestManagerService
                     throw new TestPlatformException("Mismatched Access Codes");
                 }
             }
-            entity.TestAccessSettings = _mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
+            entity.TestAccessSettings = mapper.Map<TestAccessSettingsPart>(viewModel.TestAccessSettings);
 
             updatedProperties.Add(nameof(TestDefinition.TestAccessSettings));
         }
 
         if (viewModel.GradingSettings != null)
         {
-            entity.GradingSettings = _mapper.Map<GradingSettingsPart>(viewModel.GradingSettings);
+            entity.GradingSettings = mapper.Map<GradingSettingsPart>(viewModel.GradingSettings);
             updatedProperties.Add(nameof(TestDefinition.GradingSettings));
         }
 
         if (viewModel.TimeSettings != null)
         {
-            entity.TimeSettings = _mapper.Map<TimeSettingsPart>(viewModel.TimeSettings);
+            entity.TimeSettings = mapper.Map<TimeSettingsPart>(viewModel.TimeSettings);
             updatedProperties.Add(nameof(TestDefinition.TimeSettings));
         }
 
         if (viewModel.TestStartSettings != null)
         {
-            entity.TestStartSettings = _mapper.Map<TestStartSettingsPart>(viewModel.TestStartSettings);
+            entity.TestStartSettings = mapper.Map<TestStartSettingsPart>(viewModel.TestStartSettings);
             updatedProperties.Add(nameof(TestDefinition.TestStartSettings));
         }
 
-        await _testDefinitionValidator.TryValidate(entity, updatedProperties.ToArray());
+        await testDefinitionValidator.TryValidate(entity, updatedProperties.ToArray());
 
         if (updatedProperties.Count > 0)
         {
-            var updateResult = await _managerDbContext.SaveOnlyAsync(entity, updatedProperties);
+            var updateResult = await managerDbContext.SaveOnlyAsync(entity, updatedProperties);
         }
 
-        return _mapper.Map<TestDefinitionViewModel>(entity);
+        return mapper.Map<TestDefinitionViewModel>(entity);
     }
 
     private static string[] GetPrivateAccessCodes(TestAccessSettings settings)
@@ -161,13 +143,13 @@ public class TestManagerService : ITestManagerService
 
     public async Task<TestDefinitionViewModel> ActivateTestDefinition(string id)
     {
-        var entity = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
-        var questions = await _managerDbContext.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id);
+        var entity = await managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        var questions = await managerDbContext.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id);
 
         // Check if can activate test.
-        var testRunTime = entity.EnsureCanActivate(questions.Count, _clock.UtcNow);
+        var testRunTime = entity.EnsureCanActivate(questions.Count, clock.UtcNow);
 
-        using (var ctx = _managerDbContext.Transaction())
+        using (var ctx = managerDbContext.Transaction())
         {
             // Create test run.
             var testRun = new TestRun
@@ -186,11 +168,11 @@ public class TestManagerService : ITestManagerService
             });
 
             // Set current activated test run.
-            var affectedFields = entity.Activate(testRun.ID, _clock.UtcNow, testRunTime.Status);
+            var affectedFields = entity.Activate(testRun.ID, clock.UtcNow, testRunTime.Status);
 
-            await _managerDbContext.InsertAsync(testRun);
-            await _managerDbContext.InsertAsync(testRunQuestionBatches);
-            await _managerDbContext.SaveOnlyAsync(entity, affectedFields);
+            await managerDbContext.InsertAsync(testRun);
+            await managerDbContext.InsertAsync(testRunQuestionBatches);
+            await managerDbContext.SaveOnlyAsync(entity, affectedFields);
 
             await ctx.CommitTransactionAsync();
         }
@@ -198,19 +180,19 @@ public class TestManagerService : ITestManagerService
         //todo: might make it loose couplely.
         await SendAccessCodes(entity);
 
-        return _mapper.Map<TestDefinitionViewModel>(entity);
+        return mapper.Map<TestDefinitionViewModel>(entity);
     }
 
     public async Task<TestDefinitionViewModel> EndTestDefinition(string id)
     {
         // Verify if status is in running.
-        var validEntity = await _managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status) && c.CurrentTestRun != null).ExecuteSingleAsync();
+        var validEntity = await managerDbContext.Find<TestDefinition>().Match(c => c.ID == id && TestDefinition.ActiveStatuses.Contains(c.Status) && c.CurrentTestRun != null).ExecuteSingleAsync();
         if (validEntity == null)
         {
             throw new TestPlatformException("Not Found Activated/Scheduled Test Definition");
         }
 
-        var testRun = await _managerDbContext.Find<TestRun>().MatchID(validEntity.CurrentTestRun?.Id).ExecuteSingleAsync();
+        var testRun = await managerDbContext.Find<TestRun>().MatchID(validEntity.CurrentTestRun?.Id).ExecuteSingleAsync();
         if (testRun == null)
         {
             throw new TestPlatformException("Not Found Test Run");
@@ -222,26 +204,26 @@ public class TestManagerService : ITestManagerService
 
         var testDefFieldsAffected = validEntity.End();
 
-        using (var ctx = _managerDbContext.Transaction())
+        using (var ctx = managerDbContext.Transaction())
         {
-            await _managerDbContext.SaveOnlyAsync(validEntity, testDefFieldsAffected);
+            await managerDbContext.SaveOnlyAsync(validEntity, testDefFieldsAffected);
             //todo: improve performance by save affected parts.
-            await _managerDbContext.SaveAsync(testRun);
+            await managerDbContext.SaveAsync(testRun);
             await ctx.CommitTransactionAsync();
         }
 
-        return _mapper.Map<TestDefinitionViewModel>(validEntity);
+        return mapper.Map<TestDefinitionViewModel>(validEntity);
     }
 
     public async Task<TestDefinitionViewModel> RestartTestDefinition(string id)
     {
         //todo: concurrency check impl.
-        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new TestPlatformException("NotFoundEntity");
+        var testDef = await managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new TestPlatformException("NotFoundEntity");
 
         var affectedFields = testDef.Restart();
-        await _managerDbContext.SaveOnlyAsync(testDef, affectedFields);
+        await managerDbContext.SaveOnlyAsync(testDef, affectedFields);
 
-        return _mapper.Map<TestDefinitionViewModel>(testDef);
+        return mapper.Map<TestDefinitionViewModel>(testDef);
     }
 
     public async Task<List<dynamic>> GetTestInvitationEvents(TestInvitationStatsInput input)
@@ -253,7 +235,7 @@ public class TestManagerService : ITestManagerService
 
         var keys = input.AccessCodes.Select(c => $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
         var result = new List<dynamic>();
-        var states = await _daprClient.GetBulkStateAsync("general-notify-store", keys.ToArray(), 2);
+        var states = await daprClient.GetBulkStateAsync("general-notify-store", keys.ToArray(), 2);
         foreach (var accessCode in input.AccessCodes)
         {
             var foundEvent = states.FirstOrDefault(c => c.Key.EndsWith(accessCode) && !string.IsNullOrEmpty(c.Value));
@@ -262,7 +244,7 @@ public class TestManagerService : ITestManagerService
                 continue;
             }
 
-            var parsedEvents = JsonSerializer.Deserialize<TestInvitationEventData>(foundEvent.Value, _daprClient.JsonSerializerOptions);
+            var parsedEvents = JsonSerializer.Deserialize<TestInvitationEventData>(foundEvent.Value, daprClient.JsonSerializerOptions);
             if (parsedEvents == null)
             {
                 continue;
@@ -294,7 +276,7 @@ public class TestManagerService : ITestManagerService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Could not send access code", ex);
+            logger.LogError("Could not send access code", ex);
         }
     }
 
@@ -304,7 +286,7 @@ public class TestManagerService : ITestManagerService
             throw new TestPlatformException("Invalid argument quantity");
 
         // Get and verify the test definition.
-        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id)
+        var testDef = await managerDbContext.Find<TestDefinition>().MatchID(id)
         .Project(c => c
             .Include(nameof(TestDefinition.Status))
             .Include(nameof(TestDefinition.ModifiedOn))
@@ -341,11 +323,11 @@ public class TestManagerService : ITestManagerService
         }
 
         // Update affected property: TestAccessSettings.
-        await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
+        await managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
 
         return new
         {
-            TestAccessSettings = _mapper.Map<TestAccessSettingsViewModel>(testDef.TestAccessSettings),
+            TestAccessSettings = mapper.Map<TestAccessSettingsViewModel>(testDef.TestAccessSettings),
             ModifiedOn = testDef.ModifiedOn
         };
     }
@@ -354,7 +336,7 @@ public class TestManagerService : ITestManagerService
     {
         //todo: reuse logic for 2 same methods.
         // Get and verify the test definition.
-        var testDef = await _managerDbContext
+        var testDef = await managerDbContext
         .Find<TestDefinition>()
         .MatchID(id)
         .Project(c => c
@@ -390,11 +372,11 @@ public class TestManagerService : ITestManagerService
         }
 
         // Update affected property: TestAccessSettings.
-        await _managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
+        await managerDbContext.SaveOnlyAsync(testDef, new[] { nameof(TestDefinition.TestAccessSettings) });
 
         return new
         {
-            TestAccessSettings = _mapper.Map<TestAccessSettingsViewModel>(testDef.TestAccessSettings),
+            TestAccessSettings = mapper.Map<TestAccessSettingsViewModel>(testDef.TestAccessSettings),
             ModifiedOn = testDef.ModifiedOn
         };
     }
@@ -416,7 +398,7 @@ public class TestManagerService : ITestManagerService
         };
 
         //todo: prevent harded code here.
-        var sender = _bus.CreateSender("send-test-access-code");
+        var sender = bus.CreateSender("send-test-access-code");
         await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(request)));
     }
 
@@ -424,7 +406,7 @@ public class TestManagerService : ITestManagerService
     {
         //todo: reuse logic for 2 same methods.
         // Get and verify the test definition.
-        var testDef = await _managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
+        var testDef = await managerDbContext.Find<TestDefinition>().MatchID(id).ExecuteFirstAsync() ?? throw new EntityNotFoundException(id, nameof(TestDefinition));
         if (testDef.TestAccessSettings.AccessType != TestAcessType.PrivateAccessCode)
         {
             throw new TestPlatformException("Invalid entity");

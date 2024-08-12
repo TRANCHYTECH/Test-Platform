@@ -4,16 +4,10 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinitio
 namespace VietGeeks.TestPlatform.TestManager.UnitTest;
 
 [Collection(TestDefinitionValidatorTestCollection.CollectionId)]
-public class TimeSettingsPartValidatorUnitTests
+public class TimeSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
 {
-    private readonly TestDefinitionValidatorFixture _fixture;
-    private readonly TimeSettingsPartValidator _validator;
-
-    public TimeSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
-    {
-        _fixture = fixture;
-        _validator = fixture.CreateTimeSettingsPartValidator();
-    }
+    private readonly TestDefinitionValidatorFixture _fixture = fixture;
+    private readonly TimeSettingsPartValidator _validator = fixture.CreateTimeSettingsPartValidator();
 
     [Fact]
     public async Task TimeSettingsPart_AnswerQuestionConfig_Validate_Failure()

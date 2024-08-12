@@ -5,17 +5,11 @@ using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinitio
 namespace VietGeeks.TestPlatform.TestManager.UnitTest;
 
 [Collection(TestDefinitionValidatorTestCollection.CollectionId)]
-public class TestBasicSettingsPartValidatorUnitTests
+public class TestBasicSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
 {
-    private readonly TestDefinitionValidatorFixture _fixture;
+    private readonly TestDefinitionValidatorFixture _fixture = fixture;
 
-    private readonly TestBasicSettingsPartValidator _validator;
-
-    public TestBasicSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
-    {
-        _fixture = fixture;
-        _validator = fixture.CreateTestBasicSettingsPartValidator();
-    }
+    private readonly TestBasicSettingsPartValidator _validator = fixture.CreateTestBasicSettingsPartValidator();
 
 
     #region TestBasicSettingsPart

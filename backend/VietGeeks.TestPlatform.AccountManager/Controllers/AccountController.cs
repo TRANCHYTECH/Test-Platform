@@ -11,23 +11,18 @@ namespace VietGeeks.TestPlatform.AccountManager.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class AccountController : ControllerBase
+public class AccountController(
+    ILogger<AccountController> logger,
+    IAccountSettingsService accountSettingsService,
+    ITenant tenant)
+    : ControllerBase
 {
-    private readonly ILogger<AccountController> _logger;
-    private readonly IAccountSettingsService _accountSettingsService;
-    private readonly ITenant _tenant;
-
-    public AccountController(ILogger<AccountController> logger, IAccountSettingsService accountSettingsService, ITenant tenant)
-    {
-        _logger = logger;
-        _accountSettingsService = accountSettingsService;
-        _tenant = tenant;
-    }
+    private readonly ILogger<AccountController> _logger = logger;
 
     [HttpGet("TimeZones")]
     public IActionResult GetTimeZones()
     {
-        var timeZones = _accountSettingsService.GetTimeZones();
+        var timeZones = accountSettingsService.GetTimeZones();
 
         return Ok(timeZones);
     }
@@ -35,8 +30,8 @@ public class AccountController : ControllerBase
     [HttpGet("User")]
     public async Task<IActionResult> GetSettings()
     {
-        var userId = _tenant.UserId;
-        var profile = await _accountSettingsService.GetUserProfile(userId);
+        var userId = tenant.UserId;
+        var profile = await accountSettingsService.GetUserProfile(userId);
 
         return Ok(profile);
     }
@@ -44,7 +39,7 @@ public class AccountController : ControllerBase
     [HttpPost("User")]
     public async Task<IActionResult> CreateUserProfile(UserCreateViewModel viewModel)
     {
-        var createdProfile = await _accountSettingsService.CreateUserProfile(viewModel);
+        var createdProfile = await accountSettingsService.CreateUserProfile(viewModel);
 
         return Ok(createdProfile);
     }
@@ -52,8 +47,8 @@ public class AccountController : ControllerBase
     [HttpPut("User")]
     public async Task<IActionResult> UpdateUserProfile(UserUpdateViewModel viewModel)
     {
-        viewModel.UserId = _tenant.UserId;
-        var updatedProfile = await _accountSettingsService.UpdateUserProfile(viewModel);
+        viewModel.UserId = tenant.UserId;
+        var updatedProfile = await accountSettingsService.UpdateUserProfile(viewModel);
 
         return Ok(updatedProfile);
     }

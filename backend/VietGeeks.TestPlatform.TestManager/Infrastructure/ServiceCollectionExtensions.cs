@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
@@ -13,7 +14,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static void RegisterTestManagerModule(this IServiceCollection serviceCollection, InfrastructureDataOptions options)
+    public static void RegisterTestManagerModule(this IServiceCollection serviceCollection, TestManagerModuleOptions options)
     {
         ConfigureDb(options.Database);
 
@@ -55,21 +56,7 @@ public static class ServiceCollectionExtensions
     }
 }
 
-public class DatabaseOptions
-{
-    public string DatabaseName { get; set; } = default!;
-
-    public string ConnectionString { get; set; } = default!;
-}
-
-public class ServiceBusOptions
-{
-    public string Namespace { get; set; } = default!;
-
-    public string ManagedIdentityClientId { get; set; } = default!;
-}
-
-public class InfrastructureDataOptions
+public class TestManagerModuleOptions
 {
     public DatabaseOptions Database { get; set; } = default!;
 

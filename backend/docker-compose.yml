@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: tranchy.tech
+      MONGO_INITDB_ROOT_PASSWORD: tranchy
+    volumes:
+      - ./db_data/:/data/db/
+
+  sql:
+    environment:
+      - ACCEPT_EULA=true
+      - SA_PASSWORD=Password@123
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    ports:
+      - "1434:1433"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  tranchy.ask.api:
+    image: ${DOCKER_REGISTRY-}tranchyaskapi
+    build:
+      context: .
+      dockerfile: Dockerfile

@@ -7,19 +7,12 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
     [ApiController]
     [Route("Management/TestReport")]
     [Authorize]
-    public class TestReportController : ControllerBase
+    public class TestReportController(ITestReportService testReportService) : ControllerBase
     {
-        private readonly ITestReportService _testReportService;
-
-        public TestReportController(ITestReportService testReportService)
-        {
-            _testReportService = testReportService;
-        }
-
         [HttpGet("{testId}/TestRuns")]
         public async Task<IActionResult> GetTestRuns(string testId)
         {
-            var testRuns = await _testReportService.GetTestRunSummaries(testId);
+            var testRuns = await testReportService.GetTestRunSummaries(testId);
 
             return Ok(testRuns);
         }
@@ -27,7 +20,7 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
         [HttpGet("Exams")]
         public async Task<IActionResult> ListExams([FromQuery] string[] testRunIds)
         {
-            var summaries = await _testReportService.GetExamSummaries(testRunIds);
+            var summaries = await testReportService.GetExamSummaries(testRunIds);
 
             return Ok(summaries);
         }
@@ -35,7 +28,7 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
         [HttpGet("Respondents")]
         public async Task<IActionResult> ListRespondents([FromQuery] string[] testRunIds)
         {
-            var respondents = await _testReportService.GetRespondents(testRunIds);
+            var respondents = await testReportService.GetRespondents(testRunIds);
 
             return Ok(respondents);
         }
@@ -43,7 +36,7 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
         [HttpGet("Exam/{examId}/Review")]
         public async Task<IActionResult> GetExamReview(string examId)
         {
-            var result = await _testReportService.GetExamReview(examId);
+            var result = await testReportService.GetExamReview(examId);
 
             return Ok(result);
         }

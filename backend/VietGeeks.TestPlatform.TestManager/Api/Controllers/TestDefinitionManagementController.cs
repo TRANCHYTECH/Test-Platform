@@ -11,22 +11,17 @@ namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 [ApiController]
 [Route("Management/TestDefinition")]
 [Authorize]
-public class TestDefinitionManagementController : ControllerBase
+public class TestDefinitionManagementController(
+    ILogger<TestDefinitionManagementController> logger,
+    ITestManagerService testManagerService)
+    : ControllerBase
 {
-    private readonly ILogger<TestDefinitionManagementController> _logger;
-    private readonly ITestManagerService _testManagerService;
-
-    public TestDefinitionManagementController(ILogger<TestDefinitionManagementController> logger,
-        ITestManagerService testManagerService)
-    {
-        _logger = logger;
-        _testManagerService = testManagerService;
-    }
+    private readonly ILogger<TestDefinitionManagementController> _logger = logger;
 
     [HttpPost]
     public async Task<IActionResult> Create(NewTestDefinitionViewModel viewModel)
     {
-        var createdTest = await _testManagerService.CreateTestDefinition(viewModel);
+        var createdTest = await testManagerService.CreateTestDefinition(viewModel);
 
         return Ok(createdTest);
     }
@@ -35,7 +30,7 @@ public class TestDefinitionManagementController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
         //todo: move paging search stuff to shared, also prevent max is 100
-        var testDefinitions = await _testManagerService.GetTestDefinitionOverviews(pageNumber ?? 1, pageSize ?? 12, cancellationToken);
+        var testDefinitions = await testManagerService.GetTestDefinitionOverviews(pageNumber ?? 1, pageSize ?? 12, cancellationToken);
 
         return Ok(testDefinitions);
     }
@@ -49,7 +44,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, UpdateTestDefinitionViewModel viewModel)
     {
-        var testDefinitions = await _testManagerService.UpdateTestDefinition(id, viewModel);
+        var testDefinitions = await testManagerService.UpdateTestDefinition(id, viewModel);
 
         return Ok(testDefinitions);
     }
@@ -57,7 +52,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var testDefinition = await _testManagerService.GetTestDefinition(id);
+        var testDefinition = await testManagerService.GetTestDefinition(id);
 
         if (testDefinition == null)
         {
@@ -70,7 +65,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPost("{id}/Activate")]
     public async Task<IActionResult> Activate(string id)
     {
-        var testDefiniton = await _testManagerService.ActivateTestDefinition(id);
+        var testDefiniton = await testManagerService.ActivateTestDefinition(id);
 
         return Ok(testDefiniton);
     }
@@ -78,7 +73,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPost("{id}/End")]
     public async Task<IActionResult> End(string id)
     {
-        var testDefiniton = await _testManagerService.EndTestDefinition(id);
+        var testDefiniton = await testManagerService.EndTestDefinition(id);
 
         return Ok(testDefiniton);
     }
@@ -86,7 +81,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPost("{id}/Restart")]
     public async Task<IActionResult> Restart(string id)
     {
-        TestDefinitionViewModel testDefiniton = await _testManagerService.RestartTestDefinition(id);
+        TestDefinitionViewModel testDefiniton = await testManagerService.RestartTestDefinition(id);
 
         return Ok(testDefiniton);
     }
@@ -94,7 +89,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpGet("{id}/TestAccess/GenerateAccessCodes/{quantity:range(1,50)}")]
     public async Task<IActionResult> GenerateAccessCodes(string id, int quantity)
     {
-        var result = await _testManagerService.GenerateAccessCodes(id, quantity);
+        var result = await testManagerService.GenerateAccessCodes(id, quantity);
 
         return Ok(result);
     }
@@ -102,7 +97,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPost("{id}/TestAccess/SendAccessCodes")]
     public async Task<IActionResult> SendAccessCodes(string id, [FromBody] string[] codes)
     {
-        await _testManagerService.SendAccessCodes(id, codes);
+        await testManagerService.SendAccessCodes(id, codes);
 
         return Ok();
     }
@@ -110,7 +105,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpDelete("{id}/TestAccess/RemoveAccessCodes")]
     public async Task<IActionResult> RemoveAccessCode(string id, [FromQuery(Name = "code")] string[] codes)
     {
-        var result = await _testManagerService.RemoveAccessCodes(id, codes);
+        var result = await testManagerService.RemoveAccessCodes(id, codes);
 
         return Ok(result);
     }
@@ -118,7 +113,7 @@ public class TestDefinitionManagementController : ControllerBase
     [HttpPost("{id}/TestInvitationStats")]
     public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
     {
-        var result = await _testManagerService.GetTestInvitationEvents(new()
+        var result = await testManagerService.GetTestInvitationEvents(new()
         {
             TestDefinitionId = id,
             TestRunId = model.TestRunId,

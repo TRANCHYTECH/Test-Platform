@@ -2,22 +2,15 @@
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-public class QuestionRelatedValidationService : IQuestionRelatedValidationService
+public class QuestionRelatedValidationService(TestManagerDbContext managerDbContext) : IQuestionRelatedValidationService
 {
-    private readonly TestManagerDbContext _managerDbContext;
-
-    public QuestionRelatedValidationService(TestManagerDbContext managerDbContext)
-    {
-        _managerDbContext = managerDbContext;
-    }
-
     public async Task<bool> CheckTestDefinitionExistence(string testId)
     {
-        return await _managerDbContext.Find<TestDefinition>().MatchID(testId).ExecuteAnyAsync();
+        return await managerDbContext.Find<TestDefinition>().MatchID(testId).ExecuteAnyAsync();
     }
 
     public async Task<bool> CheckTestCategoryExistence(string testCategoryId)
     {
-        return testCategoryId == TestCategory.UncategorizedId || await _managerDbContext.Find<TestCategory>().MatchID(testCategoryId).ExecuteAnyAsync();
+        return testCategoryId == TestCategory.UncategorizedId || await managerDbContext.Find<TestCategory>().MatchID(testCategoryId).ExecuteAnyAsync();
     }
 }

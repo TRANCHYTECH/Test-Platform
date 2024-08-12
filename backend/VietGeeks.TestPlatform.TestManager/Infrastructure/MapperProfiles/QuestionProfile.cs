@@ -15,7 +15,7 @@ public class QuestionProfile : Profile
         CreateMap<AnswerViewModel, Answer>().ReverseMap();
 
         CreateMap<ScoreSettingsViewModel, ScoreSettings>().IncludeAllDerived();
-        CreateMap<ScoreSettings,ScoreSettingsViewModel>().IncludeAllDerived();;
+        CreateMap<ScoreSettings,ScoreSettingsViewModel>().IncludeAllDerived();
         CreateMap<SingleChoiceScoreSettingsViewModel, SingleChoiceScoreSettings>().ReverseMap();
         CreateMap<MultipleChoiceScoreSettingsViewModel, MultipleChoiceScoreSettings>().ReverseMap();
     }

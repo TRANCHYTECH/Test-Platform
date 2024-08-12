@@ -3,18 +3,19 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.AccountManager.Services;
+using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 
 namespace VietGeeks.TestPlatform.AccountManager;
 
 public static class ServiceCollectionExtensions
 {
-    public static void RegisterAccountManagerModule(this IServiceCollection serviceCollection, InfrastructureDataOptions options)
+    public static void RegisterAccountManagerModule(this IServiceCollection serviceCollection, AccountManagerModuleOptions options)
     {
         ConfigureDb(options.Database);
 
         serviceCollection.AddScoped<IAccountSettingsService, AccountSettingsService>();
-        serviceCollection.AddSingleton<SharedKernel.PureServices.IClock, Clock>();
+        serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
     }
 
@@ -31,21 +32,7 @@ public static class ServiceCollectionExtensions
     }
 }
 
-public class DatabaseOptions
+public class AccountManagerModuleOptions
 {
-    public string DatabaseName { get; set; } = default!;
-
-    public string ConnectionString { get; set; } = default!;
-}
-
-public class ServiceBusOptions
-{
-    public string ConnectionString { get; set; } = default!;
-}
-
-public class InfrastructureDataOptions
-{
-    public DatabaseOptions Database { get; set; } = default!;
-
-    public ServiceBusOptions ServiceBus { get; set; } = default!;
+    public required DatabaseOptions Database { get; init; }
 }
