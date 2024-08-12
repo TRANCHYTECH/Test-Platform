@@ -1,0 +1,101 @@
+<viet-geeks-breadcrumbs [title]="pageTitle"></viet-geeks-breadcrumbs>
+<div class="row">
+  <div class="col-lg-auto col-xl-auto">
+    <h5 class="pb-2">
+      <span class="badge {{ testStatus | testStatusClass : 'bg' }} text-wrap">{{
+        testStatus | testStatus | translate
+      }}</span>
+    </h5>
+    <ngb-accordion
+      class="accordion-flush test-definition-sidebar"
+      #acc="ngbAccordion"
+      activeIds="test-config"
+      [closeOthers]="true"
+    >
+      <ngb-panel id="test-config" [cardClass]="'setting-parts'">
+        <ng-template
+          ngbPanelTitle
+          class="accordion-header border-0 bg-transparent"
+        >
+          <h5 class="panel-title mb-0">
+            {{ 'labels.testConfiguration' | translate }}
+          </h5>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <div class="list-group list-group-flush">
+            <ng-container *ngFor="let menu of menus$ | async">
+              <a
+                [routerLink]="menu.routerLink"
+                [routerLinkActive]="'active'"
+                [class.disabled]="menu.disable"
+                class="list-group-item list-group-item-action border-0"
+              >
+                <i [class]="menu.icon" class="align-middle me-2 fs-24"></i
+                >{{ ('testParts.' + menu.text) | translate }}</a
+              >
+            </ng-container>
+            <ng-container *ngIf="testId !== 'new'">
+              <button
+                *ngIf="testStatus === TestStatusRef.Draft"
+                class="btn btn-primary w-sm"
+                style="margin-top: 10px"
+                (click)="activateTest()"
+              >
+                {{ ('labels.' + activateMethod) | translate }}
+              </button>
+              <button
+                *ngIf="
+                  testStatus === TestStatusRef.Activated ||
+                  testStatus === TestStatusRef.Scheduled
+                "
+                class="btn btn-primary w-sm"
+                style="margin-top: 10px"
+                (click)="endTest()"
+              >
+                {{ 'labels.' + endMethod | translate }}
+              </button>
+
+              <button
+                *ngIf="testStatus === TestStatusRef.Ended"
+                class="btn btn-primary w-sm"
+                style="margin-top: 10px"
+                (click)="restart()"
+              >
+                {{ 'labels.restart' | translate }}
+              </button>
+            </ng-container>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="test-restult" [cardClass]="'result-parts'">
+        <ng-template
+          ngbPanelTitle
+          class="accordion-header border-0 bg-transparent"
+        >
+          <h5 class="panel-title mb-0">
+            {{ 'labels.testProgressAndResults' | translate }}
+          </h5>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <div class="list-group list-group-flush">
+            <ng-container *ngFor="let menu of testResultMenus$ | async">
+              <a
+                [routerLink]="menu.routerLink"
+                [routerLinkActive]="'active'"
+                [class.disabled]="menu.disable"
+                class="list-group-item list-group-item-action border-0"
+              >
+                <i [class]="menu.icon" class="align-middle me-2 fs-24"></i
+                >{{ 'testParts.' + menu.text | translate }}</a
+              >
+            </ng-container>
+          </div>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </div>
+  <div class="col">
+    <h5 class="pb-2">{{ sectionTitle$ | async }}</h5>
+    <router-outlet></router-outlet>
+  </div>
+</div>

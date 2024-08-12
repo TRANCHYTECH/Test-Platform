@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" />
+		<PackageReference Include="System.ComponentModel.Annotations" />
+		<PackageReference Include="MongoDB.Entities" />
+		<PackageReference Include="ListShuffle" />
+		<PackageReference Include="System.Text.Json" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.Azure" />
+		<PackageReference Include="Azure.Messaging.ServiceBus" />
+		<PackageReference Include="Dapr.Client" />
+		<PackageReference Include="shortid" />
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<PackageReference Include="LexoRank" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.Integration.Contract\VietGeeks.TestPlatform.Integration.Contract.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Data\VietGeeks.TestPlatform.TestManager.Data.csproj" />
+	</ItemGroup>
+
+</Project>

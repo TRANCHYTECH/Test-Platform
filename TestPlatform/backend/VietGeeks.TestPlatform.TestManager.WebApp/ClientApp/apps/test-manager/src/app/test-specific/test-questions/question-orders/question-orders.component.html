@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-xl-12" cdkDropList (cdkDropListDropped)="drop($event)">
+        <div class="card" *ngFor="let question of questions; index as i" cdkDrag>
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="flex-shrink-0 border rounded-2 p-2">
+                        <div class="question-no-text">
+                            {{i + 1}}
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">{{question.description | stripTags | truncate }}</div>
+                    <div class="flex-shrink-0">
+                        <i class="ri-menu-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-end mb-4">
+            <div class="d-flex gap-1 justify-content-end">
+                <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
+                    [canSubmit]="canSubmit"></viet-geeks-submit-button>
+            </div>
+        </div>
+    </div>
+</div>

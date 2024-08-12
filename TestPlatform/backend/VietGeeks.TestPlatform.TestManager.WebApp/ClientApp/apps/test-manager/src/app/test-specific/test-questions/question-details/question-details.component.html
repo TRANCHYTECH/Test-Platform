@@ -1,0 +1,200 @@
+<div class="row" [formGroup]="questionForm">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="question-answer-type-input" class="form-label">{{ 'labels.question' | translate }}</label>
+          <editor vietGeeksEditorLoadingIndicator class="simple-editor" formControlName="description" [apiKey]="textEditorConfigs.apiKey"
+            (onInit)="textEditorConfigs.handleEditorInit('editQuestion.description', $event)"
+            (onFocusOut)="gdprErrorTailor.showError()" [init]="textEditorConfigs.simpleEditorWithImage"
+            #gdprErrorTailor="errorTailor" [controlErrorAnchor]="messageAnchor"></editor>
+          <ng-template controlErrorAnchor #messageAnchor="controlErrorAnchor"></ng-template>
+        </div>
+        <div class="mb-3">
+          <label for="question-category-input" class="form-label">{{ 'labels.testCategory' | translate }}</label>
+          <div class="row">
+            <div class="col-sm-6">
+              <select data-choices formControlName="categoryId" class="form-select" id="question-category-input">
+                <option [ngValue]="c.id" *ngFor="let c of questionCategories$ | async">{{c.name}}</option>
+              </select>
+            </div>
+            <div class="col-sm-auto">
+              <button class="btn btn-outline-primary" (click)="addCategory()">{{ 'labels.addTestCategory' | translate }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="question-answer-type-input" class="form-label">{{ 'labels.answerType' | translate }}</label>
+          <div class="row">
+            <div>
+              <select data-choices formControlName="answerType" class="form-select" id="question-answer-type-input">
+                <option [value]="c.id" *ngFor="let c of answerTypes">{{c.text}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h5 class="card-header border-bottom-0">{{ 'labels.answers' | translate }}</h5>
+      <div class="card-body">
+        <label>{{ 'labels.answersHint' | translate }}</label>
+        <table class="table caption-top table-nowrap">
+          <thead class="table-light">
+            <tr class="text-center">
+              <th scope="col">{{ 'labels.correctAnswer' | translate}}</th>
+              <th scope="col">{{ 'labels.anwserDescription' | translate }}</th>
+              <th scope="col" *ngIf="isMultipleChoiceAnswer && isPartialScore">Point</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr formArrayName="answers" *ngFor="let answer of answers['controls']; let i = index;">
+              <ng-container [formGroupName]="i">
+                <td class="text-center">
+                  <input *ngIf="isMultipleChoiceAnswer; else singleChoice" type="checkbox" role="switch"
+                    id="flexSwitchCheckRightDisabled_{{i}}" class="form-check-input" formControlName="isCorrect">
+                  <ng-template #singleChoice>
+                    <input type="radio" role="switch" id="flexSwitchCheckRightDisabled_{{i}}" [value]="i"
+                      class="form-check-input" name="selectedIndex" formControlName="selectedIndex"
+                      (change)="selectSingleChoice(i)">
+                  </ng-template>
+                </td>
+                <td>
+                  <input type="text" class="form-control" formControlName="answerDescription">
+                </td>
+                <td class="hstack gap-2" *ngIf="isMultipleChoiceAnswer && isPartialScore">
+                  <input type="number" class="form-control" formControlName="answerPoint">
+                </td>
+                <td>
+                  <div class="hstack gap-2">
+                    <button type="button" class="btn btn-outline-secondary" (click)="removeAnswer(i)"><i
+                        class="ri-delete-bin-5-line"></i></button>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="answers.hasError('required')"><label
+          class="control-error">{{'errors.listRequired' | translate}}</label></div>
+        <button type="button" class="btn btn-outline-secondary btn-label" (click)="addEmptyAnswer()"><i
+            class="ri-add-line label-icon align-middle fs-24 me-2"></i>{{ 'labels.addAnswer' | translate }}</button>
+      </div>
+    </div>
+    <div class="card" [formGroup]="scoreSettingsForm">
+      <h5 class="card-header border-bottom-0">{{ 'labels.scoreSettings' | translate }}</h5>
+      <div class="card-body">
+        <ng-container [ngSwitch]="answerType">
+          <ng-container *ngSwitchCase="1">
+            <div class="alert alert-info alert-additional fade show custom-alert mb-3">
+              <div class="alert-body">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 me-3">
+                    <i class="ri-information-line fs-16 align-middle"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <p class="alert-heading mb-0">{{ 'labels.scoreSettingsHint' | translate }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">{{ 'labels.correctAnswerPoint' | translate }}</label>
+                  <input type="number" class="form-control" id="mask-value" placeholder=""
+                    formControlName="correctPoint">
+                </div>
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">{{ 'labels.incorrectAnswerPoint' | translate }}</label>
+                  <input type="number" class="form-control" id="mask-value" placeholder=""
+                    formControlName="incorrectPoint">
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <div class="alert alert-additional fade show custom-alert mb-3 alert-info">
+              <div class="alert-body">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 me-3">
+                    <i class="ri-information-line fs-16 align-middle"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <p class="alert-heading mb-0">{{ 'labels.scoreMethodsHint' | translate }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="hstack gap-3 mb-3">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                    name="isPartialAnswersEnabled" formControlName="isPartialAnswersEnabled" [value]=false>
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    {{ 'labels.scoreFullCorrectAnswersOnly' | translate }}
+                  </label>
+                </div>
+              </div>
+              <div class="row mb-3" *ngIf="!isPartialScore">
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">{{ 'labels.correctAnswerPoint' | translate }}</label>
+                  <input type="number" class="form-control" id="mask-value" placeholder=""
+                    formControlName="correctPoint" />
+                </div>
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">{{ 'labels.incorrectAnswerPoint' | translate }}</label>
+                  <input type="number" class="form-control" id="mask-value" placeholder=""
+                    formControlName="incorrectPoint" />
+                </div>
+              </div>
+              <div class="hstack gap-3 mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+                    name="isPartialAnswersEnabled" formControlName="isPartialAnswersEnabled" [value]=true>
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    {{ 'labels.scorePartialAnswers' | translate }}
+                  </label>
+                </div>
+              </div>
+              <div class="row" *ngIf="isPartialScore">
+                <div class="col-sm-auto">
+                  <label for="mask-value" class="form-label">{{ 'labels.bonusPointsHint' | translate }}</label>
+                  <input type="number" class="form-control" id="mask-value" placeholder=""
+                    formControlName="bonusPoints" />
+                </div>
+                <!-- <div class="col-sm-auto">
+                    <label for="mask-value" class="form-label">Number of points for each incorrect partial answer</label>
+                    <input type="number" class="form-control" id="mask-value" placeholder="" formControlName="partialIncorrectPoint">
+                  </div> -->
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <div class="hstack form-check form-switch form-switch-lg mb-3">
+          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input"
+            formControlName="isDisplayMaximumScore">
+          <label for="flexSwitchCheckRightDisabled" class="form-check-label">{{ 'labels.displaMaximumScoreForQuestion' | translate }}</label>
+        </div>
+        <div class="hstack form-check form-switch form-switch-lg mb-3">
+          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input"
+            formControlName="mustAnswerToContinue">
+          <label for="flexSwitchCheckRightDisabled" class="form-check-label">{{ 'labels.forceAnswerQuestionFirstTime' | translate }}</label>
+        </div>
+        <div class="hstack form-check form-switch form-switch-lg mb-3">
+          <input type="checkbox" role="switch" id="flexSwitchCheckRightDisabled" class="form-check-input"
+            formControlName="isMandatory">
+          <label for="flexSwitchCheckRightDisabled" class="form-check-label">{{ 'labels.terminateWhenFail' | translate }}</label>
+        </div>
+      </div>
+    </div>
+    <div class="text-end mb-4">
+      <div class="d-flex gap-1 justify-content-end">
+        <viet-geeks-submit-button [class]="'btn btn-primary w-sm'" [submitFunc]="submitFunc"
+          [canSubmit]="canSubmit"></viet-geeks-submit-button>
+      </div>
+    </div>
+  </div>
+</div>

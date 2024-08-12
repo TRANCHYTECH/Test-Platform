@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="MongoDB.Entities" />
+		<PackageReference Include="NodaTime" />
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Dapr.AspNetCore" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.Integration.Contract\VietGeeks.TestPlatform.Integration.Contract.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
+	</ItemGroup>
+</Project>

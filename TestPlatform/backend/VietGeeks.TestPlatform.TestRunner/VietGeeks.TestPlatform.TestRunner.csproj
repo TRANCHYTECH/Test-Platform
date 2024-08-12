@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" />
+		<PackageReference Include="MongoDB.Entities" />
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+		<PackageReference Include="Dapr.Client" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Dapr.AspNetCore" />
+		<PackageReference Include="Dapr.Actors.AspNetCore" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
+	  <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager.Data\VietGeeks.TestPlatform.TestManager.Data.csproj" />
+	</ItemGroup>
+
+</Project>

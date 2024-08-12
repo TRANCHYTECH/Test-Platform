@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Dapr.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VietGeeks.TestPlatform.AccountManager\VietGeeks.TestPlatform.AccountManager.csproj" />
+    <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager\VietGeeks.TestPlatform.TestManager.csproj" />
+  </ItemGroup>
+</Project>
