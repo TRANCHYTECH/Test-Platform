@@ -1,0 +1,22 @@
+<div class="btn-group" ngbDropdown #dropdown="ngbDropdown">
+    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false" ngbDropdownToggle>
+        <span class="pe-1">Respondent</span><b>{{respondentName}}</b>
+    </button>
+    <div class="dropdown-menu dropdown-menu-xl p-0" ngbDropdownMenu>
+        <div class="search-box border-bottom">
+            <input type="text" class="form-control search"
+                placeholder="{{'labels.searchRespondents' | translate}} ({{filteredRespondents$.value.length}})"
+                (keyup)="search(getValue($event))">
+            <i class="ri-search-line search-icon"></i>
+        </div>
+        <ul class="list list-group">
+            <li class="list-group-item" *ngFor="let item of filteredRespondents$ | async"
+                (click)="selectRespondent({data: item, target: dropdown})">
+                {{item.firstName}} {{item.lastName}}
+            </li>
+        </ul>
+    </div>
+</div>
+<button class="btn btn-outline-secondary" (click)="previousRespondent()" [disabled]="!canSelectPreviousRespondent()"><i class="ri-arrow-left-s-line"></i></button>
+<button class="btn btn-outline-secondary" (click)="nextRespondent()" [disabled]="!canSelectNextRespondent()"><i class="ri-arrow-right-s-line"></i></button>

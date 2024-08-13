@@ -1,0 +1,59 @@
+{
+  "MENUITEMS": {
+    "account": {
+      "text": "Account"
+    },
+    "MENU": {
+      "TEXT": "MENU"
+    },
+    "DASHBOARD": {
+      "TEXT": "Dashboard",
+      "BADGE": "New",
+      "LIST": {
+        "tests": "My Tests"
+      }
+    }
+  },
+  "pages": {
+    "testSets": {
+      "generatorTypes": {
+        "default": "Fixed questions and answers order as defined in Questions manager",
+        "randomFromCategories": "Random questions and answers order"
+      }
+    }
+  },
+  "errors": {
+    "required": "The field is required",
+    "listRequired": "The list requires at least one",
+    "minlength": "Expected length {{requiredLength}} got {{actualLength}}",
+    "maxlength": "Expected length {{requiredLength}} got {{actualLength}}",
+    "min": "Expected min value {{min}} got {{actual}}",
+    "max": "Expected max value {{max}} got {{actual}}",
+    "inputMask": "Invalid input",
+    "maxHours": "Expected max hour value {{max}} got {{actual}}",
+    "maxMins": "Expected max minute value {{max}} got {{actual}}",
+    "maxSeconds": "Expected max second value {{max}} got {{actual}}",
+    "email": "The email is invalid",
+    "url": "The url is invalid",
+    "duration": "Invalid duration",
+    "furtureDate": "The date must be in furture",
+    "greaterThanDate": "The date must be greater than {{comparedDate}}"
+  },
+  "labels": {
+    "activate": "Activate",
+    "schedule": "Schedule ",
+    "endTest": "End test",
+    "changeSettings": "Change settings",
+    "restart": "Start again",
+    "noUser": "No User",
+    "searchRespondents": "Search Respondents"
+  },
+  "summary": {
+    "testTimeLimit": "Time limit for entire test is set to {{duration}}",
+    "questionTimeLimit": "Time limit for each question is set to  {{duration}}",
+    "manualActivation": "Test will activate immediately after all settings are confirmed",
+    "timePeriodActivation": "Test actication date is {{activeFromDate}} ({{timeZone}})",
+    "publicLinkTest": "Test is in Public Link access mode",
+    "privateAccessCodeTest": "Test is in Private Access Code mode"
+  }
+}

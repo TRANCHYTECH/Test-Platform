@@ -1,0 +1,78 @@
+<div class="row g-4 mb-3" *ngIf="questions$.value.length > 0">
+  <div class="col-sm-auto d-flex gap-2">
+    <div *ngIf="!isReadonly">
+      <a routerLink="../new" class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>{{
+        'labels.newQuestion' | translate }}</a>
+    </div>
+    <a routerLink="../categories" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
+        class="ri-list-settings-fill align-bottom me-1"></i>{{ 'labels.manageQuestionCategories' | translate
+      }}</a>
+    <a routerLink="../order" class="btn btn-soft-secondary" *ngIf="!isReadonly"><i
+        class="ri-list-settings-fill align-bottom me-1"></i>{{ 'labels.changeQuestionOrder' | translate }}</a>
+  </div>
+</div>
+
+<div class="row">
+  <ng-container *ngIf="readyForUI$ | async">
+    <ng-container *ngIf="questions$.value.length === 0; then emptyList; else questionList">
+    </ng-container>
+  </ng-container>
+  <ng-template #emptyList>
+    <div class="text-center">
+      <img alt="question list" src="/assets/images/data-list.svg" />
+      <h5>You don't have any questions yet</h5>
+      <p>Click <b>Add question</b> to create your first question</p>
+      <div>
+        <a routerLink="../new" class="btn btn-secondary"><i class="ri-add-line align-bottom me-1"></i>{{
+          'labels.newQuestion' | translate }}</a>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #questionList>
+    <div class="col-xxl-12" *ngFor="let question of questions$ | async" id="pl1_{{ question.id }}">
+      <div class="card card-height-100" (click)="goToQuestionDetails(question.id, $event)" style="cursor: pointer">
+        <div class="card-body">
+          <div class="d-flex flex-column h-100">
+            <div class="d-flex">
+              <div class="flex-grow-1 mb-4">
+                <div class="text-muted"> {{ 'labels.questionNumber' | translate: {number: question.questionNo} }}</div>
+              </div>
+              <div class="flex-shrink-0">
+                <div class="d-flex gap-1 align-items-center">
+                  <div>
+                    <span class="ms-3 badge rounded-pill text-bg-primary">{{
+                      displayCategory(question.categoryId)
+                      }}</span>
+                    <span class="ms-3">{{ 'labels.questionTypeIs' | translate: {type: ('questionTypes.' + AnswerType[question.answerType] | translate)} }}</span>
+                    <span class="ms-3 vr"></span>
+                    <span class="ms-3">{{ 'labels.questionPointIs' | translate : {point: question.scoreSettings.totalPoints} }}</span>
+                  </div>
+                  <div class="dropdown question-action-menu" ngbDropdown>
+                    <button class="btn btn-link text-muted p-1 mt-n2 py-0 text-decoration-none fs-15 arrow-none"
+                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ngbDropdownToggle>
+                      <i class="ri-more-line"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                      <a class="dropdown-item" *ngIf="isDraftTest" [swal]="{
+                          title: 'Confirmation',
+                          text: 'You want to delete this test category?',
+                          showCancelButton: true
+                        }" (confirm)="removeQuestion(question.id)"><i
+                          class="ri-delete-bin-2-line align-bottom me-2 text-muted"></i>{{ 'labels.delete' | translate }}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <viet-geeks-question-view [question]="question"></viet-geeks-question-view>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<div class="row">
+  <viet-geeks-pagination #pagination [label]="'labels.questionsPerPage' | translate"
+    [pagedSearchFn]="pagedSearchFn"></viet-geeks-pagination>
+</div>

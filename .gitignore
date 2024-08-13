@@ -521,3 +521,5 @@ FodyWeavers.xsd
 TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/project.assets.json
 TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/project.nuget.cache
 TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/VietGeeks.TestPlatform.AspNetCore.csproj.nuget.dgspec.json
+
+db_data/

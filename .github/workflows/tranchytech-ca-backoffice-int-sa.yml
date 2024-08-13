@@ -1,0 +1,64 @@
+name: backoffice-int
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - freature/refactoring
+    paths:
+      - "backend/**"
+      - "!backend/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**"
+env:
+  CONTAINER_APP_CONTAINER_NAME: tranchytech-testplatform-backoffice
+  CONTAINER_APP_NAME: tranchytech-ca-backoffice-int-sa
+  CONTAINER_APP_RESOURCE_GROUP_NAME: tranchytech-rg-testplatform-int-southeastasia
+  CONTAINER_REGISTRY_LOGIN_SERVER: tranchytechacrtestplatformintsa.azurecr.io
+  DOCKER_FILE_PATH: backend/Dockerfile
+  PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformbackoffice
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Run VietGeeks.TestPlatform.TestManager.UnitTest
+        run: dotnet test ./backend/VietGeeks.TestPlatform.TestManager.UnitTest/VietGeeks.TestPlatform.TestManager.UnitTest.csproj
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.TranchyTechAcrTestPlatformIntSa_USERNAME }}
+          password: ${{ secrets.TranchyTechAcrTestPlatformIntSa_PASSWORD }}
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          context: ./
+          push: true
+          tags: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+          file: ${{ env.DOCKER_FILE_PATH }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.tranchytech_rg_testplatform_int_southeastasia_SPN }}
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Deploy to containerapp
+        uses: azure/arm-deploy@v2
+        with:
+          resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
+          template: ./deployment/container-app-dapr.bicep
+          parameters: location=southeastasia environmentName=cae-vg-tm-dev-sa-001 containerAppName=ca-vg-tm-tmgrapi-dev-sa-001 subDomainCertificate=dev-test-manager-api containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+          failOnStdErr: false
+          deploymentName: backoffice-int-${{ github.sha }}
+      - name: logout
+        run: >
+          az logout

@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.33808.371
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.SharedKernel", "VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj", "{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.AspNetCore", "VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj", "{194EF700-E3D7-486B-B00B-9A9358365CB9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Functions.SendEmail", "VietGeeks.TestPlatform.TestManager.Functions.SendEmail\VietGeeks.TestPlatform.TestManager.Functions.SendEmail.csproj", "{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{028FEB60-6D92-4401-810D-092E6706DB68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{4A1078F7-0C6F-4AC5-B0C6-851CA862B9C4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		dotnet-tools.json = dotnet-tools.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.Integration.Contract", "VietGeeks.TestPlatform.Integration.Contract\VietGeeks.TestPlatform.Integration.Contract.csproj", "{C26390CA-6200-48D6-AF42-3313DCB2999C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.AccountManager", "VietGeeks.TestPlatform.AccountManager\VietGeeks.TestPlatform.AccountManager.csproj", "{615CACA9-E6C3-45A8-8557-544BB86B2F80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.BackOffice", "VietGeeks.TestPlatform.BackOffice\VietGeeks.TestPlatform.BackOffice.csproj", "{1CE789C6-1032-4893-8F5A-FD2F75B5613C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager", "VietGeeks.TestPlatform.TestManager\VietGeeks.TestPlatform.TestManager.csproj", "{3250B524-9AE5-4560-A01B-B4B59206A63C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.UnitTest", "VietGeeks.TestPlatform.TestManager.UnitTest\VietGeeks.TestPlatform.TestManager.UnitTest.csproj", "{60B1AE70-37E3-4DA0-BABC-184D275E2E9A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestRunner", "VietGeeks.TestPlatform.TestRunner\VietGeeks.TestPlatform.TestRunner.csproj", "{C172BC51-9077-4489-9EE0-EB0D920AC550}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Data", "VietGeeks.TestPlatform.TestManager.Data\VietGeeks.TestPlatform.TestManager.Data.csproj", "{6F74234F-17E6-497C-93AE-1D0BAF982AD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.FrontOffice", "VietGeeks.TestPlatform.FrontOffice\VietGeeks.TestPlatform.FrontOffice.csproj", "{40C2B1E7-702F-4F31-B60C-0C587B966DAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{615CACA9-E6C3-45A8-8557-544BB86B2F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{615CACA9-E6C3-45A8-8557-544BB86B2F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{615CACA9-E6C3-45A8-8557-544BB86B2F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{615CACA9-E6C3-45A8-8557-544BB86B2F80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CE789C6-1032-4893-8F5A-FD2F75B5613C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CE789C6-1032-4893-8F5A-FD2F75B5613C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CE789C6-1032-4893-8F5A-FD2F75B5613C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CE789C6-1032-4893-8F5A-FD2F75B5613C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3250B524-9AE5-4560-A01B-B4B59206A63C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3250B524-9AE5-4560-A01B-B4B59206A63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3250B524-9AE5-4560-A01B-B4B59206A63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3250B524-9AE5-4560-A01B-B4B59206A63C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B1AE70-37E3-4DA0-BABC-184D275E2E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B1AE70-37E3-4DA0-BABC-184D275E2E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B1AE70-37E3-4DA0-BABC-184D275E2E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B1AE70-37E3-4DA0-BABC-184D275E2E9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C172BC51-9077-4489-9EE0-EB0D920AC550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C172BC51-9077-4489-9EE0-EB0D920AC550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C172BC51-9077-4489-9EE0-EB0D920AC550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C172BC51-9077-4489-9EE0-EB0D920AC550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F74234F-17E6-497C-93AE-1D0BAF982AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F74234F-17E6-497C-93AE-1D0BAF982AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F74234F-17E6-497C-93AE-1D0BAF982AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F74234F-17E6-497C-93AE-1D0BAF982AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40C2B1E7-702F-4F31-B60C-0C587B966DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40C2B1E7-702F-4F31-B60C-0C587B966DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40C2B1E7-702F-4F31-B60C-0C587B966DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40C2B1E7-702F-4F31-B60C-0C587B966DAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F9E39934-DAE3-44FC-87E0-BAF8BDF61FBE} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{194EF700-E3D7-486B-B00B-9A9358365CB9} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{C26390CA-6200-48D6-AF42-3313DCB2999C} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{615CACA9-E6C3-45A8-8557-544BB86B2F80} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{3250B524-9AE5-4560-A01B-B4B59206A63C} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{60B1AE70-37E3-4DA0-BABC-184D275E2E9A} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{C172BC51-9077-4489-9EE0-EB0D920AC550} = {028FEB60-6D92-4401-810D-092E6706DB68}
+		{6F74234F-17E6-497C-93AE-1D0BAF982AD8} = {028FEB60-6D92-4401-810D-092E6706DB68}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11EC26A0-B2C1-4D0F-A042-ABDACADBEB33}
+	EndGlobalSection
+EndGlobal

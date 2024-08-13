@@ -1,0 +1,26 @@
+<viet-geeks-breadcrumbs [title]="pageTitle"></viet-geeks-breadcrumbs>
+<div class="row">
+    <div class="col-lg-auto col-xl-auto">
+       <h5 class="pb-2">&nbsp;</h5>
+        <ngb-accordion class="accordion-flush test-definition-sidebar" #acc="ngbAccordion" activeIds="test-config" [closeOthers]="true">
+            <ngb-panel id="test-config" [cardClass]="'setting-parts'">
+                <ng-template ngbPanelTitle class="accordion-header border-0 bg-transparent">
+                    <h5 class="panel-title">Manage account</h5>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="list-group list-group-flush">
+                        <ng-container *ngFor="let menu of menus$ | async">
+                            <a [routerLink]="menu.routerLink" [routerLinkActive]="'active'"
+                                [class.disabled]="menu.disable" class="list-group-item list-group-item-action border-0">
+                                <i [class]="menu.icon" class="align-middle me-2"></i>{{menu.text}}</a>
+                        </ng-container>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+    <div class="col">
+        <h5 class="pb-2">{{sectionTitle}}</h5>
+        <router-outlet></router-outlet>
+    </div>
+</div>

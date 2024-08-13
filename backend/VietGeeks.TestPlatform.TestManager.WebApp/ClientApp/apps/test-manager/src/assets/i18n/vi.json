@@ -1,0 +1,244 @@
+{
+  "MENUITEMS": {
+    "account": {
+      "text": "Tài khoản"
+    },
+    "MENU": {
+      "TEXT": "MENU"
+    },
+    "DASHBOARD": {
+      "TEXT": "Dashboard",
+      "BADGE": "New",
+      "LIST": {
+        "tests": "Bài kiểm tra"
+      }
+    }
+  },
+  "pages": {
+    "testSets": {
+      "generatorTypes": {
+        "default": "Thứ tự câu hỏi và câu trả lời theo danh sách câu hỏi đã có",
+        "randomFromCategories": "Ngẫu nhiên câu hỏi và trộn thứ tự câu trả lời"
+      },
+      "auto": "[Tự động]"
+    },
+    "testAccess": {
+      "channel": {
+        "title": "Kênh truy cập",
+        "browser": "Trình duyệt web",
+        "microsoftTeams": "Microsoft Teams"
+      },
+      "accessType": {
+        "title": "Cách truy cập",
+        "publicLink": "Liên kết công khai",
+        "publicLinkHint": "Bất kỳ ai có đường dẫn bài thi có thể làm bài",
+        "publicLinkWithAccessCode": "Yêu cầu mã truy cập kiểm tra riêng để xác thực người trả lời. Trước khi bài kiểm tra bắt đầu, người trả lời sẽ phải nhập địa chỉ email của họ để nhận mã",
+        "privateAccessCode": "Mã truy cập",
+        "privateAccessCodeHint": "Chỉ những người có mã truy cập mới có thể làm bài",
+        "groupPassword": "Mã truy cập cho nhóm",
+        "training": "Luyện tập"
+      },
+      "attemptCounts": "Số lần thử trên mỗi người trả lời",
+      "attemptCountsHint": "Số lần một người trả lời có thể làm bài kiểm tra.",
+      "generateCode": "Tạo mã",
+      "generatingCode": "Đang tạo mã...",
+      "accessCode": "Mã truy cập",
+      "testSet": "Bộ đề thi",
+      "sendCode": "Gửi mã truy cập",
+      "deleteSelected": "Xoá mã được chọn",
+      "notSend": "Chưa gửi",
+      "confirmDeleteCodes": "Bạn chắc chắn muốn xoá mã truy cập đã chọn?"
+    },
+    "testStartPage": {
+      "instruction": "Hướng dẫn cho người làm bài thi",
+      "instructionHint": "Cung cấp hướng dẫn kiểm tra để hiển thị cho người trả lời trên trang bắt đầu kiểm tra.",
+      "respondentForm": "Thông tin người làm bài",
+      "respondentFormHint": "Đặt cấu hình biểu mẫu bắt đầu kiểm tra và thu thập dữ liệu để xác định người trả lời.",
+      "field": "Trường",
+      "fieldMandatory": "Bắt buộc",
+      "addField": "Thêm trường",
+      "manageCustomFields": "Quản lý các trường",
+      "consent": "Thoả thuận",
+      "consentHint": "Nếu bạn yêu cầu sự đồng ý hoặc chấp nhận trước khi người trả lời có thể thực hiện bài kiểm tra, hãy chỉ định điều đó bên dưới.",
+      "respondentFormFields": {
+        "firstName": "Tên",
+        "lastName": "Họ",
+        "city": "Thành phố",
+        "organizationName": "Tổ chức",
+        "phone": "Điện thoại"
+      }
+    },
+    "grading": {
+      "testEndMessage": "Thông báo sau khi kết thúc kiểm tra",
+      "testEndMessageHint": "Định cấu hình một thông báo sẽ được hiển thị cho tất cả những người trả lời khi kết thúc bài kiểm tra, bất kể kết quả của nó như thế nào.",
+      "redirectAfterTest": "Đặt chuyển hướng đến một trang web bên ngoài khi kết thúc quá trình kiểm tra",
+      "redirectAfterTestHint": "Nhập địa chỉ trang web đầy đủ (bao gồm http/https).",
+      "website": "Địa chỉ trang web",
+      "criteria": {
+        "title": "Tiêu chí cho điểm",
+        "hint": "Xác định tiêu chí chấm điểm ngay bây giờ hoặc khi có tất cả các điểm kiểm tra.",
+        "hint2": "Điểm tối đa có thể là {{percent}}% hoặc {{point}} điểm.",
+        "passMark": "Vượt qua mốc điểm",
+        "passMarkValue": "Giá trị",
+        "passMarkUnit": "Đơn vị",
+        "ranges": "Phạm vi",
+        "rangeNumber": "Phạm vi {{number}}",
+        "rangeFrom": "Từ {{number}} {{unit}} đến",
+        "rangesHint": "Xác định phạm vi điểm dựa trên điểm hoặc phần trăm",
+        "gradeTypes": "Các loại hạng",
+        "gradeUnit": "Đơn vị",
+        "grade": "Loại",
+        "addRange": "Thêm phạm vi"
+      },
+      "infoForRespondents": "THÔNG TIN DÀNH CHO NGƯỜI TRẢ LỜI",
+      "infoForRespondentsHint": "Chọn thông tin sẽ hiển thị cho người trả lời khi kết thúc bài kiểm tra",
+      "infoForRespondentsHint2": "Ban đầu, bạn có thể ẩn một số thông tin đối với người trả lời. Sau khi xem xét tất cả kết quả, bạn có thể hiển thị phần còn lại.",
+      "informFactors": {
+        "CorrectAnwsers": "Câu trả lời đúng",
+        "DescriptiveGrade": "Loại mô tả",
+        "Grade": "Loại",
+        "PassOrFailMessage": "Thông báo kết quả",
+        "PercentageScore": "Phần trăm",
+        "PointsScore": "Điểm số"
+      },
+      "gradeTypes": {
+        "grades": "Loại",
+        "descriptiveGrades": "Mô tả",
+        "gradeAndDescriptive": "Loại và mô tả"
+      },
+      "passMessage": "Thông báo cho người dùng đã vượt qua",
+      "failMessage": "Thông báo cho người dùng đã thất bại",
+      "informResultViaEmail": "Thông báo cho người trả lời về kết quả qua email",
+      "informResultViaEmailHint": "Email sẽ hiển thị cùng nội dung với nội dung ở cuối bài kiểm tra"
+    },
+    "testTime": {
+      "testDuration": {
+        "title": "Thời gian thi",
+        "hint": "Lựa chọn cách tính thời gian thi",
+        "completeTestMethod": "Thời gian hoàn thành bài thi (hh:mm). Tối đa: 23:59",
+        "timeEachQuestionMethod": "Thời gian giới hạn cho từng câu hỏi (hh:ss). Tối đa: 23:59"
+      },
+      "testActivation": {
+        "title": "Cách kích hoạt kiểm tra",
+        "hint": "Chọn phương thức kích hoạt",
+        "manualActivation": "Kích hoạt thủ công",
+        "manualActivationHint": "Ở phần dưới cùng của menu cấu hình, bạn sẽ tìm thấy nút \"Kích hoạt kiểm tra\". Sau khi nhấp vào nó, người trả lời có thể truy cập bài kiểm tra trong khung thời gian được chỉ định bên dưới. Khi đặt giá trị, hãy nhớ rằng những người đến sau sẽ không được phép bắt đầu bài kiểm tra.",
+        "manualActivationLabel": "Kiểm tra sẽ vẫn hoạt động cho ([d.]hh:mm:ss)",
+        "timePeriodActivation": "Kích hoạt trong khoảng thời gian đã đặt",
+        "timePeriodActivationHint": "Đặt ngày mà bài kiểm tra của bạn sẽ bắt đầu hoạt động và hạn chót mà người trả lời phải bắt đầu làm bài kiểm tra đó (họ vẫn có thể hoàn thành bài kiểm tra sau thời hạn).",
+        "testActivationDate": "Ngày kích hoạt thử nghiệm",
+        "testClosingDate": "Ngày kết thúc truy cập",
+        "timeZoneInfo": "Giờ máy chủ hiện tại theo múi giờ của bạn là: {{time}} ({{zone}}). Bạn có thể thay đổi múi giờ của mình trong",
+        "languageAndRegionSettings": "Cài đặt ngôn ngữ và khu vực",
+        "addtionalOptions": {
+          "title":"Lựạ chọn bổ sung",
+          "allowAnswerAnyOrder": "Cho phép trả lời các câu hỏi theo thứ tự bất kỳ và lùi hoặc bỏ qua câu hỏi"
+        }
+      }
+    }
+  },
+  "errors": {
+    "required": "Thông tin bắt buộc",
+    "listRequired": "Danh sách yêu cầu ít nhất một",
+    "minlength": "Độ dài dự kiến {{requiredLength}} có {{actualLength}}",
+    "maxlength": "Độ dài dự kiến {{requiredLength}} có {{actualLength}}",
+    "min": "Giá trị tối thiểu dự kiến {{min}} nhận được {{actual}}",
+    "max": "Giá trị tối đa dự kiến {{max}} nhận được {{actual}}",
+    "inputMask": "Đầu vào không hợp lệ",
+    "maxHours": "Giá trị giờ tối đa dự kiến {{max}} đã nhận được {{actual}}",
+    "maxMins": "Giá trị phút tối đa dự kiến {{max}} đã nhận được {{actual}}",
+    "maxSeconds": "Giá trị giây tối đa dự kiến {{max}} đã nhận được {{actual}}",
+    "email": "Email không hợp lệ",
+    "url": "Url không hợp lệ",
+    "duration": "Thời hạn không hợp lệ",
+    "furtureDate": "Ngày phải ở trong tương lai",
+    "greaterThanDate": "Ngày phải lớn hơn {{comparedDate}}"
+  },
+  "labels": {
+    "save": "Lưu",
+    "saving": "Đang lưu...",
+    "cancel": "Huỷ",
+    "activate": "Kích hoạt",
+    "schedule": "Đặt lịch",
+    "endTest": "Kết thúc",
+    "changeSettings": "Change settings",
+    "restart": "Kích hoạt lại",
+    "noUser": "Không có người dùng",
+    "searchRespondents": "Search Respondents",
+    "testConfiguration": "Cấu hình",
+    "testProgressAndResults": "Kết quả",
+    "newQuestion": "Thêm câu hỏi",
+    "questionNumber": "Câu hỏi {{number}}",
+    "manageQuestionCategories": "Quản lý loại câu hỏi",
+    "questionsPerPage": "Câu hỏi từng trang",
+    "testCategory": "Thể loại",
+    "addTestCategory": "Thêm thể loại",
+    "testCategoryName": "Tên thể loại",
+    "testCategoryNameHint": "Nhập tên thể loại",
+    "testName": "Tên bài thi",
+    "testNamePlaceHolder": "Nhập tên bài thi",
+    "testCategoryHint": "Giúp phân loại bài thi dễ dàng",
+    "testDescription": "Mô tả",
+    "testDescriptionHint": "Gợi nhớ mục đích bài thi",
+    "changeQuestionOrder": "Thay đổi thứ tự câu hỏi",
+    "questionTypeIs": "Loại {{type}}",
+    "questionPointIs": "Điểm {{point}}",
+    "questionOrders": "Thứ tự câu hỏi",
+    "questionOrderOptions": "Lựa chọn một trong các loại",
+    "questionCategoryName": "Thể loại câu hỏi",
+    "questionCategoryNameHint": "Nhập tên thể loại",
+    "addQuestionCategory": "Thêm thể loại câu hỏi",
+    "delete": "Xoá",
+    "answers": "Các câu trả lời",
+    "answerType": "Loại câu trả lời",
+    "correctAnswer": "Câu trả lời đúng",
+    "anwserDescription": "Mô tả",
+    "addAnswer": "Thêm câu trả lời",
+    "answersHint": "Thêm các câu trả lời cho câu hỏi",
+    "scoreSettings": "Cách tính điểm",
+    "scoreMethodsHint": "Select a scoring method for your answers. You can choose to score fully correct answers only or partial answers too.",
+    "scoreSettingsHint": "Xác định số điểm cho một câu trả lời đúng. Điểm cho câu trả lời sai cũng có thể được xác định. Nếu không hãy nhập 0 (bằng chữ: không) làm số điểm cho câu trả lời này.",
+    "correctAnswerPoint": "Điểm cho câu trả lời đúng",
+    "incorrectAnswerPoint": "Điểm cho câu trả lời sai",
+    "scoreFullCorrectAnswersOnly": "Chỉ tính điểm câu trả lời đúng",
+    "scorePartialAnswers": "Tính điểm câu đúng một phần",
+    "bonusPointsHint": "Điểm cộng cho tất cả các câu trả lời đúng",
+    "displaMaximumScoreForQuestion": "Hiển thị điểm tối đa cho câu hỏi",
+    "forceAnswerQuestionFirstTime": "Yêu cầu trả lời ngay lần đầu",
+    "terminateWhenFail": "Kết thúc bài thi nếu trả lời sai",
+    "draw": "Chọn",
+    "questionsOutOf": "câu hỏi của tổng {{total}}",
+    "copyLink": "Sao chép đường dẫn",
+    "email": "Email",
+    "confirmationTitle": "Xác nhận"
+  },
+  "testParts": {
+    "basicSettings": "Cơ bản",
+    "questions": "Danh sách câu hỏi",
+    "question": "Câu hỏi",
+    "testSets": "Bộ đề",
+    "testAccess": "Truy cập",
+    "testStartPage": "Trang bắt đầu",
+    "gradingAndSummary": "Điểm",
+    "timeSettings": "Thời gian",
+    "testResults": "Kết quả",
+    "testSheetReview": "Chi tiết bài thi"
+  },
+  "summary": {
+    "testTimeLimit": "Time limit for entire test is set to {{duration}}",
+    "questionTimeLimit": "Time limit for each question is set to  {{duration}}",
+    "manualActivation": "Test will activate immediately after all settings are confirmed",
+    "timePeriodActivation": "Test actication date is {{activeFromDate}} ({{timeZone}})",
+    "publicLinkTest": "Test is in Public Link access mode",
+    "privateAccessCodeTest": "Test is in Private Access Code mode"
+  },
+  "testStatuses": {
+    "Activated": "Đã kích hoạt",
+    "Ended": "Đã kết thúc",
+    "Draft": "Bản nháp"
+  },
+  "questionTypes": {
+    "SingleChoice": "Một đáp án",
+    "MultipleChoice": "Nhiều đáp án"
+  }
+}

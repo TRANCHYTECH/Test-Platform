@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "../../libs/shared/src/lib/models/question.model.ts"],
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  }
+}

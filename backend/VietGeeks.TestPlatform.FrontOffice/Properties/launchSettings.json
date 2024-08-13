@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "dapr": {
+      "commandName": "Executable",
+      "executablePath": "dapr",
+      "commandLineArgs": "run --app-id front-office --app-protocol https --resources-path ./../.dapr/components/ --app-port 7300 --dapr-http-port 3300 -- dotnet run --project .",
+      "workingDirectory": "$(ProjectDir)",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7300",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true
+    }
+  }
+}

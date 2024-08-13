@@ -1,0 +1,42 @@
+<div class="row g-4 mb-3">
+    <div class="col-sm-auto">
+        <div>
+            <button class="btn btn-secondary" (click)="openNewTestCategoryModal()"><i class="ri-add-line align-bottom me-1"></i>Create Test Category</button>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Test Categories</h4>
+            </div>
+
+            <div class="card-body">
+                <p class="text-muted">In the table below, you can see all the created categories. You can delete those
+                    you no longer use.</p>
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Category</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of categories$ | async">
+                                <td>{{item.name}}</td>
+                                <td>
+                                    <i class="ri-delete-bin-line delete-icon delete-btn"
+                                        [swal]="{ title: 'Confirmation', text: 'You want to delete this test category?', showCancelButton: true }"
+                                        (confirm)="removeCategory(item.id)"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
