@@ -15,22 +15,20 @@ RUN dotnet subset restore VietGeeksTestPlatform.sln --root-directory /src --outp
 
 FROM $BUILD_IMAGE AS restore
 WORKDIR /src
-COPY ./src/dotnet-tools.json .
-RUN dotnet tool restore
 COPY --from=prepare-restore-files /restore_subset .
 RUN dotnet restore
 
-FROM restore AS build
+FROM restore AS build-backoffice
 ARG BUILD_CONFIGURATION=Release
 COPY . .
 WORKDIR "/src/VietGeeks.TestPlatform.BackOffice"
 RUN dotnet build "./VietGeeks.TestPlatform.BackOffice.csproj" -c $BUILD_CONFIGURATION --no-restore
 
-FROM build AS publish
+FROM build-backoffice AS publish-backoffice
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./VietGeeks.TestPlatform.BackOffice.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build --no-restore
 
-FROM base AS final
+FROM base AS final-backoffice
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "VietGeeks.TestPlatform.BackOffice.dll"]
