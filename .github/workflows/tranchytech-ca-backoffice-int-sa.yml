@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - freature/refactoring
+    - master
     paths:
       - "backend/**"
       - "!backend/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**"

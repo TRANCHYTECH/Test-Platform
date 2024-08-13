@@ -15,7 +15,7 @@ RUN dotnet subset restore VietGeeksTestPlatform.sln --root-directory /src --outp
 
 FROM $BUILD_IMAGE AS restore
 WORKDIR /src
-COPY ./dotnet-tools.json .
+COPY /dotnet-tools.json .
 RUN dotnet tool restore
 COPY --from=prepare-restore-files /restore_subset .
 RUN dotnet restore
