@@ -30,5 +30,5 @@ RUN dotnet publish "./VietGeeks.TestPlatform.BackOffice.csproj" -c $BUILD_CONFIG
 
 FROM base AS final-backoffice
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish-backoffice /app/publish .
 ENTRYPOINT ["dotnet", "VietGeeks.TestPlatform.BackOffice.dll"]
