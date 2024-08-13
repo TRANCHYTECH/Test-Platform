@@ -4,13 +4,11 @@ param location string
 @description('Specifies the name of the container app.')
 param containerAppName string
 
-param aspNetEnv string = 'Development'
-
 @description('Specifies the container port.')
 param targetPort int = 80
 
 @description('Specifies the docker container image to deploy.')
-param containerImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
+param containerImage string
 
 @description('Number of CPU cores the container can use. Can be with a maximum of two decimals.')
 @allowed([
@@ -51,23 +49,23 @@ param environmentName string
 param revisionMode string = 'Single'
 param containerRegistry string
 param subDomainCertificate string
+param serviceBusNameSpaceName string
+param userAssignedIdentity string
 
 resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
   name: environmentName
 }
 
-resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments/managedCertificates@2023-04-01-preview' existing = {
+resource managedCertificate 'Microsoft.App/managedEnvironments/managedCertificates@2023-04-01-preview' existing = {
   name: subDomainCertificate
   parent: environment
 }
-
-var serviceBusNameSpaceName = 'vgtrunnerdev'
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' existing = {
   name: serviceBusNameSpaceName
 }
 resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
-  name: 'test-master-services-access-identity'
+  name: userAssignedIdentity
 }
 
 resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
@@ -108,8 +106,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         ]
         customDomains: [
           {
-            name: managedEnvironmentManagedCertificate.properties.subjectName
-            certificateId: managedEnvironmentManagedCertificate.id
+            name: managedCertificate.properties.subjectName
+            certificateId: managedCertificate.id
             bindingType: 'SniEnabled'
           }
         ]
@@ -123,7 +121,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
           env: [
             {
               name: 'ASPNETCORE_ENVIRONMENT'
-              value: aspNetEnv
+              value: 'Production'
             }
             {
               name: 'TestManagerServiceBus__Namespace'
@@ -157,7 +155,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
             custom: {
               type: 'cpu'
               metadata: {
-                metricType : 'Utilization'
+                metricType: 'Utilization'
                 value: '70'
               }
             }
@@ -167,7 +165,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
             custom: {
               type: 'memory'
               metadata: {
-                metricType : 'AverageValue'
+                metricType: 'AverageValue'
                 value: '70'
               }
             }
