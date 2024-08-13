@@ -32,3 +32,18 @@ FROM base AS final-backoffice
 WORKDIR /app
 COPY --from=publish-backoffice /app/publish .
 ENTRYPOINT ["dotnet", "VietGeeks.TestPlatform.BackOffice.dll"]
+
+FROM restore AS build-frontoffice
+ARG BUILD_CONFIGURATION=Release
+COPY . .
+WORKDIR "/src/VietGeeks.TestPlatform.FrontOffice"
+RUN dotnet build "./VietGeeks.TestPlatform.FrontOffice.csproj" -c $BUILD_CONFIGURATION --no-restore
+
+FROM build-frontoffice AS publish-frontoffice
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./VietGeeks.TestPlatform.FrontOffice.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build --no-restore
+
+FROM base AS final-frontoffice
+WORKDIR /app
+COPY --from=publish-frontoffice /app/publish .
+ENTRYPOINT ["dotnet", "VietGeeks.TestPlatform.FrontOffice.dll"]
