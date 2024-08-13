@@ -25,7 +25,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Run VietGeeks.TestPlatform.TestManager.UnitTest
-        run: dotnet test ./backend/VietGeeks.TestPlatform.TestManager.UnitTest/VietGeeks.TestPlatform.TestManager.UnitTest.csproj"
+        run: dotnet test ./backend/VietGeeks.TestPlatform.TestManager.UnitTest/VietGeeks.TestPlatform.TestManager.UnitTest.csproj
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Log in to container registry
