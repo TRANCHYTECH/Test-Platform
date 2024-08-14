@@ -9,7 +9,7 @@
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
 		<NuGetAudit>true</NuGetAudit>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 	</PropertyGroup>
 

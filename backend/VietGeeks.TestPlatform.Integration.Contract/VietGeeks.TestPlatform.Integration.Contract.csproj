@@ -1,5 +1,2 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <None Remove="packages.lock.json" />
-  </ItemGroup>
 </Project>
