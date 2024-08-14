@@ -52,18 +52,11 @@ param subDomainCertificate string
 param userAssignedIdentity string
 
 var appSettingKeys = [
-  'AccountManagerDatabase__ConnectionString'
-  'AccountManagerDatabase__DatabaseName'
-  'Authentication__Schemes__Auth0Integration__Authority'
-  'Authentication__Schemes__Auth0Integration__ValidAudiences'
-  'Authentication__Schemes__BackOffice__Authority'
-  'Authentication__Schemes__BackOffice__ClientId'
-  'Authentication__Schemes__BackOffice__Scopes'
-  'Authentication__Schemes__BackOffice__ValidAudiences'
-  'ConnectionStrings__UserSession'
-  'PortalUrl'
-  'TestManagerDatabase__ConnectionString'
-  'TestManagerDatabase__DatabaseName'
+  ['ConnectionStrings__UserSession', 'user-session']
+  ['TestManagerDatabase__ConnectionString', 'test-mgr-db-connect']
+  ['TestManagerDatabase__DatabaseName', 'test-mgr-db-name']
+  ['TestManagerServiceBus__Namespace', 'bus-namespace']
+  ['TestManagerServiceBus__ManagedIdentityClientId', 'bus-client']
 ]
 
 resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
@@ -129,10 +122,12 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         {
           name: containerAppName
           image: containerImage
-          env: [for appSetting in appSettingKeys: {
-            name: appSetting
-            secretRef: appSetting
-          }]
+          env: [
+            for appSetting in appSettingKeys: {
+              name: appSetting[0]
+              secretRef: appSetting[1]
+            }
+          ]
           resources: {
             cpu: json(cpuCore)
             memory: '${memorySize}Gi'
