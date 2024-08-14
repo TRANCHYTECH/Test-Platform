@@ -49,8 +49,22 @@ param environmentName string
 param revisionMode string = 'Single'
 param containerRegistry string
 param subDomainCertificate string
-param serviceBusNameSpaceName string
 param userAssignedIdentity string
+
+var appSettingKeys = [
+  'AccountManagerDatabase__ConnectionString'
+  'AccountManagerDatabase__DatabaseName'
+  'Authentication__Schemes__Auth0Integration__Authority'
+  'Authentication__Schemes__Auth0Integration__ValidAudiences'
+  'Authentication__Schemes__BackOffice__Authority'
+  'Authentication__Schemes__BackOffice__ClientId'
+  'Authentication__Schemes__BackOffice__Scopes'
+  'Authentication__Schemes__BackOffice__ValidAudiences'
+  'ConnectionStrings__UserSession'
+  'PortalUrl'
+  'TestManagerDatabase__ConnectionString'
+  'TestManagerDatabase__DatabaseName'
+]
 
 resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
   name: environmentName
@@ -61,9 +75,6 @@ resource managedCertificate 'Microsoft.App/managedEnvironments/managedCertificat
   parent: environment
 }
 
-resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' existing = {
-  name: serviceBusNameSpaceName
-}
 resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: userAssignedIdentity
 }
@@ -118,20 +129,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         {
           name: containerAppName
           image: containerImage
-          env: [
-            {
-              name: 'ASPNETCORE_ENVIRONMENT'
-              value: 'Production'
-            }
-            {
-              name: 'TestManagerServiceBus__Namespace'
-              value: serviceBusNamespace.name
-            }
-            {
-              name: 'TestManagerServiceBus__ManagedIdentityClientId'
-              value: uai.properties.clientId
-            }
-          ]
+          env: [for appSetting in appSettingKeys: {
+            name: appSetting
+            secretRef: appSetting
+          }]
           resources: {
             cpu: json(cpuCore)
             memory: '${memorySize}Gi'
