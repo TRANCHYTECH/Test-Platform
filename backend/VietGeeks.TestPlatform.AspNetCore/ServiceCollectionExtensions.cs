@@ -79,7 +79,7 @@ public static class ServiceCollectionExtensions
                             var postLogoutUri = context.Properties.RedirectUri;
                             if (!string.IsNullOrEmpty(postLogoutUri))
                             {
-                                if (string.Equals(postLogoutUri, "/agency-portal", StringComparison.Ordinal))
+                                if (string.Equals(postLogoutUri, "/test-portal", StringComparison.Ordinal))
                                 {
                                     postLogoutUri = "//todo";
                                 }
@@ -109,7 +109,7 @@ public static class ServiceCollectionExtensions
                             var handler = new JwtSecurityTokenHandler();
                             var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
-                            if (jsonToken?.Audiences.Contains("askapi/auth0", StringComparer.Ordinal) == true)
+                            if (jsonToken?.Audiences.Contains("backoffice-api/auth0", StringComparer.Ordinal) == true)
                             {
                                 return AuthenticationSchemaNames.UserSynchronization;
                             }

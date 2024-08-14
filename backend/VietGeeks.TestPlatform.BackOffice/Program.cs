@@ -1,5 +1,6 @@
 using Duende.Bff.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using VietGeeks.TestPlatform.AccountManager;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.SharedKernel;
@@ -32,7 +33,7 @@ builder.Services.RegisterTestManagerModule(new TestManagerModuleOptions
 });
 builder.Services.RegisterAccountManagerModule(new AccountManagerModuleOptions
 {
-    Database = builder.Configuration.GetSection("AccountManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
+    Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
 });
 
 builder.Services.AddDaprClient();
@@ -68,8 +69,11 @@ app.UseCors("dev");
 
 app.UseVietGeeksEssentialFeatures();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseBff();
 app.UseAuthorization();
-app.MapControllers();
+app.MapBffManagementEndpoints();
+app.MapControllers().RequireAuthorization().AsBffApiEndpoint().SkipAntiforgery();
 app.MapSubscribeHandler();
 
 await app.RunAsync();
