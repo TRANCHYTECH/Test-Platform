@@ -57,7 +57,7 @@ param userAssignedIdentity string
 //   ['TestManagerDatabase__DatabaseName', 'test-mgr-db-name']
 //   ['TestManagerServiceBus__Namespace', 'bus-namespace']
 //   ['TestManagerServiceBus__ManagedIdentityClientId', 'bus-client']
-]
+// ]
 
 resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
   name: environmentName
