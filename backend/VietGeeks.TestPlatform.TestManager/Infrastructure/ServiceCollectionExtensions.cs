@@ -49,7 +49,9 @@ public static class ServiceCollectionExtensions
 
         ConventionRegistry.Register("TestPlatformDefaultConventions", conventionPack, _ => true);
 
-        DB.InitAsync(databaseOptions.DatabaseName, MongoClientSettings.FromConnectionString(databaseOptions.ConnectionString)).Wait();
+        var settings = MongoClientSettings.FromConnectionString(databaseOptions.ConnectionString);
+        settings.UseTls = true;
+        DB.InitAsync(databaseOptions.DatabaseName, settings).Wait();
     }
 }
 
