@@ -84,7 +84,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
         }
       ]
       dapr: {
-        enabled: true
+        enabled: false
         appId: containerAppName
         appPort: 80
         appProtocol: 'http'
