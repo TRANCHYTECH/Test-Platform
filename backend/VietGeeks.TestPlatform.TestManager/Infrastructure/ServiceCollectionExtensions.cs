@@ -29,10 +29,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
         serviceCollection.AddAzureClients(builder => builder.AddServiceBusClientWithNamespace($"{options.ServiceBus.Namespace}.servicebus.windows.net")
-        .WithCredential(new DefaultAzureCredential(new DefaultAzureCredentialOptions
-        {
-            ManagedIdentityClientId = options.ServiceBus.ManagedIdentityClientId
-        })));
+        .WithCredential(new DefaultAzureCredential(new DefaultAzureCredentialOptions())));
 
         serviceCollection.AddValidators();
     }

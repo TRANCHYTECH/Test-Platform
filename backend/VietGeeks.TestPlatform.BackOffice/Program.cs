@@ -1,12 +1,19 @@
+using Azure.Identity;
 using Duende.Bff.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using VietGeeks.TestPlatform.AccountManager;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+        new DefaultAzureCredential());
+}
+
 builder.Services.AddControllers();
 builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {

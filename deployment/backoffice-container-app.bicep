@@ -51,14 +51,6 @@ param containerRegistry string
 param subDomainCertificate string
 param userAssignedIdentity string
 
-// var appSettingKeys = [
-//   ['ConnectionStrings__UserSession', 'user-session']
-//   ['TestManagerDatabase__ConnectionString', 'test-mgr-db-connect']
-//   ['TestManagerDatabase__DatabaseName', 'test-mgr-db-name']
-//   ['TestManagerServiceBus__Namespace', 'bus-namespace']
-//   ['TestManagerServiceBus__ManagedIdentityClientId', 'bus-client']
-// ]
-
 resource environment 'Microsoft.App/managedEnvironments@2023-04-01-preview' existing = {
   name: environmentName
 }
@@ -122,34 +114,6 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         {
           name: containerAppName
           image: containerImage
-          env: [
-            {
-              name: 'ConnectionStrings__UserSession'
-              secretRef: 'usersession'
-            }
-            {
-              name: 'TestManagerDatabase__ConnectionString'
-              secretRef: 'test-mgr-db-connect'
-            }
-            {
-              name: 'TestManagerDatabase__DatabaseName'
-              secretRef: 'test-mgr-db-name'
-            }
-            {
-              name: 'TestManagerServiceBus__Namespace'
-              secretRef: 'bus-namespace'
-            }
-            {
-              name: 'TestManagerServiceBus__ManagedIdentityClientId'
-              secretRef: 'bus-client'
-            }
-          ]
-          // env: [
-          //   for appSetting in appSettingKeys: {
-          //     name: appSetting[0]
-          //     secretRef: appSetting[1]
-          //   }
-          // ]
           resources: {
             cpu: json(cpuCore)
             memory: '${memorySize}Gi'
