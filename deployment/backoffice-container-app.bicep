@@ -114,6 +114,12 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
         {
           name: containerAppName
           image: containerImage
+          env: [
+            {
+              name: 'AZURE_CLIENT_ID'
+              value: uai.id
+            }
+          ]
           resources: {
             cpu: json(cpuCore)
             memory: '${memorySize}Gi'
