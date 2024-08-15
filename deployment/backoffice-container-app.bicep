@@ -125,7 +125,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
           env: [
             {
               name: 'ConnectionStrings__UserSession'
-              secretRef: 'user-session'
+              secretRef: 'usersession'
             }
             {
               name: 'TestManagerDatabase__ConnectionString'
