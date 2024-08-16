@@ -137,11 +137,8 @@ public static class ServiceCollectionExtensions
 
     public static void UseVietGeeksEssentialFeatures(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseExceptionHandler(configure => configure.Run(async context =>
         {
@@ -162,7 +159,7 @@ public class VietGeeksAspNetCoreOptions
     public AuthOptions? Auth { get; set; }
 
     public OpenIdConnectOptions? OpenIdConnect { get; init; }
-    
+
     public string PortalUrl { get; init; }
 }
 
