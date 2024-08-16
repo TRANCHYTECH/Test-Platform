@@ -5,7 +5,7 @@ param location string
 param containerAppName string
 
 @description('Specifies the container port.')
-param targetPort int = 80
+param targetPort int = 8080
 
 @description('Specifies the docker container image to deploy.')
 param containerImage string

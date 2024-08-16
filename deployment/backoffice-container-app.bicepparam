@@ -2,7 +2,7 @@ using './backoffice-container-app.bicep'
 
 param location = ''
 param containerAppName = ''
-param targetPort = 80
+param targetPort = 8080
 param containerImage = ''
 param cpuCore = '0.25'
 param memorySize = '0.5'
