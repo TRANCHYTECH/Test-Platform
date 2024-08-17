@@ -10,7 +10,7 @@ on:
 env:
   CONTAINER_APP_NAME: backoffice-api
   CONTAINER_APP_ENVIRONMENT: tranchy-cae-testplatf-dev-sa
-  CONTAINER_APP_RESOURCE_GROUP_NAME: tranchy-rg-testplatform-dev-southeastasia
+  CONTAINER_APP_RESOURCE_GROUP_NAME: tranchy-rg-testplatform-wrong-southeastasia
   CONTAINER_APP_RESOURCE_GROUP_LOCATION: southeastasia
   CONTAINER_REGISTRY_LOGIN_SERVER: TranchyAcrTestPlatfDevSa.azurecr.io
   CONTAINER_REGISTRY_USERNAME: TranchyAcrTestPlatfDevSa
