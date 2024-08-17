@@ -53,7 +53,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.tranchy-rg-testplatform-dev-southeastasia_SPN }}
+          creds: ${{ secrets.AZURE_DEPLOYMENT_DEV_SPN }}
       - name: checkout
         uses: actions/checkout@v4
       - name: Deploy to containerapp
