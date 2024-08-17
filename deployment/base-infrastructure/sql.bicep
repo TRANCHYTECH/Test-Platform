@@ -1,5 +1,8 @@
 param sqlServerName string
 param sqlDbName string
+param sqlAdmin string
+@secure()
+param sqlAdminPassword string
 param location string = resourceGroup().location
 
 resource sqlServer 'Microsoft.Sql/servers@2023-08-01-preview' = {
@@ -8,6 +11,8 @@ resource sqlServer 'Microsoft.Sql/servers@2023-08-01-preview' = {
   properties: {
     publicNetworkAccess: 'Enabled'
     restrictOutboundNetworkAccess: 'Disabled'
+    administratorLogin: sqlAdmin
+    administratorLoginPassword: sqlAdminPassword
   }
 }
 

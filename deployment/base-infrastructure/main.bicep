@@ -4,10 +4,14 @@ param serviceBusNamespace string
 param keyVaultName string
 param sqlServerName string
 param sqlDbName string
+param sqlAdmin string
+@secure()
+param sqlAdminPassword string
 param storageAccountName string
 param logWorkspaceName string
 param containerAppEnvName string
-
+param keyVaultSecretPairs array
+param tenantObjectId string
 module uaiBackOffice 'user-assigned-identity.bicep' = {
   name: 'uaiDeploy'
   params: {
@@ -49,9 +53,11 @@ module sb 'service-bus.bicep' = {
   }
 }
 
-module kv 'key-vault.bicep' = {
+module keyVault 'key-vault.bicep' = {
   name: 'keyVaultDeploy'
   params: {
+    tenantId: tenant().tenantId
+    tenantObjectId: tenantObjectId
     keyVaultName: keyVaultName
   }
 }
@@ -62,15 +68,28 @@ module sql 'sql.bicep' = {
     sqlServerName: sqlServerName
     sqlDbName: sqlDbName
     location: resourceGroup().location
+    sqlAdmin: sqlAdmin
+    sqlAdminPassword: sqlAdminPassword
   }
 }
 
-module apps 'container-apps.bicep' = {
-  name: 'appsDeploy'
+module apps 'container-apps-environment.bicep' = {
+  name: 'appsEnvionmentDeploy'
   params: {
     containerAppEnvName: containerAppEnvName
     logWorkspaceName: logWorkspaceName
   }
+  dependsOn: [logWorkspace]
+}
+
+// Data
+module keyVaultSecrets 'key-vault-secrets.bicep' = {
+  name: 'keyVaultSecretsDeploy'
+  params: {
+    keyValueName: keyVaultName
+    secretPairs: keyVaultSecretPairs
+  }
+  dependsOn: [keyVault]
 }
 
 output uaiIdBackOffice string = uaiBackOffice.outputs.uaiId

@@ -8,16 +8,15 @@ on:
       - "backend/**"
       - "!backend/VietGeeks.TestPlatform.TestManager.Functions.SendEmail/**"
 env:
-  CONTAINER_APP_CONTAINER_NAME: tranchytech-testplatform-backoffice
-  CONTAINER_APP_NAME: tranchytech-ca-backoffice-int-sa
-  CONTAINER_APP_ENVIRONMENT: tranchytech-cae-testplatform-int-sa
-  CONTAINER_APP_RESOURCE_GROUP_NAME: tranchytech-rg-testplatform-int-southeastasia
+  CONTAINER_APP_NAME: backoffice-api
+  CONTAINER_APP_ENVIRONMENT: tranchy-cae-testplatf-dev-sa
+  CONTAINER_APP_RESOURCE_GROUP_NAME: tranchy-rg-testplatform-dev-southeastasia
   CONTAINER_APP_RESOURCE_GROUP_LOCATION: southeastasia
-  CONTAINER_REGISTRY_LOGIN_SERVER: tranchytechacrtestplatformintsa.azurecr.io
+  CONTAINER_REGISTRY_LOGIN_SERVER: TranchyAcrTestPlatfDevSa.azurecr.io
   DOCKER_FILE_PATH: backend/Dockerfile
-  PROJECT_NAME_FOR_DOCKER: vietgeekstestplatformbackoffice
-  CONTAINER_APP_IDENTITY: tranchytech-uai-backoffice-int-sa
-  CONTAINER_APP_CERTIFICATE: testportal-api-dev.tranchy.t-tranchyt-240815031912
+  PROJECT_NAME_FOR_DOCKER: backoffice-api
+  CONTAINER_APP_IDENTITY: tranchy-uai-backoffice-dev-sa
+  CONTAINER_APP_CERTIFICATE: tranchy-cae-testplatf-dev-sa-testportal-api-certificate
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -61,7 +60,7 @@ jobs:
         with:
           scope: resourcegroup
           resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
-          template: ./deployment/backoffice-container-app.bicep
+          template: ./deployment/container-app-backoffice-api.bicep
           parameters: location=${{ env.CONTAINER_APP_RESOURCE_GROUP_LOCATION }} environmentName=${{ env.CONTAINER_APP_ENVIRONMENT }} containerAppName=${{ env.CONTAINER_APP_NAME }} containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} userAssignedIdentity=${{ env.CONTAINER_APP_IDENTITY }} subDomainCertificate=${{ env.CONTAINER_APP_CERTIFICATE }}
           failOnStdErr: false
           deploymentName: backoffice-int-${{ github.sha }}
