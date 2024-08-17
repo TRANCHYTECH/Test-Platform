@@ -12,7 +12,7 @@ env:
   CONTAINER_APP_ENVIRONMENT: tranchy-cae-testplatf-dev-sa
   CONTAINER_APP_RESOURCE_GROUP_NAME: tranchy-rg-testplatform-dev-southeastasia
   CONTAINER_APP_RESOURCE_GROUP_LOCATION: southeastasia
-  CONTAINER_REGISTRY_LOGIN_SERVER: TranchyAcrTestPlatfDevSa.azurecr.io
+  CONTAINER_REGISTRY_LOGIN_SERVER: tranchyacrtestplatfdevsa.azurecr.io
   CONTAINER_REGISTRY_USERNAME: TranchyAcrTestPlatfDevSa
   DOCKER_FILE_PATH: backend/Dockerfile
   PROJECT_NAME_FOR_DOCKER: backoffice-api
