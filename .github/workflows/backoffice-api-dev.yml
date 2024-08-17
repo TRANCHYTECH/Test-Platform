@@ -13,6 +13,7 @@ env:
   CONTAINER_APP_RESOURCE_GROUP_NAME: tranchy-rg-testplatform-dev-southeastasia
   CONTAINER_APP_RESOURCE_GROUP_LOCATION: southeastasia
   CONTAINER_REGISTRY_LOGIN_SERVER: TranchyAcrTestPlatfDevSa.azurecr.io
+  CONTAINER_REGISTRY_USERNAME: TranchyAcrTestPlatfDevSa
   DOCKER_FILE_PATH: backend/Dockerfile
   PROJECT_NAME_FOR_DOCKER: backoffice-api
   CONTAINER_APP_IDENTITY: tranchy-uai-backoffice-dev-sa
@@ -35,8 +36,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.TranchyTechAcrTestPlatformIntSa_USERNAME }}
-          password: ${{ secrets.TranchyTechAcrTestPlatformIntSa_PASSWORD }}
+          username: ${{env.CONTAINER_REGISTRY_USERNAME}}
+          password: ${{ secrets.TranchyAcrTestPlatfDevSa_PASSWORD }}
       - name: Build and push container image to registry
         uses: docker/build-push-action@v4
         with:
