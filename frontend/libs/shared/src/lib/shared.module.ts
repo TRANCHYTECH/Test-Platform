@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
-import { NgbPaginationModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbPaginationModule,
+  NgbToastModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -19,15 +21,21 @@ import { TruncatePipe } from './pipes/truncate.pipe';
   imports: [
     CommonModule,
     FormsModule,
-    HttpClientModule,
     NgbToastModule,
     NgbPaginationModule,
     EditorModule,
   ],
-  declarations: [BreadcrumbsComponent, SubmitButtonComponent, TestStatusClassPipe, TestStatusPipe, PaginationComponent, StripTagsPipe, TruncatePipe],
+  declarations: [
+    BreadcrumbsComponent,
+    SubmitButtonComponent,
+    TestStatusClassPipe,
+    TestStatusPipe,
+    PaginationComponent,
+    StripTagsPipe,
+    TruncatePipe,
+  ],
   exports: [
     CommonModule,
-    HttpClientModule,
     TranslateModule,
     BreadcrumbsComponent,
     SubmitButtonComponent,
@@ -38,7 +46,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     TestStatusClassPipe,
     TestStatusPipe,
     StripTagsPipe,
-    TruncatePipe
-  ]
+    TruncatePipe,
+  ],
 })
 export class SharedModule {}

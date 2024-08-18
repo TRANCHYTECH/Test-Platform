@@ -6,6 +6,8 @@ using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 
+const string testPortalSpaPolicy = "test-portal-spa";
+
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsProduction())
 {
@@ -21,18 +23,6 @@ builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "dev",
-                      configure =>
-                      {
-                          configure
-                            .AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                      });
-});
-
 builder.Services.RegisterTestManagerModule(new TestManagerModuleOptions
 {
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
@@ -42,7 +32,18 @@ builder.Services.RegisterAccountManagerModule(new AccountManagerModuleOptions
 {
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(testPortalSpaPolicy,
+        policyBuilder =>
+        {
+            policyBuilder
+                .WithOrigins(builder.Configuration.GetValue<string>("PortalUrl")!)
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 builder.Services.AddDaprClient();
 
 builder.Services
@@ -64,6 +65,8 @@ builder.Services.AddBff(options =>
 });
 
 var app = builder.Build();
+app.UseCors(testPortalSpaPolicy);
+
 if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
 {
     await using var scope = app.Services.CreateAsyncScope();
@@ -71,8 +74,9 @@ if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
     await context.Database.MigrateAsync(CancellationToken.None);
 }
 
-//todo: only dev
-app.UseCors("dev");
+app.MapGet("/test-portal", (HttpRequest _) => TypedResults.Redirect(app.Configuration.GetValue<string>("PortalUrl")!, permanent: true))
+    .WithSummary("Redirect after user login via portal")
+    .WithOpenApi();
 
 app.UseVietGeeksEssentialFeatures();
 app.UseHttpsRedirection();

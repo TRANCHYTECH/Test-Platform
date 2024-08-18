@@ -1,0 +1,9 @@
+{
+  "i18n-ally.localesPaths": [
+    "apps/test-manager/src/assets/i18n",
+    "apps/test-manager/src/assets/lang",
+    "apps/test-runner/src/assets/i18n",
+    "apps/test-manager/src/assets/scss/i18n",
+    "apps/test-runner/src/assets/fonts/i18n"
+  ]
+}

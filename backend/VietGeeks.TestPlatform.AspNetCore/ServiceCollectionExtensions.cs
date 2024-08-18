@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -81,7 +82,7 @@ public static class ServiceCollectionExtensions
                             {
                                 if (string.Equals(postLogoutUri, "/test-portal", StringComparison.Ordinal))
                                 {
-                                    postLogoutUri = "//todo";
+                                    postLogoutUri = "/test-portal";
                                 }
 
                                 logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
@@ -127,11 +128,8 @@ public static class ServiceCollectionExtensions
         {
             var dataProtectionOption = options.DataProtection;
             serviceCollection.AddDataProtection()
-                .SetApplicationName(dataProtectionOption.ApplicationName);
-            //todo: finish setup
-            // .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential(new DefaultAzureCredentialOptions {
-            //     ManagedIdentityClientId = dataProtectionOption.ManagedIdentityClientId
-            // }));
+                .SetApplicationName(dataProtectionOption.ApplicationName)
+            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential());
         }
     }
 

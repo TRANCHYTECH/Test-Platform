@@ -1,5 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { SharedModule, ToastService } from '@viet-geeks/shared';
@@ -7,10 +12,10 @@ import { TestCategoryService } from '../../_state/test-category.service';
 
 @Component({
   selector: 'viet-geeks-new-test-category',
-  standalone: true, // Important to use it as standardalone, so could share between modules efficently.
+  standalone: true,
   imports: [ReactiveFormsModule, SharedModule, errorTailorImports],
   templateUrl: './new-test-category.component.html',
-  styleUrls: ['./new-test-category.component.scss']
+  styleUrls: ['./new-test-category.component.scss'],
 })
 export class NewTestCategoryComponent implements OnInit {
   form!: FormGroup;
@@ -26,7 +31,14 @@ export class NewTestCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._fb.nonNullable.group({
-      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]]
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(50),
+        ],
+      ],
     });
   }
 

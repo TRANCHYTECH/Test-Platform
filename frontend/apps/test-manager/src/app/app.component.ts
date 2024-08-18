@@ -1,6 +1,5 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthService } from '@auth0/auth0-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreEventsService } from '@viet-geeks/core';
 import { ToastService } from '@viet-geeks/shared';
@@ -13,21 +12,19 @@ import { ToastService } from '@viet-geeks/shared';
 export class AppComponent {
   title = 'test-manager';
   notifyService = inject(ToastService);
-  authService = inject(AuthService);
   private _destroyRef = inject(DestroyRef);
 
-  constructor(translate: TranslateService, apiErrorNotifyService: CoreEventsService) {
+  constructor(
+    translate: TranslateService,
+    apiErrorNotifyService: CoreEventsService
+  ) {
     translate.setDefaultLang('vi');
     translate.use('vi');
 
-    apiErrorNotifyService.httpCallErrors.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(errorMsg => {
-      this.notifyService.error(errorMsg);
-    });
-
-    this.authService.isAuthenticated$.subscribe(c => {
-      if (c === false) {
-        this.authService.loginWithRedirect();
-      }
-    })
+    apiErrorNotifyService.httpCallErrors
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((errorMsg) => {
+        this.notifyService.error(errorMsg);
+      });
   }
 }
