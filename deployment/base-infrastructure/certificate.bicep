@@ -17,7 +17,7 @@ resource managedEnvironmentManagedCertificate 'Microsoft.App/managedEnvironments
     location: location
     properties: {
       subjectName: '${subDomain}-dev.tranchy.tech'
-      domainControlValidation: 'TXT'
+      domainControlValidation: 'CNAME'
     }
   }
 ]

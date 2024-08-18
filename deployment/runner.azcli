@@ -1,0 +1,20 @@
+
+
+az login --tenant de0dcb0a-9ef5-4e7f-8037-02fe3a42f876
+
+az group create --location southeastasia --name tranchy-rg-testplatform-dev-southeastasia
+
+# Create SP to allow CD from github, run command, paste result to github action secret ''
+az ad sp create-for-rbac --name "tranchy-rg-testplatform-dev-southeastasia_SPN" --role contributor --scopes /subscriptions/ec4dddda-f3cb-4c93-a2f1-4f3c705dfc88/resourceGroups/tranchy-rg-testplatform-dev-southeastasia --sdk-auth
+
+# Copy registry name / pass
+
+az deployment group create --resource-group tranchy-rg-testplatform-dev-southeastasia --template-file /Users/taudang/Source/Repo/TranchyTech/Test-Platform/deployment/base-infrastructure/main.bicep --parameters /Users/taudang/Source/Repo/TranchyTech/Test-Platform/deployment/base-infrastructure/main-dev.bicepparam
+
+# get static ip, verification code, add to the domain management asuid.subdomain...
+# wait 4 hours, then run below
+az deployment group create --resource-group tranchy-rg-testplatform-dev-southeastasia --template-file /Users/taudang/Source/Repo/TranchyTech/Test-Platform/deployment/base-infrastructure/certificate.bicep
+
+az containerapp env show -n tranchy-cae-testplatf-dev-sa -g tranchy-rg-testplatform-dev-southeastasia -o tsv --query "properties.staticIp"
+
+az containerapp env show -n tranchy-cae-testplatf-dev-sa -g tranchy-rg-testplatform-dev-southeastasia -o tsv --query "properties.customDomainVerificationId"
