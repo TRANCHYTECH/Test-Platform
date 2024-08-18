@@ -1,17 +1,16 @@
-name: Azure Static Web Apps CI/CD
+name: backoffice-ui-dev
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - master
-
+    paths:
+      - "frontend/**"
+env:
+  NPM_CONFIG_FORCE: true
+  NPM_CONFIG_LEGACY_PEER_DEPS: true
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
@@ -28,19 +27,7 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "./backend" # App source code path
-          api_location: "./backend" # Api source code path - optional
-          output_location: "." # Built app content directory - optional
+          app_location: /github/workspace/frontend
+          app_build_command: "npm i --force && npm run build:test-manager"
+          output_location: /github/workspace/frontend/dist/apps/test-manager
           ###### End of Repository/Build Configurations ######
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_SMOKE_0431FEF00 }}
-          action: "close"
