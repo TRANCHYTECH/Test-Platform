@@ -18,6 +18,7 @@ env:
   PROJECT_NAME_FOR_DOCKER: backoffice-api
   CONTAINER_APP_IDENTITY: tranchy-uai-backoffice-dev-sa
   CONTAINER_APP_CERTIFICATE: tranchy-cae-testplatf-dev-sa-testportal-api-certificate
+  KEY_VAULT_NAME: "TranchyKvTestPlatfDevSa"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -62,7 +63,7 @@ jobs:
           scope: resourcegroup
           resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
           template: ./deployment/container-app-backoffice-api.bicep
-          parameters: location=${{ env.CONTAINER_APP_RESOURCE_GROUP_LOCATION }} environmentName=${{ env.CONTAINER_APP_ENVIRONMENT }} containerAppName=${{ env.CONTAINER_APP_NAME }} containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} userAssignedIdentity=${{ env.CONTAINER_APP_IDENTITY }} subDomainCertificate=${{ env.CONTAINER_APP_CERTIFICATE }}
+          parameters: location=${{ env.CONTAINER_APP_RESOURCE_GROUP_LOCATION }} environmentName=${{ env.CONTAINER_APP_ENVIRONMENT }} containerAppName=${{ env.CONTAINER_APP_NAME }} containerImage=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }} containerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} userAssignedIdentity=${{ env.CONTAINER_APP_IDENTITY }} subDomainCertificate=${{ env.CONTAINER_APP_CERTIFICATE }} keyVaultName=${{ env.KEY_VAULT_NAME }}
           failOnStdErr: false
           deploymentName: backoffice-int-${{ github.sha }}
       - name: logout

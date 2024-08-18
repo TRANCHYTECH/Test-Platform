@@ -50,6 +50,7 @@ param revisionMode string = 'Single'
 param containerRegistry string
 param subDomainCertificate string
 param userAssignedIdentity string
+param keyVaultName string
 
 resource environment 'Microsoft.App/managedEnvironments@2024-03-01' existing = {
   name: environmentName
@@ -62,6 +63,10 @@ resource managedCertificate 'Microsoft.App/managedEnvironments/managedCertificat
 
 resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' existing = {
   name: userAssignedIdentity
+}
+
+resource keyVault 'Microsoft.KeyVault/vaults@2024-04-01-preview' existing = {
+  name: keyVaultName
 }
 
 resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
@@ -118,6 +123,10 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
             {
               name: 'AZURE_CLIENT_ID'
               value: uai.properties.clientId
+            }
+            {
+              name: 'KeyVaultName'
+              value: keyVault.name
             }
           ]
           resources: {
