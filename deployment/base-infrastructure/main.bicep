@@ -12,6 +12,7 @@ param logWorkspaceName string
 param containerAppEnvName string
 param keyVaultSecretPairs array
 param tenantObjectId string
+param mongoStateMetadata object[]
 module uaiBackOffice 'user-assigned-identity.bicep' = {
   name: 'uaiDeploy'
   params: {
@@ -78,6 +79,7 @@ module apps 'container-apps-environment.bicep' = {
   params: {
     containerAppEnvName: containerAppEnvName
     logWorkspaceName: logWorkspaceName
+    mongoStateMetadata: mongoStateMetadata
   }
   dependsOn: [logWorkspace]
 }
