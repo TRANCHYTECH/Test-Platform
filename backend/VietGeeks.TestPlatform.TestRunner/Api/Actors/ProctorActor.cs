@@ -305,11 +305,11 @@ public class ProctorActor(ActorHost host, IProctorService proctorService) : Acto
         public string? ActiveQuestionId { get; set; } = default!;
         public int? ActiveQuestionIndex { get; set; } = default!;
         public TestDurationState TestDuration { get; set; } = default!;
-        public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
-        public Dictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
+        public IDictionary<string, string[]> Answers { get; set; } = new Dictionary<string, string[]>();
 
-        public Dictionary<string, QuestionTiming> QuestionTimes { get; set; } = new Dictionary<string, QuestionTiming>();
+        public IDictionary<string, QuestionTiming> QuestionTimes { get; set; } = new Dictionary<string, QuestionTiming>();
         public IEnumerable<AggregatedGradingOuput> Grading { get; set; } = default!;
 
         public DateTime StartedAt { get; set; }

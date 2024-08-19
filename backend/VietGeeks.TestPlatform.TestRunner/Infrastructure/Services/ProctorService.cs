@@ -212,9 +212,9 @@ public class ProctorService(IMapper mapper, IClock time) : IProctorService
         };
     }
 
-   // TODO: Optimize query
+    // TODO: Optimize query
 
-   public async Task<IEnumerable<QuestionDefinition>> GetTestRunQuestionsByExamId(string examId)
+    public async Task<IEnumerable<QuestionDefinition>> GetTestRunQuestionsByExamId(string examId)
     {
         var exam = await GetExam(examId);
 
@@ -247,11 +247,11 @@ public class ProctorService(IMapper mapper, IClock time) : IProctorService
         return await DB.Find<TestRun>().Match(tr => tr.ID == testRunId).ExecuteSingleAsync();
     }
 
-    public bool IsCorrectAnswer(QuestionDefinition questionDefinition, string[] answers) 
+    public bool IsCorrectAnswer(QuestionDefinition questionDefinition, string[] answers)
     {
         return questionDefinition.IsCorrectAnswer(answers);
     }
-    
+
     private async Task<Exam> GetExam(string testRunId, string accessCode)
     {
         return await DB.Find<Exam>().Match(c => c.TestRunId == testRunId && c.AccessCode == accessCode).ExecuteSingleAsync();
@@ -279,7 +279,7 @@ public class ProctorService(IMapper mapper, IClock time) : IProctorService
         return await DB.Find<TestDefinition>().MatchID(testDefinitionId).ExecuteSingleAsync() ?? throw new TestPlatformException("NotFoundTestDefinition");
     }
 
-    private static Dictionary<string, int> CalculateQuestionScores(List<QuestionDefinition> questions, Dictionary<string, string[]> answers)
+    private static Dictionary<string, int> CalculateQuestionScores(List<QuestionDefinition> questions, IDictionary<string, string[]> answers)
     {
         return questions.ToDictionary(q => q.ID, q =>
         {
@@ -292,7 +292,7 @@ public class ProctorService(IMapper mapper, IClock time) : IProctorService
         });
     }
 
-    private static int CalculateExamMark(Dictionary<string, int> questionPoints)
+    private static int CalculateExamMark(IDictionary<string, int> questionPoints)
     {
         return questionPoints.Values.Sum();
     }
@@ -301,6 +301,6 @@ public class ProctorService(IMapper mapper, IClock time) : IProctorService
     {
         var key = ((int)InformFactor.CorrectAnwsers).ToString();
         var informFactors = testDefinition.GradingSettings?.InformRespondentConfig?.InformFactors;
-        return informFactors != null && informFactors.TryGetValue(key, out var factor) && factor == true;
+        return informFactors != null && informFactors.TryGetValue(key, out var factor) && factor;
     }
 }

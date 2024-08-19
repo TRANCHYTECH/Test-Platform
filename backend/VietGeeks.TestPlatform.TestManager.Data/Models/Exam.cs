@@ -10,15 +10,15 @@ public class Exam : EntityBase
 
     public string AccessCode { get; set; } = default!;
 
-    public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
+    public IDictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 
     public string[] Questions { get; set; } = default!;
 
-    public Dictionary<string, string[]> Answers { get; set; } = default!;
+    public IDictionary<string, string[]> Answers { get; set; } = default!;
 
-    public Dictionary<string, int> QuestionScores { get; set; } = default!;
+    public IDictionary<string, int> QuestionScores { get; set; } = default!;
 
-    public Dictionary<string, DateTime?[]> QuestionTimes { get; set; } = new Dictionary<string, DateTime?[]>();
+    public IDictionary<string, DateTime?[]> QuestionTimes { get; set; } = new Dictionary<string, DateTime?[]>();
 
     public string? CurrentQuestionId { get; set; }
 

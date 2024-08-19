@@ -7,16 +7,16 @@ public class FinishExamOutput
     public DateTime FinishedAt { get; set; }
     public TimeSpan TotalTime {get;set;}
     public IEnumerable<QuestionOutput> Questions { get; set; }
-    public Dictionary<string, string[]> ExamAnswers { get; set; }
+    public IDictionary<string, string[]> ExamAnswers { get; set; }
     
-    public Dictionary<string, int> QuestionScores { get; set; } = default!;
+    public IDictionary<string, int> QuestionScores { get; set; } = default!;
 }
 
 public class AggregatedGradingOuput
 {
     public int GradingType { get; set; }
     public PassMarkGradeOutput? PassMarkGrade { get; set; }
-    public Dictionary<string, string>? Grades { get; set; }
+    public IDictionary<string, string>? Grades { get; set; }
 }
 
 public class PassMarkGradeOutput

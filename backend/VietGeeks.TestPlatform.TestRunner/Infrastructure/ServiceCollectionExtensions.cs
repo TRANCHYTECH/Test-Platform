@@ -22,9 +22,9 @@ public static class ServiceCollectionExtensions
     private static void ConfigureDb(DatabaseOptions databaseOptions)
     {
         var conventionPack = new ConventionPack
-    {
-        new IgnoreExtraElementsConvention(true)
-    };
+        {
+            new IgnoreExtraElementsConvention(true),
+        };
 
         ConventionRegistry.Register("TestPlatformDefaultConventions", conventionPack, _ => true);
 

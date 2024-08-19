@@ -12,7 +12,7 @@ public class ExamStatus: IActiveQuestion
     public TimeSpan? TotalDuration { get; set;}
     public DateTime StartedAt { get; set; }
     public DateTime? FinishededAt { get; set; }
-    public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
+    public IDictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
     public IEnumerable<AggregatedGradingOuput> Grading { get; set; } = default!;
     public bool CanSkipQuestion { get; set; }
     public bool CanFinish { get; set; }
