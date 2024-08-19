@@ -1,5 +1,4 @@
-
 export const environment = {
-    production: false,
-    testRunnerApiBaseUrl: "http://localhost:6300"
-}
+  production: false,
+  testManagerApiBaseUrl: 'https://localhost:7300',
+};
