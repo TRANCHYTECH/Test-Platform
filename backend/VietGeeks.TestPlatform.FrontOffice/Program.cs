@@ -1,6 +1,7 @@
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using Azure.Identity;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Api.Filters;
@@ -10,14 +11,19 @@ using VietGeeks.TestPlatform.TestRunner.Infrastructure;
 const string testRunnerSpaPolicy = "test-runner-spa";
 
 var builder = WebApplication.CreateBuilder(args);
-
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+        new DefaultAzureCredential());
+}
 builder.Services.AddVietGeeksAspNetCore(new()
 {
     DataProtection = builder.Configuration.GetSection("DataProtection").Get<DataProtectionOptions>()
 });
 builder.Services.RegisterTestRunnerModule(new()
 {
-    Database = builder.Configuration.GetSection("TestRunnerDatabase").Get<DatabaseOptions>()!
+    Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>()!
 });
 builder.Services.AddControllers(c => c.Filters.Add<ActorInvokeExceptionFilterAttribute>());
 builder.Services.AddEndpointsApiExplorer();
@@ -46,7 +52,7 @@ builder.Services.AddCors(options =>
                       policyBuilder =>
                       {
                           policyBuilder
-                              .WithOrigins(builder.Configuration.GetValue<string>("PortalUrl")!)
+                              .WithOrigins(builder.Configuration.GetValue<string>("TestRunnerUrl")!)
                               .AllowCredentials()
                               .AllowAnyMethod()
                               .AllowAnyHeader();
