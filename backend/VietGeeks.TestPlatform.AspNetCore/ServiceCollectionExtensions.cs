@@ -132,7 +132,7 @@ public static class ServiceCollectionExtensions
             var dataProtectionOption = options.DataProtection;
             serviceCollection.AddDataProtection()
                 .SetApplicationName(dataProtectionOption.ApplicationName)
-            .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential());
+                .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl), new DefaultAzureCredential());
         }
     }
 

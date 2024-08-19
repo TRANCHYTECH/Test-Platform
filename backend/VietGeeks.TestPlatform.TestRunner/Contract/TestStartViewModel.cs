@@ -70,7 +70,7 @@ public class SubmitAnswerOutputViewModel : IExamStepInfo
 
 public class ProvideExamineeInfoViewModel
 {
-    public Dictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
+    public IDictionary<string, string> ExamineeInfo { get; set; } = new Dictionary<string, string>();
 }
 
 public class ProvideExamineeInfoInput : ProvideExamineeInfoViewModel
@@ -97,7 +97,7 @@ public class FinishExamInput
     public string ExamId { get; set; } = default!;
     public DateTime FinishededAt { get; set; }
     public DateTime StartedAt { get; set; }
-    public Dictionary<string, DateTime?[]> QuestionTimes { get; set; } = default!;
+    public IDictionary<string, DateTime?[]> QuestionTimes { get; set; } = default!;
     public TimeSpan TotalDuration { get; set; }
-    public Dictionary<string, string[]> Answers = default!;
+    public IDictionary<string, string[]> Answers = default!;
 }

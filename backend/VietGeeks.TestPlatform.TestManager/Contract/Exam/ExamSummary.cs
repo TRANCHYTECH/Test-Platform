@@ -22,7 +22,7 @@ public class ExamReview
 {
     public IEnumerable<dynamic> Questions { get; set; } = default!;
 
-    public Dictionary<string, string[]> Answers { get; set; } = default!;
+    public IDictionary<string, string[]> Answers { get; set; } = default!;
 
     public string FirstName { get; set; } = default!;
 
