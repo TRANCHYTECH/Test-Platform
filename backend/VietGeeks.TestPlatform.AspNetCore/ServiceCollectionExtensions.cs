@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VietGeeks.TestPlatform.AspNetCore.Services;
@@ -20,6 +21,8 @@ public static class ServiceCollectionExtensions
     public static void AddVietGeeksAspNetCore(this IServiceCollection serviceCollection,
         VietGeeksAspNetCoreOptions options)
     {
+        serviceCollection.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto);
+
         if (options.Auth != null)
         {
             var authOption = options.Auth;
@@ -135,9 +138,9 @@ public static class ServiceCollectionExtensions
 
     public static void UseVietGeeksEssentialFeatures(this WebApplication app)
     {
+        app.UseForwardedHeaders();
         app.UseSwagger();
         app.UseSwaggerUI();
-
         app.UseExceptionHandler(configure => configure.Run(async context =>
         {
             var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
