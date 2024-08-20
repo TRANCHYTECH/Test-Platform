@@ -1,5 +1,4 @@
-
 export const environment = {
-    production: true,
-    testRunnerApiBaseUrl: "https://dev.test-runner-api.testmaster.io",
-}
+  production: true,
+  testManagerApiBaseUrl: 'https://testrunner-api-dev.tranchy.tech',
+};
