@@ -19,14 +19,14 @@ public class SendTestAccessCode(ILoggerFactory loggerFactory)
         {
             CustomID = r.AccessCode,
             EventPayload = invitation.GenerateReferenceId(r.AccessCode),
-            From = new("notify@testmaster.io", "Test Master Notification"),
+            From = new("notify@tranchy.tech", "Test Portal Notification"),
             To = new List<SendContact>
             {
                 new(r.Email)
             },
             TemplateID = 4647722,
             TemplateLanguage = true,
-            Subject = "Test Master Notification",
+            Subject = "Test Portal Notification",
             Variables = new Dictionary<string, object>
             {
                 {"TestUrl",invitation.TestUrl },

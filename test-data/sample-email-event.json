@@ -1,0 +1,6 @@
+{
+  "TestUrl": "https://dev.test-runner.testmaster.io/start/{entity.ID}",
+  "TestDefinitionId": "entity.ID!",
+  "TestRunId": "entity.CurrentTestRun?.Id!",
+  "Receivers": [{ "AccessCode": "accessCode", "Email": "email" }]
+}
