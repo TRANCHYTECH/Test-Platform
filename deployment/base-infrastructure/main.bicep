@@ -13,6 +13,10 @@ param containerAppEnvName string
 param keyVaultSecretPairs array
 param tenantObjectId string
 param mongoStateMetadata object[]
+param mongoStateScopes string[] = [
+  'testrunner-api'
+  'backoffice-api'
+]
 module uaiBackOffice 'user-assigned-identity.bicep' = {
   name: 'uaiDeploy'
   params: {
@@ -80,6 +84,7 @@ module apps 'container-apps-environment.bicep' = {
     containerAppEnvName: containerAppEnvName
     logWorkspaceName: logWorkspaceName
     mongoStateMetadata: mongoStateMetadata
+    mongoStateScopes: mongoStateScopes
   }
   dependsOn: [logWorkspace]
 }
