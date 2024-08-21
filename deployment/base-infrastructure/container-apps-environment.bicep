@@ -2,6 +2,7 @@ param containerAppEnvName string
 param location string = resourceGroup().location
 param logWorkspaceName string
 param mongoStateMetadata object[]
+param mongoStateScopes string[]
 
 resource logWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logWorkspaceName
@@ -36,5 +37,6 @@ resource mongodbState 'Microsoft.App/managedEnvironments/daprComponents@2024-03-
     componentType: 'state.mongodb'
     version: 'v1'
     metadata: mongoStateMetadata
+    scopes: mongoStateScopes
   }
 }

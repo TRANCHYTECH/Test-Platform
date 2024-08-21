@@ -37,12 +37,7 @@ builder.Services.AddSwaggerGen(c =>
             return ((SwaggerOperationAttribute)attribute).OperationId;
         }
 
-        if (e.TryGetMethodInfo(out MethodInfo methodInfo))
-        {
-            return methodInfo.Name;
-        }
-
-        return null;
+        return e.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null;
     });
     c.OperationFilter<TestSessionHeaderFilter>();
 });
