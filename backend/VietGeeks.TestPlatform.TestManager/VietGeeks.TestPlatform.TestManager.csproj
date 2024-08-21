@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
+		<PackageReference Include="Mailjet.Api" />
+		<PackageReference Include="MassTransit.Abstractions" />
+		<PackageReference Include="MassTransit.MongoDb" />
 		<PackageReference Include="System.Text.Json" />
 		<PackageReference Include="System.ComponentModel.Annotations" />
 		<PackageReference Include="MongoDB.Entities" />

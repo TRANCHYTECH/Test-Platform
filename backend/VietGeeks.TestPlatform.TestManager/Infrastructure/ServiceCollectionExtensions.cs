@@ -1,6 +1,4 @@
-﻿using Azure.Identity;
-using FluentValidation;
-using Microsoft.Extensions.Azure;
+﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
@@ -28,9 +26,6 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
         serviceCollection.AddScoped<TestManagerDbContext>();
-        serviceCollection.AddAzureClients(builder => builder.AddServiceBusClientWithNamespace($"{options.ServiceBus.Namespace}.servicebus.windows.net")
-        .WithCredential(new DefaultAzureCredential(new DefaultAzureCredentialOptions())));
-
         serviceCollection.AddValidators();
     }
 
@@ -44,7 +39,7 @@ public static class ServiceCollectionExtensions
     {
         var conventionPack = new ConventionPack
         {
-            new IgnoreExtraElementsConvention(true)
+            new IgnoreExtraElementsConvention(ignoreExtraElements: true)
         };
 
         ConventionRegistry.Register("TestPlatformDefaultConventions", conventionPack, _ => true);
@@ -57,7 +52,5 @@ public static class ServiceCollectionExtensions
 
 public class TestManagerModuleOptions
 {
-    public DatabaseOptions Database { get; set; } = default!;
-
-    public ServiceBusOptions ServiceBus { get; set; } = default!;
+    public required DatabaseOptions Database { get; init; }
 }

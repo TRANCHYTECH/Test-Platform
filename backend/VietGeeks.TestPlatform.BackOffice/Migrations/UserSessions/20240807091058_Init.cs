@@ -38,7 +38,7 @@ namespace VietGeeks.TestPlatform.BackOffice.Migrations.UserSessions
                 name: "IX_UserSessions_ApplicationName_Key",
                 schema: "session",
                 table: "UserSessions",
-                columns: new[] { "ApplicationName", "Key" },
+                columns: ["ApplicationName", "Key"],
                 unique: true,
                 filter: "[ApplicationName] IS NOT NULL");
 
@@ -46,7 +46,7 @@ namespace VietGeeks.TestPlatform.BackOffice.Migrations.UserSessions
                 name: "IX_UserSessions_ApplicationName_SessionId",
                 schema: "session",
                 table: "UserSessions",
-                columns: new[] { "ApplicationName", "SessionId" },
+                columns: ["ApplicationName", "SessionId"],
                 unique: true,
                 filter: "[ApplicationName] IS NOT NULL AND [SessionId] IS NOT NULL");
 
@@ -54,7 +54,7 @@ namespace VietGeeks.TestPlatform.BackOffice.Migrations.UserSessions
                 name: "IX_UserSessions_ApplicationName_SubjectId_SessionId",
                 schema: "session",
                 table: "UserSessions",
-                columns: new[] { "ApplicationName", "SubjectId", "SessionId" },
+                columns: ["ApplicationName", "SubjectId", "SessionId"],
                 unique: true,
                 filter: "[ApplicationName] IS NOT NULL AND [SessionId] IS NOT NULL");
 

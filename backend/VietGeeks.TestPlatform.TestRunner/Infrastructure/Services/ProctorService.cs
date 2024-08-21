@@ -220,7 +220,7 @@ public class ProctorService(IMapper mapper, IClock time) : IProctorService
 
         if (exam == null)
         {
-            return Enumerable.Empty<QuestionDefinition>();
+            return [];
         }
 
         var batches = await DB.Find<TestRunQuestion>().ManyAsync(c => c.TestRunId == exam.TestRunId);

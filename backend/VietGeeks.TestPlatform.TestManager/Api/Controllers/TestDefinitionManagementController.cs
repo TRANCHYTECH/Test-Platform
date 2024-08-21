@@ -63,27 +63,27 @@ public class TestDefinitionManagementController(
     }
 
     [HttpPost("{id}/Activate")]
-    public async Task<IActionResult> Activate(string id)
+    public async Task<IActionResult> Activate(string id, CancellationToken cancellationToken)
     {
-        var testDefiniton = await testManagerService.ActivateTestDefinition(id);
+        var testDefinition = await testManagerService.ActivateTestDefinition(id, cancellationToken);
 
-        return Ok(testDefiniton);
+        return Ok(testDefinition);
     }
 
     [HttpPost("{id}/End")]
-    public async Task<IActionResult> End(string id)
+    public async Task<IActionResult> End(string id, CancellationToken cancellationToken)
     {
-        var testDefiniton = await testManagerService.EndTestDefinition(id);
+        var testDefinition = await testManagerService.EndTestDefinition(id, cancellationToken);
 
-        return Ok(testDefiniton);
+        return Ok(testDefinition);
     }
 
     [HttpPost("{id}/Restart")]
     public async Task<IActionResult> Restart(string id)
     {
-        TestDefinitionViewModel testDefiniton = await testManagerService.RestartTestDefinition(id);
+        TestDefinitionViewModel testDefinition = await testManagerService.RestartTestDefinition(id);
 
-        return Ok(testDefiniton);
+        return Ok(testDefinition);
     }
 
     [HttpGet("{id}/TestAccess/GenerateAccessCodes/{quantity:range(1,50)}")]
@@ -113,14 +113,13 @@ public class TestDefinitionManagementController(
     [HttpPost("{id}/TestInvitationStats")]
     public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
     {
-        var result = await testManagerService.GetTestInvitationEvents(new()
-        {
-            TestDefinitionId = id,
-            TestRunId = model.TestRunId,
-            AccessCodes = model.AccessCodes
-        });
+        // var result = await testManagerService.GetTestInvitationEvents(new TestInvitationStatsInput
+        // {
+        //     TestDefinitionId = id,
+        //     TestRunId = model.TestRunId,
+        //     AccessCodes = model.AccessCodes
+        // });
 
-        return Ok(result);
+        return Ok(default);
     }
 }
-

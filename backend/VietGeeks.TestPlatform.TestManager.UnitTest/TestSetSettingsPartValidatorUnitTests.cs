@@ -40,12 +40,12 @@ public class TestSetSettingsPartValidatorUnitTests
             GeneratorType = TestSetGeneratorType.RandomByCategories,
             Generator = new RandomFromCategoriesGenerator()
             {
-                Configs = new List<RandomFromCategoriesGeneratorConfig>
-                {
+                Configs =
+                [
                     new RandomFromCategoriesGeneratorConfig
                     {
                     }
-                }
+                ]
             }
         };
 
@@ -79,14 +79,14 @@ public class TestSetSettingsPartValidatorUnitTests
             GeneratorType = TestSetGeneratorType.RandomByCategories,
             Generator = new RandomFromCategoriesGenerator
             {
-                Configs = new List<RandomFromCategoriesGeneratorConfig>
-                {
+                Configs =
+                [
                     new RandomFromCategoriesGeneratorConfig
                     {
                         QuestionCategoryId = "001",
                         DrawNumber = 1
                     }
-                }
+                ]
             }
         };
 

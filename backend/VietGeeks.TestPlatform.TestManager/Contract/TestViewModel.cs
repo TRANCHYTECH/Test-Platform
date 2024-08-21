@@ -96,7 +96,7 @@ public class DefaultGeneratorViewModel : TestSetGeneratorViewModel
 
 public class RandomByCategoriesGeneratorViewModel : TestSetGeneratorViewModel
 {
-    public List<RandomByCategoriesGeneratorConfigViewModel> Configs { get; set; } = new List<RandomByCategoriesGeneratorConfigViewModel>();
+    public List<RandomByCategoriesGeneratorConfigViewModel> Configs { get; set; } = [];
 }
 
 public class RandomByCategoriesGeneratorConfigViewModel

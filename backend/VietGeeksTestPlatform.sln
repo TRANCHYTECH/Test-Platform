@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.Shar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.AspNetCore", "VietGeeks.TestPlatform.AspNetCore\VietGeeks.TestPlatform.AspNetCore.csproj", "{194EF700-E3D7-486B-B00B-9A9358365CB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietGeeks.TestPlatform.TestManager.Functions.SendEmail", "VietGeeks.TestPlatform.TestManager.Functions.SendEmail\VietGeeks.TestPlatform.TestManager.Functions.SendEmail.csproj", "{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{028FEB60-6D92-4401-810D-092E6706DB68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{4A1078F7-0C6F-4AC5-B0C6-851CA862B9C4}"
@@ -51,10 +49,6 @@ Global
 		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{194EF700-E3D7-486B-B00B-9A9358365CB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B52B3148-2A9A-4DC2-A1B8-F4CA86E35918}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C26390CA-6200-48D6-AF42-3313DCB2999C}.Release|Any CPU.ActiveCfg = Release|Any CPU

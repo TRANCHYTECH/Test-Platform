@@ -59,15 +59,15 @@ public class QuestionDefinitionValidatorUnitTests
                 IsDisplayMaximumScore = true,
                 IsMandatory = true
             },
-            Answers = new Answer[]
-            {
+            Answers =
+            [
                 new(),
                 new()
                 {
                     AnswerDescription = "",
                     AnswerPoint = 0
                 }
-            }
+            ]
         };
         var ctx = new ValidationContext<QuestionDefinition>(input);
         var result = await _validator.TestValidateAsync(ctx);
@@ -98,15 +98,15 @@ public class QuestionDefinitionValidatorUnitTests
             ScoreSettings = new SingleChoiceScoreSettings
             {
             },
-            Answers = new Answer[]
-            {
+            Answers =
+            [
                 new()
                 {
                     Id = ObjectId.GenerateNewId().ToString(),
                     AnswerDescription = "Yes it's hardest",
                     AnswerPoint = 10
                 }
-            }
+            ]
         };
 
         var right2 = new QuestionDefinition()
@@ -118,15 +118,15 @@ public class QuestionDefinitionValidatorUnitTests
             ScoreSettings = new MultipleChoiceScoreSettings
             {
             },
-            Answers = new Answer[]
-            {
+            Answers =
+            [
                 new()
                 {
                     Id = ObjectId.GenerateNewId().ToString(),
                     AnswerDescription = "Yes it's hardest",
                     AnswerPoint = 10
                 }
-            }
+            ]
         };
 
         return new List<object[]>

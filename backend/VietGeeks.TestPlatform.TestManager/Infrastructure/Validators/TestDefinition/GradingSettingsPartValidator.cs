@@ -151,11 +151,11 @@ public class GradeRangeCriteriaValidator : AbstractValidator<GradeRangeCriteria>
         switch (gradeType)
         {
             case GradeType.Grade:
-                return new[] { GradeType.Grade.Value() };
+                return [GradeType.Grade.Value()];
             case GradeType.Descriptive:
-                return new[] { GradeType.Descriptive.Value() };
+                return [GradeType.Descriptive.Value()];
             case GradeType.GradeAndDescriptive:
-                return new[] { GradeType.Grade.Value(), GradeType.Descriptive.Value() };
+                return [GradeType.Grade.Value(), GradeType.Descriptive.Value()];
             default:
                 throw new TestPlatformException("Not supported type");
         }
@@ -185,8 +185,10 @@ public class InformRespondentConfigValidator : AbstractValidator<InformResponden
             }
 
             // Grade & Descriptive grade
-            ValidateGradeFactor(prop, InformFactor.Grade, ctx, gradingCriterias, (new[] { GradeType.Grade, GradeType.GradeAndDescriptive }));
-            ValidateGradeFactor(prop, InformFactor.DescriptiveGrade, ctx, gradingCriterias, (new[] { GradeType.Descriptive, GradeType.GradeAndDescriptive }));
+            ValidateGradeFactor(prop, InformFactor.Grade, ctx, gradingCriterias, ( [GradeType.Grade, GradeType.GradeAndDescriptive
+            ]));
+            ValidateGradeFactor(prop, InformFactor.DescriptiveGrade, ctx, gradingCriterias, ( [GradeType.Descriptive, GradeType.GradeAndDescriptive
+            ]));
         });
 
         static void ValidateGradeFactor(Dictionary<string, bool> prop, InformFactor factorName, ValidationContext<InformRespondentConfig> ctx, Dictionary<string, GradingCriteriaConfig> gradingCriterias, GradeType[] gradeTypes)

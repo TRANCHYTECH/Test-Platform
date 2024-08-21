@@ -48,7 +48,7 @@ public class DefaultGenerator : TestSetGenerator
 /// </summary>
 public class RandomFromCategoriesGenerator : TestSetGenerator
 {
-    public List<RandomFromCategoriesGeneratorConfig> Configs { get; set; } = new List<RandomFromCategoriesGeneratorConfig>();
+    public List<RandomFromCategoriesGeneratorConfig> Configs { get; set; } = [];
 
     public override List<QuestionDefinition> Generate(List<QuestionDefinition> questions)
     {

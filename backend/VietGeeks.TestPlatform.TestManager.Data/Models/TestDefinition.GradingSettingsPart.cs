@@ -83,7 +83,7 @@ public class GradeRangeCriteria : GradingCriteriaConfig
 
     public RangeUnit Unit { get; set; }
 
-    public List<GradeRangeCriteriaDetail> Details { get; set; } = new List<GradeRangeCriteriaDetail>();
+    public List<GradeRangeCriteriaDetail> Details { get; set; } = [];
 }
 
 public class GradeRangeCriteriaDetail

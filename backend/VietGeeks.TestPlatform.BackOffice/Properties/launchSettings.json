@@ -1,15 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "dapr": {
-      "commandName": "Executable",
-      "executablePath": "dapr",
-      "commandLineArgs": "run --app-id back-office --app-protocol https --resources-path ./../.dapr/components/ --app-port 7200 --dapr-http-port 3200 -- dotnet run --project .",
-      "workingDirectory": "$(ProjectDir)",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
+    // "dapr": {
+    //   "commandName": "Executable",
+    //   "executablePath": "dapr",
+    //   "commandLineArgs": "run --app-id back-office --app-protocol https --resources-path ./../.dapr/components/ --app-port 7200 --dapr-http-port 3200 -- dotnet run --project .",
+    //   "workingDirectory": "$(ProjectDir)",
+    //   "environmentVariables": {
+    //     "ASPNETCORE_ENVIRONMENT": "Development"
+    //   }
+    // },
     "https": {
       "commandName": "Project",
       "launchBrowser": true,

@@ -20,8 +20,8 @@ public class TestAccessSettingsPartValidatorUnitTests(TestDefinitionValidatorFix
             AccessType = TestAcessType.PublicLink,
             Settings = new PrivateAccessCodeType
             {
-                Configs = new List<PrivateAccessCodeConfig>
-                {
+                Configs =
+                [
                     new PrivateAccessCodeConfig
                     {
                         Code = "Code001",
@@ -29,7 +29,7 @@ public class TestAccessSettingsPartValidatorUnitTests(TestDefinitionValidatorFix
                         SendCode = true,
                         SetId = "set001"
                     }
-                },
+                ],
                 Attempts = 2
             }
         };
@@ -64,8 +64,8 @@ public class TestAccessSettingsPartValidatorUnitTests(TestDefinitionValidatorFix
             AccessType = TestAcessType.PrivateAccessCode,
             Settings = new PrivateAccessCodeType
             {
-                Configs = new List<PrivateAccessCodeConfig>
-                {
+                Configs =
+                [
                     new PrivateAccessCodeConfig
                     {
                         Code = "Code001",
@@ -73,7 +73,7 @@ public class TestAccessSettingsPartValidatorUnitTests(TestDefinitionValidatorFix
                         SendCode = true,
                         SetId = "set001"
                     }
-                },
+                ],
                 Attempts = 2
             }
         };

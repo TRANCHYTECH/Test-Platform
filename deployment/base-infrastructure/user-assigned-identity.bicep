@@ -6,6 +6,7 @@ var roles = {
   acrPullRole: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
   sbDataSenderRole: '69a216fc-b8fb-44d8-bc22-1f3c2cd27a39'
   sbDataReceiverRole: '4f6d3b9b-027b-4f4c-9142-0e5a2a2247e0'
+  sbDataOwner: '090c5cfd-751d-490a-894a-3ce6f1109419'
   storageAccountStorageBlobDataContributorRole: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   storageAccountContributorRole: '17d1049b-9a84-46fb-8f53-869881c3d3ab'
   keuvaultReader: '21090545-7ca7-4776-b22c-e363652d74d2'

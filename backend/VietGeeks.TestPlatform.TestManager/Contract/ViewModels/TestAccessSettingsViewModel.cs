@@ -37,7 +37,7 @@ public class PublicLinkTypeViewModel : TestAccessConfigViewModel
 
 public class PrivateAccessCodeTypeViewModel : TestAccessConfigViewModel
 {
-    public List<PrivateAccessCodeConfigViewModel> Configs { get; set; } = new List<PrivateAccessCodeConfigViewModel>();
+    public List<PrivateAccessCodeConfigViewModel> Configs { get; set; } = [];
 
     public int Attempts { get; set; }
 }

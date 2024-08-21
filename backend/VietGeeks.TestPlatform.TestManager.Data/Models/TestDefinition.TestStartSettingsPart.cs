@@ -12,11 +12,11 @@
         {
             return new()
             {
-                RespondentIdentifyConfig = new List<RespondentIdentifyConfig>
-                {
-                    new(){ FieldId = "FirstName", IsRequired = true },
-                    new(){ FieldId = "LastName", IsRequired = true }
-                }
+                RespondentIdentifyConfig =
+                [
+                    new() { FieldId = "FirstName", IsRequired = true },
+                    new() { FieldId = "LastName", IsRequired = true }
+                ]
             };
         }
     }

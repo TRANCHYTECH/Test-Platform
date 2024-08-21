@@ -46,7 +46,7 @@ public class PublicLinkType : TestAccessSettings
 
 public class PrivateAccessCodeType : TestAccessSettings
 {
-    public List<PrivateAccessCodeConfig> Configs { get; set; } = new List<PrivateAccessCodeConfig>();
+    public List<PrivateAccessCodeConfig> Configs { get; set; } = [];
 
     public int Attempts { get; set; }
 }

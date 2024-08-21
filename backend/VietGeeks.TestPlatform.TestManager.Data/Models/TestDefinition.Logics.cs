@@ -66,7 +66,7 @@ public partial class TestDefinition
             throw new TestPlatformException("Invalid Status Input");
         }
 
-        return new[] { nameof(Status), nameof(CurrentTestRun) };
+        return [nameof(Status), nameof(CurrentTestRun)];
     }
 
     public string[] End()
@@ -88,7 +88,7 @@ public partial class TestDefinition
             throw new TestPlatformException("ActionNotAllowed");
         }
 
-        return new[] { nameof(Status), nameof(CurrentTestRun) };
+        return [nameof(Status), nameof(CurrentTestRun)];
     }
     
     //todo: verify actual how values are reset.
@@ -102,7 +102,7 @@ public partial class TestDefinition
         Status = TestDefinitionStatus.Draft;
         TestAccessSettings = TestAccessSettingsPart.Default();
 
-        return new[] { nameof(Status), nameof(TestAccessSettings) };
+        return [nameof(Status), nameof(TestAccessSettings)];
     }
 
     //todo: combine this and above method
@@ -171,6 +171,7 @@ public partial class TestDefinition
         return ActiveStatuses.Contains(Status) && CurrentTestRun != null;
     }
 
-    public static TestDefinitionStatus[] ActiveStatuses => new[] { TestDefinitionStatus.Activated, TestDefinitionStatus.Scheduled };
+    public static TestDefinitionStatus[] ActiveStatuses => [TestDefinitionStatus.Activated, TestDefinitionStatus.Scheduled
+    ];
 }
 

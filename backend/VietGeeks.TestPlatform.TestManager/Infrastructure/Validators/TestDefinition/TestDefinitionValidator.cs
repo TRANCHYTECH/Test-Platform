@@ -24,10 +24,11 @@ public class TestDefinitionValidator : AbstractValidator<Data.Models.TestDefinit
         return true;
     }
 
-    public static readonly string[] ChildValidators = new string[] {
+    public static readonly string[] ChildValidators =
+    [
         nameof(Data.Models.TestDefinition.BasicSettings),
         nameof(Data.Models.TestDefinition.TestSetSettings),
         nameof(Data.Models.TestDefinition.TestAccessSettings),
         nameof(Data.Models.TestDefinition.GradingSettings)
-    };
+    ];
 }

@@ -1,10 +1,14 @@
 using Azure.Identity;
 using Duende.Bff.EntityFramework;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Entities;
 using VietGeeks.TestPlatform.AccountManager;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
+using VietGeeks.TestPlatform.TestManager.Infrastructure.EventConsumers;
 
 const string testPortalSpaPolicy = "test-portal-spa";
 
@@ -21,16 +25,46 @@ builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {
     OpenIdConnect = builder.Configuration.GetSection("Authentication:Schemes:BackOffice").Get<OpenIdConnectOptions>(),
 });
+builder.Services.AddMassTransit(c =>
+{
+    c.ConfigureHealthCheckOptions(cfg => cfg.MinimalFailureStatus = HealthStatus.Degraded);
+    c.AddMongoDbOutbox(o =>
+    {
+        var dbOptions = GetTestManagerDatabaseOptions(builder);
+        o.ClientFactory(_ => DB.Database(dbOptions.DatabaseName).Client);
+        o.DatabaseFactory(_ => DB.Database(dbOptions.DatabaseName));
+        o.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
+        o.UseBusOutbox();
+    });
+
+    var endpointPrefix = builder.Environment.IsDevelopment()
+        ? Environment.UserName
+        : string.Empty;
+    c.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(endpointPrefix, includeNamespace: false));
+    c.AddConsumersFromNamespaceContaining<SendTestAccessCode>();
+    c.UsingAzureServiceBus((ctx, factoryConfig) =>
+    {
+        factoryConfig.Host(builder.Configuration.GetConnectionString("ServiceBus"),
+            hostConfig =>
+            {
+                if (builder.Environment.IsProduction())
+                {
+                    hostConfig.TokenCredential = new DefaultAzureCredential();
+                }
+            });
+        factoryConfig.ConfigureEndpoints(ctx);
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterTestManagerModule(new TestManagerModuleOptions
 {
-    Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
-    ServiceBus = builder.Configuration.GetSection("TestManagerServiceBus").Get<ServiceBusOptions>() ?? new ServiceBusOptions(),
+    Database = GetTestManagerDatabaseOptions(builder),
 });
 builder.Services.RegisterAccountManagerModule(new AccountManagerModuleOptions
 {
-    Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>() ?? new DatabaseOptions(),
+    Database = GetTestManagerDatabaseOptions(builder),
 });
 builder.Services.AddCors(options =>
 {
@@ -88,3 +122,9 @@ app.MapControllers().RequireAuthorization().AsBffApiEndpoint().SkipAntiforgery()
 app.MapSubscribeHandler();
 
 await app.RunAsync();
+return;
+
+DatabaseOptions GetTestManagerDatabaseOptions(WebApplicationBuilder webApplicationBuilder)
+{
+    return webApplicationBuilder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>()!;
+}

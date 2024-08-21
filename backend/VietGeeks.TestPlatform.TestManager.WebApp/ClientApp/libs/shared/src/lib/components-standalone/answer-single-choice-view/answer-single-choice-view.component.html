@@ -1,9 +1,0 @@
-<div *ngFor="let answer of question.answers" [class.bg-light]="answer.isCorrect" class="d-flex mb-3">
-    <div class="user-answer-check answer-state-{{checkAnswer(answer)}}"></div>
-    <div class="form-check">
-        <input class="form-check-input" type="radio" id="{{answer.id}}" [attr.checked]="userAnswerMark(answer)" disabled>
-        <label class="form-check-label" for="{{answer.id}}">
-            {{answer.answerDescription}}
-        </label>
-    </div>
-</div>

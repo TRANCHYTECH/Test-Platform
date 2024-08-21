@@ -207,19 +207,19 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
                 { GradingCriteriaConfigType.GradeRanges.Value(), new GradeRangeCriteria {
                     Unit = RangeUnit.Point,
                     GradeType = GradeType.GradeAndDescriptive,
-                    Details = new List<GradeRangeCriteriaDetail>
-                    {
+                    Details =
+                    [
                         new GradeRangeCriteriaDetail
                         {
                             To = TestDefinitionValidatorFixture.TestMock.TotalPoints,
                             Grades = new Dictionary<string, string>()
                             {
-                                { GradeType.Grade.Value() ,"grade A" },
-                                { GradeType.Descriptive.Value() ,"grade A desc" },
+                                { GradeType.Grade.Value(), "grade A" },
+                                { GradeType.Descriptive.Value(), "grade A desc" },
                             }
                         }
+                    ]
                     }
-                }
                 }
             },
             InformRespondentConfig = new InformRespondentConfig
@@ -240,54 +240,56 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         var wrong2 = new GradeRangeCriteria
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Point,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         return new List<object[]>
@@ -303,8 +305,8 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 0,
@@ -314,6 +316,7 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
                         { "2", "Good desc" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 100,
@@ -323,15 +326,15 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
                         { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         var wrong2 = new GradeRangeCriteria
         {
             GradeType = GradeType.GradeAndDescriptive,
             Unit = RangeUnit.Point,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 0,
@@ -341,6 +344,7 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
                         { "2", "Good desc" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 100,
@@ -350,7 +354,7 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
                         { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         return new List<object[]>
@@ -366,63 +370,64 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 101,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         var wrong2 = new GradeRangeCriteria
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 101,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         var wrong3 = new GradeRangeCriteria
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Point,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = TestDefinitionValidatorFixture.TestMock.TotalPoints + 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Good" },
-                        {"2","Good desc" }
+                        { "1", "Good" },
+                        { "2", "Good desc" }
                     }
                 }
-            }
+            ]
         };
 
         return new List<object[]>
@@ -439,62 +444,63 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
         {
             GradeType = GradeType.Grade,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 100,
                     Grades = new Dictionary<string, string>
                     {
-                        {"2","Descriptive" }
+                        { "2", "Descriptive" }
                     }
                 }
-            }
+            ]
         };
 
         var wrong2 = new GradeRangeCriteria
         {
             GradeType = GradeType.Descriptive,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 100,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"3","Unknown" }
+                        { "1", "Grade" },
+                        { "3", "Unknown" }
                     }
                 }
-            }
+            ]
         };
 
         var wrong3 = new GradeRangeCriteria
         {
             GradeType = GradeType.GradeAndDescriptive,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 50,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"2","Descriptive" }
+                        { "1", "Grade" },
+                        { "2", "Descriptive" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 100,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"3","Unknown" }
+                        { "1", "Grade" },
+                        { "3", "Unknown" }
                     }
                 }
-            }
+            ]
         };
         return new List<object[]>
         {
@@ -594,54 +600,57 @@ public class GradingSettingsPartValidatorUnitTests(TestDefinitionValidatorFixtur
         {
             GradeType = GradeType.GradeAndDescriptive,
             Unit = RangeUnit.Percent,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 50,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"2","Descriptive" }
+                        { "1", "Grade" },
+                        { "2", "Descriptive" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
                     To = 100,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"2","Descriptive" }
+                        { "1", "Grade" },
+                        { "2", "Descriptive" }
                     }
                 }
-            }
+            ]
         };
 
         var right2 = new GradeRangeCriteria
         {
             GradeType = GradeType.GradeAndDescriptive,
             Unit = RangeUnit.Point,
-            Details = new List<GradeRangeCriteriaDetail>
-            {
+            Details =
+            [
                 new GradeRangeCriteriaDetail
                 {
                     To = 10,
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"2","Descriptive" }
+                        { "1", "Grade" },
+                        { "2", "Descriptive" }
                     }
                 },
+
                 new GradeRangeCriteriaDetail
                 {
-                    To =  TestDefinitionValidatorFixture.TestMock.TotalPoints, // matches total points returned from according mock service.
+                    To = TestDefinitionValidatorFixture.TestMock
+                        .TotalPoints, // matches total points returned from according mock service.
                     Grades = new Dictionary<string, string>
                     {
-                        {"1","Grade" },
-                        {"2","Descriptive" }
+                        { "1", "Grade" },
+                        { "2", "Descriptive" }
                     }
                 }
-            }
+            ]
         };
 
         return new List<object[]>
