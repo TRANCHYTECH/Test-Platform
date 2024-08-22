@@ -10,7 +10,6 @@ namespace VietGeeks.TestPlatform.TestRunner.Api.Actors;
 public class ProctorActor(ActorHost host, IProctorService proctorService) : Actor(host), IProctorActor
 {
     private const string EXAM_STATE_NAME = "Exam";
-    private const string TEST_QUESTIONS_CACHE_KEY = "Exam_TestQuestions";
     private const int SUBMIT_ALLOW_WINDOW_SECONDS = 5;
 
     private List<QuestionDefinition>? _testRunQuestions;
