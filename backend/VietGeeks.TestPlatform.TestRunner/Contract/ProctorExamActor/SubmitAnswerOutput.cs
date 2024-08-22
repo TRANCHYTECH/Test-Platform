@@ -1,9 +1,8 @@
-namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor
+namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
+
+public class SubmitAnswerOutput
 {
-    public class SubmitAnswerOutput
-    {
-        public bool IsSuccess { get; set; }
-        public string? Reason { get; set; }
-        public bool Terminated { get; set; }
-    }
+    public bool IsSuccess { get; set; }
+    public string? Reason { get; set; }
+    public bool Terminated { get; set; }
 }

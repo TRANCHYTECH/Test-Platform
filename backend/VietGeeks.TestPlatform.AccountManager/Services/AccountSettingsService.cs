@@ -5,62 +5,61 @@ using VietGeeks.TestPlatform.AccountManager.Contract;
 using VietGeeks.TestPlatform.AccountManager.Data;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
-namespace VietGeeks.TestPlatform.AccountManager.Services
+namespace VietGeeks.TestPlatform.AccountManager.Services;
+
+public class AccountSettingsService(IMapper mapper) : IAccountSettingsService
 {
-    public class AccountSettingsService(IMapper mapper) : IAccountSettingsService
+    public async Task<UserViewModel> CreateUserProfile(UserCreateViewModel viewModel)
     {
-        public async Task<UserViewModel> CreateUserProfile(UserCreateViewModel viewModel)
+        var userProfile = await DB.Find<User>().Match(c => c.ID == viewModel.UserId || c.Email == viewModel.Email)
+            .ExecuteSingleAsync();
+        if (userProfile != null)
         {
-            var userProfile = await DB.Find<User>().Match(c => c.ID == viewModel.UserId || c.Email == viewModel.Email)
-                .ExecuteSingleAsync();
-            if (userProfile != null)
-            {
-                throw new TestPlatformException("User with Id or Email already exists");
-            }
-
-            var newUser = mapper.Map<User>(viewModel);
-
-            //todo: use distributed lock here
-            await DB.InsertAsync(newUser);
-
-            return mapper.Map<UserViewModel>(userProfile);
+            throw new TestPlatformException("User with Id or Email already exists");
         }
 
-        public async Task<UserViewModel> UpdateUserProfile(UserUpdateViewModel viewModel)
+        var newUser = mapper.Map<User>(viewModel);
+
+        //todo: use distributed lock here
+        await DB.InsertAsync(newUser);
+
+        return mapper.Map<UserViewModel>(userProfile);
+    }
+
+    public async Task<UserViewModel> UpdateUserProfile(UserUpdateViewModel viewModel)
+    {
+        var userProfile = await DB.Find<User>().MatchID(viewModel.UserId).ExecuteSingleAsync();
+        if (userProfile == null)
         {
-            var userProfile = await DB.Find<User>().MatchID(viewModel.UserId).ExecuteSingleAsync();
-            if (userProfile == null)
-            {
-                throw new TestPlatformException("Not found user");
-            }
-
-            var affectedProperties = new List<string>();
-            if (viewModel.RegionalSettings != null)
-            {
-                userProfile.RegionalSettings = mapper.Map<RegionalSettings>(viewModel.RegionalSettings);
-
-                //todo: validate timezone, langugage are valid.
-                affectedProperties.Add(nameof(User.RegionalSettings));
-            }
-
-            if (affectedProperties.Count > 0)
-            {
-                await DB.SaveOnlyAsync(userProfile, affectedProperties);
-            }
-
-            return mapper.Map<UserViewModel>(userProfile);
+            throw new TestPlatformException("Not found user");
         }
 
-        public async Task<UserViewModel> GetUserProfile(string userId)
+        var affectedProperties = new List<string>();
+        if (viewModel.RegionalSettings != null)
         {
-            var userProfile = await DB.Find<User>().MatchID(userId).ExecuteSingleAsync();
+            userProfile.RegionalSettings = mapper.Map<RegionalSettings>(viewModel.RegionalSettings);
 
-            return mapper.Map<UserViewModel>(userProfile);
+            //todo: validate timezone, langugage are valid.
+            affectedProperties.Add(nameof(User.RegionalSettings));
         }
 
-        public string[] GetTimeZones()
+        if (affectedProperties.Count > 0)
         {
-            return DateTimeZoneProviders.Tzdb.Ids.ToArray();
+            await DB.SaveOnlyAsync(userProfile, affectedProperties);
         }
+
+        return mapper.Map<UserViewModel>(userProfile);
+    }
+
+    public async Task<UserViewModel> GetUserProfile(string userId)
+    {
+        var userProfile = await DB.Find<User>().MatchID(userId).ExecuteSingleAsync();
+
+        return mapper.Map<UserViewModel>(userProfile);
+    }
+
+    public string[] GetTimeZones()
+    {
+        return DateTimeZoneProviders.Tzdb.Ids.ToArray();
     }
 }

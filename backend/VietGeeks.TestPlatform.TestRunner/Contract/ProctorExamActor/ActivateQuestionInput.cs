@@ -1,13 +1,12 @@
-namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor
-{
-    public class ActivateNextQuestionInput
-    {
-        public ActivateDirection Direction { get; set; }
-    }
+namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
 
-    public enum ActivateDirection
-    {
-        Previous,
-        Next
-    }
+public class ActivateNextQuestionInput
+{
+    public ActivateDirection Direction { get; set; }
+}
+
+public enum ActivateDirection
+{
+    Previous,
+    Next
 }

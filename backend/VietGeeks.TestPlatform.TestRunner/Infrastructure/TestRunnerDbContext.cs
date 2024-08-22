@@ -1,8 +1,7 @@
 ﻿using MongoDB.Entities;
 
-namespace VietGeeks.TestPlatform.TestRunner.Infrastructure
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure;
+
+public class TestRunnerDbContext : DBContext
 {
-    public class TestRunnerDbContext : DBContext
-    {
-    }
 }

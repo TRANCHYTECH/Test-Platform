@@ -1,8 +1,7 @@
-﻿namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
+﻿namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+
+public interface IQuestionRelatedValidationService
 {
-    public interface IQuestionRelatedValidationService
-    {
-        Task<bool> CheckTestCategoryExistence(string testCategoryId);
-        Task<bool> CheckTestDefinitionExistence(string testId);
-    }
+    Task<bool> CheckTestCategoryExistence(string testCategoryId);
+    Task<bool> CheckTestDefinitionExistence(string testId);
 }

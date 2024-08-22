@@ -1,10 +1,9 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators
+namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators;
+
+public interface IScoreCalculator
 {
-    public interface IScoreCalculator
-    {
-        bool IsCorrectAnswer(QuestionDefinition question, string[]? answerIds);
-        int Calculate(QuestionDefinition question, string[]? answerIds);
-    }
+    bool IsCorrectAnswer(QuestionDefinition question, string[]? answerIds);
+    int Calculate(QuestionDefinition question, string[]? answerIds);
 }

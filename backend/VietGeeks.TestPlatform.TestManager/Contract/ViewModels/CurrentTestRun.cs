@@ -1,8 +1,7 @@
-namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
+namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
+
+public class CurrentTestRun
 {
-    public class CurrentTestRun
-    {
-        public string Id { get; set; } = default!;
-        public DateTime ActivatedOrScheduledAtUtc { get; set; }
-    }
+    public string Id { get; set; } = default!;
+    public DateTime ActivatedOrScheduledAtUtc { get; set; }
 }

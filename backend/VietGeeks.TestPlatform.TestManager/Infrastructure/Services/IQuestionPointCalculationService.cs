@@ -1,9 +1,8 @@
 ﻿using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
+
+public interface IQuestionPointCalculationService
 {
-    public interface IQuestionPointCalculationService
-    {
-        int CalculateTotalPoints(QuestionDefinition question);
-    }
+    int CalculateTotalPoints(QuestionDefinition question);
 }

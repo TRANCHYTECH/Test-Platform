@@ -1,72 +1,71 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Models
+namespace VietGeeks.TestPlatform.TestManager.Data.Models;
+
+public class TimeSettingsPart
 {
-    public class TimeSettingsPart
+    public TestDurationMethod TestDurationMethod { get; set; } = default!;
+
+    public TestActivationMethod TestActivationMethod { get; set; } = default!;
+
+    public AnswerQuestionConfig AnswerQuestionConfig { get; set; } = default!;
+
+    public static TimeSettingsPart Default()
     {
-        public TestDurationMethod TestDurationMethod { get; set; } = default!;
-
-        public TestActivationMethod TestActivationMethod { get; set; } = default!;
-
-        public AnswerQuestionConfig AnswerQuestionConfig { get; set; } = default!;
-
-        public static TimeSettingsPart Default()
+        return new TimeSettingsPart
         {
-            return new TimeSettingsPart
+            TestDurationMethod = new CompleteQuestionDuration
             {
-                TestDurationMethod = new CompleteQuestionDuration
-                {
-                    Duration = TimeSpan.FromMinutes(2)
-                },
-                TestActivationMethod = new ManualTestActivation
-                {
-                    ActiveUntil = TimeSpan.FromDays(30)
-                },
-                AnswerQuestionConfig = new AnswerQuestionConfig
-                {
-                    SkipQuestion = false
-                }
-            };
-        }
+                Duration = TimeSpan.FromMinutes(2)
+            },
+            TestActivationMethod = new ManualTestActivation
+            {
+                ActiveUntil = TimeSpan.FromDays(30)
+            },
+            AnswerQuestionConfig = new AnswerQuestionConfig
+            {
+                SkipQuestion = false
+            }
+        };
     }
+}
 
-    [BsonKnownTypes(typeof(CompleteTestDuration), typeof(CompleteQuestionDuration))]
-    public abstract class TestDurationMethod
-    {
-    }
+[BsonKnownTypes(typeof(CompleteTestDuration), typeof(CompleteQuestionDuration))]
+public abstract class TestDurationMethod
+{
+}
 
-    public class CompleteTestDuration : TestDurationMethod
-    {
-        public TimeSpan Duration { get; set; }
-    }
+public class CompleteTestDuration : TestDurationMethod
+{
+    public TimeSpan Duration { get; set; }
+}
 
-    public class CompleteQuestionDuration : TestDurationMethod
-    {
-        public TimeSpan Duration { get; set; }
-    }
+public class CompleteQuestionDuration : TestDurationMethod
+{
+    public TimeSpan Duration { get; set; }
+}
 
-    [BsonKnownTypes(typeof(ManualTestActivation), typeof(TimePeriodActivation))]
-    public abstract class TestActivationMethod
-    {
-    }
+[BsonKnownTypes(typeof(ManualTestActivation), typeof(TimePeriodActivation))]
+public abstract class TestActivationMethod
+{
+}
 
-    public class ManualTestActivation : TestActivationMethod
-    {
-        public TimeSpan ActiveUntil { get; set; }
-    }
+public class ManualTestActivation : TestActivationMethod
+{
+    public TimeSpan ActiveUntil { get; set; }
+}
 
-    /// <summary>
-    ///     All times are in UTC.
-    /// </summary>
-    public class TimePeriodActivation : TestActivationMethod
-    {
-        public DateTime ActiveFromDate { get; set; }
+/// <summary>
+///     All times are in UTC.
+/// </summary>
+public class TimePeriodActivation : TestActivationMethod
+{
+    public DateTime ActiveFromDate { get; set; }
 
-        public DateTime ActiveUntilDate { get; set; }
-    }
+    public DateTime ActiveUntilDate { get; set; }
+}
 
-    public class AnswerQuestionConfig
-    {
-        public bool SkipQuestion { get; set; }
-    }
+public class AnswerQuestionConfig
+{
+    public bool SkipQuestion { get; set; }
 }

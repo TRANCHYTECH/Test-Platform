@@ -1,7 +1,6 @@
-﻿namespace VietGeeks.TestPlatform.TestManager.Api.Models
+﻿namespace VietGeeks.TestPlatform.TestManager.Api.Models;
+
+public class QuestionSettings
 {
-    public class QuestionSettings
-    {
-        public int PageSize { get; set; }
-    }
+    public int PageSize { get; set; }
 }

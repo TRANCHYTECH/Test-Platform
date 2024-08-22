@@ -1,7 +1,6 @@
-﻿namespace VietGeeks.TestPlatform.TestRunner.Contract
+﻿namespace VietGeeks.TestPlatform.TestRunner.Contract;
+
+public interface IExamStepInfo
 {
-    public interface IExamStepInfo
-    {
-        ExamStep Step { get; set; }
-    }
+    ExamStep Step { get; set; }
 }
