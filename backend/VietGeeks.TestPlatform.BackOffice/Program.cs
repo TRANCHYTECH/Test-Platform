@@ -23,7 +23,7 @@ if (builder.Environment.IsProduction())
 builder.Services.AddControllers();
 builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {
-    OpenIdConnect = builder.Configuration.GetSection("Authentication:Schemes:BackOffice").Get<OpenIdConnectOptions>(),
+    OpenIdConnect = builder.Configuration.GetSection("Authentication:Schemes:BackOffice").Get<OpenIdConnectOptions>()
 });
 builder.Services.AddMassTransit(c =>
 {
@@ -40,7 +40,7 @@ builder.Services.AddMassTransit(c =>
     var endpointPrefix = builder.Environment.IsDevelopment()
         ? Environment.UserName
         : string.Empty;
-    c.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(endpointPrefix, includeNamespace: false));
+    c.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(endpointPrefix, false));
     c.AddConsumersFromNamespaceContaining<SendTestAccessCode>();
     c.UsingAzureServiceBus((ctx, factoryConfig) =>
     {
@@ -60,11 +60,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterTestManagerModule(new TestManagerModuleOptions
 {
-    Database = GetTestManagerDatabaseOptions(builder),
+    Database = GetTestManagerDatabaseOptions(builder)
 });
 builder.Services.RegisterAccountManagerModule(new AccountManagerModuleOptions
 {
-    Database = GetTestManagerDatabaseOptions(builder),
+    Database = GetTestManagerDatabaseOptions(builder)
 });
 builder.Services.AddCors(options =>
 {
@@ -108,7 +108,8 @@ if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
     await context.Database.MigrateAsync(CancellationToken.None);
 }
 
-app.MapGet("/test-portal", (HttpRequest _) => TypedResults.Redirect(app.Configuration.GetValue<string>("PortalUrl")!, permanent: true))
+app.MapGet("/test-portal",
+        (HttpRequest _) => TypedResults.Redirect(app.Configuration.GetValue<string>("PortalUrl")!, true))
     .WithSummary("Redirect after user login via portal")
     .WithOpenApi();
 

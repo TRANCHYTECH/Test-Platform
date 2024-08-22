@@ -8,12 +8,14 @@ using VietGeeks.TestPlatform.Integration.Contract;
 
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.EventConsumers
 {
-    public class SendTestAccessCode(ILogger<SendTestAccessCode> logger, IConfiguration configuration) : IConsumer<SendTestAccessCodeRequest>
+    public class SendTestAccessCode(ILogger<SendTestAccessCode> logger, IConfiguration configuration)
+        : IConsumer<SendTestAccessCodeRequest>
     {
         public async Task Consume(ConsumeContext<SendTestAccessCodeRequest> context)
         {
             logger.ReceivedEventSendingAccessCode();
-            MailjetClient client = new(configuration.GetValue<string>("MailJet:PublicKey"), configuration.GetValue<string>("MailJet:PrivateKey"));
+            MailjetClient client = new(configuration.GetValue<string>("MailJet:PublicKey"),
+                configuration.GetValue<string>("MailJet:PrivateKey"));
             var mails = context.Message.Receivers.Select(r => new TransactionalEmail
             {
                 CustomID = r.AccessCode,
@@ -25,9 +27,9 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.EventConsumers
                 Subject = "Test Portal Notification",
                 Variables = new Dictionary<string, object>
                 {
-                    {"TestUrl",context.Message.TestUrl },
-                    {"AccessCode", r.AccessCode },
-                },
+                    { "TestUrl", context.Message.TestUrl },
+                    { "AccessCode", r.AccessCode }
+                }
             });
             var sendResult = await client.SendTransactionalEmailsAsync(mails);
             foreach (var item in sendResult.Messages.Where(c => c.Status != "success"))

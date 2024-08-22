@@ -11,4 +11,3 @@ namespace VietGeeks.TestPlatform.AccountManager.Data
         public DateTime ModifiedOn { get; set; }
     }
 }
-

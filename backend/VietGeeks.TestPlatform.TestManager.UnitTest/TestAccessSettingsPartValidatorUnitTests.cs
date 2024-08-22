@@ -2,85 +2,88 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
-namespace VietGeeks.TestPlatform.TestManager.UnitTest;
-
-[Collection(TestDefinitionValidatorTestCollection.CollectionId)]
-public class TestAccessSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
+namespace VietGeeks.TestPlatform.TestManager.UnitTest
 {
-    private readonly TestDefinitionValidatorFixture _fixture = fixture;
-    private readonly TestAccessSettingsPartValidator _validator = fixture.CreateTestAccessSettingsPartValidator();
-
-    #region TestAccessSettingsPart
-
-    [Fact]
-    public async Task TestAccessSettingsPart_Validate_Failure_MismatchTestAccessType()
+    [Collection(TestDefinitionValidatorTestCollection.CollectionId)]
+    public class TestAccessSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
     {
-        var input = new TestAccessSettingsPart
+        private readonly TestDefinitionValidatorFixture _fixture = fixture;
+        private readonly TestAccessSettingsPartValidator _validator = fixture.CreateTestAccessSettingsPartValidator();
+
+        #region TestAccessSettingsPart
+
+        [Fact]
+        public async Task TestAccessSettingsPart_Validate_Failure_MismatchTestAccessType()
         {
-            AccessType = TestAcessType.PublicLink,
-            Settings = new PrivateAccessCodeType
+            var input = new TestAccessSettingsPart
             {
-                Configs =
-                [
-                    new PrivateAccessCodeConfig
-                    {
-                        Code = "Code001",
-                        Email = "dnt@loca.co",
-                        SendCode = true,
-                        SetId = "set001"
-                    }
-                ],
-                Attempts = 2
-            }
-        };
+                AccessType = TestAcessType.PublicLink,
+                Settings = new PrivateAccessCodeType
+                {
+                    Configs =
+                    [
+                        new PrivateAccessCodeConfig
+                        {
+                            Code = "Code001",
+                            Email = "dnt@loca.co",
+                            SendCode = true,
+                            SetId = "set001"
+                        }
+                    ],
+                    Attempts = 2
+                }
+            };
 
-        var result = await _validator.TestValidateAsync(input);
-        Assert.False(result.IsValid);
-        Assert.Equal(1, result.Errors.Count(c => c.PropertyName == nameof(TestAccessSettingsPart.Settings) && c.ErrorCode == "PredicateValidator"));
-    }
+            var result = await _validator.TestValidateAsync(input);
+            Assert.False(result.IsValid);
+            Assert.Equal(1,
+                result.Errors.Count(c =>
+                    c.PropertyName == nameof(TestAccessSettingsPart.Settings) && c.ErrorCode == "PredicateValidator"));
+        }
 
-    [Fact]
-    public async Task TestAccessSettingsPart_Validate_Success_PublicLinkType()
-    {
-        var input = new TestAccessSettingsPart
+        [Fact]
+        public async Task TestAccessSettingsPart_Validate_Success_PublicLinkType()
         {
-            AccessType = TestAcessType.PublicLink,
-            Settings = new PublicLinkType
+            var input = new TestAccessSettingsPart
             {
-                RequireAccessCode = true,
-                Attempts = 2
-            }
-        };
+                AccessType = TestAcessType.PublicLink,
+                Settings = new PublicLinkType
+                {
+                    RequireAccessCode = true,
+                    Attempts = 2
+                }
+            };
 
-        var result = await _validator.TestValidateAsync(input);
-        Assert.True(result.IsValid);
-    }
+            var result = await _validator.TestValidateAsync(input);
+            Assert.True(result.IsValid);
+        }
 
-    [Fact]
-    public async Task TestAccessSettingsPart_Validate_Success_PrivateAccessCodeType()
-    {
-        var input = new TestAccessSettingsPart
+        [Fact]
+        public async Task TestAccessSettingsPart_Validate_Success_PrivateAccessCodeType()
         {
-            AccessType = TestAcessType.PrivateAccessCode,
-            Settings = new PrivateAccessCodeType
+            var input = new TestAccessSettingsPart
             {
-                Configs =
-                [
-                    new PrivateAccessCodeConfig
-                    {
-                        Code = "Code001",
-                        Email = "dnt@loca.co",
-                        SendCode = true,
-                        SetId = "set001"
-                    }
-                ],
-                Attempts = 2
-            }
-        };
+                AccessType = TestAcessType.PrivateAccessCode,
+                Settings = new PrivateAccessCodeType
+                {
+                    Configs =
+                    [
+                        new PrivateAccessCodeConfig
+                        {
+                            Code = "Code001",
+                            Email = "dnt@loca.co",
+                            SendCode = true,
+                            SetId = "set001"
+                        }
+                    ],
+                    Attempts = 2
+                }
+            };
 
-        var result = await _validator.TestValidateAsync(input);
-        Assert.True(result.IsValid);
+            var result = await _validator.TestValidateAsync(input);
+            Assert.True(result.IsValid);
+        }
+
+        #endregion
     }
-
-    #endregion
 }

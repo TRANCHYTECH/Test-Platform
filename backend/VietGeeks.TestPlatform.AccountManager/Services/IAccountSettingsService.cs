@@ -1,15 +1,15 @@
 ﻿using VietGeeks.TestPlatform.AccountManager.Contract;
 
-namespace VietGeeks.TestPlatform.AccountManager.Services;
-
-public interface IAccountSettingsService
+namespace VietGeeks.TestPlatform.AccountManager.Services
 {
-    Task<UserViewModel> CreateUserProfile(UserCreateViewModel viewModel);
+    public interface IAccountSettingsService
+    {
+        Task<UserViewModel> CreateUserProfile(UserCreateViewModel viewModel);
 
-    Task<UserViewModel> UpdateUserProfile(UserUpdateViewModel viewModel);
+        Task<UserViewModel> UpdateUserProfile(UserUpdateViewModel viewModel);
 
-    Task<UserViewModel> GetUserProfile(string userId);
+        Task<UserViewModel> GetUserProfile(string userId);
 
-    string[] GetTimeZones();
-
+        string[] GetTimeZones();
+    }
 }

@@ -1,8 +1,9 @@
-﻿namespace VietGeeks.TestPlatform.AspNetCore.Services;
-
-public interface ITenant
+﻿namespace VietGeeks.TestPlatform.AspNetCore.Services
 {
-    string UserId { get; }
+    public interface ITenant
+    {
+        string UserId { get; }
 
-    string Email { get; }
+        string Email { get; }
+    }
 }

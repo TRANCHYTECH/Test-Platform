@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+
 namespace VietGeeks.TestPlatform.TestManager.Data.Models
 {
     public class CurrentTestRunPart
@@ -9,4 +10,3 @@ namespace VietGeeks.TestPlatform.TestManager.Data.Models
         public DateTime ActivatedOrScheduledAtUtc { get; set; }
     }
 }
-

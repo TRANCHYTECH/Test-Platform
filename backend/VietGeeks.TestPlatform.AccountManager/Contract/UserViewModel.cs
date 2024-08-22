@@ -28,4 +28,3 @@
         public string TimeZone { get; set; } = default!;
     }
 }
-

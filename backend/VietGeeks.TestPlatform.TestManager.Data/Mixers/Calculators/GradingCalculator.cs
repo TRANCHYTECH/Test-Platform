@@ -1,56 +1,58 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Data.ReadonlyModels;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators;
-
-public static class GradingCalculator
+namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators
 {
-    public static List<AggregatedGrading> CalculateGrading(this GradingSettingsPart settings, decimal finalMark, decimal totalPoints)
+    public static class GradingCalculator
     {
-        var result = new List<AggregatedGrading>();
-        foreach (var setting in settings.GradingCriterias)
+        public static List<AggregatedGrading> CalculateGrading(this GradingSettingsPart settings, decimal finalMark,
+            decimal totalPoints)
         {
-            if (setting.Value is PassMaskCriteria passMaskCriteria)
+            var result = new List<AggregatedGrading>();
+            foreach (var setting in settings.GradingCriterias)
             {
-                var v = finalMark;
-                if (passMaskCriteria.Unit == RangeUnit.Percent)
+                if (setting.Value is PassMaskCriteria passMaskCriteria)
                 {
-                    v = finalMark / totalPoints * 100;
-                }
-
-                var aggregatedGrading = new AggregatedGrading()
-                {
-                    PassMarkGrade = new PassMarkGrade
+                    var v = finalMark;
+                    if (passMaskCriteria.Unit == RangeUnit.Percent)
                     {
-                        FinalPoints = v,
-                        IsPass = v >= passMaskCriteria.Value,
-                        TotalPoints = totalPoints,
-                        Unit = passMaskCriteria.Unit
-                    },
-                    GradingType = GradingCriteriaConfigType.PassMask
-                };
+                        v = finalMark / totalPoints * 100;
+                    }
 
-                result.Add(aggregatedGrading);
-            }
-            else if (setting.Value is GradeRangeCriteria gradeRangeCriteria)
-            {
-                var v = finalMark;
-                if (gradeRangeCriteria.Unit == RangeUnit.Percent)
-                {
-                    v = finalMark / totalPoints * 100;
+                    var aggregatedGrading = new AggregatedGrading
+                    {
+                        PassMarkGrade = new PassMarkGrade
+                        {
+                            FinalPoints = v,
+                            IsPass = v >= passMaskCriteria.Value,
+                            TotalPoints = totalPoints,
+                            Unit = passMaskCriteria.Unit
+                        },
+                        GradingType = GradingCriteriaConfigType.PassMask
+                    };
+
+                    result.Add(aggregatedGrading);
                 }
-
-                var matchedLevel = gradeRangeCriteria.Details.OrderBy(c => c.To).First(c => c.To >= v);
-                var aggregatedGrading = new AggregatedGrading()
+                else if (setting.Value is GradeRangeCriteria gradeRangeCriteria)
                 {
-                    Grades = matchedLevel.Grades,
-                    GradingType = GradingCriteriaConfigType.GradeRanges,
-                };
+                    var v = finalMark;
+                    if (gradeRangeCriteria.Unit == RangeUnit.Percent)
+                    {
+                        v = finalMark / totalPoints * 100;
+                    }
 
-                result.Add(aggregatedGrading);
+                    var matchedLevel = gradeRangeCriteria.Details.OrderBy(c => c.To).First(c => c.To >= v);
+                    var aggregatedGrading = new AggregatedGrading
+                    {
+                        Grades = matchedLevel.Grades,
+                        GradingType = GradingCriteriaConfigType.GradeRanges
+                    };
+
+                    result.Add(aggregatedGrading);
+                }
             }
-        }
 
-        return result;
+            return result;
+        }
     }
 }

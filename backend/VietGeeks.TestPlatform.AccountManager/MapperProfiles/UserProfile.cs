@@ -17,4 +17,3 @@ namespace VietGeeks.TestPlatform.AccountManager.MapperProfiles
         }
     }
 }
-

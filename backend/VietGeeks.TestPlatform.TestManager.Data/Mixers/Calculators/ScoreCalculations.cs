@@ -1,20 +1,21 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators;
-
-public static class ScoreCalculations
+namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators
 {
-    public static int CalculateScores(this QuestionDefinition question, string[]? answerIds)
+    public static class ScoreCalculations
     {
-        var calculator = ScoreCalculatorFactory.GetCalculator((AnswerType)question.AnswerType);
+        public static int CalculateScores(this QuestionDefinition question, string[]? answerIds)
+        {
+            var calculator = ScoreCalculatorFactory.GetCalculator(question.AnswerType);
 
-        return calculator.Calculate(question, answerIds);
-    }
+            return calculator.Calculate(question, answerIds);
+        }
 
-    public static bool IsCorrectAnswer(this QuestionDefinition question, string[]? answerIds)
-    {
-        var calculator = ScoreCalculatorFactory.GetCalculator((AnswerType)question.AnswerType);
+        public static bool IsCorrectAnswer(this QuestionDefinition question, string[]? answerIds)
+        {
+            var calculator = ScoreCalculatorFactory.GetCalculator(question.AnswerType);
 
-        return calculator.IsCorrectAnswer(question, answerIds);
+            return calculator.IsCorrectAnswer(question, answerIds);
+        }
     }
 }

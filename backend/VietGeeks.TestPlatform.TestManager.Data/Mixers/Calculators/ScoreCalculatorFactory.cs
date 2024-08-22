@@ -1,19 +1,20 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators;
-
-public static class ScoreCalculatorFactory
+namespace VietGeeks.TestPlatform.TestManager.Data.Mixers.Calculators
 {
-    public static IScoreCalculator GetCalculator(AnswerType answerType)
+    public static class ScoreCalculatorFactory
     {
-        switch (answerType)
+        public static IScoreCalculator GetCalculator(AnswerType answerType)
         {
-            case AnswerType.SingleChoice:
-                return new SingleChoiceScoreCalculator();
-            case AnswerType.MultipleChoice:
-                return new MultipleChoicesScoreCalculator();
-            default:
-                throw new ArgumentOutOfRangeException($"Answer type {answerType} is not supported");
+            switch (answerType)
+            {
+                case AnswerType.SingleChoice:
+                    return new SingleChoiceScoreCalculator();
+                case AnswerType.MultipleChoice:
+                    return new MultipleChoicesScoreCalculator();
+                default:
+                    throw new ArgumentOutOfRangeException($"Answer type {answerType} is not supported");
+            }
         }
     }
 }

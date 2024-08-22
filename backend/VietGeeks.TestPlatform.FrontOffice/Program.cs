@@ -1,7 +1,6 @@
+using Azure.Identity;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
-using Azure.Identity;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Api.Filters;
@@ -17,11 +16,12 @@ if (builder.Environment.IsProduction())
         new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
         new DefaultAzureCredential());
 }
-builder.Services.AddVietGeeksAspNetCore(new()
+
+builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {
     DataProtection = builder.Configuration.GetSection("DataProtection").Get<DataProtectionOptions>()
 });
-builder.Services.RegisterTestRunnerModule(new()
+builder.Services.RegisterTestRunnerModule(new InfrastructureDataOptions
 {
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>()!
 });
@@ -44,23 +44,20 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(testRunnerSpaPolicy,
-                      policyBuilder =>
-                      {
-                          policyBuilder
-                              .WithOrigins(builder.Configuration.GetValue<string>("TestRunnerUrl")!)
-                              .AllowCredentials()
-                              .AllowAnyMethod()
-                              .AllowAnyHeader();
-                      });
+        policyBuilder =>
+        {
+            policyBuilder
+                .WithOrigins(builder.Configuration.GetValue<string>("TestRunnerUrl")!)
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
 });
 
 builder.Services.AddDaprClient();
-builder.Services.AddActors(options =>
-{
-    options.Actors.RegisterActor<ProctorActor>();
-});
+builder.Services.AddActors(options => { options.Actors.RegisterActor<ProctorActor>(); });
 
-builder.Services.ConfigureApplicationCookie((options) =>
+builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.Strict;

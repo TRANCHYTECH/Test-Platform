@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
-    <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager\VietGeeks.TestPlatform.TestManager.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj"/>
+        <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager\VietGeeks.TestPlatform.TestManager.csproj"/>
+    </ItemGroup>
 </Project>

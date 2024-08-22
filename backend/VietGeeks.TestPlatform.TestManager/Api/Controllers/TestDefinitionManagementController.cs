@@ -3,123 +3,124 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
-using VietGeeks.TestPlatform.TestManager.Infrastructure;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
-
-[ApiController]
-[Route("Management/TestDefinition")]
-[Authorize]
-public class TestDefinitionManagementController(
-    ILogger<TestDefinitionManagementController> logger,
-    ITestManagerService testManagerService)
-    : ControllerBase
+namespace VietGeeks.TestPlatform.TestManager.Api.Controllers
 {
-    private readonly ILogger<TestDefinitionManagementController> _logger = logger;
-
-    [HttpPost]
-    public async Task<IActionResult> Create(NewTestDefinitionViewModel viewModel)
+    [ApiController]
+    [Route("Management/TestDefinition")]
+    [Authorize]
+    public class TestDefinitionManagementController(
+        ILogger<TestDefinitionManagementController> logger,
+        ITestManagerService testManagerService)
+        : ControllerBase
     {
-        var createdTest = await testManagerService.CreateTestDefinition(viewModel);
+        private readonly ILogger<TestDefinitionManagementController> _logger = logger;
 
-        return Ok(createdTest);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
-    {
-        //todo: move paging search stuff to shared, also prevent max is 100
-        var testDefinitions = await testManagerService.GetTestDefinitionOverviews(pageNumber ?? 1, pageSize ?? 12, cancellationToken);
-
-        return Ok(testDefinitions);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="viewModel"></param>
-    /// <returns></returns>
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, UpdateTestDefinitionViewModel viewModel)
-    {
-        var testDefinitions = await testManagerService.UpdateTestDefinition(id, viewModel);
-
-        return Ok(testDefinitions);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id)
-    {
-        var testDefinition = await testManagerService.GetTestDefinition(id);
-
-        if (testDefinition == null)
+        [HttpPost]
+        public async Task<IActionResult> Create(NewTestDefinitionViewModel viewModel)
         {
-            return NotFound();
+            var createdTest = await testManagerService.CreateTestDefinition(viewModel);
+
+            return Ok(createdTest);
         }
 
-        return Ok(testDefinition);
-    }
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] int? pageNumber, [FromQuery] int? pageSize,
+            CancellationToken cancellationToken)
+        {
+            //todo: move paging search stuff to shared, also prevent max is 100
+            var testDefinitions =
+                await testManagerService.GetTestDefinitionOverviews(pageNumber ?? 1, pageSize ?? 12, cancellationToken);
 
-    [HttpPost("{id}/Activate")]
-    public async Task<IActionResult> Activate(string id, CancellationToken cancellationToken)
-    {
-        var testDefinition = await testManagerService.ActivateTestDefinition(id, cancellationToken);
+            return Ok(testDefinitions);
+        }
 
-        return Ok(testDefinition);
-    }
+        /// <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, UpdateTestDefinitionViewModel viewModel)
+        {
+            var testDefinitions = await testManagerService.UpdateTestDefinition(id, viewModel);
 
-    [HttpPost("{id}/End")]
-    public async Task<IActionResult> End(string id, CancellationToken cancellationToken)
-    {
-        var testDefinition = await testManagerService.EndTestDefinition(id, cancellationToken);
+            return Ok(testDefinitions);
+        }
 
-        return Ok(testDefinition);
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var testDefinition = await testManagerService.GetTestDefinition(id);
 
-    [HttpPost("{id}/Restart")]
-    public async Task<IActionResult> Restart(string id)
-    {
-        TestDefinitionViewModel testDefinition = await testManagerService.RestartTestDefinition(id);
+            if (testDefinition == null)
+            {
+                return NotFound();
+            }
 
-        return Ok(testDefinition);
-    }
+            return Ok(testDefinition);
+        }
 
-    [HttpGet("{id}/TestAccess/GenerateAccessCodes/{quantity:range(1,50)}")]
-    public async Task<IActionResult> GenerateAccessCodes(string id, int quantity)
-    {
-        var result = await testManagerService.GenerateAccessCodes(id, quantity);
+        [HttpPost("{id}/Activate")]
+        public async Task<IActionResult> Activate(string id, CancellationToken cancellationToken)
+        {
+            var testDefinition = await testManagerService.ActivateTestDefinition(id, cancellationToken);
 
-        return Ok(result);
-    }
+            return Ok(testDefinition);
+        }
 
-    [HttpPost("{id}/TestAccess/SendAccessCodes")]
-    public async Task<IActionResult> SendAccessCodes(string id, [FromBody] string[] codes)
-    {
-        await testManagerService.SendAccessCodes(id, codes);
+        [HttpPost("{id}/End")]
+        public async Task<IActionResult> End(string id, CancellationToken cancellationToken)
+        {
+            var testDefinition = await testManagerService.EndTestDefinition(id, cancellationToken);
 
-        return Ok();
-    }
+            return Ok(testDefinition);
+        }
 
-    [HttpDelete("{id}/TestAccess/RemoveAccessCodes")]
-    public async Task<IActionResult> RemoveAccessCode(string id, [FromQuery(Name = "code")] string[] codes)
-    {
-        var result = await testManagerService.RemoveAccessCodes(id, codes);
+        [HttpPost("{id}/Restart")]
+        public async Task<IActionResult> Restart(string id)
+        {
+            var testDefinition = await testManagerService.RestartTestDefinition(id);
 
-        return Ok(result);
-    }
+            return Ok(testDefinition);
+        }
 
-    [HttpPost("{id}/TestInvitationStats")]
-    public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
-    {
-        // var result = await testManagerService.GetTestInvitationEvents(new TestInvitationStatsInput
-        // {
-        //     TestDefinitionId = id,
-        //     TestRunId = model.TestRunId,
-        //     AccessCodes = model.AccessCodes
-        // });
+        [HttpGet("{id}/TestAccess/GenerateAccessCodes/{quantity:range(1,50)}")]
+        public async Task<IActionResult> GenerateAccessCodes(string id, int quantity)
+        {
+            var result = await testManagerService.GenerateAccessCodes(id, quantity);
 
-        return Ok(default);
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/TestAccess/SendAccessCodes")]
+        public async Task<IActionResult> SendAccessCodes(string id, [FromBody] string[] codes)
+        {
+            await testManagerService.SendAccessCodes(id, codes);
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}/TestAccess/RemoveAccessCodes")]
+        public async Task<IActionResult> RemoveAccessCode(string id, [FromQuery(Name = "code")] string[] codes)
+        {
+            var result = await testManagerService.RemoveAccessCodes(id, codes);
+
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/TestInvitationStats")]
+        public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
+        {
+            // var result = await testManagerService.GetTestInvitationEvents(new TestInvitationStatsInput
+            // {
+            //     TestDefinitionId = id,
+            //     TestRunId = model.TestRunId,
+            //     AccessCodes = model.AccessCodes
+            // });
+
+            return Ok(default);
+        }
     }
 }

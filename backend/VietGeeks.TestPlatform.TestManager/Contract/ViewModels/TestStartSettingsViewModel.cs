@@ -25,4 +25,3 @@
         public bool IsRequired { get; set; }
     }
 }
-

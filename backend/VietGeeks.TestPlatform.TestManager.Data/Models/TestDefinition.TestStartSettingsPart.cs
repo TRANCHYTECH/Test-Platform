@@ -10,12 +10,12 @@
 
         public static TestStartSettingsPart Default()
         {
-            return new()
+            return new TestStartSettingsPart
             {
                 RespondentIdentifyConfig =
                 [
-                    new() { FieldId = "FirstName", IsRequired = true },
-                    new() { FieldId = "LastName", IsRequired = true }
+                    new RespondentIdentifyConfig { FieldId = "FirstName", IsRequired = true },
+                    new RespondentIdentifyConfig { FieldId = "LastName", IsRequired = true }
                 ]
             };
         }
@@ -28,4 +28,3 @@
         public bool IsRequired { get; set; }
     }
 }
-

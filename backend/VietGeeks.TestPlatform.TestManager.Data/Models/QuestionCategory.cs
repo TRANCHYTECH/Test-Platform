@@ -1,20 +1,20 @@
 ﻿using MongoDB.Entities;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Models;
-
-[Collection("Category")]
-public class QuestionCategory : CategoryBase
+namespace VietGeeks.TestPlatform.TestManager.Data.Models
 {
-    public string TestId { get; set; } = default!;
-
-    public static QuestionCategory Generic()
+    [Collection("Category")]
+    public class QuestionCategory : CategoryBase
     {
-        return new()
+        public string TestId { get; set; } = default!;
+
+        public static QuestionCategory Generic()
         {
-            ID = UncategorizedId,
-            Name = nameof(Generic),
-            DisplayOrder = -1
-        };
+            return new QuestionCategory
+            {
+                ID = UncategorizedId,
+                Name = nameof(Generic),
+                DisplayOrder = -1
+            };
+        }
     }
 }
-

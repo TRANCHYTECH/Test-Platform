@@ -1,9 +1,9 @@
-﻿namespace VietGeeks.TestPlatform.Integration.Contract;
-
-public class UserCreateRequest
+﻿namespace VietGeeks.TestPlatform.Integration.Contract
 {
-    public string UserId { get; set; } = default!;
+    public class UserCreateRequest
+    {
+        public string UserId { get; set; } = default!;
 
-    public string Email { get; set; } = default!;
+        public string Email { get; set; } = default!;
+    }
 }
-

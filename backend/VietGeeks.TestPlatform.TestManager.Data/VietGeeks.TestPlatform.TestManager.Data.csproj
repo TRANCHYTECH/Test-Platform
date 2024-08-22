@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MongoDB.Entities" />
-    <PackageReference Include="ListShuffle" />
-    <PackageReference Include="System.Text.Json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Models\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MongoDB.Entities"/>
+        <PackageReference Include="ListShuffle"/>
+        <PackageReference Include="System.Text.Json"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj"/>
+    </ItemGroup>
 </Project>

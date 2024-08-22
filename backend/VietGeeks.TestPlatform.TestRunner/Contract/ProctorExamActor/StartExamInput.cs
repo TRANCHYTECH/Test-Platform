@@ -1,6 +1,7 @@
-﻿namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
-
-public class StartExamInput
+﻿namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor
 {
-    public string ExamId { get; set; } = default!;
+    public class StartExamInput
+    {
+        public string ExamId { get; set; } = default!;
+    }
 }

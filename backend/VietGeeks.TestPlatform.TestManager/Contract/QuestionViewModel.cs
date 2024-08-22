@@ -4,12 +4,12 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
 {
     public class CreateOrUpdateQuestionViewModel : IQuestionViewModel
     {
+        public bool IsMandatory { get; set; }
         public string Description { get; set; } = default!;
         public string CategoryId { get; set; } = default!;
         public AnswerType AnswerType { get; set; }
         public IEnumerable<AnswerViewModel> Answers { get; set; } = default!;
         public ScoreSettingsViewModel ScoreSettings { get; set; } = default!;
-        public bool IsMandatory { get; set; }
     }
 
     public class QuestionViewModel : IQuestionViewModel
@@ -17,10 +17,10 @@ namespace VietGeeks.TestPlatform.TestManager.Contract
         public string Id { get; set; } = default!;
         public int QuestionNo { get; set; }
         public string Order { get; set; } = default!;
-        public string Description { get; set; } = default!;
-        public string CategoryId { get; set; } = default!;
         public string? CategoryName { get; set; }
         public string? CategoryColor { get; set; }
+        public string Description { get; set; } = default!;
+        public string CategoryId { get; set; } = default!;
         public AnswerType AnswerType { get; set; }
         public IEnumerable<AnswerViewModel> Answers { get; set; } = default!;
         public ScoreSettingsViewModel ScoreSettings { get; set; } = default!;

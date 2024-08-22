@@ -1,79 +1,79 @@
 ﻿using FluentValidation;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
-
-public class TestAccessSettingsPartValidator : AbstractValidator<TestAccessSettingsPart>
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition
 {
-    public TestAccessSettingsPartValidator(
-        IValidator<PublicLinkType> validator1,
-        IValidator<PrivateAccessCodeType> validator2,
-        IValidator<GroupPasswordType> validator3,
-        IValidator<TrainingType> validator4)
+    public class TestAccessSettingsPartValidator : AbstractValidator<TestAccessSettingsPart>
     {
-        RuleFor(c => c.Settings).NotNull().Must(MatchTestAccessType()).WithMessage("Mismatch Test Access Type").SetInheritanceValidator(v =>
+        public TestAccessSettingsPartValidator(
+            IValidator<PublicLinkType> validator1,
+            IValidator<PrivateAccessCodeType> validator2,
+            IValidator<GroupPasswordType> validator3,
+            IValidator<TrainingType> validator4)
         {
-            v.Add(validator1);
-            v.Add(validator2);
-            v.Add(validator3);
-            v.Add(validator4);
-        });
-    }
+            RuleFor(c => c.Settings).NotNull().Must(MatchTestAccessType()).WithMessage("Mismatch Test Access Type")
+                .SetInheritanceValidator(v =>
+                {
+                    v.Add(validator1);
+                    v.Add(validator2);
+                    v.Add(validator3);
+                    v.Add(validator4);
+                });
+        }
 
-    private static Func<TestAccessSettingsPart, TestAccessSettings, bool> MatchTestAccessType()
-    {
-        return (part, prop) =>
+        private static Func<TestAccessSettingsPart, TestAccessSettings, bool> MatchTestAccessType()
         {
-            switch (part.AccessType)
+            return (part, prop) =>
             {
-                case TestAcessType.PublicLink:
-                    return prop is PublicLinkType;
-                case TestAcessType.PrivateAccessCode:
-                    return prop is PrivateAccessCodeType;
-                case TestAcessType.GroupPassword:
-                    return prop is GroupPasswordType;
-                case TestAcessType.Training:
-                    return prop is TrainingType;
-                default:
-                    return false;
-            }
-        };
+                switch (part.AccessType)
+                {
+                    case TestAcessType.PublicLink:
+                        return prop is PublicLinkType;
+                    case TestAcessType.PrivateAccessCode:
+                        return prop is PrivateAccessCodeType;
+                    case TestAcessType.GroupPassword:
+                        return prop is GroupPasswordType;
+                    case TestAcessType.Training:
+                        return prop is TrainingType;
+                    default:
+                        return false;
+                }
+            };
+        }
     }
-}
 
-public class PublicLinkTypeValidator : AbstractValidator<PublicLinkType>
-{
-    public PublicLinkTypeValidator()
+    public class PublicLinkTypeValidator : AbstractValidator<PublicLinkType>
     {
-        RuleFor(c => c.RequireAccessCode).NotNull();
-        RuleFor(c => c.Attempts).GreaterThanOrEqualTo(1);
+        public PublicLinkTypeValidator()
+        {
+            RuleFor(c => c.RequireAccessCode).NotNull();
+            RuleFor(c => c.Attempts).GreaterThanOrEqualTo(1);
+        }
     }
-}
 
-public class PrivateAccessCodeTypeValidator : AbstractValidator<PrivateAccessCodeType>
-{
-    public PrivateAccessCodeTypeValidator(IValidator<PrivateAccessCodeConfig> validator1)
+    public class PrivateAccessCodeTypeValidator : AbstractValidator<PrivateAccessCodeType>
     {
-        RuleForEach(c => c.Configs).NotNull().SetValidator(validator1);
-        RuleFor(c => c.Attempts).GreaterThanOrEqualTo(1);
+        public PrivateAccessCodeTypeValidator(IValidator<PrivateAccessCodeConfig> validator1)
+        {
+            RuleForEach(c => c.Configs).NotNull().SetValidator(validator1);
+            RuleFor(c => c.Attempts).GreaterThanOrEqualTo(1);
+        }
     }
-}
 
-public class PrivateAccessCodeConfigValidator : AbstractValidator<PrivateAccessCodeConfig>
-{
-    public PrivateAccessCodeConfigValidator()
+    public class PrivateAccessCodeConfigValidator : AbstractValidator<PrivateAccessCodeConfig>
     {
-        RuleFor(c => c.Code).NotEmpty();
-        RuleFor(c => c.Email).EmailAddress().When(c => c.Email != null);
+        public PrivateAccessCodeConfigValidator()
+        {
+            RuleFor(c => c.Code).NotEmpty();
+            RuleFor(c => c.Email).EmailAddress().When(c => c.Email != null);
+        }
     }
-}
 
-public class GroupPasswordTypeValidator : AbstractValidator<GroupPasswordType>
-{
+    public class GroupPasswordTypeValidator : AbstractValidator<GroupPasswordType>
+    {
+    }
 
-}
-
-public class TrainingTypeValidator : AbstractValidator<TrainingType>
-{
-
+    public class TrainingTypeValidator : AbstractValidator<TrainingType>
+    {
+    }
 }

@@ -75,4 +75,3 @@ namespace VietGeeks.TestPlatform.TestManager.Contract.ViewModels
         TimePeriod = 2
     }
 }
-

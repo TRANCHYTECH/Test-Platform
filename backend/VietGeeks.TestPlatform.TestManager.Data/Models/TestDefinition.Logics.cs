@@ -1,177 +1,193 @@
 ﻿using MongoDB.Entities;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
-namespace VietGeeks.TestPlatform.TestManager.Data.Models;
-
-public partial class TestDefinition
+namespace VietGeeks.TestPlatform.TestManager.Data.Models
 {
-    [Ignore]
-    public TestDefinitionStatus LatestStatus => GetActualStatus(DateTime.UtcNow);
-
-    public TestDefinitionStatus GetActualStatus(DateTime checkMomentUtc)
+    public partial class TestDefinition
     {
-        if (Status == TestDefinitionStatus.Draft)
-            return TestDefinitionStatus.Draft;
+        [Ignore] public TestDefinitionStatus LatestStatus => GetActualStatus(DateTime.UtcNow);
 
-        if (Status == TestDefinitionStatus.Ended)
-            return TestDefinitionStatus.Ended;
+        public static TestDefinitionStatus[] ActiveStatuses =>
+        [
+            TestDefinitionStatus.Activated, TestDefinitionStatus.Scheduled
+        ];
 
-        if (CurrentTestRun == null || TimeSettings == null)
-            throw new TestPlatformException("Invalid Test Definition");
-
-        if (ActiveStatuses.Contains(Status))
+        public TestDefinitionStatus GetActualStatus(DateTime checkMomentUtc)
         {
-            var safeCheckMoment = checkMomentUtc.ToUniversalTime();
-            if (TimeSettings.TestActivationMethod is ManualTestActivation manualTestActivation)
+            if (Status == TestDefinitionStatus.Draft)
             {
-                if (safeCheckMoment.ToUniversalTime() >= CurrentTestRun.ActivatedOrScheduledAtUtc.Add(manualTestActivation.ActiveUntil))
+                return TestDefinitionStatus.Draft;
+            }
+
+            if (Status == TestDefinitionStatus.Ended)
+            {
+                return TestDefinitionStatus.Ended;
+            }
+
+            if (CurrentTestRun == null || TimeSettings == null)
+            {
+                throw new TestPlatformException("Invalid Test Definition");
+            }
+
+            if (ActiveStatuses.Contains(Status))
+            {
+                var safeCheckMoment = checkMomentUtc.ToUniversalTime();
+                if (TimeSettings.TestActivationMethod is ManualTestActivation manualTestActivation)
                 {
-                    return TestDefinitionStatus.Ended;
+                    if (safeCheckMoment.ToUniversalTime() >=
+                        CurrentTestRun.ActivatedOrScheduledAtUtc.Add(manualTestActivation.ActiveUntil))
+                    {
+                        return TestDefinitionStatus.Ended;
+                    }
+
+                    return TestDefinitionStatus.Activated;
                 }
 
-                return TestDefinitionStatus.Activated;
+                if (TimeSettings.TestActivationMethod is TimePeriodActivation timePeriodActivationMethod)
+                {
+                    if (safeCheckMoment < timePeriodActivationMethod.ActiveFromDate)
+                    {
+                        return TestDefinitionStatus.Scheduled;
+                    }
+
+                    if (safeCheckMoment >= timePeriodActivationMethod.ActiveUntilDate)
+                    {
+                        return TestDefinitionStatus.Ended;
+                    }
+
+                    return TestDefinitionStatus.Activated;
+                }
+
+                throw new TestPlatformException("Invalid Test Activation Method");
             }
 
-            if (TimeSettings.TestActivationMethod is TimePeriodActivation timePeriodActivationMethod)
+            throw new TestPlatformException("Unknown Status");
+        }
+
+        public string[] Activate(string testRunId, DateTime activatedOrScheduledAtUtc, TestDefinitionStatus status)
+        {
+            if (ActiveStatuses.Contains(status))
             {
-                if (safeCheckMoment < timePeriodActivationMethod.ActiveFromDate)
-                    return TestDefinitionStatus.Scheduled;
-
-                if (safeCheckMoment >= timePeriodActivationMethod.ActiveUntilDate)
-                    return TestDefinitionStatus.Ended;
-
-                return TestDefinitionStatus.Activated;
+                Status = status;
+                CurrentTestRun = new CurrentTestRunPart
+                {
+                    Id = testRunId,
+                    // Ensure store utc if user passes local time.
+                    ActivatedOrScheduledAtUtc = activatedOrScheduledAtUtc.ToUniversalTime()
+                };
+            }
+            else
+            {
+                throw new TestPlatformException("Invalid Status Input");
             }
 
-            throw new TestPlatformException("Invalid Test Activation Method");
+            return [nameof(Status), nameof(CurrentTestRun)];
         }
 
-        throw new TestPlatformException("Unknown Status");
-    }
-
-    public string[] Activate(string testRunId, DateTime activatedOrScheduledAtUtc, TestDefinitionStatus status)
-    {
-        if (ActiveStatuses.Contains(status))
+        public string[] End()
         {
-            Status = status;
-            CurrentTestRun = new CurrentTestRunPart
+            var actualStatus = LatestStatus;
+            if (actualStatus == TestDefinitionStatus.Activated)
             {
-                Id = testRunId,
-                // Ensure store utc if user passes local time.
-                ActivatedOrScheduledAtUtc = activatedOrScheduledAtUtc.ToUniversalTime()
-            };
-        }
-        else
-        {
-            throw new TestPlatformException("Invalid Status Input");
+                Status = TestDefinitionStatus.Ended;
+                CurrentTestRun = null;
+            }
+            else if (actualStatus == TestDefinitionStatus.Scheduled)
+            {
+                Status = TestDefinitionStatus.Draft;
+                CurrentTestRun = null;
+            }
+            else
+            {
+                throw new TestPlatformException("ActionNotAllowed");
+            }
+
+            return [nameof(Status), nameof(CurrentTestRun)];
         }
 
-        return [nameof(Status), nameof(CurrentTestRun)];
-    }
-
-    public string[] End()
-    {
-        var actualStatus = LatestStatus;
-        if (actualStatus == TestDefinitionStatus.Activated)
+        //todo: verify actual how values are reset.
+        public string[] Restart()
         {
-            Status = TestDefinitionStatus.Ended;
-            CurrentTestRun = null;
+            if (LatestStatus != TestDefinitionStatus.Ended)
+            {
+                throw new TestPlatformException("ActionNotAllowed");
+            }
 
-        }
-        else if (actualStatus == TestDefinitionStatus.Scheduled)
-        {
             Status = TestDefinitionStatus.Draft;
-            CurrentTestRun = null;
-        }
-        else
-        {
-            throw new TestPlatformException("ActionNotAllowed");
+            TestAccessSettings = TestAccessSettingsPart.Default();
+
+            return [nameof(Status), nameof(TestAccessSettings)];
         }
 
-        return [nameof(Status), nameof(CurrentTestRun)];
-    }
-    
-    //todo: verify actual how values are reset.
-    public string[] Restart()
-    {
-        if (LatestStatus != TestDefinitionStatus.Ended)
+        //todo: combine this and above method
+        public (TestDefinitionStatus Status, DateTime StartAtUtc, DateTime EndAtUtc) EnsureCanActivate(
+            int questionCount, DateTime checkMoment)
         {
-            throw new TestPlatformException("ActionNotAllowed");
-        }
-
-        Status = TestDefinitionStatus.Draft;
-        TestAccessSettings = TestAccessSettingsPart.Default();
-
-        return [nameof(Status), nameof(TestAccessSettings)];
-    }
-
-    //todo: combine this and above method
-    public (TestDefinitionStatus Status, DateTime StartAtUtc, DateTime EndAtUtc) EnsureCanActivate(int questionCount, DateTime checkMoment)
-    {
-        (TestDefinitionStatus, DateTime, DateTime) result;
-        if (TimeSettings == null || TestSetSettings == null || TestAccessSettings == null || GradingSettings == null || TestStartSettings == null)
-        {
-            throw new TestPlatformException("IncompleteSetup");
-        }
-
-        if (TimeSettings?.TestActivationMethod == null)
-        {
-            throw new TestPlatformException("MissTestActivationMethod");
-        }
-
-
-        if (questionCount <= 0)
-        {
-            throw new TestPlatformException("MissQuestion");
-        }
-
-        if (Status == TestDefinitionStatus.Ended)
-        {
-            throw new TestPlatformException("TestEnded");
-        }
-
-        if (TestInRunning())
-        {
-            throw new TestPlatformException("TestIsRunning");
-        }
-
-        if (TimeSettings.TestActivationMethod is ManualTestActivation manualTestActivation)
-        {
-            if (manualTestActivation.ActiveUntil == TimeSpan.Zero)
+            (TestDefinitionStatus, DateTime, DateTime) result;
+            if (TimeSettings == null || TestSetSettings == null || TestAccessSettings == null ||
+                GradingSettings == null || TestStartSettings == null)
             {
-                throw new TestPlatformException("InvalidActiveUntil");
+                throw new TestPlatformException("IncompleteSetup");
             }
 
-            result = (TestDefinitionStatus.Activated, DateTime.UtcNow, DateTime.UtcNow.Add(manualTestActivation.ActiveUntil));
-        }
-        else if (TimeSettings.TestActivationMethod is TimePeriodActivation timePeriodActivation)
-        {
-            if (checkMoment >= timePeriodActivation.ActiveFromDate)
+            if (TimeSettings?.TestActivationMethod == null)
             {
-                throw new TestPlatformException("The activate from date is invalid. It's in the pass");
+                throw new TestPlatformException("MissTestActivationMethod");
             }
 
-            if (timePeriodActivation.ActiveFromDate >= timePeriodActivation.ActiveUntilDate)
+
+            if (questionCount <= 0)
             {
-                throw new TestPlatformException("The activate from dates are invalid. It's greater than until date");
+                throw new TestPlatformException("MissQuestion");
             }
 
-            result = (TestDefinitionStatus.Scheduled, timePeriodActivation.ActiveFromDate, timePeriodActivation.ActiveUntilDate);
+            if (Status == TestDefinitionStatus.Ended)
+            {
+                throw new TestPlatformException("TestEnded");
+            }
+
+            if (TestInRunning())
+            {
+                throw new TestPlatformException("TestIsRunning");
+            }
+
+            if (TimeSettings.TestActivationMethod is ManualTestActivation manualTestActivation)
+            {
+                if (manualTestActivation.ActiveUntil == TimeSpan.Zero)
+                {
+                    throw new TestPlatformException("InvalidActiveUntil");
+                }
+
+                result = (TestDefinitionStatus.Activated, DateTime.UtcNow,
+                    DateTime.UtcNow.Add(manualTestActivation.ActiveUntil));
+            }
+            else if (TimeSettings.TestActivationMethod is TimePeriodActivation timePeriodActivation)
+            {
+                if (checkMoment >= timePeriodActivation.ActiveFromDate)
+                {
+                    throw new TestPlatformException("The activate from date is invalid. It's in the pass");
+                }
+
+                if (timePeriodActivation.ActiveFromDate >= timePeriodActivation.ActiveUntilDate)
+                {
+                    throw new TestPlatformException(
+                        "The activate from dates are invalid. It's greater than until date");
+                }
+
+                result = (TestDefinitionStatus.Scheduled, timePeriodActivation.ActiveFromDate,
+                    timePeriodActivation.ActiveUntilDate);
+            }
+            else
+            {
+                throw new TestPlatformException("NotSupportedActivationType");
+            }
+
+            return result;
         }
-        else
+
+        public bool TestInRunning()
         {
-            throw new TestPlatformException("NotSupportedActivationType");
+            return ActiveStatuses.Contains(Status) && CurrentTestRun != null;
         }
-
-        return result;
     }
-
-    public bool TestInRunning()
-    {
-        return ActiveStatuses.Contains(Status) && CurrentTestRun != null;
-    }
-
-    public static TestDefinitionStatus[] ActiveStatuses => [TestDefinitionStatus.Activated, TestDefinitionStatus.Scheduled
-    ];
 }
-

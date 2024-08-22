@@ -11,9 +11,12 @@ namespace VietGeeks.TestPlatform.AccountManager.Services
     {
         public async Task<UserViewModel> CreateUserProfile(UserCreateViewModel viewModel)
         {
-            var userProfile = await DB.Find<User>().Match(c => c.ID == viewModel.UserId || c.Email == viewModel.Email).ExecuteSingleAsync();
+            var userProfile = await DB.Find<User>().Match(c => c.ID == viewModel.UserId || c.Email == viewModel.Email)
+                .ExecuteSingleAsync();
             if (userProfile != null)
+            {
                 throw new TestPlatformException("User with Id or Email already exists");
+            }
 
             var newUser = mapper.Map<User>(viewModel);
 
@@ -27,7 +30,9 @@ namespace VietGeeks.TestPlatform.AccountManager.Services
         {
             var userProfile = await DB.Find<User>().MatchID(viewModel.UserId).ExecuteSingleAsync();
             if (userProfile == null)
+            {
                 throw new TestPlatformException("Not found user");
+            }
 
             var affectedProperties = new List<string>();
             if (viewModel.RegionalSettings != null)

@@ -1,74 +1,74 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.1" />
-    <PackageVersion Include="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.2.4" />
-    <PackageVersion Include="MassTransit" Version="8.2.4" />
-    <PackageVersion Include="MassTransit.Abstractions" Version="8.2.4" />
-    <PackageVersion Include="MassTransit.Azure.ServiceBus.Core" Version="8.2.4" />
-    <PackageVersion Include="MassTransit.MongoDb" Version="8.2.4" />
-    <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />
-    <PackageVersion Include="Duende.BFF" Version="2.2.0" />
-    <PackageVersion Include="Duende.BFF.EntityFramework" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
-    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
-    <PackageVersion Include="Dapr.AspNetCore" Version="1.13.1" />
-    <PackageVersion Include="Dapr.Actors.AspNetCore" Version="1.13.1" />
-    <PackageVersion Include="MongoDB.Entities" Version="23.1.1" />
-    <PackageVersion Include="NodaTime" Version="3.1.9" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-    <PackageVersion Include="AutoMapper" Version="12.0.1" />
-    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageVersion Include="Azure.Identity" Version="1.12.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-    <PackageVersion Include="Azure.Extensions.AspNetCore.DataProtection.Blobs" Version="1.3.4" />
-    <PackageVersion Include="System.Text.Json" Version="8.0.4" />
-    <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageVersion Include="ListShuffle" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Azure" Version="1.7.4" />
-    <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.18.1" />
-    <PackageVersion Include="Dapr.Client" Version="1.13.1" />
-    <PackageVersion Include="shortid" Version="4.0.0" />
-    <PackageVersion Include="FluentValidation" Version="11.9.2" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
-    <PackageVersion Include="LexoRank" Version="1.0.10" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.0" />
-    <PackageVersion Include="Mailjet.Api" Version="3.0.0" />
-    <PackageVersion Include="Microsoft.NET.Sdk.Functions" Version="4.4.0" />
-    <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.16.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageVersion Include="Moq" Version="4.20.70" />
-    <PackageVersion Include="Faker.Net" Version="2.0.163" />
-    <PackageVersion Include="xunit" Version="2.9.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageVersion>
-    <PackageVersion Include="coverlet.collector" Version="6.0.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageVersion>
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.163">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageVersion>
-    <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.11.0-beta1.24219.2" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.12.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageVersion>
-    <PackageVersion Include="Roslynator.Formatting.Analyzers" Version="4.12.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageVersion>
-  </ItemGroup>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.1"/>
+        <PackageVersion Include="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.2.4"/>
+        <PackageVersion Include="MassTransit" Version="8.2.4"/>
+        <PackageVersion Include="MassTransit.Abstractions" Version="8.2.4"/>
+        <PackageVersion Include="MassTransit.Azure.ServiceBus.Core" Version="8.2.4"/>
+        <PackageVersion Include="MassTransit.MongoDb" Version="8.2.4"/>
+        <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0"/>
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7"/>
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7"/>
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7"/>
+        <PackageVersion Include="Duende.BFF" Version="2.2.0"/>
+        <PackageVersion Include="Duende.BFF.EntityFramework" Version="2.2.0"/>
+        <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0"/>
+        <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5"/>
+        <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
+        <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0"/>
+        <PackageVersion Include="Dapr.AspNetCore" Version="1.13.1"/>
+        <PackageVersion Include="Dapr.Actors.AspNetCore" Version="1.13.1"/>
+        <PackageVersion Include="MongoDB.Entities" Version="23.1.1"/>
+        <PackageVersion Include="NodaTime" Version="3.1.9"/>
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>
+        <PackageVersion Include="AutoMapper" Version="12.0.1"/>
+        <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
+        <PackageVersion Include="Azure.Identity" Version="1.12.0"/>
+        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
+        <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8"/>
+        <PackageVersion Include="Azure.Extensions.AspNetCore.DataProtection.Blobs" Version="1.3.4"/>
+        <PackageVersion Include="System.Text.Json" Version="8.0.4"/>
+        <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0"/>
+        <PackageVersion Include="ListShuffle" Version="2.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.Azure" Version="1.7.4"/>
+        <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.18.1"/>
+        <PackageVersion Include="Dapr.Client" Version="1.13.1"/>
+        <PackageVersion Include="shortid" Version="4.0.0"/>
+        <PackageVersion Include="FluentValidation" Version="11.9.2"/>
+        <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2"/>
+        <PackageVersion Include="LexoRank" Version="1.0.10"/>
+        <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.0"/>
+        <PackageVersion Include="Mailjet.Api" Version="3.0.0"/>
+        <PackageVersion Include="Microsoft.NET.Sdk.Functions" Version="4.4.0"/>
+        <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.16.4"/>
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
+        <PackageVersion Include="Moq" Version="4.20.70"/>
+        <PackageVersion Include="Faker.Net" Version="2.0.163"/>
+        <PackageVersion Include="xunit" Version="2.9.0"/>
+        <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageVersion>
+        <PackageVersion Include="coverlet.collector" Version="6.0.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageVersion>
+        <PackageVersion Include="Meziantou.Analyzer" Version="2.0.163">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageVersion>
+        <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.11.0-beta1.24219.2"/>
+        <PackageVersion Include="Roslynator.Analyzers" Version="4.12.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageVersion>
+        <PackageVersion Include="Roslynator.Formatting.Analyzers" Version="4.12.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageVersion>
+    </ItemGroup>
 </Project>

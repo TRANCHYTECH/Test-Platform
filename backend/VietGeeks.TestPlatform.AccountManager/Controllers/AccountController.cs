@@ -3,53 +3,53 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VietGeeks.TestPlatform.AccountManager.Contract;
 using VietGeeks.TestPlatform.AccountManager.Services;
-using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.AspNetCore.Services;
 
-namespace VietGeeks.TestPlatform.AccountManager.Controllers;
-
-[Authorize]
-[ApiController]
-[Route("[controller]")]
-public class AccountController(
-    ILogger<AccountController> logger,
-    IAccountSettingsService accountSettingsService,
-    ITenant tenant)
-    : ControllerBase
+namespace VietGeeks.TestPlatform.AccountManager.Controllers
 {
-    private readonly ILogger<AccountController> _logger = logger;
-
-    [HttpGet("TimeZones")]
-    public IActionResult GetTimeZones()
+    [Authorize]
+    [ApiController]
+    [Route("[controller]")]
+    public class AccountController(
+        ILogger<AccountController> logger,
+        IAccountSettingsService accountSettingsService,
+        ITenant tenant)
+        : ControllerBase
     {
-        var timeZones = accountSettingsService.GetTimeZones();
+        private readonly ILogger<AccountController> _logger = logger;
 
-        return Ok(timeZones);
-    }
+        [HttpGet("TimeZones")]
+        public IActionResult GetTimeZones()
+        {
+            var timeZones = accountSettingsService.GetTimeZones();
 
-    [HttpGet("User")]
-    public async Task<IActionResult> GetSettings()
-    {
-        var userId = tenant.UserId;
-        var profile = await accountSettingsService.GetUserProfile(userId);
+            return Ok(timeZones);
+        }
 
-        return Ok(profile);
-    }
+        [HttpGet("User")]
+        public async Task<IActionResult> GetSettings()
+        {
+            var userId = tenant.UserId;
+            var profile = await accountSettingsService.GetUserProfile(userId);
 
-    [HttpPost("User")]
-    public async Task<IActionResult> CreateUserProfile(UserCreateViewModel viewModel)
-    {
-        var createdProfile = await accountSettingsService.CreateUserProfile(viewModel);
+            return Ok(profile);
+        }
 
-        return Ok(createdProfile);
-    }
+        [HttpPost("User")]
+        public async Task<IActionResult> CreateUserProfile(UserCreateViewModel viewModel)
+        {
+            var createdProfile = await accountSettingsService.CreateUserProfile(viewModel);
 
-    [HttpPut("User")]
-    public async Task<IActionResult> UpdateUserProfile(UserUpdateViewModel viewModel)
-    {
-        viewModel.UserId = tenant.UserId;
-        var updatedProfile = await accountSettingsService.UpdateUserProfile(viewModel);
+            return Ok(createdProfile);
+        }
 
-        return Ok(updatedProfile);
+        [HttpPut("User")]
+        public async Task<IActionResult> UpdateUserProfile(UserUpdateViewModel viewModel)
+        {
+            viewModel.UserId = tenant.UserId;
+            var updatedProfile = await accountSettingsService.UpdateUserProfile(viewModel);
+
+            return Ok(updatedProfile);
+        }
     }
 }

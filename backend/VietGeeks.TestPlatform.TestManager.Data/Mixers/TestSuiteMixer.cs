@@ -4,8 +4,8 @@ namespace VietGeeks.TestPlatform.TestManager.Data.Mixers
 {
     public static class TestSuiteMixer
     {
-
-        public static List<QuestionDefinition> GenerateTestSet(this TestDefinition testDefinition, List<QuestionDefinition> questions, string? accessCode)
+        public static List<QuestionDefinition> GenerateTestSet(this TestDefinition testDefinition,
+            List<QuestionDefinition> questions, string? accessCode)
         {
             // Check test access type.
             var testAccess = testDefinition.TestAccessSettings;
@@ -52,7 +52,8 @@ namespace VietGeeks.TestPlatform.TestManager.Data.Mixers
             throw new NotSupportedException(testAccess.AccessType.ToString());
         }
 
-        private static List<QuestionDefinition> GenerateTestSet(TestSetSettingsPart? testSets, List<QuestionDefinition> questions)
+        private static List<QuestionDefinition> GenerateTestSet(TestSetSettingsPart? testSets,
+            List<QuestionDefinition> questions)
         {
             if (testSets == null)
             {
@@ -63,4 +64,3 @@ namespace VietGeeks.TestPlatform.TestManager.Data.Mixers
         }
     }
 }
-

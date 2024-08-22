@@ -1,7 +1,8 @@
-namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor;
-
-public class SubmitAnswerInput
+namespace VietGeeks.TestPlatform.TestRunner.Contract.ProctorExamActor
 {
-    public string[] AnswerIds { get; set; } = default!;
-    public string QuestionId { get; set; } = default!;
+    public class SubmitAnswerInput
+    {
+        public string[] AnswerIds { get; set; } = default!;
+        public string QuestionId { get; set; } = default!;
+    }
 }

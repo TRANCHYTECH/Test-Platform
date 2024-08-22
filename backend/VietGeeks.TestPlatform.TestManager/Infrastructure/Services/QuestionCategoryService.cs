@@ -8,11 +8,15 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
     public class QuestionCategoryService(IMapper mapper, TestManagerDbContext managerDbContext)
         : IQuestionCategoryService
     {
-        public async Task<QuestionCategoryViewModel> CreateCategory(string testId, NewQuestionCategoryViewModel questionCategory, CancellationToken cancellationToken)
+        public async Task<QuestionCategoryViewModel> CreateCategory(string testId,
+            NewQuestionCategoryViewModel questionCategory, CancellationToken cancellationToken)
         {
             // Ensure test existence.
-            if (await managerDbContext.Find<TestDefinition>().MatchID(testId).ExecuteAnyAsync(cancellationToken) == false)
+            if (await managerDbContext.Find<TestDefinition>().MatchID(testId).ExecuteAnyAsync(cancellationToken) ==
+                false)
+            {
                 throw new TestPlatformException("Not Found Test");
+            }
 
             var questionCategoryEntity = mapper.Map<QuestionCategory>(questionCategory);
             questionCategoryEntity.TestId = testId;
@@ -22,7 +26,8 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             return mapper.Map<QuestionCategoryViewModel>(questionCategoryEntity);
         }
 
-        public async Task<IEnumerable<QuestionCategoryViewModel>> GetCategories(string testId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<QuestionCategoryViewModel>> GetCategories(string testId,
+            CancellationToken cancellationToken)
         {
             var entities = await managerDbContext.Find<QuestionCategory>()
                 .ManyAsync(c => c.TestId == testId, cancellationToken);

@@ -21,7 +21,8 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
         public async Task<List<ExamSummary>> GetExamSummaries(string[] testRunIds)
         {
             // Verify that test runs belongs to user.
-            var testRuns = await managerDbContext.Find<TestRun>().Match(c => testRunIds.Contains(c.ID)).Project(c => new TestRun { ID = c.ID }).ExecuteAsync();
+            var testRuns = await managerDbContext.Find<TestRun>().Match(c => testRunIds.Contains(c.ID))
+                .Project(c => new TestRun { ID = c.ID }).ExecuteAsync();
             if (testRuns.Count != testRunIds.Count())
             {
                 throw new TestPlatformException("Invalid Test Run Ids");
@@ -105,10 +106,13 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
             var examQuestions = await GetTestRunQuestions(examEntity);
 
             //todo: IMPORTANT -improve architecture design for query. store hierchacy data from testdef => test run => exam, tenant to query easily.
-            var testRun = await managerDbContext.Find<TestRun>().MatchID(examEntity.TestRunId).Project(c => new TestRun { ID = c.ID, TestDefinitionSnapshot = c.TestDefinitionSnapshot }).ExecuteFirstAsync();
+            var testRun = await managerDbContext.Find<TestRun>().MatchID(examEntity.TestRunId)
+                .Project(c => new TestRun { ID = c.ID, TestDefinitionSnapshot = c.TestDefinitionSnapshot })
+                .ExecuteFirstAsync();
             //todo: cache question categories within original method?
-            var questionCategories = await questionCategoryService.GetCategories(testRun.TestDefinitionSnapshot.ID, default);
-            return new()
+            var questionCategories =
+                await questionCategoryService.GetCategories(testRun.TestDefinitionSnapshot.ID, default);
+            return new ExamReview
             {
                 StartedAt = examEntity.StartedAt,
                 FinishedAt = examEntity.FinishedAt,
@@ -124,7 +128,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
                     q.AnswerType,
                     q.CategoryId,
                     CategoryName = questionCategories.Single(c => c.Id == q.CategoryId).Name,
-                    TotalPoints = q.ScoreSettings.TotalPoints,
+                    q.ScoreSettings.TotalPoints,
                     ActualPoints = GetActualScores(examEntity, q.ID),
                     AnswerTime = GetAnswerTime(examEntity, q.ID)
                 }),
@@ -143,7 +147,8 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 
         public async Task<List<TestRunSummary>> GetTestRunSummaries(string testId)
         {
-            var testRunEntities = await managerDbContext.Find<TestRun>().Match(c => c.TestDefinitionSnapshot.ID == testId).ExecuteAsync();
+            var testRunEntities = await managerDbContext.Find<TestRun>()
+                .Match(c => c.TestDefinitionSnapshot.ID == testId).ExecuteAsync();
             return testRunEntities.Select(c => new TestRunSummary
             {
                 Id = c.ID,
@@ -160,7 +165,8 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 
         private async Task<IEnumerable<QuestionDefinition>> GetTestRunQuestions(Exam examEntity)
         {
-            var questionBatches = await managerDbContext.Find<TestRunQuestion>().IgnoreGlobalFilters().ManyAsync(c => c.TestRunId == examEntity.TestRunId);
+            var questionBatches = await managerDbContext.Find<TestRunQuestion>().IgnoreGlobalFilters()
+                .ManyAsync(c => c.TestRunId == examEntity.TestRunId);
             var testRunQuestions = questionBatches.SelectMany(c => c.Batch);
             var examQuestions = examEntity.Questions.Select(id => testRunQuestions.Single(q => q.ID == id));
 
@@ -169,7 +175,7 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 
         private int GetActualScores(Exam exam, string questionId)
         {
-            if (exam.QuestionScores.TryGetValue(questionId, out int point))
+            if (exam.QuestionScores.TryGetValue(questionId, out var point))
             {
                 return point;
             }

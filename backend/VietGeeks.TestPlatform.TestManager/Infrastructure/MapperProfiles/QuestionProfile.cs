@@ -2,21 +2,22 @@
 using VietGeeks.TestPlatform.TestManager.Contract;
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 
-namespace VietGeeks.TestPlatform.TestManager.Infrastructure.MapperProfiles;
-
-public class QuestionProfile : Profile
+namespace VietGeeks.TestPlatform.TestManager.Infrastructure.MapperProfiles
 {
-    public QuestionProfile()
+    public class QuestionProfile : Profile
     {
-        CreateMap<CreateOrUpdateQuestionViewModel, QuestionDefinition>();
-        CreateMap<QuestionViewModel, QuestionDefinition>().ReverseMap();
-        CreateMap<QuestionCategoryViewModel, QuestionCategory>().ReverseMap();
-        CreateMap<NewQuestionCategoryViewModel, QuestionCategory>();
-        CreateMap<AnswerViewModel, Answer>().ReverseMap();
+        public QuestionProfile()
+        {
+            CreateMap<CreateOrUpdateQuestionViewModel, QuestionDefinition>();
+            CreateMap<QuestionViewModel, QuestionDefinition>().ReverseMap();
+            CreateMap<QuestionCategoryViewModel, QuestionCategory>().ReverseMap();
+            CreateMap<NewQuestionCategoryViewModel, QuestionCategory>();
+            CreateMap<AnswerViewModel, Answer>().ReverseMap();
 
-        CreateMap<ScoreSettingsViewModel, ScoreSettings>().IncludeAllDerived();
-        CreateMap<ScoreSettings,ScoreSettingsViewModel>().IncludeAllDerived();
-        CreateMap<SingleChoiceScoreSettingsViewModel, SingleChoiceScoreSettings>().ReverseMap();
-        CreateMap<MultipleChoiceScoreSettingsViewModel, MultipleChoiceScoreSettings>().ReverseMap();
+            CreateMap<ScoreSettingsViewModel, ScoreSettings>().IncludeAllDerived();
+            CreateMap<ScoreSettings, ScoreSettingsViewModel>().IncludeAllDerived();
+            CreateMap<SingleChoiceScoreSettingsViewModel, SingleChoiceScoreSettings>().ReverseMap();
+            CreateMap<MultipleChoiceScoreSettingsViewModel, MultipleChoiceScoreSettings>().ReverseMap();
+        }
     }
 }

@@ -1,80 +1,83 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestRunner.Contract;
 
-namespace VietGeeks.TestPlatform.TestRunner.Infrastructure.MapperProfiles;
-
-public static class ManualMapper
+namespace VietGeeks.TestPlatform.TestRunner.Infrastructure.MapperProfiles
 {
-    public static ExamQuestion ToViewModel(this QuestionDefinition model)
+    public static class ManualMapper
     {
-        var question = new ExamQuestion
+        public static ExamQuestion ToViewModel(this QuestionDefinition model)
         {
-            Id = model.ID,
-            Description = model.Description,
-            AnswerType = (int)model.AnswerType,
-            Answers = model.Answers.Select(c => new ExamAnswer
+            var question = new ExamQuestion
             {
-                Id = c.Id,
-                Description = c.AnswerDescription,
-            }).ToArray()
-        };
-
-        if (model.ScoreSettings != null) 
-        {
-            var scoreSettings = model.ScoreSettings;
-            question.ScoreSettings = new ExamQuestionScoreSettings {
-                IsDisplayMaximumScore = scoreSettings.IsDisplayMaximumScore,
-                MustCorrect = scoreSettings.IsMandatory,
-                MustAnswerToContinue = scoreSettings.MustAnswerToContinue
+                Id = model.ID,
+                Description = model.Description,
+                AnswerType = (int)model.AnswerType,
+                Answers = model.Answers.Select(c => new ExamAnswer
+                {
+                    Id = c.Id,
+                    Description = c.AnswerDescription
+                }).ToArray()
             };
 
-            if (scoreSettings.IsDisplayMaximumScore) {
-                question.ScoreSettings.TotalPoints = scoreSettings.TotalPoints;
+            if (model.ScoreSettings != null)
+            {
+                var scoreSettings = model.ScoreSettings;
+                question.ScoreSettings = new ExamQuestionScoreSettings
+                {
+                    IsDisplayMaximumScore = scoreSettings.IsDisplayMaximumScore,
+                    MustCorrect = scoreSettings.IsMandatory,
+                    MustAnswerToContinue = scoreSettings.MustAnswerToContinue
+                };
+
+                if (scoreSettings.IsDisplayMaximumScore)
+                {
+                    question.ScoreSettings.TotalPoints = scoreSettings.TotalPoints;
+                }
             }
+
+            return question;
         }
 
-        return question;
-    }
-
-    public static TestDuration ToViewModel(this TestDurationMethod model)
-    {
-        if (model is CompleteQuestionDuration questionDuration)
+        public static TestDuration ToViewModel(this TestDurationMethod model)
         {
-            return new()
+            if (model is CompleteQuestionDuration questionDuration)
             {
-                Method = TestDurationMethodType.CompleteQuestionTime,
-                Duration = questionDuration.Duration
-            };
-        }
+                return new TestDuration
+                {
+                    Method = TestDurationMethodType.CompleteQuestionTime,
+                    Duration = questionDuration.Duration
+                };
+            }
 
-        if (model is CompleteTestDuration testDuration)
-        {
-            return new()
+            if (model is CompleteTestDuration testDuration)
             {
-                Method = TestDurationMethodType.CompleteTestTime,
-                Duration = testDuration.Duration
-            };
+                return new TestDuration
+                {
+                    Method = TestDurationMethodType.CompleteTestTime,
+                    Duration = testDuration.Duration
+                };
+            }
+
+            throw new Exception("Not supported type");
         }
 
-        throw new Exception("Not supported type");
-    }
-
-    public static VerifyTestOutput ToOutput(this TestRun testRun, TestDefinition testDefinition, string accessCode)
-    {
-        var result = new VerifyTestOutput();
-        result.ProctorExamId = $"{testRun.ID}__{accessCode}";
-        result.TestRunId = testRun.ID;
-        result.StartAtUtc = testRun.StartAtUtc;
-        result.EndAtUtc = testRun.EndAtUtc;
-        result.AccessCode = accessCode;
-        result.TestName = testDefinition.BasicSettings.Name;
-        var testStartSettings = testDefinition.TestStartSettings;
-        if (testStartSettings != null)
+        public static VerifyTestOutput ToOutput(this TestRun testRun, TestDefinition testDefinition, string accessCode)
         {
-            result.InstructionMessage = testStartSettings.Instruction;
-            result.ConsentMessage = testStartSettings.Consent;
-        }
+            var result = new VerifyTestOutput();
+            result.ProctorExamId = $"{testRun.ID}__{accessCode}";
+            result.TestRunId = testRun.ID;
+            result.StartAtUtc = testRun.StartAtUtc;
+            result.EndAtUtc = testRun.EndAtUtc;
+            result.AccessCode = accessCode;
+            result.TestName = testDefinition.BasicSettings.Name;
+            var testStartSettings = testDefinition.TestStartSettings;
+            if (testStartSettings != null)
+            {
+                result.InstructionMessage = testStartSettings.Instruction;
+                result.ConsentMessage = testStartSettings.Consent;
+            }
 
-        return result;
+            return result;
+        }
     }
 }

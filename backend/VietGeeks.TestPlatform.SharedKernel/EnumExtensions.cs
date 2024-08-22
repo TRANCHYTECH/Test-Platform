@@ -1,14 +1,15 @@
-﻿namespace VietGeeks.TestPlatform.SharedKernel;
-
-public static class EnumExtensions
+﻿namespace VietGeeks.TestPlatform.SharedKernel
 {
-    public static string Value(this Enum value)
+    public static class EnumExtensions
     {
-        return value.ToString("d");
-    }
+        public static string Value(this Enum value)
+        {
+            return value.ToString("d");
+        }
 
-    public static string Key(this Enum value)
-    {
-        return value.ToString("G");
+        public static string Key(this Enum value)
+        {
+            return value.ToString("G");
+        }
     }
 }

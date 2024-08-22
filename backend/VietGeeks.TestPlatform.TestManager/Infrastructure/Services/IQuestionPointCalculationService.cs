@@ -4,6 +4,6 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Services
 {
     public interface IQuestionPointCalculationService
     {
-         int CalculateTotalPoints(QuestionDefinition question);
+        int CalculateTotalPoints(QuestionDefinition question);
     }
 }

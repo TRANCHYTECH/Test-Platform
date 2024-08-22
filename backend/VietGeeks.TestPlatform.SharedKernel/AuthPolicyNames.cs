@@ -1,6 +1,7 @@
-namespace VietGeeks.TestPlatform.SharedKernel;
-
-public static class AuthPolicyNames
+namespace VietGeeks.TestPlatform.SharedKernel
 {
-    public const string CreateUserPolicy = "CreateUserPolicy";
+    public static class AuthPolicyNames
+    {
+        public const string CreateUserPolicy = "CreateUserPolicy";
+    }
 }

@@ -7,8 +7,9 @@ namespace VietGeeks.TestPlatform.TestManager.Data.Models
     public class QuestionDefinition : EntityBase
     {
         public string TestId { get; set; } = default!;
-        [Ignore]
-        public int QuestionNo { get; set; }
+
+        [Ignore] public int QuestionNo { get; set; }
+
         public string Description { get; set; } = default!;
         public string CategoryId { get; set; } = default!;
         public AnswerType AnswerType { get; set; }
@@ -39,7 +40,9 @@ namespace VietGeeks.TestPlatform.TestManager.Data.Models
         public int CorrectPoint { get; set; }
         public int IncorrectPoint { get; set; }
         public bool IsPartialAnswersEnabled { get; set; }
+
         public int? BonusPoints { get; set; }
+
         //todo: there are 2 options of this case. check testportal.
         public int? PartialIncorrectPoint { get; set; }
     }

@@ -1,18 +1,19 @@
 using Dapr.Actors;
-using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 
-namespace VietGeeks.TestPlatform.TestRunner.Api.Filters;
-
-public class ActorInvokeExceptionFilterAttribute : ExceptionFilterAttribute
+namespace VietGeeks.TestPlatform.TestRunner.Api.Filters
 {
-    public override void OnException(ExceptionContext context)
+    public class ActorInvokeExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        if (context.Exception is ActorMethodInvocationException ex
-        && (ex.InnerException is Dapr.Actors.ActorInvokeException invokeEx)
-        && invokeEx.ActualExceptionType == typeof(TestPlatformException).FullName)
+        public override void OnException(ExceptionContext context)
         {
-            context.Exception = new TestPlatformException(invokeEx.Message);
+            if (context.Exception is ActorMethodInvocationException ex
+                && ex.InnerException is ActorInvokeException invokeEx
+                && invokeEx.ActualExceptionType == typeof(TestPlatformException).FullName)
+            {
+                context.Exception = new TestPlatformException(invokeEx.Message);
+            }
         }
     }
 }

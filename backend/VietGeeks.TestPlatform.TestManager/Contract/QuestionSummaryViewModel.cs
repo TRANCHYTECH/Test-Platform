@@ -1,10 +1,11 @@
-﻿namespace VietGeeks.TestPlatform.TestManager.Contract;
-
-public class QuestionSummaryViewModel
+﻿namespace VietGeeks.TestPlatform.TestManager.Contract
 {
-    public string CategoryId { get; set; } = default!;
+    public class QuestionSummaryViewModel
+    {
+        public string CategoryId { get; set; } = default!;
 
-    public int NumberOfQuestions { get; set; }
+        public int NumberOfQuestions { get; set; }
 
-    public int TotalPoints { get; set; }
+        public int TotalPoints { get; set; }
+    }
 }

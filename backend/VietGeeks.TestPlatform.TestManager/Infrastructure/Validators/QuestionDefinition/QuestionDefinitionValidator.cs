@@ -2,7 +2,6 @@
 using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Services;
 
-
 namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.QuestionDefinition
 {
     public class QuestionDefinitionValidator : AbstractValidator<Data.Models.QuestionDefinition>
@@ -14,8 +13,12 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.QuestionD
             IValidator<MultipleChoiceScoreSettings> validator3)
         {
             //todo: DISCUSSION if there is need for further verification by checking test def status. Example: Finished => Not allow to add question.
-            RuleFor(c => c.TestId).NotEmpty().MustAsync((testId, _) => validationService.CheckTestDefinitionExistence(testId)).WithErrorCode("ERR.QUESTIONDEF.TESTSID.NOTFOUND");
-            RuleFor(c => c.CategoryId).NotEmpty().MustAsync((categoryId, _) => validationService.CheckTestCategoryExistence(categoryId)).WithErrorCode("ERR.QUESTIONDEF.TESTCATID.NOTFOUND");
+            RuleFor(c => c.TestId).NotEmpty()
+                .MustAsync((testId, _) => validationService.CheckTestDefinitionExistence(testId))
+                .WithErrorCode("ERR.QUESTIONDEF.TESTSID.NOTFOUND");
+            RuleFor(c => c.CategoryId).NotEmpty()
+                .MustAsync((categoryId, _) => validationService.CheckTestCategoryExistence(categoryId))
+                .WithErrorCode("ERR.QUESTIONDEF.TESTCATID.NOTFOUND");
             RuleFor(c => c.AnswerType).IsInEnum();
             //todo: define suitable maxlength for question desc.
             RuleFor(c => c.Description).NotEmpty().MaximumLength(3000);
@@ -28,7 +31,8 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.QuestionD
             });
         }
 
-        private static Action<ScoreSettings, ValidationContext<Data.Models.QuestionDefinition>> AnswerTypeMatchValidator()
+        private static Action<ScoreSettings, ValidationContext<Data.Models.QuestionDefinition>>
+            AnswerTypeMatchValidator()
         {
             return (prop, ctx) =>
             {
@@ -93,4 +97,3 @@ namespace VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.QuestionD
         }
     }
 }
-

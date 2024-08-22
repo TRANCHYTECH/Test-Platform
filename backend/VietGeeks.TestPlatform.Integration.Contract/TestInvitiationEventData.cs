@@ -1,6 +1,7 @@
-﻿namespace VietGeeks.TestPlatform.Integration.Contract;
-
-public class TestInvitationEventData
+﻿namespace VietGeeks.TestPlatform.Integration.Contract
 {
-    public List<IDictionary<string, string>> Events { get; set; } = [];
+    public class TestInvitationEventData
+    {
+        public List<IDictionary<string, string>> Events { get; init; } = [];
+    }
 }

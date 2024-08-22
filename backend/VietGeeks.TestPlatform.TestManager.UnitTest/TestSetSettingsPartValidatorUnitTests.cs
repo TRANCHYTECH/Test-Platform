@@ -1,99 +1,111 @@
 ﻿using VietGeeks.TestPlatform.TestManager.Data.Models;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.Validators.TestDefinition;
 
-namespace VietGeeks.TestPlatform.TestManager.UnitTest;
-
-[Collection(TestDefinitionValidatorTestCollection.CollectionId)]
-public class TestSetSettingsPartValidatorUnitTests
+namespace VietGeeks.TestPlatform.TestManager.UnitTest
 {
-    private readonly TestDefinitionValidatorFixture _fixture;
-    private readonly TestSetSettingsPartValidator _validator;
-
-    public TestSetSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
+    [Collection(TestDefinitionValidatorTestCollection.CollectionId)]
+    public class TestSetSettingsPartValidatorUnitTests
     {
-        _fixture = fixture;
-        _validator = _fixture.CreateTestSetSettingsPartValidator();
-    }
+        private readonly TestDefinitionValidatorFixture _fixture;
+        private readonly TestSetSettingsPartValidator _validator;
 
-    #region TestSetSettingsPart
-
-    [Fact]
-    public async Task TestSetSettingsPart_Validate_Failure_Null()
-    {
-        var input = new TestSetSettingsPart
+        public TestSetSettingsPartValidatorUnitTests(TestDefinitionValidatorFixture fixture)
         {
-            Generator = default!,
-            GeneratorType = 0
-        };
-        var result = await _validator.ValidateAsync(input);
+            _fixture = fixture;
+            _validator = _fixture.CreateTestSetSettingsPartValidator();
+        }
 
-        Assert.False(result.IsValid);
-        Assert.Equal(1, result.Errors.Count(c => c.PropertyName == nameof(input.GeneratorType) && c.ErrorCode == "EnumValidator"));
-        Assert.Equal(1, result.Errors.Count(c => c.PropertyName == nameof(input.Generator) && c.ErrorCode == "NotNullValidator"));
-    }
+        #region TestSetSettingsPart
 
-    [Fact]
-    public async Task TestSetSettingsPart_Validate_Failure_Required_RandomFromCategoriesGeneratorConfig()
-    {
-        var input = new TestSetSettingsPart
+        [Fact]
+        public async Task TestSetSettingsPart_Validate_Failure_Null()
         {
-            GeneratorType = TestSetGeneratorType.RandomByCategories,
-            Generator = new RandomFromCategoriesGenerator()
+            var input = new TestSetSettingsPart
             {
-                Configs =
-                [
-                    new RandomFromCategoriesGeneratorConfig
-                    {
-                    }
-                ]
-            }
-        };
+                Generator = default!,
+                GeneratorType = 0
+            };
+            var result = await _validator.ValidateAsync(input);
 
-        var result = await _validator.ValidateAsync(input);
+            Assert.False(result.IsValid);
+            Assert.Equal(1,
+                result.Errors.Count(
+                    c => c.PropertyName == nameof(input.GeneratorType) && c.ErrorCode == "EnumValidator"));
+            Assert.Equal(1,
+                result.Errors.Count(c =>
+                    c.PropertyName == nameof(input.Generator) && c.ErrorCode == "NotNullValidator"));
+        }
 
-        Assert.False(result.IsValid);
-        Assert.Equal(1, result.Errors.Count(c => c.PropertyName.EndsWith(nameof(RandomFromCategoriesGeneratorConfig.QuestionCategoryId)) && c.ErrorCode == "NotEmptyValidator"));
-        Assert.Equal(1, result.Errors.Count(c => c.PropertyName.EndsWith(nameof(RandomFromCategoriesGeneratorConfig.DrawNumber)) && c.ErrorCode == "GreaterThanOrEqualValidator"));
-    }
-
-    [Fact]
-    public async Task TestSetSettingsPart_Validate_Failure_MismatchGeneratorType()
-    {
-        var input = new TestSetSettingsPart
+        [Fact]
+        public async Task TestSetSettingsPart_Validate_Failure_Required_RandomFromCategoriesGeneratorConfig()
         {
-            GeneratorType = TestSetGeneratorType.Default,
-            Generator = new RandomFromCategoriesGenerator()
-        };
-
-        var result = await _validator.ValidateAsync(input);
-
-        Assert.False(result.IsValid);
-        Assert.Equal(1, result.Errors.Count(c => c.PropertyName.EndsWith(nameof(TestSetSettingsPart.Generator)) && c.ErrorCode == "PredicateValidator"));
-    }
-
-    [Fact]
-    public async Task TestSetSettingsPart_Validate_Success()
-    {
-        var input = new TestSetSettingsPart
-        {
-            GeneratorType = TestSetGeneratorType.RandomByCategories,
-            Generator = new RandomFromCategoriesGenerator
+            var input = new TestSetSettingsPart
             {
-                Configs =
-                [
-                    new RandomFromCategoriesGeneratorConfig
-                    {
-                        QuestionCategoryId = "001",
-                        DrawNumber = 1
-                    }
-                ]
-            }
-        };
+                GeneratorType = TestSetGeneratorType.RandomByCategories,
+                Generator = new RandomFromCategoriesGenerator
+                {
+                    Configs =
+                    [
+                        new RandomFromCategoriesGeneratorConfig()
+                    ]
+                }
+            };
 
-        var result = await _validator.ValidateAsync(input);
+            var result = await _validator.ValidateAsync(input);
 
-        Assert.True(result.IsValid);
+            Assert.False(result.IsValid);
+            Assert.Equal(1,
+                result.Errors.Count(c =>
+                    c.PropertyName.EndsWith(nameof(RandomFromCategoriesGeneratorConfig.QuestionCategoryId)) &&
+                    c.ErrorCode == "NotEmptyValidator"));
+            Assert.Equal(1,
+                result.Errors.Count(c =>
+                    c.PropertyName.EndsWith(nameof(RandomFromCategoriesGeneratorConfig.DrawNumber)) &&
+                    c.ErrorCode == "GreaterThanOrEqualValidator"));
+        }
+
+        [Fact]
+        public async Task TestSetSettingsPart_Validate_Failure_MismatchGeneratorType()
+        {
+            var input = new TestSetSettingsPart
+            {
+                GeneratorType = TestSetGeneratorType.Default,
+                Generator = new RandomFromCategoriesGenerator()
+            };
+
+            var result = await _validator.ValidateAsync(input);
+
+            Assert.False(result.IsValid);
+            Assert.Equal(1,
+                result.Errors.Count(c =>
+                    c.PropertyName.EndsWith(nameof(TestSetSettingsPart.Generator)) &&
+                    c.ErrorCode == "PredicateValidator"));
+        }
+
+        [Fact]
+        public async Task TestSetSettingsPart_Validate_Success()
+        {
+            var input = new TestSetSettingsPart
+            {
+                GeneratorType = TestSetGeneratorType.RandomByCategories,
+                Generator = new RandomFromCategoriesGenerator
+                {
+                    Configs =
+                    [
+                        new RandomFromCategoriesGeneratorConfig
+                        {
+                            QuestionCategoryId = "001",
+                            DrawNumber = 1
+                        }
+                    ]
+                }
+            };
+
+            var result = await _validator.ValidateAsync(input);
+
+            Assert.True(result.IsValid);
+        }
+
+        #endregion
     }
-
-    #endregion
 }
