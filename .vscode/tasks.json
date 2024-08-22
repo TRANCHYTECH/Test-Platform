@@ -1,118 +1,118 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build-testrunner-api",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/VietGeeks.TestPlatform.TestRunner.Api.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "appId": "testrunner-api",
-            "appPort": 6300,
-            "httpPort": 3700,
-            "grpcPort": 37000,
-            "appSsl": false,
-            "label": "testrunner-api-dapr-debug",
-            "type": "dapr",
-            "dependsOn": "build-testrunner-api",
-            "componentsPath": "./src/Services/TestRunner/dapr/components"
-        },
-        {
-            "appId": "testrunner-api",
-            "label": "testrunner-api-svc-daprd-down",
-            "type": "daprd-down"
-        },
-        {
-            "label": "build-proctormanager-api",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api/VietGeeks.TestPlatform.ProctorManager.Api.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "appId": "proctormanager-api",
-            "appPort": 6400,
-            "httpPort": 3800,
-            "grpcPort": 38000,
-            "appSsl": false,
-            "label": "proctormanager-api-dapr-debug",
-            "type": "dapr",
-            "dependsOn": "build-proctormanager-api",
-            "componentsPath": "./src/Services/ProctorManager/dapr/components"
-        },
-        {
-            "appId": "proctormanager-api",
-            "label": "proctormanager-api-svc-daprd-down",
-            "type": "daprd-down"
-        },
-        {
-            "label": "build-TestManager-api",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api/VietGeeks.TestPlatform.TestManager.Api.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "appId": "TestManager-api",
-            "appPort": 6200,
-            "httpPort": 3600,
-            "grpcPort": 36000,
-            "appSsl": false,
-            "label": "TestManager-api-dapr-debug",
-            "type": "dapr",
-            "dependsOn": "build-TestManager-api",
-            "componentsPath": "./src/Services/TestManager/dapr/components"
-        },
-        {
-            "appId": "TestManager-api",
-            "label": "TestManager-api-svc-daprd-down",
-            "type": "daprd-down"
-        },
-        //
-        {
-            "label": "build-AccountManager-api",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/VietGeeks.TestPlatform.AccountManager.Api.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "appId": "AccountManager-api",
-            "appPort": 6500,
-            "httpPort": 3900,
-            "grpcPort": 39000,
-            "appSsl": false,
-            "label": "AccountManager-api-dapr-debug",
-            "type": "dapr",
-            "dependsOn": "build-AccountManager-api",
-            "componentsPath": "./src/Services/AccountManager/dapr/components"
-        },
-        {
-            "appId": "AccountManager-api",
-            "label": "AccountManager-api-svc-daprd-down",
-            "type": "daprd-down"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-testrunner-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/backend/VietGeeks.TestPlatform.FrontOffice/VietGeeks.TestPlatform.FrontOffice.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "appId": "testrunner-api",
+      "appPort": 7300,
+      "httpPort": 5300,
+      "grpcPort": 53000,
+      "appProtocol": "http",
+      "label": "testrunner-api-dapr-debug",
+      "type": "dapr",
+      "dependsOn": "build-testrunner-api",
+      "resourcesPath": "./backend/.dapr/components"
+    },
+    {
+      "appId": "testrunner-api",
+      "label": "testrunner-api-svc-daprd-down",
+      "type": "daprd-down"
+    },
+    {
+      "label": "build-proctormanager-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api/VietGeeks.TestPlatform.ProctorManager.Api.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "appId": "proctormanager-api",
+      "appPort": 6400,
+      "httpPort": 3800,
+      "grpcPort": 38000,
+      "appSsl": false,
+      "label": "proctormanager-api-dapr-debug",
+      "type": "dapr",
+      "dependsOn": "build-proctormanager-api",
+      "componentsPath": "./src/Services/ProctorManager/dapr/components"
+    },
+    {
+      "appId": "proctormanager-api",
+      "label": "proctormanager-api-svc-daprd-down",
+      "type": "daprd-down"
+    },
+    {
+      "label": "build-TestManager-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api/VietGeeks.TestPlatform.TestManager.Api.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "appId": "TestManager-api",
+      "appPort": 6200,
+      "httpPort": 3600,
+      "grpcPort": 36000,
+      "appSsl": false,
+      "label": "TestManager-api-dapr-debug",
+      "type": "dapr",
+      "dependsOn": "build-TestManager-api",
+      "componentsPath": "./src/Services/TestManager/dapr/components"
+    },
+    {
+      "appId": "TestManager-api",
+      "label": "TestManager-api-svc-daprd-down",
+      "type": "daprd-down"
+    },
+    //
+    {
+      "label": "build-AccountManager-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/VietGeeks.TestPlatform.AccountManager.Api.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "appId": "AccountManager-api",
+      "appPort": 6500,
+      "httpPort": 3900,
+      "grpcPort": 39000,
+      "appSsl": false,
+      "label": "AccountManager-api-dapr-debug",
+      "type": "dapr",
+      "dependsOn": "build-AccountManager-api",
+      "componentsPath": "./src/Services/AccountManager/dapr/components"
+    },
+    {
+      "appId": "AccountManager-api",
+      "label": "AccountManager-api-svc-daprd-down",
+      "type": "daprd-down"
+    }
+  ]
 }

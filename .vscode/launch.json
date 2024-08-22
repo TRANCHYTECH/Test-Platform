@@ -1,108 +1,108 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            // Use IntelliSense to find out which attributes exist for C# debugging
-            // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-            "name": "Test Runner Dapr",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "testrunner-api-dapr-debug",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.TestRunner.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/Services/TestRunner/VietGeeks.TestPlatform.TestRunner.Api",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "DAPR_HTTP_PORT": "3700",
-                "DAPR_GRPC_PORT": "37000",
-                "ASPNETCORE_URLS": "http://localhost:6300"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            },
-            "postDebugTask": "testrunner-api-svc-daprd-down" 
-        },
-        {
-            "name": "Proctor Manager Dapr",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "proctormanager-api-dapr-debug",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.ProctorManager.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "DAPR_HTTP_PORT": "3800",
-                "DAPR_GRPC_PORT": "38000",
-                "ASPNETCORE_URLS": "http://localhost:6400"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            },
-            "postDebugTask": "proctormanager-api-svc-daprd-down" 
-        },
-        {
-            "name": "Test Manager Dapr",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "TestManager-api-dapr-debug",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.TestManager.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api",
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "DAPR_HTTP_PORT": "3600",
-                "DAPR_GRPC_PORT": "36000",
-                "ASPNETCORE_URLS": "https://localhost:6200"
-            },
-            "postDebugTask": "TestManager-api-svc-daprd-down" 
-        },
-        {
-            "name": "Account Manager Dapr",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "AccountManager-api-dapr-debug",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.AccountManager.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "DAPR_HTTP_PORT": "3900",
-                "DAPR_GRPC_PORT": "39000",
-                "ASPNETCORE_URLS": "https://localhost:6500"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            },
-            "postDebugTask": "proctormanager-api-svc-daprd-down" 
-        },
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Use IntelliSense to find out which attributes exist for C# debugging
+      // Use hover for the description of the existing attributes
+      // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+      "name": "Test Runner Dapr",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "testrunner-api-dapr-debug",
+      // If you have changed target frameworks, make sure to update the program path.
+      "program": "${workspaceFolder}/backend/VietGeeks.TestPlatform.FrontOffice/bin/Debug/net8.0/VietGeeks.TestPlatform.FrontOffice.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/backend/VietGeeks.TestPlatform.FrontOffice",
+      "stopAtEntry": false,
+      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DAPR_HTTP_PORT": "3700",
+        "DAPR_GRPC_PORT": "37000",
+        "ASPNETCORE_URLS": "https://localhost:7300"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      },
+      "postDebugTask": "testrunner-api-svc-daprd-down"
+    },
+    {
+      "name": "Proctor Manager Dapr",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "proctormanager-api-dapr-debug",
+      // If you have changed target frameworks, make sure to update the program path.
+      "program": "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.ProctorManager.Api.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Services/ProctorManager/VietGeeks.TestPlatform.ProctorManager.Api",
+      "stopAtEntry": false,
+      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DAPR_HTTP_PORT": "3800",
+        "DAPR_GRPC_PORT": "38000",
+        "ASPNETCORE_URLS": "http://localhost:6400"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      },
+      "postDebugTask": "proctormanager-api-svc-daprd-down"
+    },
+    {
+      "name": "Test Manager Dapr",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "TestManager-api-dapr-debug",
+      // If you have changed target frameworks, make sure to update the program path.
+      "program": "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.TestManager.Api.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Services/TestManager/VietGeeks.TestPlatform.TestManager.Api",
+      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DAPR_HTTP_PORT": "3600",
+        "DAPR_GRPC_PORT": "36000",
+        "ASPNETCORE_URLS": "https://localhost:6200"
+      },
+      "postDebugTask": "TestManager-api-svc-daprd-down"
+    },
+    {
+      "name": "Account Manager Dapr",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "AccountManager-api-dapr-debug",
+      // If you have changed target frameworks, make sure to update the program path.
+      "program": "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api/bin/Debug/net7.0/VietGeeks.TestPlatform.AccountManager.Api.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Services/AccountManager/VietGeeks.TestPlatform.AccountManager.Api",
+      "stopAtEntry": false,
+      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DAPR_HTTP_PORT": "3900",
+        "DAPR_GRPC_PORT": "39000",
+        "ASPNETCORE_URLS": "https://localhost:6500"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      },
+      "postDebugTask": "proctormanager-api-svc-daprd-down"
+    }
+  ]
 }
