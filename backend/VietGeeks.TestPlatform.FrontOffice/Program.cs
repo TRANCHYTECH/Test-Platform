@@ -1,6 +1,10 @@
 using Azure.Identity;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.TestRunner.Api.Actors;
 using VietGeeks.TestPlatform.TestRunner.Api.Filters;
@@ -10,17 +14,17 @@ using VietGeeks.TestPlatform.TestRunner.Infrastructure;
 const string testRunnerSpaPolicy = "test-runner-spa";
 
 var builder = WebApplication.CreateBuilder(args);
-if (builder.Environment.IsProduction())
-{
-    builder.Configuration.AddAzureKeyVault(
-        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
-        new DefaultAzureCredential());
-}
 
-builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
-{
-    DataProtection = builder.Configuration.GetSection("DataProtection").Get<DataProtectionOptions>()
-});
+Uri vaultUri = new($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/");
+Uri storageUri = new($"https://{builder.Configuration["BlobStorageName"]}.blob.core.windows.net");
+builder.Configuration.AddAzureKeyVault(vaultUri, builder.Environment.GetTokenCredential());
+builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions());
+
+builder.Services.AddDataProtection()
+    .SetApplicationName(builder.Configuration.GetValue<string>("DataProtection:ApplicationName")!)
+    .PersistKeysToAzureBlobStorage(new Uri(storageUri, $"{builder.Configuration.GetValue<string>("DataProtection:FileName")}"), builder.Environment.GetTokenCredential())
+    .ProtectKeysWithAzureKeyVault(new Uri(vaultUri, $"keys/{builder.Configuration.GetValue<string>("DataProtection:KeyName")}"), builder.Environment.GetTokenCredential());
+
 builder.Services.RegisterTestRunnerModule(new InfrastructureDataOptions
 {
     Database = builder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>()!
