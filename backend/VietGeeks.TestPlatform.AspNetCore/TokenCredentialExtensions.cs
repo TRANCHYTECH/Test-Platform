@@ -14,7 +14,8 @@ namespace VietGeeks.TestPlatform.AspNetCore
                 return new EnvironmentCredential(tokenCredentialOptions);
             }
 
-            return new ManagedIdentityCredential(options: tokenCredentialOptions);
+            // Use the user assigned managed identity via env AZURE_CLIENT_ID
+            return new DefaultAzureCredential();
         }
     }
 }
