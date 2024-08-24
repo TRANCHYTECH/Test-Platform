@@ -4,7 +4,6 @@
         <PackageReference Include="System.Text.Json"/>
         <PackageReference Include="MongoDB.Entities"/>
         <PackageReference Include="AutoMapper"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
         <PackageReference Include="Dapr.Client"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
         <PackageReference Include="Dapr.AspNetCore"/>

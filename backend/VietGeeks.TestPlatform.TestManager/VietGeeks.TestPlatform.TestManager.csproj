@@ -10,7 +10,6 @@
         <PackageReference Include="ListShuffle"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
         <PackageReference Include="AutoMapper"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
         <PackageReference Include="Microsoft.Extensions.Azure"/>
         <PackageReference Include="Azure.Messaging.ServiceBus"/>
         <PackageReference Include="Dapr.Client"/>

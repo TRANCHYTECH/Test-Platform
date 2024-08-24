@@ -3,7 +3,6 @@
         <PackageReference Include="MongoDB.Entities"/>
         <PackageReference Include="NodaTime"/>
         <PackageReference Include="AutoMapper"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets"/>
