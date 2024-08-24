@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using VietGeeks.TestPlatform.AspNetCore.Services;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
@@ -128,15 +130,6 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddHttpContextAccessor();
         serviceCollection.AddScoped<ITenant, Tenant>();
-
-        if (options.DataProtection != null)
-        {
-            var dataProtectionOption = options.DataProtection;
-            serviceCollection.AddDataProtection()
-                .SetApplicationName(dataProtectionOption.ApplicationName)
-                .PersistKeysToAzureBlobStorage(new Uri(dataProtectionOption.DataProtectionBlobUrl),
-                    new DefaultAzureCredential());
-        }
     }
 
     public static void UseVietGeeksEssentialFeatures(this WebApplication app)
@@ -163,15 +156,6 @@ public class VietGeeksAspNetCoreOptions
     public AuthOptions? Auth { get; set; }
 
     public OpenIdConnectOptions? OpenIdConnect { get; init; }
-}
-
-public class DataProtectionOptions
-{
-    public string ApplicationName { get; init; } = default!;
-
-    public string DataProtectionBlobUrl { get; init; } = default!;
-
-    public string ManagedIdentityClientId { get; init; } = default!;
 }
 
 public class AuthOptions

@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Entities;
-using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestRunner.Infrastructure.Services;
 
 namespace VietGeeks.TestPlatform.TestRunner.Infrastructure;
@@ -10,12 +10,16 @@ namespace VietGeeks.TestPlatform.TestRunner.Infrastructure;
 public static class ServiceCollectionExtensions
 {
     public static void RegisterTestRunnerModule(this IServiceCollection serviceCollection,
-        InfrastructureDataOptions options)
+        IConfiguration configuration)
     {
-        ConfigureDb(options.Database);
+        var databaseOptions = new DatabaseOptions
+        {
+            ConnectionString = configuration.GetConnectionString("TestManager")!,
+            DatabaseName = configuration["TestManagerDatabaseName"]!,
+        };
+        ConfigureDb(databaseOptions);
 
         serviceCollection.AddScoped<IProctorService, ProctorService>();
-        serviceCollection.AddSingleton<IClock, Clock>();
         serviceCollection.AddScoped<TestRunnerDbContext>();
         serviceCollection.AddAutoMapper(typeof(ServiceCollectionExtensions));
     }
@@ -24,7 +28,7 @@ public static class ServiceCollectionExtensions
     {
         var conventionPack = new ConventionPack
         {
-            new IgnoreExtraElementsConvention(true)
+            new IgnoreExtraElementsConvention(ignoreExtraElements: true),
         };
 
         ConventionRegistry.Register("TestPlatformDefaultConventions", conventionPack, _ => true);

@@ -25,6 +25,7 @@
         "DAPR_GRPC_PORT": "33000",
         "ASPNETCORE_URLS": "https://localhost:7300"
       },
+      "envFile": "${workspaceFolder}/.development-env",
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
       },

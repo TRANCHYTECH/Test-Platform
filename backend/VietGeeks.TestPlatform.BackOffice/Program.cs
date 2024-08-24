@@ -6,66 +6,39 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MongoDB.Entities;
 using VietGeeks.TestPlatform.AccountManager;
 using VietGeeks.TestPlatform.AspNetCore;
+using VietGeeks.TestPlatform.BackOffice;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
 using VietGeeks.TestPlatform.TestManager.Infrastructure.EventConsumers;
 
 const string testPortalSpaPolicy = "test-portal-spa";
+const string appName = "test-manager-api";
 
 var builder = WebApplication.CreateBuilder(args);
-if (builder.Environment.IsProduction())
-{
-    builder.Configuration.AddAzureKeyVault(
-        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
-        new DefaultAzureCredential());
-}
 
-builder.Services.AddControllers();
+builder.AddTestPlatformKeyVault(appName);
 builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {
     OpenIdConnect = builder.Configuration.GetSection("Authentication:Schemes:BackOffice").Get<OpenIdConnectOptions>()
 });
-builder.Services.AddMassTransit(c =>
+builder.AddTestManagerMassTransit();
+
+var databaseOptions = new DatabaseOptions
 {
-    c.ConfigureHealthCheckOptions(cfg => cfg.MinimalFailureStatus = HealthStatus.Degraded);
-    c.AddMongoDbOutbox(o =>
-    {
-        var dbOptions = GetTestManagerDatabaseOptions(builder);
-        o.ClientFactory(_ => DB.Database(dbOptions.DatabaseName).Client);
-        o.DatabaseFactory(_ => DB.Database(dbOptions.DatabaseName));
-        o.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
-        o.UseBusOutbox();
-    });
+    ConnectionString = builder.Configuration.GetConnectionString("TestManager")!,
+    DatabaseName = builder.Configuration.GetValue<string>("TestManagerDatabaseName")!,
+};
 
-    var endpointPrefix = builder.Environment.IsDevelopment()
-        ? Environment.UserName
-        : string.Empty;
-    c.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(endpointPrefix, false));
-    c.AddConsumersFromNamespaceContaining<SendTestAccessCode>();
-    c.UsingAzureServiceBus((ctx, factoryConfig) =>
-    {
-        factoryConfig.Host(builder.Configuration.GetConnectionString("ServiceBus"),
-            hostConfig =>
-            {
-                if (builder.Environment.IsProduction())
-                {
-                    hostConfig.TokenCredential = new DefaultAzureCredential();
-                }
-            });
-        factoryConfig.ConfigureEndpoints(ctx);
-    });
-});
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.RegisterTestManagerModule(new TestManagerModuleOptions
 {
-    Database = GetTestManagerDatabaseOptions(builder)
+    Database = databaseOptions,
 });
 builder.Services.RegisterAccountManagerModule(new AccountManagerModuleOptions
 {
-    Database = GetTestManagerDatabaseOptions(builder)
+    Database = databaseOptions,
 });
+
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(testPortalSpaPolicy,
@@ -79,9 +52,7 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddDaprClient();
-
-builder.Services
-    .AddAuthorization();
+builder.Services.AddAuthorization();
 
 builder.Services.Configure<SessionStoreOptions>(options => options.DefaultSchema = "session");
 builder.Services.AddBff(options =>
@@ -98,9 +69,12 @@ builder.Services.AddBff(options =>
     });
 });
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 app.UseCors(testPortalSpaPolicy);
-
+// todo: remove this dev block
 if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
 {
     await using var scope = app.Services.CreateAsyncScope();
@@ -109,7 +83,7 @@ if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
 }
 
 app.MapGet("/test-portal",
-        (HttpRequest _) => TypedResults.Redirect(app.Configuration.GetValue<string>("PortalUrl")!, true))
+        (HttpRequest _) => TypedResults.Redirect(app.Configuration.GetValue<string>("PortalUrl")!, permanent: true))
     .WithSummary("Redirect after user login via portal")
     .WithOpenApi();
 
@@ -123,9 +97,3 @@ app.MapControllers().RequireAuthorization().AsBffApiEndpoint().SkipAntiforgery()
 app.MapSubscribeHandler();
 
 await app.RunAsync();
-return;
-
-DatabaseOptions GetTestManagerDatabaseOptions(WebApplicationBuilder webApplicationBuilder)
-{
-    return webApplicationBuilder.Configuration.GetSection("TestManagerDatabase").Get<DatabaseOptions>()!;
-}
