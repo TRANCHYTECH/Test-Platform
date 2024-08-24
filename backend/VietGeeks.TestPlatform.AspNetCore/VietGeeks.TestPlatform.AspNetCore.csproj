@@ -10,6 +10,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
         <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Blobs" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Services\" />

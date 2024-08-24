@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using VietGeeks.TestPlatform.AspNetCore.Services;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;

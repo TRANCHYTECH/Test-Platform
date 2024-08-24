@@ -11,11 +11,10 @@ namespace VietGeeks.TestPlatform.AspNetCore
         {
             if (environment.IsDevelopment())
             {
-                var token = new EnvironmentCredential(tokenCredentialOptions);
-                return token;
+                return new EnvironmentCredential(tokenCredentialOptions);
             }
 
-            return new ManagedIdentityCredential();
+            return new ManagedIdentityCredential(options: tokenCredentialOptions);
         }
     }
 }

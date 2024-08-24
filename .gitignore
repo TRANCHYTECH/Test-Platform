@@ -523,3 +523,6 @@ TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/project.nu
 TestPlatform/src/BuildingBlocks/VietGeeks.TestPlatform.AspNetCore/obj/VietGeeks.TestPlatform.AspNetCore.csproj.nuget.dgspec.json
 
 db_data/
+.development-env
+*.bicepparam
+*.azcli

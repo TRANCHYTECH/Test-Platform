@@ -155,7 +155,7 @@ public class TestManagerService(
                      throw new EntityNotFoundException(id, nameof(TestDefinition));
         var questions = await DB.Find<QuestionDefinition>().ManyAsync(c => c.TestId == id, cancellationToken);
 
-        // Check if can activate test.
+        // Check if we can activate test.
         var testRunTime = entity.EnsureCanActivate(questions.Count, clock.UtcNow);
 
         await dbContext.BeginTransaction(default);
@@ -165,14 +165,14 @@ public class TestManagerService(
             ID = ObjectId.GenerateNewId().ToString(),
             StartAtUtc = testRunTime.StartAtUtc,
             EndAtUtc = testRunTime.EndAtUtc,
-            TestDefinitionSnapshot = entity
+            TestDefinitionSnapshot = entity,
         };
 
         // Copy questions.
         var testRunQuestionBatches = questions.Chunk(10).Select(q => new TestRunQuestion
         {
             TestRunId = testRun.ID,
-            Batch = q.ToArray()
+            Batch = q.ToArray(),
         });
 
         // Set current activated test run.
