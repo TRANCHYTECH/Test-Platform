@@ -126,6 +126,13 @@ public static class ServiceCollectionExtensions
                         return CookieAuthenticationDefaults.AuthenticationScheme;
                     };
                 });
+
+            serviceCollection.AddAuthorizationBuilder()
+                .AddPolicy(AuthPolicyNames.CreateUserPolicy, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "write:user");
+                });
         }
 
         serviceCollection.AddHttpContextAccessor();

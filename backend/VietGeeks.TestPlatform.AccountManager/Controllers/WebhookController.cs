@@ -2,8 +2,17 @@
 using System.Text.Json.Serialization;
 using Dapr;
 using Dapr.Client;
+using MassTransit;
+using MassTransit.MongoDbIntegration;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using MongoDB.Entities;
 using VietGeeks.TestPlatform.Integration.Contract;
+using VietGeeks.TestPlatform.SharedKernel;
+using VietGeeks.TestPlatform.SharedKernel.Events;
 
 namespace VietGeeks.TestPlatform.AccountManager.Controllers;
 
@@ -15,45 +24,46 @@ public class WebhookController : ControllerBase
 
     private const string AccessCodeSendingStatusQueue = "access-code-email-notification";
 
-    private const string UserCreateRequestQueue = "user-create-request";
-
+    [Authorize( Policy = AuthPolicyNames.CreateUserPolicy )]
     [HttpPost("CreateUserRequest")]
-    public async Task<IActionResult> CreateUserRequest([FromServices] DaprClient client,
-        [FromBody] UserCreateRequest request)
+    public async Task<IActionResult> CreateUserRequest( [FromBody] UserCreateRequest request,
+        [FromServices] MongoDbContext dbContext,
+        [FromServices] IPublishEndpoint publishEndpoint,
+        [FromServices] ILogger<WebhookController> logger,
+        CancellationToken cancellationToken)
     {
-        await client.PublishEventAsync(WebhookBus, UserCreateRequestQueue, JsonSerializer.Serialize(request));
+        logger.ReceivedCreatingUserAction(request.UserId, request.Email);
 
-        return Ok();
+        // Could reuse object id from original source as id of entity User
+        (string providerId, string userId) = request.ParseUserId();
+        try
+        {
+            var userEntity = new Data.User
+            {
+                ID = userId, Email = request.Email, ProviderId = providerId,
+            };
+
+            await dbContext.BeginTransaction(cancellationToken);
+            await DB.InsertAsync(userEntity, dbContext.Session, cancellationToken);
+            await publishEndpoint.Publish(new UserCreatedEvent { UserId = userEntity.ID }, cancellationToken);
+            await dbContext.CommitTransaction(cancellationToken);
+
+            logger.CreatedUser(userEntity.ID, userEntity.Email);
+        }
+        catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+        {
+            logger.DuplicatedUser(ex);
+
+            return BadRequest("DuplicatedUserIdOrEmail");
+        }
+
+        return Accepted(request.UserId);
     }
 
     [HttpPost("Mailjet")]
     public async Task<IActionResult> Mailjet([FromServices] DaprClient client, [FromBody] MailjetEvent[] events)
     {
-        await client.PublishEventAsync(WebhookBus, AccessCodeSendingStatusQueue, JsonSerializer.Serialize(events));
-
-        return Ok();
-    }
-
-    // [Topic(WebhookBus, UserCreateRequestQueue)]
-    // [HttpPost("ProcessUserCreateRequest")]
-    // public IActionResult ProcessUserCreateRequest([FromBody] string @event)
-    // {
-    //     var parsedEvent = JsonSerializer.Deserialize<UserCreateRequest>(@event) ?? throw new Exception("Wrong events");
-
-
-    //     Console.WriteLine("processed event {0}", parsedEvent.UserId);
-
-    //     return Ok();
-    // }
-
-    [Topic(WebhookBus, AccessCodeSendingStatusQueue)]
-    [HttpPost("ProcessMailjetEvents")]
-    public async Task<IActionResult> ProcessMailjetEvents([FromServices] DaprClient client,
-        [FromBody] string @event)
-    {
-        var parsedEvents = JsonSerializer.Deserialize<MailjetEvent[]>(@event) ??
-                           throw new Exception("Wrong events");
-        foreach (var g in parsedEvents.GroupBy(c => c.Payload).Where(c => !string.IsNullOrEmpty(c.Key)))
+        foreach (var g in events.GroupBy(c => c.Payload).Where(c => !string.IsNullOrEmpty(c.Key)))
         {
             var state = await client.GetStateAsync<TestInvitationEventData>("general-notify-store", g.Key) ??
                         new TestInvitationEventData();
@@ -62,7 +72,7 @@ public class WebhookController : ControllerBase
             await client.SaveStateAsync("general-notify-store", g.Key, state);
         }
 
-        Console.WriteLine("processed event {0}", parsedEvents.Count());
+        Console.WriteLine("processed event {0}", events.Count());
 
         return Ok();
     }

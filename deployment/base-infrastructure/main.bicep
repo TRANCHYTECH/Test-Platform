@@ -65,6 +65,7 @@ module keyVault 'key-vault.bicep' = {
     tenantObjectId: tenantObjectId
     keyVaultName: keyVaultName
   }
+  dependsOn: [uaiBackOffice]
 }
 
 module sql 'sql.bicep' = {
@@ -74,8 +75,10 @@ module sql 'sql.bicep' = {
     sqlDbName: sqlDbName
     location: resourceGroup().location
     sqlAdmin: sqlAdmin
-    sqlAdminPassword: sqlAdminPassword
+    sqlAdminPass: sqlAdminPassword
+    userManagedIdentity: userAssignedIdentityBackOffice
   }
+  dependsOn: [uaiBackOffice]
 }
 
 module apps 'container-apps-environment.bicep' = {
@@ -90,13 +93,23 @@ module apps 'container-apps-environment.bicep' = {
 }
 
 // Data
+var extendedSecretPairs = [
+  {
+    name: 'test-manager-api-ConnectionStrings--UserSessionManaged'
+    value: sql.outputs.sqlConnectionString
+  }
+  {
+    name: 'test-manager-api-ConnectionStrings--UserSession'
+    value: sql.outputs.sqlConnectionString2
+  }
+]
 module keyVaultSecrets 'key-vault-secrets.bicep' = {
   name: 'keyVaultSecretsDeploy'
   params: {
     keyValueName: keyVaultName
-    secretPairs: keyVaultSecretPairs
+    secretPairs: concat(keyVaultSecretPairs, extendedSecretPairs)
   }
-  dependsOn: [keyVault]
+  dependsOn: [keyVault, uaiBackOffice, sql]
 }
 
 output uaiIdBackOffice string = uaiBackOffice.outputs.uaiId

@@ -31,3 +31,4 @@ resource uaiRbac 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
 ]
 
 output uaiId string = uai.id
+output principalId string = uai.properties.principalId

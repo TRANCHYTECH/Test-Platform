@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
+        <PackageReference Include="MassTransit.MongoDb" />
         <PackageReference Include="MongoDB.Entities"/>
         <PackageReference Include="NodaTime"/>
         <PackageReference Include="AutoMapper"/>

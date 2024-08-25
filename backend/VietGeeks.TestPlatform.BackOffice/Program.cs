@@ -1,15 +1,10 @@
-using Azure.Identity;
 using Duende.Bff.EntityFramework;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using MongoDB.Entities;
 using VietGeeks.TestPlatform.AccountManager;
 using VietGeeks.TestPlatform.AspNetCore;
 using VietGeeks.TestPlatform.BackOffice;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.TestManager.Infrastructure;
-using VietGeeks.TestPlatform.TestManager.Infrastructure.EventConsumers;
 
 const string testPortalSpaPolicy = "test-portal-spa";
 const string appName = "test-manager-api";
@@ -21,6 +16,7 @@ builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {
     OpenIdConnect = builder.Configuration.GetSection("Authentication:Schemes:BackOffice").Get<OpenIdConnectOptions>()
 });
+
 builder.AddTestManagerMassTransit();
 
 var databaseOptions = new DatabaseOptions
