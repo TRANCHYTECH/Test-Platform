@@ -242,7 +242,7 @@ public class TestManagerService(
 
         var keys = input.AccessCodes.Select(c => $"{input.TestDefinitionId}_{input.TestRunId}_{c}");
         var result = new List<dynamic>();
-        var states = await daprClient.GetBulkStateAsync("general-notify-store", keys.ToArray(), 2);
+        var states = await daprClient.GetBulkStateAsync("test-runner-state", keys.ToArray(), 2);
         foreach (var accessCode in input.AccessCodes)
         {
             var foundEvent =

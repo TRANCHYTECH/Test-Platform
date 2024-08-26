@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: mongdbState
+  name: test-runner-state
 spec:
   type: state.mongodb
   version: v1

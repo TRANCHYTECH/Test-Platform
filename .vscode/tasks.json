@@ -23,11 +23,40 @@
       "label": "testrunner-api-dapr-debug",
       "type": "dapr",
       "dependsOn": "build-testrunner-api",
-      "resourcesPath": "./backend/.dapr/components"
+      "componentsPath": "./backend/.dapr/components"
     },
     {
       "appId": "testrunner-api",
       "label": "testrunner-api-svc-daprd-down",
+      "type": "daprd-down"
+    },
+    {
+      "label": "build-testmanager-api",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/backend/VietGeeks.TestPlatform.BackOffice/VietGeeks.TestPlatform.BackOffice.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "appId": "testmanager-api",
+      "appPort": 7200,
+      "httpPort": 3200,
+      "grpcPort": 32000,
+      "appProtocol": "http",
+      "appSsl": true,
+      "label": "testmanager-api-dapr-debug",
+      "type": "dapr",
+      "dependsOn": "build-testmanager-api",
+      "componentsPath": "./backend/.dapr/components"
+    },
+    {
+      "appId": "testmanager-api",
+      "label": "testmanager-api-svc-daprd-down",
       "type": "daprd-down"
     }
   ]

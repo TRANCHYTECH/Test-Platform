@@ -20,9 +20,7 @@ namespace VietGeeks.TestPlatform.AccountManager.Controllers;
 [Route("[controller]")]
 public class WebhookController : ControllerBase
 {
-    private const string WebhookBus = "webhook-pubsub";
-
-    private const string AccessCodeSendingStatusQueue = "access-code-email-notification";
+    private const string TestInvitationEventStore = "test-runner-state";
 
     [Authorize( Policy = AuthPolicyNames.CreateUserPolicy )]
     [HttpPost("CreateUserRequest")]
@@ -61,15 +59,16 @@ public class WebhookController : ControllerBase
     }
 
     [HttpPost("Mailjet")]
+    [AllowAnonymous]
     public async Task<IActionResult> Mailjet([FromServices] DaprClient client, [FromBody] MailjetEvent[] events)
     {
         foreach (var g in events.GroupBy(c => c.Payload).Where(c => !string.IsNullOrEmpty(c.Key)))
         {
-            var state = await client.GetStateAsync<TestInvitationEventData>("general-notify-store", g.Key) ??
+            var state = await client.GetStateAsync<TestInvitationEventData>(TestInvitationEventStore, g.Key) ??
                         new TestInvitationEventData();
 
             state.Events.AddRange(g.Select(c => c.GetData()));
-            await client.SaveStateAsync("general-notify-store", g.Key, state);
+            await client.SaveStateAsync(TestInvitationEventStore, g.Key, state);
         }
 
         Console.WriteLine("processed event {0}", events.Count());
@@ -82,7 +81,7 @@ public class WebhookController : ControllerBase
         [FromQuery] string[] keys)
     {
         var result = new List<dynamic>();
-        var states = await client.GetBulkStateAsync("general-notify-store", keys.ToList(), 0);
+        var states = await client.GetBulkStateAsync(TestInvitationEventStore, keys.ToList(), 0);
         foreach (var state in states)
         {
             var parsedEvents =

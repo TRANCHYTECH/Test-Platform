@@ -113,13 +113,13 @@ public class TestDefinitionManagementController(
     [HttpPost("{id}/TestInvitationStats")]
     public async Task<IActionResult> GetTestInvitationEvents(string id, TestInvitationStatsViewModel model)
     {
-        // var result = await testManagerService.GetTestInvitationEvents(new TestInvitationStatsInput
-        // {
-        //     TestDefinitionId = id,
-        //     TestRunId = model.TestRunId,
-        //     AccessCodes = model.AccessCodes
-        // });
+        var result = await testManagerService.GetTestInvitationEvents(new TestInvitationStatsInput
+        {
+            TestDefinitionId = id,
+            TestRunId = model.TestRunId,
+            AccessCodes = model.AccessCodes
+        });
 
-        return Ok(default);
+        return Ok(result);
     }
 }
