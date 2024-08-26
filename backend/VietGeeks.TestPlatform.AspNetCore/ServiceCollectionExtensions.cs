@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Azure.Identity;
+using Duende.Bff;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.Options;
 using VietGeeks.TestPlatform.AspNetCore.Services;
 using VietGeeks.TestPlatform.SharedKernel;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
@@ -25,6 +24,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.Configure<ForwardedHeadersOptions>(options =>
             options.ForwardedHeaders = ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto);
 
+        serviceCollection.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, ForcePostConfigureApplicationCookieTicketStore>();
         if (options.Auth != null)
         {
             var authOption = options.Auth;
@@ -192,4 +192,18 @@ public class OpenIdConnectOptions
 public class ErrorDetails
 {
     public string Error { get; set; } = default!;
+}
+
+public class ForcePostConfigureApplicationCookieTicketStore : IPostConfigureOptions<CookieAuthenticationOptions>
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="httpContextAccessor"></param>
+    public ForcePostConfigureApplicationCookieTicketStore(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
+
+    /// <inheritdoc />
+    public void PostConfigure(string? name, CookieAuthenticationOptions options) => options.SessionStore = new TicketStoreShim(_httpContextAccessor);
 }

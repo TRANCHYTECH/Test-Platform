@@ -4,6 +4,7 @@
         <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" />
         <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Keys" />
         <PackageReference Include="Azure.Identity" />
+        <PackageReference Include="Duende.BFF" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />

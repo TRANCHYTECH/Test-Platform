@@ -12,6 +12,22 @@ const string appName = "test-manager-api";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddTestPlatformKeyVault(appName);
+
+builder.Services.Configure<SessionStoreOptions>(options => options.DefaultSchema = "session");
+builder.Services.AddBff(options =>
+{
+    options.BackchannelLogoutAllUserSessions = true;
+    options.EnableSessionCleanup = true;
+}).AddEntityFrameworkServerSideSessions<SessionDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("UserSession"), sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(3);
+        sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "session");
+        sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
+    });
+});
+
 builder.Services.AddVietGeeksAspNetCore(new VietGeeksAspNetCoreOptions
 {
     OpenIdConnect = builder.Configuration.GetSection("Authentication:Schemes:BackOffice").Get<OpenIdConnectOptions>()
@@ -49,21 +65,6 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddDaprClient();
 builder.Services.AddAuthorization();
-
-builder.Services.Configure<SessionStoreOptions>(options => options.DefaultSchema = "session");
-builder.Services.AddBff(options =>
-{
-    options.BackchannelLogoutAllUserSessions = true;
-    options.EnableSessionCleanup = true;
-}).AddEntityFrameworkServerSideSessions<SessionDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("UserSession"), sqlOptions =>
-    {
-        sqlOptions.EnableRetryOnFailure(3);
-        sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "session");
-        sqlOptions.MigrationsAssembly(typeof(Program).Assembly.FullName);
-    });
-});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
