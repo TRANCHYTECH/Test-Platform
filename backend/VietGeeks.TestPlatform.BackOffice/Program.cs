@@ -1,3 +1,5 @@
+using Azure;
+using Azure.AI.OpenAI;
 using Duende.Bff.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using VietGeeks.TestPlatform.AccountManager;
@@ -49,6 +51,10 @@ builder.Services.RegisterAccountManagerModule(new AccountManagerModuleOptions
 {
     Database = databaseOptions,
 });
+
+builder.Services.AddScoped<AzureOpenAIClient>((_) => new(
+    builder.Configuration.GetValue<Uri>("OpenAi:Endpoint"),
+    builder.Environment.GetTokenCredential()));
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>

@@ -1,0 +1,14 @@
+1. What is your primary school?
+[a]. Hoa tien
+b. Hoa Lien
+c. Hoa Phong
+
+2. Con gì kêu oak oak?
+a. Con bò
+[b]. Con heo
+c. Con chó [wrong]
+
+2. Con gì kêu mow mow?
+[a]. Con bò
+b. Con heo
+c. Con chó [wrong]
