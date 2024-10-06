@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentValidation;
 using LexoAlgorithm;
 using MongoDB.Entities;
+using OfficeIMO.Word;
 using VietGeeks.TestPlatform.SharedKernel.Exceptions;
 using VietGeeks.TestPlatform.SharedKernel.PureServices;
 using VietGeeks.TestPlatform.TestManager.Contract;
@@ -142,6 +143,16 @@ public class QuestionManagerService(
         {
             //todo: refine this exception.
             throw new Exception("Could not update");
+        }
+    }
+
+    public void ReadQuestionFile(string testId, Stream stream, CancellationToken cancellationToken)
+    {
+        // Read 
+        using (var document = WordDocument.Load(stream))
+        {
+            // Read each graphs
+            // Process question or answer, use base case recursive case.
         }
     }
 

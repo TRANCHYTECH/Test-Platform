@@ -13,7 +13,7 @@ using VietGeeks.TestPlatform.TestManager.Contract.ViewModels;
 namespace VietGeeks.TestPlatform.TestManager.Api.Controllers;
 
 [ApiController]
-[Route("Management/TestDefinition/{testId}/Question")]
+[Route("Management/TestDefinition/{testId}")]
 [Authorize]
 public class ImportQuestionsController(ILogger<ImportQuestionsController> logger) : ControllerBase
 {
@@ -24,13 +24,16 @@ public class ImportQuestionsController(ILogger<ImportQuestionsController> logger
         {0}
         ```
         Each question begins with a number followed by a period. For example: 1. or 2.
-        Questions are separated by a newline.
-        Below each question are the answers, which begin with a letter and a period. For example: a., b. or c.
-        It's possible to have multiple corrected answer. Each correct answer is marked with a pair of square brackets. For example: [a].
+        Below each question are the answers, which begin with a letter followed by a period. For example: a., b. or c.
+        It's possible to have multiple corrected answers. Each correct answer is marked with a pair of square brackets. For example: [a].
         """;
 
-    [HttpPost(":ReadFile")]
-    public async Task<IActionResult> ReadFile([FromServices] AzureOpenAIClient openAIClient, [FromServices] IConfiguration configuration, IFormFile file, CancellationToken cancellation)
+    [HttpPost("Question:ReadFile")]
+    public async Task<IActionResult> ReadFile(
+        [FromServices] AzureOpenAIClient openAiClient,
+        [FromServices] IConfiguration configuration,
+        IFormFile file,
+        CancellationToken cancellation)
     {
         try
         {
@@ -51,7 +54,7 @@ public class ImportQuestionsController(ILogger<ImportQuestionsController> logger
             var jsonSchema = JsonSerializer.Serialize(responseSchemaBuilder.Build());
 
             using var openAiRequestCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(cancellation, new CancellationTokenSource(TimeSpan.FromSeconds(15)).Token);
-            var completionResult = await openAIClient.GetChatClient(configuration.GetValue<string>("OpenAi:Deployment")).CompleteChatAsync(
+            var completionResult = await openAiClient.GetChatClient(configuration.GetValue<string>("OpenAi:Deployment")).CompleteChatAsync(
                 [
                     new SystemChatMessage(ParsingQuestionsSystemPrompt),
                 new UserChatMessage(string.Format(ParsingQuestionsUserPrompt, textContent)),

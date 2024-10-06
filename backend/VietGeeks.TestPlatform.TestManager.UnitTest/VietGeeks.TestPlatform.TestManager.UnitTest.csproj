@@ -9,4 +9,10 @@
         <ProjectReference Include="..\VietGeeks.TestPlatform.SharedKernel\VietGeeks.TestPlatform.SharedKernel.csproj"/>
         <ProjectReference Include="..\VietGeeks.TestPlatform.TestManager\VietGeeks.TestPlatform.TestManager.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="TestData\import-questions-2.docx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
