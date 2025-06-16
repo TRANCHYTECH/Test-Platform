@@ -222,7 +222,7 @@ public class RealEstateListing
     public int PriceUnit { get; set; }
     public string MainDisplayedPrice { get; set; } = string.Empty;
     public string SubDisplayedPrice { get; set; } = string.Empty;
-    public int Area { get; set; }
+    public decimal Area { get; set; }
     public int Rooms { get; set; }
     public int Toilets { get; set; }
     public string Address { get; set; } = string.Empty;
