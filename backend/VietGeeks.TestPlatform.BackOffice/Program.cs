@@ -99,4 +99,6 @@ app.MapBffManagementEndpoints();
 app.MapControllers().RequireAuthorization().AsBffApiEndpoint().SkipAntiforgery();
 app.MapSubscribeHandler();
 
+app.UsePoc();
+
 await app.RunAsync();
