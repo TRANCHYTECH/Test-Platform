@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 
 namespace VietGeeks.TestPlatform.BackOffice
@@ -218,13 +218,13 @@ public class RealEstateListing
     public bool Has3dScan { get; set; }
     public bool HasVideo { get; set; }
     public string Title { get; set; } = string.Empty;
-    public long ComputedPrice { get; set; }
-    public int PriceUnit { get; set; }
+    public decimal? ComputedPrice { get; set; }
+    public decimal? PriceUnit { get; set; }
     public string MainDisplayedPrice { get; set; } = string.Empty;
     public string SubDisplayedPrice { get; set; } = string.Empty;
-    public decimal Area { get; set; }
+    public decimal? Area { get; set; }
     public int Rooms { get; set; }
-    public int Toilets { get; set; }
+    public decimal? Toilets { get; set; }
     public string Address { get; set; } = string.Empty;
     public string AddressForCityLevel { get; set; } = string.Empty;
     public string AddressForDistrictLevel { get; set; } = string.Empty;
