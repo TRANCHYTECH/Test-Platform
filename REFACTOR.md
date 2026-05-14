@@ -60,7 +60,9 @@ Committed 2026-05-14. Agents must not "improve" their way past these in any slic
 
 ## 4. Slicing
 
-One PR per slice. Order top-to-bottom; ship the foundation slices before the agent slices.
+Workflow (updated 2026-05-14): **all slices land as commits on a single long-running branch `refactor/cleanup`. One PR opens at the end of the pass, against `master`.** Per-slice commits keep the audit trail; the slice metadata (slice number, why, conventions touched, test plan) lives in each commit message body following the `.github/pull_request_template.md` shape. The single PR description at the end summarizes all slices included.
+
+Order top-to-bottom; ship the foundation slices before the agent slices.
 
 | # | Slice | Owner | Tests to add first | Status |
 |---|-------|-------|--------------------|--------|
@@ -85,7 +87,7 @@ One PR per slice. Order top-to-bottom; ship the foundation slices before the age
   - `backend/.env`, anything with `<KeyVault>` placeholders, `Properties/launchSettings.json`
   - `.github/workflows/*`, `deployment/*.bicep`
   - `Directory.Packages.props` version bumps that cross a major (open a separate PR)
-- **One slice per PR**; PR description must list which `CLAUDE.md` conventions the change touches.
+- **One commit per slice** on `refactor/cleanup`. Each commit body lists the slice number, why, `CLAUDE.md` conventions touched, and test plan — same fields as `.github/pull_request_template.md`. A single PR opens at the end summarizing all slices.
 - **Conventions to follow**: namespaces `VietGeeks.TestPlatform.<Module>`; module registration via `RegisterXxxModule`; FluentValidation per aggregate; AutoMapper profiles under `MapperProfiles/`; throw `TestPlatformException` for domain errors.
 
 ## 6. Review loop
