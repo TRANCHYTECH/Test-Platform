@@ -41,7 +41,6 @@ deployment/                   container-app-dapr.bicep (referenced by workflows)
 - **Secrets**: `<KeyVault>` placeholders in `appsettings.json` are resolved by `AddTestPlatformKeyVault` using a managed identity (`GetTokenCredential`) and `TestPlatformKeyVaultSecretManager` which scopes by appName prefix (`test-manager-api-*` / `test-runner-api-*`).
 - **Data Protection**: keys persisted to Azure Blob, protected by Key Vault key (`AddTestPlatformDataProtection`).
 - **OpenAI**: `AzureOpenAIClient` registered in BackOffice. Used by the question-import flow (`Api/Controllers/ImportQuestionsController.cs`). Deployment is `gpt-4o` per appsettings.
-- **`PocProgram.cs`** in BackOffice: a real-estate-listing → HTML scratch endpoint (`/convert-to-html`, `/convert-json-string`). Unrelated to the test-platform domain — flagged for removal during refactor (see REFACTOR.md).
 
 ## Build / run / test
 
