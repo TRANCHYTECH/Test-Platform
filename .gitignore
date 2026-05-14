@@ -526,3 +526,7 @@ db_data/
 .development-env
 *.bicepparam
 *.azcli
+
+# Claude Code — local overrides only; .claude/settings.json is shared.
+.claude/settings.local.json
+.claude/.credentials.json
